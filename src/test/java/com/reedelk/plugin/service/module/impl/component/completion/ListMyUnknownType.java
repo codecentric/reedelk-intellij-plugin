@@ -14,7 +14,7 @@ public class ListMyUnknownType extends ArrayList<MyUnknownType> implements TrieP
 
     @Override
     public void register(Map<String, Trie> trieMap) {
-        Trie trie = new TrieDefault(ArrayList.class.getName(), MyUnknownType.class.getName());
+        Trie trie = new TrieImpl(ArrayList.class.getName(), MyUnknownType.class.getName());
         trieMap.put(ListMyUnknownType.class.getName(), trie);
     }
 }

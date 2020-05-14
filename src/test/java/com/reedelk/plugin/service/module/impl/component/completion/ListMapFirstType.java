@@ -14,7 +14,7 @@ public class ListMapFirstType extends ArrayList<MapFirstType> implements TriePro
 
     @Override
     public void register(Map<String, Trie> trieMap) {
-        Trie trie = new TrieDefault(ArrayList.class.getName(), MapFirstType.class.getName());
+        Trie trie = new TrieImpl(ArrayList.class.getName(), MapFirstType.class.getName());
         trieMap.put(ListMapFirstType.class.getName(), trie);
     }
 }

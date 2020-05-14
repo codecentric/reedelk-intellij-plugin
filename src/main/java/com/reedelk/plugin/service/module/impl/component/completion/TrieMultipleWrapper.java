@@ -5,20 +5,20 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-public class TrieWrapper implements Trie {
+public class TrieMultipleWrapper implements Trie {
 
     private final Collection<Trie> tries;
 
-    public TrieWrapper(List<Trie> tries) {
+    public TrieMultipleWrapper(List<Trie> tries) {
         this.tries = tries;
     }
 
-    public TrieWrapper(Trie ...tries) {
+    public TrieMultipleWrapper(Trie ...tries) {
         this.tries = Arrays.asList(tries);
     }
 
     @Override
-    public Collection<Suggestion> autocomplete(String word, TrieMapWrapper typeAndTrieMap) {
+    public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
         Collection<Suggestion> result = new HashSet<>();
         for (Trie trie : tries) {
             result.addAll(trie.autocomplete(word, typeAndTrieMap));

@@ -17,7 +17,7 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.runtime.component.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +46,7 @@ public class DiscoveryStrategyFactory {
 
     public static Optional<? extends ComponentOutputDescriptor> get(@NotNull Module module,
                                                                     @NotNull PlatformModuleService moduleService,
-                                                                    @NotNull TrieMapWrapper typeAndAndTries,
+                                                                    @NotNull TypeAndTries typeAndAndTries,
                                                                     @NotNull ComponentContext context,
                                                                     @NotNull GraphNode nodeToFindInputMessage) {
 
@@ -77,16 +77,16 @@ public class DiscoveryStrategyFactory {
         }
     }
 
-    private static DiscoveryStrategy get(Module module, PlatformModuleService moduleService, TrieMapWrapper typeAndAndTries, String componentFullyQualifiedName) {
+    private static DiscoveryStrategy get(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries, String componentFullyQualifiedName) {
         Class<? extends DiscoveryStrategy> rendererClazz =
                 DISCOVERY.getOrDefault(componentFullyQualifiedName, GENERIC_DISCOVERY);
         return instantiate(rendererClazz, module, moduleService, typeAndAndTries);
     }
 
-    private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, Module module, PlatformModuleService moduleService, TrieMapWrapper typeAndAndTries) {
+    private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
         try {
             return discoveryClazz
-                    .getConstructor(Module.class, PlatformModuleService.class, TrieMapWrapper.class)
+                    .getConstructor(Module.class, PlatformModuleService.class, TypeAndTries.class)
                     .newInstance(module, moduleService, typeAndAndTries);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException exception) {
             throw new PluginException("Could not instantiate discovery strategy class=" + discoveryClazz.getName(), exception);

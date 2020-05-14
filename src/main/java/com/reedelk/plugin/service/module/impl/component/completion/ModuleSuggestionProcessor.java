@@ -19,11 +19,11 @@ public class ModuleSuggestionProcessor {
     private static final Logger LOG = Logger.getInstance(ModuleSuggestionProcessor.class);
 
     private final Trie moduleGlobalTypes;
-    private final TrieMapWrapper allTypesMap; // Only used for lookup.
+    private final TypeAndTries allTypesMap; // Only used for lookup.
     private final Map<String, Trie> moduleTypes;
     private final Map<String, Trie> moduleSignatureTypes;
 
-    public ModuleSuggestionProcessor(@NotNull TrieMapWrapper allTypesMap,
+    public ModuleSuggestionProcessor(@NotNull TypeAndTries allTypesMap,
                                      @NotNull Trie moduleGlobalTypes,
                                      @NotNull Map<String, Trie> moduleTypes,
                                      @NotNull Map<String, Trie> moduleSignatureTypes) {
@@ -39,7 +39,7 @@ public class ModuleSuggestionProcessor {
         moduleDescriptor.getTypes().forEach(typeDescriptor -> {
             // We first must register all the tries and then the functions. Because one function
             // might depend on a trie of another type previously defined in the same module.
-            Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
+            Trie typeTrie = new TrieImpl(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
             moduleTypes.put(typeDescriptor.getType(), typeTrie);
         });
 
@@ -120,7 +120,7 @@ public class ModuleSuggestionProcessor {
     }
 
     private Trie createTrieFromScriptSignature(@NotNull ScriptSignatureDescriptor descriptor) {
-        Trie trie = new TrieDefault();
+        Trie trie = new TrieImpl();
         descriptor.getArguments().stream().map(argument -> {
             // Lookup the type: we want to make it nice to present in the autocompletion: List<Message> for example.
             String argumentType = argument.getArgumentType();

@@ -37,7 +37,7 @@ public class DynamicTypeUtils {
     // The dynamic types depend on the previous component output descriptor.
     // Note that there might be multiple dynamic types because a component
     // could have multiple outputs.
-    public static Collection<Suggestion> createDynamicSuggestion(TrieMapWrapper typeAndTrieMap, ComponentOutputDescriptor descriptor, Suggestion suggestion) {
+    public static Collection<Suggestion> createDynamicSuggestion(TypeAndTries typeAndTrieMap, ComponentOutputDescriptor descriptor, Suggestion suggestion) {
         return DynamicTypeUtils.from(suggestion, descriptor).stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .returnType(dynamicType)

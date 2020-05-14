@@ -36,7 +36,7 @@ public class PresentableTypeUtils {
         }
     }
 
-    public static String presentableTypeOf(Suggestion suggestion, String dynamicType, TrieMapWrapper typeAndTrieMap) {
+    public static String presentableTypeOf(Suggestion suggestion, String dynamicType, TypeAndTries typeAndTrieMap) {
         String originalType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(originalType)) {
             return MessageAttributes.class.getSimpleName(); // We keep the message attributes.

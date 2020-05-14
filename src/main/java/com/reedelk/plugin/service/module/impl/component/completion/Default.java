@@ -10,10 +10,10 @@ import static com.reedelk.plugin.service.module.impl.component.completion.Sugges
 
 public class Default {
 
-    public static final Trie UNKNOWN = new TrieDefault();
+    public static final Trie UNKNOWN = new TrieImpl();
 
     // Default script signature is message and context.
-    public static final Trie TRIE = new TrieDefault();
+    public static final Trie TRIE = new TrieImpl();
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .lookup("message")
@@ -34,7 +34,7 @@ public class Default {
         // TODO: Add lists, maps and so on ...
         public static void register(Map<String, Trie> trieMap) {
             // Init async
-            Trie trie = new TrieDefault();
+            Trie trie = new TrieImpl();
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
                     .lookup("each { it }")
                     .lookupDisplayValue("each")

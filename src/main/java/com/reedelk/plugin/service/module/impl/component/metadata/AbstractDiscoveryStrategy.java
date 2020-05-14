@@ -5,17 +5,17 @@ import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 
 import java.util.Optional;
 
 public abstract class AbstractDiscoveryStrategy implements DiscoveryStrategy {
 
     protected final PlatformModuleService moduleService;
-    protected final TrieMapWrapper typeAndAndTries;
+    protected final TypeAndTries typeAndAndTries;
     protected final Module module;
 
-    public AbstractDiscoveryStrategy(Module module, PlatformModuleService moduleService, TrieMapWrapper typeAndAndTries) {
+    public AbstractDiscoveryStrategy(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
         this.moduleService = moduleService;
         this.typeAndAndTries = typeAndAndTries;
         this.module = module;

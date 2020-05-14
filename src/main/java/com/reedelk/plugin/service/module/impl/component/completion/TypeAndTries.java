@@ -2,12 +2,12 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 
 import java.util.Map;
 
-public class TrieMapWrapper  {
+public class TypeAndTries {
 
     private final Map<String, Trie>[] typeAndTries;
 
     @SafeVarargs
-    public TrieMapWrapper(Map<String, Trie> ...typeAndTries) {
+    public TypeAndTries(Map<String, Trie> ...typeAndTries) {
         this.typeAndTries = typeAndTries;
     }
 

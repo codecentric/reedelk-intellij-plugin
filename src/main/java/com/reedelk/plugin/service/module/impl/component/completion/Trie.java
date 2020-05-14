@@ -12,5 +12,5 @@ public interface Trie {
 
     void insert(Suggestion suggestion);
 
-    Collection<Suggestion> autocomplete(String word, TrieMapWrapper typeAndTrieMap);
+    Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap);
 }

@@ -12,9 +12,9 @@ import static java.util.stream.Collectors.toList;
 
 public class CompletionFinder {
 
-    private final TrieMapWrapper typeAndTrieMap;
+    private final TypeAndTries typeAndTrieMap;
 
-    public CompletionFinder(TrieMapWrapper typeAndTrieMap) {
+    public CompletionFinder(TypeAndTries typeAndTrieMap) {
         this.typeAndTrieMap = typeAndTrieMap;
     }
 
@@ -53,7 +53,7 @@ public class CompletionFinder {
 
                 // If there is at least one exact match, we can move forward to the
                 // next token with the autocomplete.
-                current = new TrieWrapper(exactMatchTries);
+                current = new TrieMultipleWrapper(exactMatchTries);
             }
         }
 

@@ -28,7 +28,7 @@ import static java.util.stream.Collectors.toList;
 class PlatformComponentMetadataService implements PlatformModuleService {
 
     private final Module module;
-    private final TrieMapWrapper typeAndAndTries;
+    private final TypeAndTries typeAndAndTries;
     private final CompletionFinder completionFinder;
     private final OnComponentMetadataEvent onComponentMetadataEvent;
     private final ComponentInputDescriptorBuilder inputDescriptorBuilder;
@@ -36,7 +36,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
 
     public PlatformComponentMetadataService(@NotNull Module module,
                                             @NotNull CompletionFinder completionFinder,
-                                            @NotNull TrieMapWrapper typesMap,
+                                            @NotNull TypeAndTries typesMap,
                                             @NotNull PlatformComponentService componentService) {
         this.module = module;
         this.typeAndAndTries = typesMap;

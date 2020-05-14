@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ModuleSuggestionProcessorTest {
 
     private Trie moduleGlobalTypes;
-    private TrieMapWrapper allTypesMap;
+    private TypeAndTries allTypesMap;
     private Map<String, Trie> moduleTypes;
     private Map<String, Trie> moduleSignatureTypes;
 
@@ -30,9 +30,9 @@ class ModuleSuggestionProcessorTest {
     @BeforeEach
     void setUp() {
         moduleTypes = new HashMap<>();
-        moduleGlobalTypes = new TrieDefault();
+        moduleGlobalTypes = new TrieImpl();
         moduleSignatureTypes = new HashMap<>();
-        allTypesMap = new TrieMapWrapper(moduleTypes);
+        allTypesMap = new TypeAndTries(moduleTypes);
         processor = new ModuleSuggestionProcessor(
                 allTypesMap,
                 moduleGlobalTypes,

@@ -43,10 +43,10 @@ class CompletionFinderTest {
         MyAttributeType.initialize(tries);
 
         Suggestion message = createProperty("message", Message.class.getName());
-        messageRootTrie = new TrieDefault();
+        messageRootTrie = new TrieImpl();
         messageRootTrie.insert(message);
 
-        finder = new CompletionFinder(new TrieMapWrapper(tries));
+        finder = new CompletionFinder(new TypeAndTries(tries));
     }
 
     // -------------------------------- Tests for --------------------------------

@@ -19,7 +19,7 @@ public class MessageType implements TrieProvider {
 
     @Override
     public void register(Map<String, Trie> trieMap) {
-        Trie trie = new TrieDefault();
+        Trie trie = new TrieImpl();
         trie.insert(createFunction("payload", MessagePayload.class.getName()));
         trie.insert(createFunction("attributes", MessageAttributes.class.getName()));
         trieMap.put(Message.class.getName(), trie);

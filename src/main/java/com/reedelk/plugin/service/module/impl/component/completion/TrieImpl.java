@@ -7,19 +7,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class TrieDefault implements Trie {
+public class TrieImpl implements Trie {
 
     private final String extendsType;
     private final String listItemType;
     private TrieNode root;
 
-    public TrieDefault() {
+    public TrieImpl() {
         this.root = new TrieNode();
         this.extendsType = null;
         this.listItemType = null;
     }
 
-    public TrieDefault(String extendsType, String listItemType) {
+    public TrieImpl(String extendsType, String listItemType) {
         this.root = new TrieNode();
         this.listItemType = listItemType;
         this.extendsType = extendsType;
@@ -36,7 +36,7 @@ public class TrieDefault implements Trie {
     }
 
     @Override
-    public Collection<Suggestion> autocomplete(String word, TrieMapWrapper typeAndTrieMap) {
+    public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
         Set<Suggestion> autocomplete = autocomplete(word);
         addExtendsTypeSuggestions(this, typeAndTrieMap, word, autocomplete);
         return autocomplete;
@@ -96,7 +96,7 @@ public class TrieDefault implements Trie {
         return suggestions;
     }
 
-    private static void addExtendsTypeSuggestions(Trie current, TrieMapWrapper typeAndTrieMap, String token, Collection<Suggestion> suggestions) {
+    private static void addExtendsTypeSuggestions(Trie current, TypeAndTries typeAndTrieMap, String token, Collection<Suggestion> suggestions) {
         if (current != null && StringUtils.isNotBlank(current.extendsType())) {
             String extendsType = current.extendsType();
             Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType, Default.UNKNOWN);

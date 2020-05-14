@@ -14,7 +14,7 @@ public class ListMyItemType extends ArrayList<MyItemType> implements TrieProvide
 
     @Override
     public void register(Map<String, Trie> trieMap) {
-        Trie trie = new TrieDefault(ArrayList.class.getName(), MyItemType.class.getName());
+        Trie trie = new TrieImpl(ArrayList.class.getName(), MyItemType.class.getName());
         trieMap.put(ListMyItemType.class.getName(), trie);
     }
 }

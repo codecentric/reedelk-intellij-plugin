@@ -15,18 +15,18 @@ import java.util.Map;
 class PlatformCompletionService implements PlatformModuleService {
 
     // GLOBAL MODULE TYPES MAPs
-    private final Trie flowControlModuleGlobalTypes = new TrieDefault();
-    private final Trie mavenModulesGlobalTypes = new TrieDefault();
-    private final Trie currentModuleGlobalTypes = new TrieDefault();
-    private final TrieWrapper allGlobalTypes =
-            new TrieWrapper(flowControlModuleGlobalTypes, mavenModulesGlobalTypes, currentModuleGlobalTypes);
+    private final Trie flowControlModuleGlobalTypes = new TrieImpl();
+    private final Trie mavenModulesGlobalTypes = new TrieImpl();
+    private final Trie currentModuleGlobalTypes = new TrieImpl();
+    private final TrieMultipleWrapper allGlobalTypes =
+            new TrieMultipleWrapper(flowControlModuleGlobalTypes, mavenModulesGlobalTypes, currentModuleGlobalTypes);
 
     // LOCAL MODULE TYPES MAPs
     private final Map<String, Trie> flowControlTypes = new HashMap<>(); // Fully qualified name of the module.
     private final Map<String, Trie> mavenModulesTypes = new HashMap<>();
     private final Map<String, Trie> currentModuleTypes = new HashMap<>();
-    private final TrieMapWrapper allTypes =
-            new TrieMapWrapper(flowControlTypes, mavenModulesTypes, currentModuleTypes);
+    private final TypeAndTries allTypes =
+            new TypeAndTries(flowControlTypes, mavenModulesTypes, currentModuleTypes);
 
     // COMPONENT SCRIPT PROPERTY SIGNATURE -> TYPES MAPs (maps to a Trie: signature variables for the property are the roots)
     private final Map<String, Trie> flowControlSignatureTypes = new HashMap<>();

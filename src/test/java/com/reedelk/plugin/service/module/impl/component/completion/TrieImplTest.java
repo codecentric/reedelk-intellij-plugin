@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-class TrieDefaultTest {
+class TrieImplTest {
 
-    private TrieMapWrapper trieMapWrapper;
+    private TypeAndTries typeAndTries;
 
     @BeforeEach
     void setUp() {
-        trieMapWrapper = new TrieMapWrapper();
+        typeAndTries = new TypeAndTries();
     }
 
     @Test
@@ -30,11 +30,11 @@ class TrieDefaultTest {
                 .returnTypeDisplayValue(String.class.getSimpleName())
                 .build();
 
-        TrieDefault trie = new TrieDefault();
+        TrieImpl trie = new TrieImpl();
         trie.insert(suggestion1);
         trie.insert(suggestion2);
 
-        Collection<Suggestion> suggestions = trie.autocomplete("", trieMapWrapper);
+        Collection<Suggestion> suggestions = trie.autocomplete("", typeAndTries);
         PluginAssertion.assertThat(suggestions)
                 .hasSize(2);
     }
@@ -58,11 +58,11 @@ class TrieDefaultTest {
                 .returnTypeDisplayValue(String.class.getSimpleName())
                 .build();
 
-        TrieDefault trie = new TrieDefault();
+        TrieImpl trie = new TrieImpl();
         trie.insert(suggestion1);
         trie.insert(suggestion2);
 
-        Collection<Suggestion> suggestions = trie.autocomplete("", trieMapWrapper);
+        Collection<Suggestion> suggestions = trie.autocomplete("", typeAndTries);
         PluginAssertion.assertThat(suggestions)
                 .hasSize(2);
     }
