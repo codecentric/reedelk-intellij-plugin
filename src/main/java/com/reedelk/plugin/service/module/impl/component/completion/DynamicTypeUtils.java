@@ -42,8 +42,9 @@ public class DynamicTypeUtils {
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .returnType(dynamicType)
                         .lookup(suggestion.getLookup())
-                        .cursorOffset(suggestion.getCursorOffset())
                         .lookupDisplayValue(suggestion.getLookupDisplayValue())
+                        .tailText(suggestion.getTailText())
+                        .cursorOffset(suggestion.getCursorOffset())
                         .returnTypeDisplayValue(PresentableTypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
                         .build())
                 .collect(toList());

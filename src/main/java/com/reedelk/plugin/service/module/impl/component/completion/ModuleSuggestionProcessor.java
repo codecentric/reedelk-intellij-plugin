@@ -64,12 +64,14 @@ public class ModuleSuggestionProcessor {
             moduleGlobalTypes.insert(globalTypeProperty);
         }
 
-        final Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
+        Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
+        moduleTypes.put(typeDescriptor.getType(), typeTrie);
 
         // Functions for the type
         typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
             Suggestion functionSuggestion = Suggestion.create(FUNCTION)
-                    .lookup(typeFunctionDescriptor.getName())
+                    .lookup(typeFunctionDescriptor.getName() + "()")
+                    .lookupDisplayValue(typeFunctionDescriptor.getName())
                     // We remove from the signature the method name: the tail text will be (String param1, int param2) and so on.
                     .tailText(typeFunctionDescriptor.getSignature().substring(typeFunctionDescriptor.getName().length()))
                     .cursorOffset(typeFunctionDescriptor.getCursorOffset())
@@ -87,8 +89,6 @@ public class ModuleSuggestionProcessor {
                     .build();
             typeTrie.insert(propertySuggestion);
         });
-
-        moduleTypes.put(typeDescriptor.getType(), typeTrie);
     }
 
     private void populate(PropertyDescriptor propertyDescriptor, String parentComponentPropertyPath) {
