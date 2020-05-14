@@ -3,12 +3,14 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
+import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 import static com.intellij.icons.AllIcons.Actions.EditSource;
@@ -57,8 +59,10 @@ public class DynamicValueField extends DisposablePanel {
                     switchComponent(inputFieldContainer, scriptContainer);
                     listener.onChange(inputFieldAdapter.getValue());
                 });
-
         DisposablePanel container = ContainerFactory.createLabelNextToComponentWithOuterBorder(codeIcon, editorComponent);
+        Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
+        codeIcon.setPreferredSize(new Dimension(25, 22));
+        codeIcon.setBorder(iconOutside);
         return new FixedHeightPanel(container);
     }
 

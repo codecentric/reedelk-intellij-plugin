@@ -8,8 +8,6 @@ import javax.swing.*;
 
 public class Suggestion {
 
-    private final String presentableType;
-
     public enum Type {
         FUNCTION,
         PROPERTY
@@ -17,8 +15,9 @@ public class Suggestion {
 
     private final String name;
     private final String typeText;
-    private final String presentableText;
     private final String lookupString;
+    private final String presentableType;
+    private final String presentableText;
 
     private final Type type;
     private final Icon icon;
@@ -66,6 +65,10 @@ public class Suggestion {
         return PresentableTypeUtils.from(typeText); // TODO : Fixme!
     }
 
+    public String tailText() {
+        return null;
+    }
+
     public Icon icon() {
         return icon;
     }
@@ -77,27 +80,25 @@ public class Suggestion {
     public static class Builder {
 
         private final Type type;
-        private String presentableText;
-        private String lookupString;
-        private String name;
-        private int cursorOffset;
         private final Icon icon;
+
+        private int cursorOffset;
+
+        private String name;
         private String typeText;
+        private String lookupString;
+        private String presentableText;
         private String presentableType;
 
+        // TODO: It is pointless to use an icon here...
         public Builder(Type type) {
             this.type = type;
             this.icon = Type.FUNCTION.equals(type) ?
                     AllIcons.Nodes.Method : AllIcons.Nodes.Variable;
         }
 
-        public Builder withPresentableText(String presentableText) {
-            this.presentableText = presentableText;
-            return this;
-        }
-
-        public Builder withLookupString(String lookupString) {
-            this.lookupString = lookupString;
+        public Builder withName(String name) {
+            this.name = name;
             return this;
         }
 
@@ -106,18 +107,23 @@ public class Suggestion {
             return this;
         }
 
-        public Builder withPresentableType(String presentableType) {
-            this.presentableType = presentableType;
-            return this;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
         public Builder withCursorOffset(int cursorOffset) {
             this.cursorOffset = cursorOffset;
+            return this;
+        }
+
+        public Builder withLookupString(String lookupString) {
+            this.lookupString = lookupString;
+            return this;
+        }
+
+        public Builder withPresentableText(String presentableText) {
+            this.presentableText = presentableText;
+            return this;
+        }
+
+        public Builder withPresentableType(String presentableType) {
+            this.presentableType = presentableType;
             return this;
         }
 

@@ -47,7 +47,7 @@ public class Icons {
         private Script() {
         }
 
-        public static final Icon Code = AllIcons.Json.Object;
+        public static final Icon Code = IconLoader.getIcon("/icons/DynamicValue.svg");
         public static final Icon ScriptLoadError = IconLoader.getIcon("/icons/ScriptLoadError.png");
     }
 

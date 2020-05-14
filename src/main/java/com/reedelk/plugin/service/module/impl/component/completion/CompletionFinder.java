@@ -103,9 +103,9 @@ public class CompletionFinder {
                 .map(s -> PresentableTypeUtils.from(s.typeText()))
                 .collect(toList());
         return Suggestion.create(suggestion.getType())
+                .withName(suggestion.name())
                 .withLookupString(suggestion.lookupString())
                 .withPresentableText(suggestion.presentableText())
-                .withName(suggestion.name())
                 .withPresentableType(String.join(",", possibleTypes))
                 .build();
     }

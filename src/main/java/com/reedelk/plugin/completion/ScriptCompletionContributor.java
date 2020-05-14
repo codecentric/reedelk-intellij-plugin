@@ -28,7 +28,7 @@ public class ScriptCompletionContributor extends CompletionContributor {
         ComponentContext context = editor.getUserData(COMPONENT_CONTEXT);
         String componentPropertyPath = editor.getUserData(COMPONENT_PROPERTY_PATH);
 
-        if (project != null && context != null && isNotBlank(moduleName)) {
+        if (project != null && context != null && isNotBlank(moduleName) && isNotBlank(componentPropertyPath)) {
 
             Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
             if (module == null) return;

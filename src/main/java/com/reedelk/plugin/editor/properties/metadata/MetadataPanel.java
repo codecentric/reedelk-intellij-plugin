@@ -36,6 +36,7 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
         loadingPanel.setOpaque(true);
         loadingPanel.setBackground(JBColor.WHITE);
 
+        // TODO: Extract strings
         MetadataPanelHeader metadataPanelHeader = new MetadataPanelHeader(
                 "Input Message", this::showInputMessage,
                 "Expected Payload", this::showExpectedInput);
