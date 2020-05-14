@@ -42,7 +42,7 @@ public class CompletionFinder {
                 for (Suggestion suggestion : suggestions) {
                     // We only need to find exact matches. If there are no exact matches,
                     // we can not move forward with the autocomplete.
-                    if (suggestion.getLookup().equals(token)) {
+                    if (suggestion.getLookupDisplayValue().equals(token)) {
                         Trie trie = typeAndTrieMap.getOrDefault(suggestion.getReturnType(), Default.UNKNOWN);
                         exactMatchTries.add(trie);
                     }
@@ -104,6 +104,7 @@ public class CompletionFinder {
                 .collect(toList());
         return Suggestion.create(suggestion.getType())
                 .lookup(suggestion.getLookup())
+                .tailText(suggestion.getTailText())
                 .lookupDisplayValue(suggestion.getLookupDisplayValue())
                 .returnTypeDisplayValue(String.join(",", possibleTypes))
                 .build();

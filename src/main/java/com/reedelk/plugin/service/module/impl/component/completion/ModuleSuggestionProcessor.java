@@ -11,8 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
 import static java.lang.String.format;
 
 public class ModuleSuggestionProcessor {
@@ -67,7 +66,7 @@ public class ModuleSuggestionProcessor {
     private void populate(TypeDescriptor typeDescriptor, Trie typeTrie) {
         // Global root type
         if (typeDescriptor.isGlobal()) {
-            Suggestion globalTypeProperty = Suggestion.create(PROPERTY)
+            Suggestion globalTypeProperty = Suggestion.create(GLOBAL)
                     .lookup(typeDescriptor.getDisplayName())
                     .returnType(typeDescriptor.getType())
                     .returnTypeDisplayValue(PresentableTypeUtils.from(typeDescriptor.getType()))

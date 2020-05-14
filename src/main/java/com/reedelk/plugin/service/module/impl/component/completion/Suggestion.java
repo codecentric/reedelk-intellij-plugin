@@ -1,6 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.intellij.icons.AllIcons;
+import com.reedelk.plugin.commons.Icons;
 import com.reedelk.runtime.api.commons.Preconditions;
 
 import javax.swing.*;
@@ -61,8 +61,9 @@ public class Suggestion {
 
     public enum Type {
 
-        FUNCTION(AllIcons.Nodes.Function),
-        PROPERTY(AllIcons.Nodes.Variable);
+        FUNCTION(Icons.Script.Function),
+        PROPERTY(Icons.Script.Property),
+        GLOBAL(Icons.Script.Global);
 
         public final Icon icon;
 

@@ -47,6 +47,9 @@ public class Icons {
         private Script() {
         }
 
+        public static final Icon Function = AllIcons.Nodes.Method;
+        public static final Icon Property = AllIcons.Nodes.Property;
+        public static final Icon Global = IconLoader.getIcon("/icons/GroovyClass.svg");
         public static final Icon Code = IconLoader.getIcon("/icons/DynamicValue.svg");
         public static final Icon ScriptLoadError = IconLoader.getIcon("/icons/ScriptLoadError.png");
     }
