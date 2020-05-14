@@ -82,7 +82,7 @@ class PlatformCompletionService implements PlatformModuleService {
     }
 
     public void registerCurrent(ModuleDescriptor moduleDescriptor) {
-        ModuleSuggestionProcessor processor = new ModuleSuggestionProcessor(
+        SuggestionProcessor processor = new SuggestionProcessor(
                 allTypes,
                 currentModuleGlobalTypes,
                 currentModuleTypes,
@@ -91,7 +91,7 @@ class PlatformCompletionService implements PlatformModuleService {
     }
 
     public void registerMaven(ModuleDescriptor moduleDescriptor) {
-        ModuleSuggestionProcessor processor = new ModuleSuggestionProcessor(
+        SuggestionProcessor processor = new SuggestionProcessor(
                 allTypes,
                 mavenModulesGlobalTypes,
                 mavenModulesTypes,
@@ -103,7 +103,7 @@ class PlatformCompletionService implements PlatformModuleService {
         // Init Language Core types such as List, Map, ArrayList, HashMap and so on.
         Default.Types.register(flowControlTypes);
 
-        ModuleSuggestionProcessor processor = new ModuleSuggestionProcessor(
+        SuggestionProcessor processor = new SuggestionProcessor(
                 allTypes,
                 flowControlModuleGlobalTypes,
                 flowControlTypes,

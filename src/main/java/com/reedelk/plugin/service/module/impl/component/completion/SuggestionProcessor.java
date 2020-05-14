@@ -13,19 +13,19 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
-public class ModuleSuggestionProcessor {
+public class SuggestionProcessor {
 
-    private static final Logger LOG = Logger.getInstance(ModuleSuggestionProcessor.class);
+    private static final Logger LOG = Logger.getInstance(SuggestionProcessor.class);
 
     private final Trie moduleGlobalTypes;
-    private final TypeAndTries allTypesMap; // Only used for lookup.
+    private final TypeAndTries allTypesMap; // Only used for lookup, never updated.
     private final Map<String, Trie> moduleTypes;
     private final Map<String, Trie> moduleSignatureTypes;
 
-    public ModuleSuggestionProcessor(@NotNull TypeAndTries allTypesMap,
-                                     @NotNull Trie moduleGlobalTypes,
-                                     @NotNull Map<String, Trie> moduleTypes,
-                                     @NotNull Map<String, Trie> moduleSignatureTypes) {
+    public SuggestionProcessor(@NotNull TypeAndTries allTypesMap,
+                               @NotNull Trie moduleGlobalTypes,
+                               @NotNull Map<String, Trie> moduleTypes,
+                               @NotNull Map<String, Trie> moduleSignatureTypes) {
         this.allTypesMap = allTypesMap;
         this.moduleTypes = moduleTypes;
         this.moduleGlobalTypes = moduleGlobalTypes;

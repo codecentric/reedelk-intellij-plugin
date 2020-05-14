@@ -20,14 +20,14 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ModuleSuggestionProcessorTest {
+class SuggestionProcessorTest {
 
     private Trie moduleGlobalTypes;
     private TypeAndTries allTypesMap;
     private Map<String, Trie> moduleTypes;
     private Map<String, Trie> moduleSignatureTypes;
 
-    private ModuleSuggestionProcessor processor;
+    private SuggestionProcessor processor;
 
     @BeforeEach
     void setUp() {
@@ -35,7 +35,7 @@ class ModuleSuggestionProcessorTest {
         moduleGlobalTypes = new TrieImpl();
         moduleSignatureTypes = new HashMap<>();
         allTypesMap = new TypeAndTries(moduleTypes);
-        processor = new ModuleSuggestionProcessor(
+        processor = new SuggestionProcessor(
                 allTypesMap,
                 moduleGlobalTypes,
                 moduleTypes,
