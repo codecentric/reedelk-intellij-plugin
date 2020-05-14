@@ -65,7 +65,7 @@ public class TrieImpl implements Trie {
         }
 
         if (current.isSuggestion()) {
-            return current.getSuggestions();
+            return new HashSet<>(current.getSuggestions());
         } else {
             String prefix = lastWordIndex != -1 ? token.substring(lastWordIndex + 1) : token;
             return traversal(current, suggestions, prefix);
