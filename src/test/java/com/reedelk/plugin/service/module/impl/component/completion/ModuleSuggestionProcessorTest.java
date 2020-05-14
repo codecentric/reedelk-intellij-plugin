@@ -46,11 +46,11 @@ class ModuleSuggestionProcessorTest {
     void shouldPopulateCorrectlyTrieForType() {
         // Given
         String type = "com.test.internal.type.FileType";
-        TypePropertyDescriptor idProperty = createStringProperty("id");
-        TypePropertyDescriptor ageProperty = createIntProperty("age");
-        TypeFunctionDescriptor method1 = createMethod("method1", "method1(String key)", String.class.getName(), 1);
-        TypeFunctionDescriptor method2 = createMethod("method2", "method2()", int.class.getName());
-        TypeDescriptor fileType = createType(type, asList(idProperty, ageProperty), asList(method1, method2));
+        TypePropertyDescriptor idProperty = createStringPropertyDescriptor("id");
+        TypePropertyDescriptor ageProperty = createIntPropertyDescriptor("age");
+        TypeFunctionDescriptor method1 = createFunctionDescriptor("method1", "method1(String key)", String.class.getName(), 1);
+        TypeFunctionDescriptor method2 = createFunctionDescriptor("method2", "method2()", int.class.getName());
+        TypeDescriptor fileType = createTypeDescriptor(type, asList(idProperty, ageProperty), asList(method1, method2));
 
         ModuleDescriptor descriptor = new ModuleDescriptor();
         descriptor.setName("module-xyz");

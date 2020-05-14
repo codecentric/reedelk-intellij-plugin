@@ -18,7 +18,7 @@ public class SuggestionFactory {
 
     static Suggestion create(@NotNull TypeDescriptor typeDescriptor) {
         checkState(typeDescriptor.isGlobal(), "expected global type but it was not (%s).", typeDescriptor.getType());
-        String returnType = typeDescriptor.getType();
+        String returnType = returnTypeOrDefault(typeDescriptor.getType());
         // The global type token is always the simple class name or the display
         // name if it was bound to the script engine with a different name.
         String globalToken = StringUtils.isNotBlank(typeDescriptor.getDisplayName()) ?
@@ -33,7 +33,7 @@ public class SuggestionFactory {
     }
 
     static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull TypeFunctionDescriptor descriptor) {
-        String returnType = descriptor.getReturnType();
+        String returnType = returnTypeOrDefault(descriptor.getReturnType());
         String presentableReturnType = typeDisplayValueOf(allTypesMap, returnType);
         return Suggestion.create(FUNCTION)
                 .tailText(descriptor.getSignature().substring(descriptor.getName().length())) // We remove from the signature the method name: the tail text will be (String param1, int param2) and so on.
@@ -46,7 +46,7 @@ public class SuggestionFactory {
     }
 
     static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull TypePropertyDescriptor descriptor) {
-        String propertyType = descriptor.getType();
+        String propertyType = returnTypeOrDefault(descriptor.getType());
         String presentableReturnType = typeDisplayValueOf(allTypesMap, propertyType);
         return Suggestion.create(PROPERTY)
                 .returnTypeDisplayValue(presentableReturnType)
@@ -56,7 +56,7 @@ public class SuggestionFactory {
     }
 
     static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull ScriptSignatureArgument descriptor) {
-        String argumentType = descriptor.getArgumentType();
+        String argumentType = returnTypeOrDefault(descriptor.getArgumentType());
         String argumentPresentableType = typeDisplayValueOf(allTypesMap, argumentType);
         return Suggestion.create(PROPERTY)
                 .returnTypeDisplayValue(argumentPresentableType)
@@ -72,5 +72,11 @@ public class SuggestionFactory {
         return StringUtils.isNotBlank(typeTrie.displayName()) ?
                 typeTrie.displayName() :
                 PresentableTypeUtils.from(type, typeTrie);
+    }
+
+    private static final String VOID = "void";
+
+    private static String returnTypeOrDefault(String type) {
+        return StringUtils.isBlank(type) ? VOID : type;
     }
 }

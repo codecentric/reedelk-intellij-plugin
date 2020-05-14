@@ -103,23 +103,13 @@ public class Suggestion {
             return this;
         }
 
-        public Builder insertValue(String insertValue) {
-            this.insertValue = insertValue;
-            return this;
-        }
-
-        public Builder lookupToken(String lookupToken) {
-            this.lookupToken = lookupToken;
-            return this;
-        }
-
         public Builder returnType(String returnType) {
             this.returnType = returnType;
             return this;
         }
 
-        public Builder returnTypeDisplayValue(String returnTypeDisplayValue) {
-            this.returnTypeDisplayValue = returnTypeDisplayValue;
+        public Builder insertValue(String insertValue) {
+            this.insertValue = insertValue;
             return this;
         }
 
@@ -128,11 +118,22 @@ public class Suggestion {
             return this;
         }
 
+        public Builder lookupToken(String lookupToken) {
+            this.lookupToken = lookupToken;
+            return this;
+        }
+
+        public Builder returnTypeDisplayValue(String returnTypeDisplayValue) {
+            this.returnTypeDisplayValue = returnTypeDisplayValue;
+            return this;
+        }
+
         public Suggestion build() {
+            checkNotNull(type, "type");
+            checkNotNull(returnType, "returnType");
             checkNotNull(insertValue, "insertValue");
-            if (lookupToken == null) {
-                lookupToken = insertValue;
-            }
+            if (lookupToken == null) lookupToken = insertValue;
+
             return new Suggestion(
                     type,
                     insertValue,

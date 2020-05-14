@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type;
-import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createProperty;
+import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createPropertySuggestion;
 import static com.reedelk.plugin.service.module.impl.component.completion.TypesTestUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -43,7 +43,7 @@ class CompletionFinderTest {
         MessageAttributeType.initialize(tries);
         MyAttributeType.initialize(tries);
 
-        Suggestion message = createProperty("message", Message.class.getName());
+        Suggestion message = createPropertySuggestion("message", Message.class.getName());
         messageRootTrie = new TrieImpl();
         messageRootTrie.insert(message);
 

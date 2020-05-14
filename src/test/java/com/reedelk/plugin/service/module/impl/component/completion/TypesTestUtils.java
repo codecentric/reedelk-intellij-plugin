@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createFunction;
-import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createProperty;
+import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createFunctionSuggestion;
+import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createPropertySuggestion;
 
 public class TypesTestUtils {
 
@@ -30,10 +30,10 @@ public class TypesTestUtils {
         @Override
         public void register(Map<String, Trie> trieMap) {
             Trie trie = new TrieImpl();
-            trie.insert(createFunction("size", int.class.getName()));
-            trie.insert(createFunction("each", Void.class.getName()));
-            trie.insert(createFunction("eachWithIndex", Void.class.getName()));
-            trie.insert(createFunction("find", Object.class.getName()));
+            trie.insert(createFunctionSuggestion("size", int.class.getName()));
+            trie.insert(createFunctionSuggestion("each", Void.class.getName()));
+            trie.insert(createFunctionSuggestion("eachWithIndex", Void.class.getName()));
+            trie.insert(createFunctionSuggestion("find", Object.class.getName()));
             trieMap.put(Map.class.getName(), trie);
             // Hashmap for objects extending from it.
             trieMap.put(HashMap.class.getName(), new TrieImpl(Map.class.getName(), null, null));
@@ -101,8 +101,8 @@ public class TypesTestUtils {
         @Override
         public void register(Map<String, Trie> trieMap) {
             Trie trie = new TrieImpl(HashMap.class.getName(), null, null);
-            trie.insert(createProperty("firstProperty1", String.class.getName()));
-            trie.insert(createProperty("firstProperty2", String.class.getName()));
+            trie.insert(createPropertySuggestion("firstProperty1", String.class.getName()));
+            trie.insert(createPropertySuggestion("firstProperty2", String.class.getName()));
             trieMap.put(MapFirstType.class.getName(), trie);
         }
     }
@@ -119,8 +119,8 @@ public class TypesTestUtils {
         @Override
         public void register(Map<String, Trie> trieMap) {
             Trie trie = new TrieImpl(HashMap.class.getName(), null, null);
-            trie.insert(createProperty("secondProperty1", String.class.getName()));
-            trie.insert(createProperty("secondProperty2", long.class.getName()));
+            trie.insert(createPropertySuggestion("secondProperty1", String.class.getName()));
+            trie.insert(createPropertySuggestion("secondProperty2", long.class.getName()));
             trieMap.put(MapSecondType.class.getName(), trie);
         }
     }
@@ -137,7 +137,7 @@ public class TypesTestUtils {
         @Override
         public void register(Map<String, Trie> trieMap) {
             Trie trie = new TrieImpl();
-            trie.insert(createProperty("component", String.class.getName()));
+            trie.insert(createPropertySuggestion("component", String.class.getName()));
             trieMap.put(MessageAttributes.class.getName(), trie);
         }
     }
@@ -154,8 +154,8 @@ public class TypesTestUtils {
         @Override
         public void register(Map<String, Trie> trieMap) {
             Trie trie = new TrieImpl(MessageAttributes.class.getName(), null, null);
-            trie.insert(createProperty("attributeProperty1", String.class.getName()));
-            trie.insert(createProperty("attributeProperty2", long.class.getName()));
+            trie.insert(createPropertySuggestion("attributeProperty1", String.class.getName()));
+            trie.insert(createPropertySuggestion("attributeProperty2", long.class.getName()));
             trieMap.put(MyAttributeType.class.getName(), trie);
         }
     }
@@ -172,7 +172,7 @@ public class TypesTestUtils {
         @Override
         public void register(Map<String, Trie> trieMap) {
             Trie trie = new TrieImpl();
-            trie.insert(SuggestionTestUtils.createFunction("method1", String.class.getName()));
+            trie.insert(SuggestionTestUtils.createFunctionSuggestion("method1", String.class.getName()));
             trieMap.put(MyItemType.class.getName(), trie);
         }
     }
@@ -192,8 +192,8 @@ public class TypesTestUtils {
         @Override
         public void register(Map<String, Trie> trieMap) {
             Trie trie = new TrieImpl();
-            trie.insert(createFunction("payload", MessagePayload.class.getName()));
-            trie.insert(createFunction("attributes", MessageAttributes.class.getName()));
+            trie.insert(createFunctionSuggestion("payload", MessagePayload.class.getName()));
+            trie.insert(createFunctionSuggestion("attributes", MessageAttributes.class.getName()));
             trieMap.put(Message.class.getName(), trie);
         }
     }
