@@ -8,7 +8,7 @@ import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.Default;
 import com.reedelk.plugin.service.module.impl.component.completion.Trie;
-import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
 import com.reedelk.plugin.service.module.impl.component.metadata.MultipleMessages;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public ForEachComponentDiscovery(Module module, PlatformModuleService moduleService, TrieMapWrapper typeAndAndTries) {
+    public ForEachComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
         super(module, moduleService, typeAndAndTries);
     }
 

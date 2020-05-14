@@ -19,7 +19,7 @@ import com.reedelk.plugin.graph.utils.FindScopes;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.SubflowService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 import com.reedelk.runtime.commons.JsonParser;
@@ -31,7 +31,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public FlowReferenceComponentDiscovery(Module module, PlatformModuleService moduleService, TrieMapWrapper typeAndAndTries) {
+    public FlowReferenceComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
         super(module, moduleService, typeAndAndTries);
     }
 
