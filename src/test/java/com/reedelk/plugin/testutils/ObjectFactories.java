@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class ObjectFactories {
 
-
     public static ObjectDescriptor createTypeObjectDescriptor(String fullyQualifiedName, List<PropertyDescriptor> propertiesDescriptor, Shared shared) {
         ObjectDescriptor descriptor = new ObjectDescriptor();
         descriptor.setTypeFullyQualifiedName(fullyQualifiedName);

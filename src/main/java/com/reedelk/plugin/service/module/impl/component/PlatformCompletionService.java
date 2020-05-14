@@ -1,5 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
@@ -12,7 +13,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 class PlatformCompletionService implements PlatformModuleService {
+
+    private static final Logger LOG = Logger.getInstance(PlatformCompletionService.class);
 
     // GLOBAL MODULE TYPES MAPs
     private final Trie flowControlModuleGlobalTypes = new TrieImpl();
@@ -82,12 +87,20 @@ class PlatformCompletionService implements PlatformModuleService {
     }
 
     public void registerCurrent(ModuleDescriptor moduleDescriptor) {
-        SuggestionProcessor processor = new SuggestionProcessor(
-                allTypes,
-                currentModuleGlobalTypes,
-                currentModuleTypes,
-                currentModuleSignatureTypes);
-        processor.populate(moduleDescriptor);
+        try {
+            SuggestionProcessor processor = new SuggestionProcessor(
+                    allTypes,
+                    currentModuleGlobalTypes,
+                    currentModuleTypes,
+                    currentModuleSignatureTypes);
+            processor.populate(moduleDescriptor);
+        } catch (Exception exception) {
+            String error = message("module.completion.suggestion.processor.module.error",
+                    moduleDescriptor.getName(),
+                    moduleDescriptor.getDisplayName());
+            LOG.warn(error, exception);
+            // Exception is not rethrown on purpose.
+        }
     }
 
     public void registerMaven(ModuleDescriptor moduleDescriptor) {
@@ -98,8 +111,12 @@ class PlatformCompletionService implements PlatformModuleService {
                     mavenModulesTypes,
                     mavenModulesSignatureTypes);
             processor.populate(moduleDescriptor);
-        }  catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            String error = message("module.completion.suggestion.processor.module.error",
+                    moduleDescriptor.getName(),
+                    moduleDescriptor.getDisplayName());
+            LOG.warn(error, exception);
+            // Exception is not rethrown on purpose.
         }
     }
 
@@ -114,8 +131,13 @@ class PlatformCompletionService implements PlatformModuleService {
                     flowControlTypes,
                     flowControlSignatureTypes);
             processor.populate(moduleDescriptor);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            String error = message("module.completion.suggestion.processor.module.error",
+                    moduleDescriptor.getName(),
+                    moduleDescriptor.getDisplayName());
+            LOG.error(error, exception);
+            // This is a fatal error and it must be fixed.
+            throw exception;
         }
     }
 }
