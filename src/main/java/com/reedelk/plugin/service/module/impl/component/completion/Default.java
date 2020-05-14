@@ -10,6 +10,8 @@ import static com.reedelk.plugin.service.module.impl.component.completion.Sugges
 
 public class Default {
 
+    public static final String DEFAULT_RETURN_TYPE = "void";
+
     public static final Trie UNKNOWN = new TrieImpl();
 
     // Default script signature is message and context.

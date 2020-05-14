@@ -84,7 +84,7 @@ class CompletionFinderTest {
         // Then
         assertThat(suggestions).hasSize(1);
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<TestTypes$MyItemType>");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<TypesTestUtils$MyItemType>");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -102,7 +102,7 @@ class CompletionFinderTest {
         // Then
         assertThat(suggestions).hasSize(1);
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<TestTypes$MyUnknownType>");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<TypesTestUtils$MyUnknownType>");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -120,7 +120,7 @@ class CompletionFinderTest {
         assertThat(suggestions).hasSize(1);
 
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<TestTypes$MapFirstType>");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<TypesTestUtils$MapFirstType>");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -138,7 +138,7 @@ class CompletionFinderTest {
         assertThat(suggestions).hasSize(1);
 
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("TestTypes$MapFirstType");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("TypesTestUtils$MapFirstType");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -156,7 +156,7 @@ class CompletionFinderTest {
         assertThat(suggestions).hasSize(1);
 
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("TestTypes$MapFirstType,byte[],String");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("TypesTestUtils$MapFirstType,byte[],String");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 

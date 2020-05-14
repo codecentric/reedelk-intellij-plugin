@@ -106,6 +106,8 @@ public class CompletionFinder {
                 .insertValue(suggestion.getInsertValue())
                 .tailText(suggestion.getTailText())
                 .lookupToken(suggestion.getLookupToken())
+                // The return type for 'flattened' suggestions is never used because this suggestion is only created for a terminal token.
+                .returnType(Default.DEFAULT_RETURN_TYPE)
                 .returnTypeDisplayValue(String.join(",", possibleTypes))
                 .build();
     }

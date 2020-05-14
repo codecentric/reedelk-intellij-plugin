@@ -8,6 +8,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Default.DEFAULT_RETURN_TYPE;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
@@ -74,9 +75,7 @@ public class SuggestionFactory {
                 PresentableTypeUtils.from(type, typeTrie);
     }
 
-    private static final String VOID = "void";
-
     private static String returnTypeOrDefault(String type) {
-        return StringUtils.isBlank(type) ? VOID : type;
+        return StringUtils.isBlank(type) ? DEFAULT_RETURN_TYPE : type;
     }
 }
