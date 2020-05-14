@@ -36,6 +36,8 @@ public class ModuleSuggestionProcessor {
 
     public void populate(@NotNull ModuleDescriptor moduleDescriptor) {
         // Defined module types
+        // First create all the tries for the type.
+        
         moduleDescriptor.getTypes().forEach(type -> {
             try {
                 populate(type);
@@ -64,6 +66,8 @@ public class ModuleSuggestionProcessor {
             moduleGlobalTypes.insert(globalTypeProperty);
         }
 
+        // We first must register all the tries and then the functions. Because one function
+        // might depend on a trie of another type previously defined in the same module.
         Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
         moduleTypes.put(typeDescriptor.getType(), typeTrie);
 
@@ -76,7 +80,7 @@ public class ModuleSuggestionProcessor {
                     .tailText(typeFunctionDescriptor.getSignature().substring(typeFunctionDescriptor.getName().length()))
                     .cursorOffset(typeFunctionDescriptor.getCursorOffset())
                     .returnType(typeFunctionDescriptor.getReturnType())
-                    // TODO: Presentable return type!???
+                    .returnType(PresentableTypeUtils.from(typeFunctionDescriptor.getReturnType()))
                     .build();
             typeTrie.insert(functionSuggestion);
         });
