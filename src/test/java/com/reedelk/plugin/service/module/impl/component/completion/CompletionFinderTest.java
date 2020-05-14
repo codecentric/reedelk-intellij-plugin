@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type;
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createProperty;
-import static com.reedelk.plugin.service.module.impl.component.completion.TestTypes.*;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypesTestUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;

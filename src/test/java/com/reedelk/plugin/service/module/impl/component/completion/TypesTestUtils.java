@@ -12,7 +12,7 @@ import java.util.Map;
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createFunction;
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createProperty;
 
-public class TestTypes {
+public class TypesTestUtils {
 
     public interface TrieProvider {
         void register(Map<String, Trie> trieMap);
