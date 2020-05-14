@@ -16,13 +16,13 @@ public class Default {
     public static final Trie TRIE = new TrieImpl();
     static {
         Suggestion message = Suggestion.create(PROPERTY)
-                .lookup("message")
+                .insertValue("message")
                 .returnType(Message.class.getName())
                 .returnTypeDisplayValue(PresentableTypeUtils.from(Message.class.getName()))
                 .build();
         TRIE.insert(message);
         Suggestion context = Suggestion.create(PROPERTY)
-                .lookup("context")
+                .insertValue("context")
                 .returnType(FlowContext.class.getName())
                 .returnTypeDisplayValue(PresentableTypeUtils.from(FlowContext.class.getName()))
                 .build();
@@ -36,18 +36,18 @@ public class Default {
             // Init async
             Trie trie = new TrieImpl();
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                    .lookup("each { it }")
-                    .lookupDisplayValue("each")
+                    .insertValue("each { it }")
+                    .lookupToken("each")
                     .cursorOffset(2)
                     .build());
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                    .lookup("eachWithIndex { it, i ->  }")
-                    .lookupDisplayValue("eachWithIndex")
+                    .insertValue("eachWithIndex { it, i ->  }")
+                    .lookupToken("eachWithIndex")
                     .cursorOffset(2)
                     .build());
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                    .lookup("collect { it }")
-                    .lookupDisplayValue("collect")
+                    .insertValue("collect { it }")
+                    .lookupToken("collect")
                     .cursorOffset(2)
                     .build());
             trieMap.put(ArrayList.class.getName(), trie);

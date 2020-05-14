@@ -37,6 +37,7 @@ class PlatformCompletionService implements PlatformModuleService {
     private final PlatformComponentMetadataService componentMetadataService;
 
     public PlatformCompletionService(Module module, PlatformComponentService componentTracker) {
+
         this.completionFinder = new CompletionFinder(allTypes);
         this.componentMetadataService = new PlatformComponentMetadataService(module, completionFinder, allTypes, componentTracker);
     }

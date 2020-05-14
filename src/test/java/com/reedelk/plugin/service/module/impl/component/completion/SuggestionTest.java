@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
 class SuggestionTest {
 

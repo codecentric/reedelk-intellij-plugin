@@ -1,30 +1,37 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.runtime.api.commons.Preconditions;
 
 import javax.swing.*;
+
+import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
 
 public class Suggestion {
 
     private final Type type;
+    // the tail text shown next to the lookup token (e.g: function arguments)
     private final String tailText;
-    private final String lookup;
-    private final String lookupDisplayValue;
+    // the value inserted in the editor when the user presses enter.
+    private final String insertValue;
+    // the value shown in the suggestion popup
+    private final String lookupToken;
+    // the fully qualified type of the return type of the suggestion
     private final String returnType;
+    // the display value to be shown in the suggestion popup of the return value
     private final String returnTypeDisplayValue;
+    // for functions taking arguments, the cursor could be placed between ( and ) by setting an offset to the cursor.
     private final int cursorOffset;
 
     private Suggestion(Type type,
-                       String lookup,
-                       String lookupDisplayValue,
+                       String insertValue,
+                       String lookupToken,
                        String returnType,
                        String returnTypeDisplayValue,
                        String tailText,
                        int cursorOffset) {
         this.type = type;
-        this.lookup = lookup;
-        this.lookupDisplayValue = lookupDisplayValue;
+        this.insertValue = insertValue;
+        this.lookupToken = lookupToken;
         this.returnType = returnType;
         this.returnTypeDisplayValue = returnTypeDisplayValue;
         this.cursorOffset = cursorOffset;
@@ -39,12 +46,12 @@ public class Suggestion {
         return tailText;
     }
 
-    public String getLookup() {
-        return lookup;
+    public String getInsertValue() {
+        return insertValue;
     }
 
-    public String getLookupDisplayValue() {
-        return lookupDisplayValue;
+    public String getLookupToken() {
+        return lookupToken;
     }
 
     public String getReturnType() {
@@ -80,8 +87,8 @@ public class Suggestion {
 
         private Type type;
         private String tailText;
-        private String lookup;
-        private String lookupDisplayValue;
+        private String insertValue;
+        private String lookupToken;
         private String returnType;
         private String returnTypeDisplayValue;
         private int cursorOffset;
@@ -96,13 +103,13 @@ public class Suggestion {
             return this;
         }
 
-        public Builder lookup(String lookup) {
-            this.lookup = lookup;
+        public Builder insertValue(String insertValue) {
+            this.insertValue = insertValue;
             return this;
         }
 
-        public Builder lookupDisplayValue(String lookupDisplayValue) {
-            this.lookupDisplayValue = lookupDisplayValue;
+        public Builder lookupToken(String lookupToken) {
+            this.lookupToken = lookupToken;
             return this;
         }
 
@@ -122,14 +129,14 @@ public class Suggestion {
         }
 
         public Suggestion build() {
-            Preconditions.checkNotNull(lookup, "lookupString");
-            if (lookupDisplayValue == null) {
-                lookupDisplayValue = lookup;
+            checkNotNull(insertValue, "insertValue");
+            if (lookupToken == null) {
+                lookupToken = insertValue;
             }
             return new Suggestion(
                     type,
-                    lookup,
-                    lookupDisplayValue,
+                    insertValue,
+                    lookupToken,
                     returnType,
                     returnTypeDisplayValue,
                     tailText,

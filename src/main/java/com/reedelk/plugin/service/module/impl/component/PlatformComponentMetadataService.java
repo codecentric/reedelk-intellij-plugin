@@ -129,7 +129,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, Trie typeTrie) {
         return find(typeTrie, output)
                 .stream()
-                .sorted(Comparator.comparing(Suggestion::getLookup))
+                .sorted(Comparator.comparing(Suggestion::getInsertValue))
                 .map(mapper(output))
                 .collect(toList());
     }
@@ -145,11 +145,11 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 // The list type display is: List<FileType> : FileType
                 String typeDisplay = PresentableTypeUtils.formatListDisplayType(type, typeTrie);
                 return asTypeDTO(output, listItemType, listItemTrie,
-                        suggestion.getLookup(),
+                        suggestion.getInsertValue(),
                         typeDisplay);
             } else {
                 return asTypeDTO(output, type, typeTrie,
-                        suggestion.getLookup(),
+                        suggestion.getInsertValue(),
                         suggestion.getReturnTypeDisplayValue());
             }
         };

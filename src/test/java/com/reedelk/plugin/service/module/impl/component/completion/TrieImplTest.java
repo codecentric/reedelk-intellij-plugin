@@ -19,13 +19,13 @@ class TrieImplTest {
     void shouldFindMultipleSuggestionsByPrefix() {
         // Given
         Suggestion suggestion1 = Suggestion.create(Suggestion.Type.PROPERTY)
-                .lookup("property1")
+                .insertValue("property1")
                 .returnType(String.class.getName())
                 .returnTypeDisplayValue(String.class.getSimpleName())
                 .build();
 
         Suggestion suggestion2 = Suggestion.create(Suggestion.Type.PROPERTY)
-                .lookup("property2")
+                .insertValue("property2")
                 .returnType(String.class.getName())
                 .returnTypeDisplayValue(String.class.getSimpleName())
                 .build();
@@ -43,16 +43,16 @@ class TrieImplTest {
     void shouldAddMultipleSuggestionsWithDifferentSignature() {
         // Given
         Suggestion suggestion1 = Suggestion.create(Suggestion.Type.FUNCTION)
-                .lookup("method1()")
-                .lookupDisplayValue("method1")
+                .insertValue("method1()")
+                .lookupToken("method1")
                 .tailText("()")
                 .returnType(String.class.getName())
                 .returnTypeDisplayValue(String.class.getSimpleName())
                 .build();
 
         Suggestion suggestion2 = Suggestion.create(Suggestion.Type.FUNCTION)
-                .lookup("method1()")
-                .lookupDisplayValue("method1")
+                .insertValue("method1()")
+                .lookupToken("method1")
                 .tailText("(String key)")
                 .returnType(String.class.getName())
                 .returnTypeDisplayValue(String.class.getSimpleName())

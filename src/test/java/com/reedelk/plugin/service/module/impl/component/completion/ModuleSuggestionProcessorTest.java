@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +43,7 @@ class ModuleSuggestionProcessorTest {
     }
 
     @Test
-    void shouldPopulateCorrectlyModuleTrieForType() {
+    void shouldPopulateCorrectlyTrieForType() {
         // Given
         String type = "com.test.internal.type.FileType";
         TypePropertyDescriptor idProperty = createStringProperty("id");
@@ -64,11 +66,9 @@ class ModuleSuggestionProcessorTest {
         Collection<Suggestion> suggestions = typeTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
         assertThat(suggestions).hasSize(4);
         PluginAssertion.assertThat(suggestions)
-                .contains("", "");
-    }
-
-    private void assertExistSuggestion(Collection<Suggestion> suggestions, Suggestion target) {
-
+                .contains(PROPERTY, "id", "id", String.class.getName(), String.class.getSimpleName())
+                .contains(PROPERTY, "age", "age", int.class.getName(), int.class.getSimpleName())
+                .contains(FUNCTION, "method1()", "method1", String.class.getName(), String.class.getSimpleName());
     }
 
     private TypePropertyDescriptor createStringProperty(String name) {

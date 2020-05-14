@@ -4,8 +4,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.ScriptSignatureArgument;
 import com.reedelk.module.descriptor.model.property.ScriptSignatureDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
+import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
+import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import org.jetbrains.annotations.NotNull;
 
@@ -66,35 +69,19 @@ public class ModuleSuggestionProcessor {
     private void populate(TypeDescriptor typeDescriptor, Trie typeTrie) {
         // Global root type
         if (typeDescriptor.isGlobal()) {
-            Suggestion globalTypeProperty = Suggestion.create(GLOBAL)
-                    .lookup(typeDescriptor.getDisplayName())
-                    .returnType(typeDescriptor.getType())
-                    .returnTypeDisplayValue(PresentableTypeUtils.from(typeDescriptor.getType()))
-                    .build();
-            moduleGlobalTypes.insert(globalTypeProperty);
+            Suggestion globalTypeSuggestion = createGlobal(typeDescriptor);
+            moduleGlobalTypes.insert(globalTypeSuggestion);
         }
 
         // Functions for the type
         typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
-            Suggestion functionSuggestion = Suggestion.create(FUNCTION)
-                    .lookup(typeFunctionDescriptor.getName() + "()")
-                    .lookupDisplayValue(typeFunctionDescriptor.getName())
-                    // We remove from the signature the method name: the tail text will be (String param1, int param2) and so on.
-                    .tailText(typeFunctionDescriptor.getSignature().substring(typeFunctionDescriptor.getName().length()))
-                    .cursorOffset(typeFunctionDescriptor.getCursorOffset())
-                    .returnType(typeFunctionDescriptor.getReturnType())
-                    .returnTypeDisplayValue(PresentableTypeUtils.from(typeFunctionDescriptor.getReturnType()))
-                    .build();
+            Suggestion functionSuggestion = createFunction(allTypesMap, typeFunctionDescriptor);
             typeTrie.insert(functionSuggestion);
         });
 
         // Properties for the type
         typeDescriptor.getProperties().forEach(typePropertyDescriptor -> {
-            Suggestion propertySuggestion = Suggestion.create(PROPERTY)
-                    .lookup(typePropertyDescriptor.getName())
-                    .returnType(typePropertyDescriptor.getType())
-                    .returnTypeDisplayValue(PresentableTypeUtils.from(typePropertyDescriptor.getType()))
-                    .build();
+            Suggestion propertySuggestion = createProperty(allTypesMap, typePropertyDescriptor);
             typeTrie.insert(propertySuggestion);
         });
     }
@@ -121,17 +108,56 @@ public class ModuleSuggestionProcessor {
 
     private Trie createTrieFromScriptSignature(@NotNull ScriptSignatureDescriptor descriptor) {
         Trie trie = new TrieImpl();
-        descriptor.getArguments().stream().map(argument -> {
-            // Lookup the type: we want to make it nice to present in the autocompletion: List<Message> for example.
-            String argumentType = argument.getArgumentType();
-            Trie typeTrie = allTypesMap.getOrDefault(argumentType, Default.UNKNOWN);
-            String argumentPresentableType = PresentableTypeUtils.from(argumentType, typeTrie);
-            return Suggestion.create(PROPERTY)
-                    .lookup(argument.getArgumentName())
-                    .returnType(argument.getArgumentType())
-                    .returnTypeDisplayValue(argumentPresentableType)
-                    .build();
-        }).forEach(trie::insert);
+        descriptor.getArguments()
+                .stream()
+                .map(scriptSignatureArgument -> createProperty(allTypesMap, scriptSignatureArgument))
+                .forEach(trie::insert);
         return trie;
+    }
+
+    static Suggestion createGlobal(@NotNull TypeDescriptor typeDescriptor) {
+        return Suggestion.create(GLOBAL)
+                .insertValue(typeDescriptor.getDisplayName())
+                .returnType(typeDescriptor.getType())
+                .returnTypeDisplayValue(PresentableTypeUtils.from(typeDescriptor.getDisplayName()))
+                .build();
+    }
+
+    static Suggestion createFunction(@NotNull TypeAndTries allTypesMap, @NotNull TypeFunctionDescriptor descriptor) {
+        String returnType = descriptor.getReturnType();
+        String presentableReturnType = returnTypeDisplayValueFrom(allTypesMap, returnType);
+        return Suggestion.create(FUNCTION)
+                .tailText(descriptor.getSignature().substring(descriptor.getName().length())) // We remove from the signature the method name: the tail text will be (String param1, int param2) and so on.
+                .returnTypeDisplayValue(presentableReturnType)
+                .cursorOffset(descriptor.getCursorOffset())
+                .insertValue(descriptor.getName() + "()") // For functions we insert functionName()
+                .lookupToken(descriptor.getName())
+                .returnType(returnType)
+                .build();
+    }
+
+    static Suggestion createProperty(@NotNull TypeAndTries allTypesMap, @NotNull TypePropertyDescriptor descriptor) {
+        String propertyType = descriptor.getType();
+        String presentableReturnType = returnTypeDisplayValueFrom(allTypesMap, propertyType);
+        return Suggestion.create(PROPERTY)
+                .returnTypeDisplayValue(presentableReturnType)
+                .insertValue(descriptor.getName())
+                .returnType(propertyType)
+                .build();
+    }
+
+    static Suggestion createProperty(@NotNull TypeAndTries allTypesMap, @NotNull ScriptSignatureArgument descriptor) {
+        String argumentType = descriptor.getArgumentType();
+        String argumentPresentableType = returnTypeDisplayValueFrom(allTypesMap, argumentType);
+        return Suggestion.create(PROPERTY)
+                .returnTypeDisplayValue(argumentPresentableType)
+                .insertValue(descriptor.getArgumentName())
+                .returnType(argumentType)
+                .build();
+    }
+
+    private static String returnTypeDisplayValueFrom(@NotNull TypeAndTries allTypesMap, @NotNull String type) {
+        Trie typeTrie = allTypesMap.getOrDefault(type, Default.UNKNOWN);
+        return PresentableTypeUtils.from(type, typeTrie);
     }
 }

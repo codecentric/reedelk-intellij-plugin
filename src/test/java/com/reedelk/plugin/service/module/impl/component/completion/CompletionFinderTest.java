@@ -281,7 +281,7 @@ class CompletionFinderTest {
     }
 
     private void assertExistSuggestionWithName(Collection<Suggestion> suggestions, String expectedName) {
-        boolean found = suggestions.stream().anyMatch(suggestion -> expectedName.equals(suggestion.getLookup()));
+        boolean found = suggestions.stream().anyMatch(suggestion -> expectedName.equals(suggestion.getInsertValue()));
         assertThat(found)
                 .withFailMessage("Could not find suggestion with expected name=<%s>", expectedName)
                 .isTrue();

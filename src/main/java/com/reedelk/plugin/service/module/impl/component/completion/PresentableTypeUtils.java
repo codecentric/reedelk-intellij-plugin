@@ -14,7 +14,7 @@ public class PresentableTypeUtils {
     }
 
     // Converts a fully qualified name type e.g. com.my.component.MyType
-    //  to a simple name: MyType.
+    //  to a simple name: MyType. // This is wrong should always go through the method below.
     public static String from(String originalType) {
         if (originalType == null) return StringUtils.EMPTY;
         String[] splits = originalType.split(","); // might be multiple types

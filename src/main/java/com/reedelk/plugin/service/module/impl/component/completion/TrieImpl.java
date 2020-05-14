@@ -28,7 +28,7 @@ public class TrieImpl implements Trie {
     @Override
     public void insert(Suggestion suggestion) {
         TrieNode current = root;
-        String word = suggestion.getLookup();
+        String word = suggestion.getInsertValue();
         for (int i = 0; i < word.length(); i++) {
             current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
         }
