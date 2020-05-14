@@ -91,23 +91,31 @@ class PlatformCompletionService implements PlatformModuleService {
     }
 
     public void registerMaven(ModuleDescriptor moduleDescriptor) {
-        SuggestionProcessor processor = new SuggestionProcessor(
-                allTypes,
-                mavenModulesGlobalTypes,
-                mavenModulesTypes,
-                mavenModulesSignatureTypes);
-        processor.populate(moduleDescriptor);
+        try {
+            SuggestionProcessor processor = new SuggestionProcessor(
+                    allTypes,
+                    mavenModulesGlobalTypes,
+                    mavenModulesTypes,
+                    mavenModulesSignatureTypes);
+            processor.populate(moduleDescriptor);
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void registerFlowControl(ModuleDescriptor moduleDescriptor) {
-        // Init Language Core types such as List, Map, ArrayList, HashMap and so on.
-        Default.Types.register(flowControlTypes);
+        try {
+            // Init Language Core types such as List, Map, ArrayList, HashMap and so on.
+            Default.Types.register(allTypes, flowControlTypes);
 
-        SuggestionProcessor processor = new SuggestionProcessor(
-                allTypes,
-                flowControlModuleGlobalTypes,
-                flowControlTypes,
-                flowControlSignatureTypes);
-        processor.populate(moduleDescriptor);
+            SuggestionProcessor processor = new SuggestionProcessor(
+                    allTypes,
+                    flowControlModuleGlobalTypes,
+                    flowControlTypes,
+                    flowControlSignatureTypes);
+            processor.populate(moduleDescriptor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

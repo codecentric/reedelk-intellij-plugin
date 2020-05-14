@@ -67,7 +67,7 @@ public class SuggestionFactory {
     }
 
     @Nullable
-    private static String typeDisplayValueOf(@NotNull TypeAndTries allTypesMap, @Nullable String type) {
+    public static String typeDisplayValueOf(@NotNull TypeAndTries allTypesMap, @Nullable String type) {
         if (type == null) return null;
         Trie typeTrie = allTypesMap.getOrDefault(type, Default.UNKNOWN);
         return StringUtils.isNotBlank(typeTrie.displayName()) ?

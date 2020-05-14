@@ -8,9 +8,11 @@ import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Optional;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
@@ -47,7 +49,7 @@ public class UnknownComponentPropertiesRenderer extends AbstractComponentPropert
                     String displayName = propertyDescriptor.getDisplayName();
                     String propertyValue = componentData.get(propertyDescriptor.getName());
 
-                    JBLabel label = new JBLabel(propertyValue);
+                    JBLabel label = new JBLabel(Optional.ofNullable(propertyValue).orElse(StringUtils.EMPTY));
                     label.setBorder(JBUI.Borders.empty(BORDER_TOP_BOTTOM,0));
                     FormBuilder.get()
                             .addLabel(displayName, propertiesPanel)

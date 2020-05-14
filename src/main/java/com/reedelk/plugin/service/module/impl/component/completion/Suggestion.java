@@ -130,7 +130,7 @@ public class Suggestion {
 
         public Suggestion build() {
             checkNotNull(type, "type");
-            checkNotNull(returnType, "returnType");
+            checkNotNull(returnType, "returnType (" + insertValue + ")");
             checkNotNull(insertValue, "insertValue");
             if (lookupToken == null) lookupToken = insertValue;
 
