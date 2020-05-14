@@ -1,28 +1,27 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TrieNode {
 
-    private Suggestion suggestion;
+    private Set<Suggestion> suggestions = new HashSet<>();
     private Map<Character, TrieNode> children = new HashMap<>();
 
     public boolean isSuggestion() {
-        return (children.isEmpty() && suggestion != null) ||
-                (children.containsKey('.') && suggestion != null) ||
-                suggestion != null;
+        return (children.isEmpty() && !suggestions.isEmpty()) ||
+                (children.containsKey('.') && !suggestions.isEmpty()) ||
+                !suggestions.isEmpty();
     }
 
     public Map<Character, TrieNode> getChildren() {
         return children;
     }
 
-    public Suggestion getSuggestion() {
-        return suggestion;
+    public Set<Suggestion> getSuggestions() {
+        return Collections.unmodifiableSet(suggestions);
     }
 
-    public void setSuggestion(Suggestion suggestion) {
-        this.suggestion = suggestion;
+    public void addSuggestion(Suggestion suggestion) {
+        this.suggestions.add(suggestion);
     }
 }

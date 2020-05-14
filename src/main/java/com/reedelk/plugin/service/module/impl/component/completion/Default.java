@@ -18,11 +18,13 @@ public class Default {
         Suggestion message = Suggestion.create(PROPERTY)
                 .lookup("message")
                 .returnType(Message.class.getName())
+                .returnTypeDisplayValue(PresentableTypeUtils.from(Message.class.getName()))
                 .build();
         TRIE.insert(message);
         Suggestion context = Suggestion.create(PROPERTY)
                 .lookup("context")
                 .returnType(FlowContext.class.getName())
+                .returnTypeDisplayValue(PresentableTypeUtils.from(FlowContext.class.getName()))
                 .build();
         TRIE.insert(context);
     }

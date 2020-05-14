@@ -35,12 +35,20 @@ public class ModuleSuggestionProcessor {
     }
 
     public void populate(@NotNull ModuleDescriptor moduleDescriptor) {
-        // Defined module types
+
         // First create all the tries for the type.
-        
-        moduleDescriptor.getTypes().forEach(type -> {
+        moduleDescriptor.getTypes().forEach(typeDescriptor -> {
+            // We first must register all the tries and then the functions. Because one function
+            // might depend on a trie of another type previously defined in the same module.
+            Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
+            moduleTypes.put(typeDescriptor.getType(), typeTrie);
+        });
+
+        // Then populate Global type, functions and properties for each type.
+        moduleDescriptor.getTypes().forEach(typeDescriptor -> {
             try {
-                populate(type);
+                Trie typeTrie = moduleTypes.get(typeDescriptor.getType());
+                populate(typeDescriptor, typeTrie);
             } catch (Exception exception) {
                 String errorMessage = format("Could not populate types for module descriptor=[%s], cause=[%s]", moduleDescriptor.getName(), exception.getMessage());
                 LOG.warn(errorMessage, exception);
@@ -56,20 +64,16 @@ public class ModuleSuggestionProcessor {
         });
     }
 
-    private void populate(TypeDescriptor typeDescriptor) {
+    private void populate(TypeDescriptor typeDescriptor, Trie typeTrie) {
         // Global root type
         if (typeDescriptor.isGlobal()) {
             Suggestion globalTypeProperty = Suggestion.create(PROPERTY)
                     .lookup(typeDescriptor.getDisplayName())
                     .returnType(typeDescriptor.getType())
+                    .returnTypeDisplayValue(PresentableTypeUtils.from(typeDescriptor.getType()))
                     .build();
             moduleGlobalTypes.insert(globalTypeProperty);
         }
-
-        // We first must register all the tries and then the functions. Because one function
-        // might depend on a trie of another type previously defined in the same module.
-        Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
-        moduleTypes.put(typeDescriptor.getType(), typeTrie);
 
         // Functions for the type
         typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
@@ -80,7 +84,7 @@ public class ModuleSuggestionProcessor {
                     .tailText(typeFunctionDescriptor.getSignature().substring(typeFunctionDescriptor.getName().length()))
                     .cursorOffset(typeFunctionDescriptor.getCursorOffset())
                     .returnType(typeFunctionDescriptor.getReturnType())
-                    .returnType(PresentableTypeUtils.from(typeFunctionDescriptor.getReturnType()))
+                    .returnTypeDisplayValue(PresentableTypeUtils.from(typeFunctionDescriptor.getReturnType()))
                     .build();
             typeTrie.insert(functionSuggestion);
         });
@@ -90,6 +94,7 @@ public class ModuleSuggestionProcessor {
             Suggestion propertySuggestion = Suggestion.create(PROPERTY)
                     .lookup(typePropertyDescriptor.getName())
                     .returnType(typePropertyDescriptor.getType())
+                    .returnTypeDisplayValue(PresentableTypeUtils.from(typePropertyDescriptor.getType()))
                     .build();
             typeTrie.insert(propertySuggestion);
         });
@@ -123,9 +128,9 @@ public class ModuleSuggestionProcessor {
             Trie typeTrie = allTypesMap.getOrDefault(argumentType, Default.UNKNOWN);
             String argumentPresentableType = PresentableTypeUtils.from(argumentType, typeTrie);
             return Suggestion.create(PROPERTY)
+                    .lookup(argument.getArgumentName())
                     .returnType(argument.getArgumentType())
                     .returnTypeDisplayValue(argumentPresentableType)
-                    .lookup(argument.getArgumentName())
                     .build();
         }).forEach(trie::insert);
         return trie;

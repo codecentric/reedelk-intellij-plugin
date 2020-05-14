@@ -4,6 +4,7 @@ import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
 import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
+import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,6 +63,8 @@ class ModuleSuggestionProcessorTest {
 
         Collection<Suggestion> suggestions = typeTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
         assertThat(suggestions).hasSize(4);
+        PluginAssertion.assertThat(suggestions)
+                .contains("", "");
     }
 
     private void assertExistSuggestion(Collection<Suggestion> suggestions, Suggestion target) {

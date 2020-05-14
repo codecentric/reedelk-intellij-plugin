@@ -2,7 +2,10 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.runtime.api.commons.StringUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class TrieDefault implements Trie {
 
@@ -29,7 +32,7 @@ public class TrieDefault implements Trie {
         for (int i = 0; i < word.length(); i++) {
             current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
         }
-        current.setSuggestion(suggestion);
+        current.addSuggestion(suggestion);
     }
 
     @Override
@@ -60,7 +63,7 @@ public class TrieDefault implements Trie {
         }
 
         if (current.isSuggestion()) {
-            return Collections.singleton(current.getSuggestion());
+            return current.getSuggestions();
         } else {
             String prefix = lastWordIndex != -1 ? token.substring(lastWordIndex + 1) : token;
             return traversal(current, suggestions, prefix);
@@ -83,15 +86,15 @@ public class TrieDefault implements Trie {
         this.root = new TrieNode();
     }
 
-    private Set<Suggestion> traversal(TrieNode start, Set<Suggestion> suggestion, String current) {
+    private Set<Suggestion> traversal(TrieNode start, Set<Suggestion> suggestions, String current) {
         if (start.isSuggestion()) {
-            suggestion.add(start.getSuggestion());
+            suggestions.addAll(start.getSuggestions());
         }
         start.getChildren().forEach((character, trieNode) -> {
             String newCurrent = current + character;
-            traversal(trieNode, suggestion, newCurrent);
+            traversal(trieNode, suggestions, newCurrent);
         });
-        return suggestion;
+        return suggestions;
     }
 
     private static void addExtendsTypeSuggestions(Trie current, TrieMapWrapper typeAndTrieMap, String token, Collection<Suggestion> suggestions) {
