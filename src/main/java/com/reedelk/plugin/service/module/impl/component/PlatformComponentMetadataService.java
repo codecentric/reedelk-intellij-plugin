@@ -45,10 +45,10 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     public void componentMetadataOf(@NotNull ComponentContext context) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
             try {
-                ComponentMetadataActualInputDTO actualInputDTO = outputDescriptorBuilder.build(context);
-                ComponentMetadataExpectedInputDTO expectedInputDTO = inputDescriptorBuilder.build(context);
-                ComponentMetadataDTO componentMetadataDTO = new ComponentMetadataDTO(actualInputDTO, expectedInputDTO);
-                onComponentMetadataEvent.onComponentMetadataUpdated(componentMetadataDTO);
+                ComponentMetadataActualInputDTO actualInput = outputDescriptorBuilder.build(context);
+                ComponentMetadataExpectedInputDTO expectedInput = inputDescriptorBuilder.build(context);
+                ComponentMetadataDTO componentMetadata = new ComponentMetadataDTO(actualInput, expectedInput);
+                onComponentMetadataEvent.onComponentMetadataUpdated(componentMetadata);
 
             } catch (Exception exception) {
                 String componentFullyQualifiedName = context.node().componentData().getFullyQualifiedName();
