@@ -19,18 +19,6 @@ public class TypeUtils {
     private TypeUtils() {
     }
 
-    // Converts a fully qualified type name to a simple name, e.g: com.my.component.MyType > MyType.
-    public static String toSimpleName(String type) {
-        if (type == null) return EMPTY;
-        String[] splits = type.split(","); // might be multiple types
-        List<String> tmp = new ArrayList<>();
-        for (String split : splits) {
-            String[] segments = split.split("\\.");
-            tmp.add(segments[segments.length - 1]);
-        }
-        return String.join(",", tmp);
-    }
-
     @NotNull
     public static String toSimpleName(@Nullable String type, @NotNull Trie typeTrie) {
         if (type == null) {
@@ -76,5 +64,17 @@ public class TypeUtils {
     @NotNull
     public static String returnTypeOrDefault(String type) {
         return isNotBlank(type) ? type : DEFAULT_RETURN_TYPE;
+    }
+
+    // Converts a fully qualified type name to a simple name, e.g: com.my.component.MyType > MyType.
+    static String toSimpleName(String type) {
+        if (type == null) return EMPTY;
+        String[] splits = type.split(","); // might be multiple types
+        List<String> tmp = new ArrayList<>();
+        for (String split : splits) {
+            String[] segments = split.split("\\.");
+            tmp.add(segments[segments.length - 1]);
+        }
+        return String.join(",", tmp);
     }
 }

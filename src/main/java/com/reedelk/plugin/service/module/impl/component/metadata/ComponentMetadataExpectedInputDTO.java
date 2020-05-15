@@ -1,13 +1,11 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import java.util.List;
-
 public class ComponentMetadataExpectedInputDTO {
 
     private final String description;
-    private final List<String> payload;
+    private final String payload;
 
-    public ComponentMetadataExpectedInputDTO(List<String> payload, String description) {
+    public ComponentMetadataExpectedInputDTO(String payload, String description) {
         this.payload = payload;
         this.description = description;
     }
@@ -16,7 +14,7 @@ public class ComponentMetadataExpectedInputDTO {
         return description;
     }
 
-    public List<String> getPayload() {
+    public String getPayload() {
         return payload;
     }
 }

@@ -42,9 +42,9 @@ class PlatformCompletionService implements PlatformModuleService {
     private final CompletionFinder completionFinder;
     private final PlatformComponentMetadataService componentMetadataService;
 
-    public PlatformCompletionService(Module module, PlatformComponentService componentTracker) {
+    public PlatformCompletionService(Module module, PlatformModuleService moduleService) {
         this.completionFinder = new CompletionFinder(allTypes);
-        this.componentMetadataService = new PlatformComponentMetadataService(module, completionFinder, allTypes, componentTracker);
+        this.componentMetadataService = new PlatformComponentMetadataService(module, moduleService, completionFinder, allTypes);
     }
 
     @Override

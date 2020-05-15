@@ -46,7 +46,7 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
         this.module = module;
         this.publisher = messageBus.syncPublisher(Topics.COMPONENTS_UPDATE_EVENTS);
         this.componentTracker = new PlatformComponentService();
-        this.platformCompletionService = new PlatformCompletionService(module, componentTracker);
+        this.platformCompletionService = new PlatformCompletionService(module, this);
 
         // We load the modules in the following order:
         // 1. flow-control module (e.g flow-ref, router, fork): these components are immutable.
