@@ -104,7 +104,7 @@ public class DiscoveryStrategyFactory {
         }
     }
 
-    private static DiscoveryStrategy get(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries, String componentFullyQualifiedName) {
+    public static DiscoveryStrategy get(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries, String componentFullyQualifiedName) {
         Class<? extends DiscoveryStrategy> rendererClazz =
                 DISCOVERY.getOrDefault(componentFullyQualifiedName, GENERIC_DISCOVERY);
         return instantiate(rendererClazz, module, moduleService, typeAndAndTries);

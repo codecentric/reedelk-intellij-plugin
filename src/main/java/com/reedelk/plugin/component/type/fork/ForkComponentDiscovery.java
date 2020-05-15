@@ -8,11 +8,12 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategy;
+import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
 import com.reedelk.plugin.service.module.impl.component.metadata.MultipleMessages;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
 
@@ -35,11 +36,16 @@ public class ForkComponentDiscovery extends GenericComponentDiscovery {
             MultipleMessages descriptor = new MultipleMessages();
             return Optional.of(descriptor);
         } else {
+            // TODO: Compplete me
             // For each predecessor we should compute the component output descriptor... and merge all the attributes
             Set<String> attributes = new HashSet<>();
             Set<String> payloads = new HashSet<>();
             for (GraphNode node : predecessors) {
-                discover(context, node).ifPresent((Consumer<ComponentOutputDescriptor>) componentOutputDescriptor -> {
+                String nodeFullyQualifiedName = node.componentData().getFullyQualifiedName();
+                DiscoveryStrategy strategy =
+                        DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, nodeFullyQualifiedName);
+
+                strategy.compute(context, node).ifPresent(componentOutputDescriptor -> {
                     // Add all the attributes
                     List<String> predecessorAttributes = componentOutputDescriptor.getAttributes();
                     attributes.addAll(predecessorAttributes);
@@ -52,8 +58,7 @@ public class ForkComponentDiscovery extends GenericComponentDiscovery {
             ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
 
             outputDescriptor.setAttributes(attributes.isEmpty() ?
-                    singletonList(MessageAttributes.class.getName()) :
-                    new ArrayList<>(attributes));
+                    singletonList(MessageAttributes.class.getName()) : new ArrayList<>(attributes));
 
             // TODO: If I have a payload of the same type? or if different types?
             outputDescriptor.setPayload(singletonList(List.class.getName()));
