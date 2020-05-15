@@ -9,17 +9,17 @@ import java.util.List;
 
 public class SuggestionTestUtils {
 
-    public static Suggestion createFunctionSuggestion(String lookup, String returnType) {
+    public static Suggestion createFunctionSuggestion(String insertValue, String returnType) {
         return Suggestion.create(Suggestion.Type.FUNCTION)
+                .insertValue(insertValue)
                 .returnType(returnType)
-                .insertValue(lookup)
                 .build();
     }
 
-    public static Suggestion createPropertySuggestion(String lookup, String returnType) {
+    public static Suggestion createPropertySuggestion(String insertValue, String returnType) {
         return Suggestion.create(Suggestion.Type.PROPERTY)
+                .insertValue(insertValue)
                 .returnType(returnType)
-                .insertValue(lookup)
                 .build();
     }
 
