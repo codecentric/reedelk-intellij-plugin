@@ -17,6 +17,7 @@ import static com.reedelk.plugin.service.module.impl.component.completion.Sugges
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,5 +71,25 @@ class SuggestionProcessorTest {
                 .contains(PROPERTY, "age", "age", int.class.getName(), int.class.getSimpleName())
                 .contains(FUNCTION, "method1()", "method1", String.class.getName(), String.class.getSimpleName())
                 .contains(FUNCTION, "method2()", "method2", int.class.getName(), int.class.getSimpleName());
+    }
+
+    @Test
+    void shouldPopulateCorrectlyAllModuleGlobalTypes() {
+        // Given
+        String type = "com.test.internal.type.FileType";
+        TypeFunctionDescriptor method1 = createFunctionDescriptor("method1", "method1(String key)", String.class.getName(), 1);
+        TypeDescriptor fileType = createTypeDescriptor(type, emptyList(), singletonList(method1));
+        fileType.setGlobal(true);
+
+        ModuleDescriptor descriptor = new ModuleDescriptor();
+        descriptor.setName("module-xyz");
+        descriptor.setTypes(singletonList(fileType));
+
+        // When
+        processor.populate(descriptor);
+
+        // Then
+        Collection<Suggestion> suggestions = moduleGlobalTypes.autocomplete(StringUtils.EMPTY, allTypesMap);
+        assertThat(suggestions).hasSize(1);
     }
 }
