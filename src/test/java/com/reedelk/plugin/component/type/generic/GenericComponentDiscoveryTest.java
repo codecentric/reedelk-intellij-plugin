@@ -6,6 +6,7 @@ import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
+import com.reedelk.plugin.fixture.ComponentRoot;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
@@ -156,6 +157,31 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
         assertThat(actualOutputDescriptor.getDescription()).isEqualTo("My description"); // description from component 1
         assertThat(actualOutputDescriptor.getAttributes()).isEqualTo("com.test.MyOtherAttributes"); // attributes from component 2
         assertThat(actualOutputDescriptor.getPayload()).isEqualTo(singletonList(String.class.getName())); // payload from component 1
+    }
+
+    @Test
+    void shouldReturnDefaultDescriptorWhenPreviousIsRootAndPayloadIsPreviousComponent() {
+        // Given
+        ComponentDescriptor previousDescriptor =
+                createComponentDescriptor("com.test.MyAttributes", "My description", ComponentOutput.PreviousComponent.class.getName());
+        doReturn(previousDescriptor)
+                .when(moduleService)
+                .componentDescriptorOf(ComponentRoot.class.getName());
+
+
+        ComponentContext componentContext = new ComponentContext(graph, componentNode1);
+
+        // When
+        Optional<? extends ComponentOutputDescriptor> maybeActualOutput =
+                discovery.compute(componentContext, root);
+
+        // Then
+        assertThat(maybeActualOutput).isNotPresent();
+
+        ComponentOutputDescriptor actualOutputDescriptor = maybeActualOutput.get();
+        assertThat(actualOutputDescriptor.getDescription()).isEqualTo("My description");
+        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo("com.test.MyAttributes");
+        assertThat(actualOutputDescriptor.getPayload()).isEqualTo(singletonList(Object.class.getName()));
     }
 
     private ComponentDescriptor createComponentDescriptor(String attribute, String description, String ...payload) {

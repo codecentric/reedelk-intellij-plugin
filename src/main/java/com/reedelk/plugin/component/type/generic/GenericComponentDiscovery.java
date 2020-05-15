@@ -57,7 +57,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
             // type must be taken from the previous component.
             return discover(context, currentNode)
                     .map(descriptor -> Pair.create(descriptor.getPayload(), descriptor.getDescription()))
-                    .orElse(Pair.create(singletonList(Object.class.getName()), StringUtils.EMPTY));
+                    .orElse(Pair.create(singletonList(DEFAULT_PAYLOAD), StringUtils.EMPTY));
         } else {
             return Pair.create(currentOutput.getPayload(), currentOutput.getDescription());
         }
@@ -69,16 +69,18 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
             // type must be taken from the previous component.
             return discover(context, currentNode)
                     .map(ComponentOutputDescriptor::getAttributes)
-                    .orElse(MessageAttributes.class.getName());
+                    .orElse(DEFAULT_ATTRIBUTES);
         } else {
             return currentOutput.getAttributes();
         }
     }
 
     private static final ComponentOutputDescriptor DEFAULT;
+    private static final String DEFAULT_PAYLOAD = Object.class.getName();
+    private static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
     static {
         DEFAULT = new ComponentOutputDescriptor();
-        DEFAULT.setPayload(singletonList(Object.class.getName()));
-        DEFAULT.setAttributes(MessageAttributes.class.getName());
+        DEFAULT.setPayload(singletonList(DEFAULT_PAYLOAD));
+        DEFAULT.setAttributes(DEFAULT_ATTRIBUTES);
     }
 }
