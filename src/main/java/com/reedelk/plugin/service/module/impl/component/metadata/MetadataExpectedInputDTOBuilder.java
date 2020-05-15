@@ -12,12 +12,12 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
 
-public class MetadataExpectedInputBuilder {
+public class MetadataExpectedInputDTOBuilder {
 
     private final PlatformModuleService moduleService;
     private final TypeAndTries typeAndTrie;
 
-    public MetadataExpectedInputBuilder(PlatformModuleService moduleService, TypeAndTries typeAndTrie) {
+    public MetadataExpectedInputDTOBuilder(PlatformModuleService moduleService, TypeAndTries typeAndTrie) {
         this.moduleService = moduleService;
         this.typeAndTrie = typeAndTrie;
     }

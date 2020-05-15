@@ -19,8 +19,8 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     private final Module module;
     private final TypeAndTries typeAndAndTries;
     private final OnComponentMetadataEvent onComponentMetadataEvent;
-    private final MetadataExpectedInputBuilder metadataExpectedInputBuilder;
-    private final MetadataActualInputBuilder metadataActualInputBuilder;
+    private final MetadataExpectedInputDTOBuilder metadataExpectedInputDTOBuilder;
+    private final MetadataActualInputDTOBuilder metadataActualInputBuilder;
     private final PlatformModuleService moduleService;
 
     public PlatformComponentMetadataService(@NotNull Module module,
@@ -30,8 +30,8 @@ class PlatformComponentMetadataService implements PlatformModuleService {
         this.module = module;
         this.moduleService = moduleService;
         this.typeAndAndTries = typesMap;
-        this.metadataExpectedInputBuilder = new MetadataExpectedInputBuilder(moduleService, typeAndAndTries);
-        this.metadataActualInputBuilder = new MetadataActualInputBuilder(module, moduleService, completionFinder, typeAndAndTries);
+        this.metadataExpectedInputDTOBuilder = new MetadataExpectedInputDTOBuilder(moduleService, typeAndAndTries);
+        this.metadataActualInputBuilder = new MetadataActualInputDTOBuilder(module, moduleService, completionFinder, typeAndAndTries);
         this.onComponentMetadataEvent = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
@@ -46,7 +46,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
             try {
                 MetadataActualInputDTO actualInput = metadataActualInputBuilder.build(context);
-                MetadataExpectedInputDTO expectedInput = metadataExpectedInputBuilder.build(context);
+                MetadataExpectedInputDTO expectedInput = metadataExpectedInputDTOBuilder.build(context);
                 MetadataDTO componentMetadata = new MetadataDTO(actualInput, expectedInput);
                 onComponentMetadataEvent.onComponentMetadataUpdated(componentMetadata);
 

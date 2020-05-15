@@ -11,10 +11,8 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.MultipleMessages;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class ForkComponentDiscovery extends GenericComponentDiscovery {
 
@@ -35,9 +33,30 @@ public class ForkComponentDiscovery extends GenericComponentDiscovery {
             MultipleMessages descriptor = new MultipleMessages();
             return Optional.of(descriptor);
         } else {
+            // For each predecessor we should compute the component output descriptor... and merge all the attributes
+            Set<String> attributes = new HashSet<>();
+            Set<String> payloads = new HashSet<>();
+            for (GraphNode node : predecessors) {
+                discover(context, node).ifPresent((Consumer<ComponentOutputDescriptor>) componentOutputDescriptor -> {
+                    // Add all the attributes
+                    String predecessorAttributes = componentOutputDescriptor.getAttributes();
+                    attributes.add(predecessorAttributes);
+
+                    // Add all the payloads
+                    List<String> predecessorPayload = componentOutputDescriptor.getPayload();
+                    payloads.addAll(predecessorPayload);
+                });
+            }
             ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
+
+            if (attributes.isEmpty()) {
+                outputDescriptor.setAttributes(MessageAttributes.class.getName());
+            } else {
+                outputDescriptor.setAttributes(String.join(",", attributes));
+            }
+
             outputDescriptor.setPayload(Collections.singletonList(List.class.getName()));
-            outputDescriptor.setAttributes(MessageAttributes.class.getName());
+
             return Optional.of(outputDescriptor);
         }
     }
