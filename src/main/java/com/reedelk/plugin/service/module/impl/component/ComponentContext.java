@@ -4,11 +4,13 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindJoiningScope;
+import com.reedelk.plugin.graph.utils.FindScopes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 
 public class ComponentContext {
 
@@ -24,6 +26,10 @@ public class ComponentContext {
         return node;
     }
 
+    public List<GraphNode> endNodes() {
+        return graph.endNodes();
+    }
+
     public List<GraphNode> successors(GraphNode target) {
         return graph.successors(target);
     }
@@ -34,5 +40,16 @@ public class ComponentContext {
 
     public Optional<ScopedGraphNode> joiningScopeOf(GraphNode target) {
         return FindJoiningScope.of(graph, target);
+    }
+
+    public Optional<ScopedGraphNode> outermostScopeOf(List<GraphNode> targets) {
+        if (targets.isEmpty()) return Optional.empty();
+        GraphNode target = targets.get(0);
+        Stack<ScopedGraphNode> stack = FindScopes.of(graph, target);
+        ScopedGraphNode current = null;
+        while (!stack.isEmpty()) {
+            current = stack.pop();
+        }
+        return Optional.ofNullable(current);
     }
 }

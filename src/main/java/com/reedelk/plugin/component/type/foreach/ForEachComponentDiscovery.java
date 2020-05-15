@@ -54,7 +54,7 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
     @Override
     public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, Collection<GraphNode> predecessors) {
-        ComponentType componentClass = context.node().getComponentClass();
+        ComponentType componentClass = context.node().getComponentType();
         if (ComponentType.JOIN.equals(componentClass)) {
             MultipleMessages descriptor = new MultipleMessages();
             return Optional.of(descriptor);

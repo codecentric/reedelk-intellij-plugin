@@ -14,6 +14,6 @@ public class FlowReplaceRootAction extends ReplaceNodeAction {
     @Override
     public boolean applicableOn(GraphNode replacement) {
         // Only inbound components can replace root.
-        return ComponentType.INBOUND.equals(replacement.getComponentClass());
+        return ComponentType.INBOUND.equals(replacement.getComponentType());
     }
 }

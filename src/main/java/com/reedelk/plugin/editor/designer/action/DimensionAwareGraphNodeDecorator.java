@@ -115,8 +115,8 @@ class DimensionAwareGraphNodeDecorator implements GraphNode {
     }
 
     @Override
-    public ComponentType getComponentClass() {
-        return delegate.getComponentClass();
+    public ComponentType getComponentType() {
+        return delegate.getComponentType();
     }
 
     @Override

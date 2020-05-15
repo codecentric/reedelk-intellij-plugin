@@ -134,7 +134,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     }
 
     @Override
-    public ComponentType getComponentClass() {
+    public ComponentType getComponentType() {
         return componentData.getComponentClass();
     }
 

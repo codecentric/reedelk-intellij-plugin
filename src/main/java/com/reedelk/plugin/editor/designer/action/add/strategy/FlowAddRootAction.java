@@ -21,6 +21,6 @@ public class FlowAddRootAction implements ActionStrategy {
     @Override
     public boolean applicableOn(GraphNode node) {
         // Only inbound components can be added as root inside flows.
-        return ComponentType.INBOUND.equals(node.getComponentClass());
+        return ComponentType.INBOUND.equals(node.getComponentType());
     }
 }

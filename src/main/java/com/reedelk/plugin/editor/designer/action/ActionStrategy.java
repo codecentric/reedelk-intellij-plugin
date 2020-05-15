@@ -11,6 +11,6 @@ public interface ActionStrategy {
         // By default a strategy can only be applied
         // on components which are not inbound.
         // For Inbound components a strategy needs to replace this method.
-        return !ComponentType.INBOUND.equals(node.getComponentClass());
+        return !ComponentType.INBOUND.equals(node.getComponentType());
     }
 }

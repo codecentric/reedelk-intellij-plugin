@@ -43,8 +43,6 @@ public interface Drawable {
 
     int height(Graphics2D graphics);
 
-    ComponentType getComponentClass();
-
     boolean contains(ImageObserver observer, int x, int y);
 
     void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
@@ -52,6 +50,11 @@ public interface Drawable {
     void mouseMoved(DrawableListener listener, MouseEvent event);
 
     void mousePressed(DrawableListener listener, MouseEvent event);
+
+    /**
+     * Returns the type of the component: inbound, join, processor and so on.
+     */
+    ComponentType getComponentType();
 
     /**
      * Returns the point where on this node, the target arrow should end.

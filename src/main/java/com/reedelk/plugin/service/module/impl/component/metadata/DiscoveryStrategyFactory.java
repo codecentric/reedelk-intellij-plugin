@@ -2,6 +2,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceComponentDiscovery;
 import com.reedelk.plugin.component.type.foreach.ForEachComponentDiscovery;
 import com.reedelk.plugin.component.type.fork.ForkComponentDiscovery;
@@ -52,21 +53,47 @@ public class DiscoveryStrategyFactory {
 
         List<GraphNode> predecessors = context.predecessors(nodeToFindInputMessage);
         if (predecessors.size() == 0) {
-            // First node of the flow/subflow (no input here).
-            return Optional.empty();
+            // There are no predecessors, therefore it must be the first
+            // node of a flow or subflow.
+            ComponentType componentClass = nodeToFindInputMessage.getComponentType();
+
+            if (ComponentType.INBOUND.equals(componentClass)) {
+                // If it is an inbound, then the predecessor is the last component(s) of the flow.
+                List<GraphNode> lastNodesOfFlow = context.endNodes();
+                if (lastNodesOfFlow.size() == 1) {
+                    GraphNode predecessor = lastNodesOfFlow.get(0);
+                    String predecessorFullyQualifiedName = lastNodesOfFlow.get(0).componentData().getFullyQualifiedName();
+                    DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, predecessorFullyQualifiedName);
+                    return strategy.compute(context, predecessor);
+                } else {
+                    // We need to find the outermost scope
+                    Optional<ScopedGraphNode> outermostScope = context.outermostScopeOf(lastNodesOfFlow);
+                    if (outermostScope.isPresent()) {
+                        String fullyQualifiedScopeNodeName = outermostScope.get().componentData().getFullyQualifiedName();
+                        DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, fullyQualifiedScopeNodeName);
+                        return strategy.compute(context, predecessors);
+                    } else {
+                        return Optional.empty();
+                    }
+                }
+            } else {
+                // If it is not an inbound we are in a subflow and we can't know which
+                // is the previous component because a subflow might be used in many
+                // different flows.
+                return Optional.empty();
+            }
         }
 
         Optional<ScopedGraphNode> maybeScopedGraphNode = context.joiningScopeOf(nodeToFindInputMessage);
         if (maybeScopedGraphNode.isPresent()) {
-            // The current node to find input message is joining a scope.
-            // We must use the strategy with multiple predecessor for the scope node it is joining.
+            // The current node to find input message is joining a scope. We must use the strategy
+            // with multiple predecessor for the scope node it is joining.
             String fullyQualifiedScopeNodeName = maybeScopedGraphNode.get().componentData().getFullyQualifiedName();
             DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, fullyQualifiedScopeNodeName);
             return strategy.compute(context, predecessors);
 
         } else {
-            // The current node does not join any scope, therefore
-            // its predecessors must be at most 1.
+            // The current node does not join any scope, therefore its predecessors must be at most 1.
             checkState(predecessors.size() == 1,
                     "Found [" + predecessors.size() +"] predecessors but expected only 1.");
 
