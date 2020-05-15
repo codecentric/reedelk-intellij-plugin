@@ -44,37 +44,52 @@ class SuggestionProcessorTest {
     }
 
     @Test
-    void shouldPopulateCorrectlyAllModuleTypes() {
+    void shouldPopulateCorrectlyModuleTypes() {
         // Given
-        String type = "com.test.internal.type.FileType";
+        String fileTypeQualifiedName = "com.test.internal.type.FileType";
         TypePropertyDescriptor idProperty = createStringPropertyDescriptor("id");
         TypePropertyDescriptor ageProperty = createIntPropertyDescriptor("age");
         TypeFunctionDescriptor method1 = createFunctionDescriptor("method1", "method1(String key)", String.class.getName(), 1);
         TypeFunctionDescriptor method2 = createFunctionDescriptor("method2", "method2()", int.class.getName());
-        TypeDescriptor fileType = createTypeDescriptor(type, asList(idProperty, ageProperty), asList(method1, method2));
+        TypeDescriptor fileType = createTypeDescriptor(fileTypeQualifiedName, asList(idProperty, ageProperty), asList(method1, method2));
+
+        String documentTypeQualifiedName = "com.test.internal.type.DocumentType";
+        TypePropertyDescriptor nameProperty = createStringPropertyDescriptor("name");
+        TypeFunctionDescriptor findMethod = createFunctionDescriptor("find", "find(String key)", int.class.getName(), 1);
+        TypeDescriptor documentType = createTypeDescriptor(documentTypeQualifiedName, singletonList(nameProperty), singletonList(findMethod));
 
         ModuleDescriptor descriptor = new ModuleDescriptor();
         descriptor.setName("module-xyz");
-        descriptor.setTypes(singletonList(fileType));
+        descriptor.setTypes(asList(fileType, documentType));
 
         // When
         processor.populate(descriptor);
 
-        // Then
-        assertThat(moduleTypes).containsKey(type);
-        Trie typeTrie = moduleTypes.get(type);
+        // Then (file type trie built correctly)
+        assertThat(moduleTypes).containsKey(fileTypeQualifiedName);
+        Trie fileTypeTrie = moduleTypes.get(fileTypeQualifiedName);
 
-        Collection<Suggestion> suggestions = typeTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
+        Collection<Suggestion> suggestions = fileTypeTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
         assertThat(suggestions).hasSize(4);
         PluginAssertion.assertThat(suggestions)
                 .contains(PROPERTY, "id", "id", String.class.getName(), String.class.getSimpleName())
                 .contains(PROPERTY, "age", "age", int.class.getName(), int.class.getSimpleName())
                 .contains(FUNCTION, "method1()", "method1", String.class.getName(), String.class.getSimpleName())
                 .contains(FUNCTION, "method2()", "method2", int.class.getName(), int.class.getSimpleName());
+
+        // Then (document type trie built correctly)
+        assertThat(moduleTypes).containsKey(documentTypeQualifiedName);
+        Trie documentTypeTrie = moduleTypes.get(documentTypeQualifiedName);
+
+        suggestions = documentTypeTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
+        assertThat(suggestions).hasSize(2);
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY, "name", "name", String.class.getName(), String.class.getSimpleName())
+                .contains(FUNCTION, "find()", "find", int.class.getName(), int.class.getSimpleName());
     }
 
     @Test
-    void shouldPopulateCorrectlyAllModuleGlobalTypes() {
+    void shouldPopulateCorrectlyModuleGlobalTypes() {
         // Given
         String type = "com.test.internal.type.FileType";
         TypeFunctionDescriptor method1 = createFunctionDescriptor("method1", "method1(String key)", String.class.getName(), 1);
