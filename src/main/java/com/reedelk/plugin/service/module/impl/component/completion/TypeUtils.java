@@ -16,9 +16,8 @@ public class TypeUtils {
     private TypeUtils() {
     }
 
-    // Converts a fully qualified name type e.g. com.my.component.MyType
-    //  to a simple name: MyType.
-    // TODO: This is wrong should always go through the method below.
+    // Converts a fully qualified type name to a simple name,
+    // e.g: com.my.component.MyType > MyType
     public static String from(String originalType) {
         if (originalType == null) return StringUtils.EMPTY;
         String[] splits = originalType.split(","); // might be multiple types

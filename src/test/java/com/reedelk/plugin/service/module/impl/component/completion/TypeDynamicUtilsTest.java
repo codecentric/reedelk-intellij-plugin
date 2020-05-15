@@ -1,13 +1,18 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
+import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -115,7 +120,7 @@ class TypeDynamicUtilsTest {
     @Test
     void shouldResolveMessagePayloadTypeFromDescriptor() {
         // Given
-        List<String> expectedTypes = Arrays.asList(Integer.class.getName(), "com.test.MyType");
+        List<String> expectedTypes = asList(Integer.class.getName(), "com.test.MyType");
         ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
         outputDescriptor.setPayload(expectedTypes);
 
@@ -158,5 +163,35 @@ class TypeDynamicUtilsTest {
 
         // Then
         assertThat(thrown).hasMessage("Resolve must be called only if the suggestion type is dynamic");
+    }
+
+    // Create dynamic suggestions
+    @Test
+    void shouldCorrectlyCreateDynamicSuggestions() {
+        // Given
+        String myType1 = "com.test.MyType1";
+        Trie myType1Trie = new TrieImpl(null, null, null);
+        String myType2 = "com.test.MyType2";
+        Trie myType2Trie = new TrieImpl(null, null, null);
+
+        Map<String, Trie> moduleTries = new HashMap<>();
+        moduleTries.put(myType1, myType1Trie);
+        moduleTries.put(myType2, myType2Trie);
+
+        TypeAndTries typeAndTries = new TypeAndTries(moduleTries);
+        ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
+        outputDescriptor.setPayload(asList(myType1, myType2));
+        Suggestion payload =
+                SuggestionTestUtils.createFunctionSuggestion("payload()", MessagePayload.class.getName());
+
+        // When
+        Collection<Suggestion> dynamicSuggestions =
+                TypeDynamicUtils.createDynamicSuggestions(outputDescriptor, payload, typeAndTries);
+
+        // Then
+        assertThat(dynamicSuggestions).hasSize(2);
+        PluginAssertion.assertThat(dynamicSuggestions)
+                .contains(FUNCTION, "payload()", "payload()", myType1, "MyType1")
+                .contains(FUNCTION, "payload()", "payload()", myType2, "MyType2");
     }
 }
