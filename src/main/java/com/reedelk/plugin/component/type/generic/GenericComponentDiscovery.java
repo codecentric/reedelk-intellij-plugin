@@ -30,13 +30,15 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         ComponentDescriptor componentDescriptor = moduleService.componentDescriptorOf(componentFullyQualifiedName);
 
         ComponentOutputDescriptor componentOutput = componentDescriptor.getOutput();
-        // if the component output has not been defined for this component we return empty.
+        // If the component output has not been defined for this component we return the default output.
         if (componentOutput == null) return Optional.of(DEFAULT);
 
         // Here you might have components having 'PreviousComponent' only on attributes (e.g payload set),
-        // this means that the payload type would be from the current component output.
-        // But you might also have components defining PreviousComponents for both attributes and payload,
-        // for example Logger component.
+        // this means that the payload type would be from the current component output but the attributes
+        // need to be discovered from the previous(es) components.
+        // There might also be cases where the Component defines as payload and attribute types
+        // PreviousComponents. In this case the payload and attributes must be discovered from
+        // previous(es) components, for example: Logger component.
         Pair<List<String>, String> payloadTypesAndDescription =
                 discoverPayloadTypesAndDescription(currentNode, context, componentOutput);
         String attributeType = discoverAttributeType(currentNode, context, componentOutput);
