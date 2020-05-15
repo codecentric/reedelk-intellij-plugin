@@ -7,10 +7,7 @@ import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
@@ -49,8 +46,9 @@ public class MetadataActualInputDTOBuilder {
     }
 
     private MetadataTypeDTO attributes(ComponentOutputDescriptor output) {
-        String attributeType = output != null ? output.getAttributes() : MessageAttributes.class.getName();
-        Collection<MetadataTypeItemDTO> suggestions = findAndMapDTO(output, attributeType);
+        Collection<MetadataTypeItemDTO> suggestions = output == null ?
+                findAndMapDTO(output, MessageAttributes.class.getName()) :
+                findAndMapDTO(output, output.getAttributes());
         return new MetadataTypeDTO(MessageAttributes.class.getName(), suggestions);
     }
 
@@ -77,6 +75,15 @@ public class MetadataActualInputDTOBuilder {
             Collection<MetadataTypeItemDTO> typeDTOs = findAndMapDTO(output, typeTrie);
             return new MetadataTypeDTO(typeDisplay, typeDTOs);
         }
+    }
+
+    private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, List<String> types) {
+        Collection<MetadataTypeItemDTO> allTypeItems = new ArrayList<>();
+        for (String type : types) {
+            Collection<MetadataTypeItemDTO> mappedTypeItems = findAndMapDTO(output, type);
+            allTypeItems.addAll(mappedTypeItems);
+        }
+        return allTypeItems;
     }
 
     private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, String type) {

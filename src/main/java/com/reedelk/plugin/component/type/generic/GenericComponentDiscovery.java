@@ -41,7 +41,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         // previous(es) components, for example: Logger component.
         Pair<List<String>, String> payloadTypesAndDescription =
                 discoverPayloadTypesAndDescription(currentNode, context, componentOutput);
-        String attributeType = discoverAttributeType(currentNode, context, componentOutput);
+        List<String> attributeType = discoverAttributeType(currentNode, context, componentOutput);
 
         ComponentOutputDescriptor finalComponentOutput = new ComponentOutputDescriptor();
         finalComponentOutput.setDescription(payloadTypesAndDescription.second);
@@ -53,6 +53,13 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
 
     private Pair<List<String>, String> discoverPayloadTypesAndDescription(GraphNode currentNode, ComponentContext context, ComponentOutputDescriptor currentOutput) {
         if (currentOutput.getPayload().contains(ComponentOutput.PreviousComponent.class.getName())) {
+            if (context.predecessors(currentNode).isEmpty()) {
+                // If this is root we stop and do not look for the previous component,
+                // this is because otherwise we might continuously loop to the previous component
+                // when all the components specified the 'PreviousComponent' constraint in the payload type.
+                return Pair.create(singletonList(DEFAULT_PAYLOAD), StringUtils.EMPTY);
+            }
+
             // We need to recursively go back in the graph if the user specified that the payload
             // type must be taken from the previous component.
             return discover(context, currentNode)
@@ -63,13 +70,13 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         }
     }
 
-    private String discoverAttributeType(GraphNode currentNode, ComponentContext context, ComponentOutputDescriptor currentOutput) {
-        if (ComponentOutput.PreviousComponent.class.getName().equals(currentOutput.getAttributes())) {
+    private List<String> discoverAttributeType(GraphNode currentNode, ComponentContext context, ComponentOutputDescriptor currentOutput) {
+        if (currentOutput.getAttributes().contains(ComponentOutput.PreviousComponent.class.getName())) {
             // We need to recursively go back in the graph if the user specified that the attributes
             // type must be taken from the previous component.
             return discover(context, currentNode)
                     .map(ComponentOutputDescriptor::getAttributes)
-                    .orElse(DEFAULT_ATTRIBUTES);
+                    .orElse(singletonList(DEFAULT_ATTRIBUTES));
         } else {
             return currentOutput.getAttributes();
         }
@@ -81,6 +88,6 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
     static {
         DEFAULT = new ComponentOutputDescriptor();
         DEFAULT.setPayload(singletonList(DEFAULT_PAYLOAD));
-        DEFAULT.setAttributes(DEFAULT_ATTRIBUTES);
+        DEFAULT.setAttributes(singletonList(DEFAULT_ATTRIBUTES));
     }
 }

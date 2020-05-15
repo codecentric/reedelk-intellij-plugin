@@ -14,6 +14,8 @@ import com.reedelk.runtime.api.message.MessageAttributes;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static java.util.Collections.singletonList;
+
 public class ForkComponentDiscovery extends GenericComponentDiscovery {
 
     public ForkComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
@@ -39,8 +41,8 @@ public class ForkComponentDiscovery extends GenericComponentDiscovery {
             for (GraphNode node : predecessors) {
                 discover(context, node).ifPresent((Consumer<ComponentOutputDescriptor>) componentOutputDescriptor -> {
                     // Add all the attributes
-                    String predecessorAttributes = componentOutputDescriptor.getAttributes();
-                    attributes.add(predecessorAttributes);
+                    List<String> predecessorAttributes = componentOutputDescriptor.getAttributes();
+                    attributes.addAll(predecessorAttributes);
 
                     // Add all the payloads
                     List<String> predecessorPayload = componentOutputDescriptor.getPayload();
@@ -49,13 +51,12 @@ public class ForkComponentDiscovery extends GenericComponentDiscovery {
             }
             ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
 
-            if (attributes.isEmpty()) {
-                outputDescriptor.setAttributes(MessageAttributes.class.getName());
-            } else {
-                outputDescriptor.setAttributes(String.join(",", attributes));
-            }
+            outputDescriptor.setAttributes(attributes.isEmpty() ?
+                    singletonList(MessageAttributes.class.getName()) :
+                    new ArrayList<>(attributes));
 
-            outputDescriptor.setPayload(Collections.singletonList(List.class.getName()));
+            // TODO: If I have a payload of the same type? or if different types?
+            outputDescriptor.setPayload(singletonList(List.class.getName()));
 
             return Optional.of(outputDescriptor);
         }

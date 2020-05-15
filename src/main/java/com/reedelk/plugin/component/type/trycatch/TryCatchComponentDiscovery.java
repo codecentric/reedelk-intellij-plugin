@@ -10,9 +10,10 @@ import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscove
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Collections.singletonList;
 
 public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
 
@@ -29,8 +30,8 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
         } else {
             // We are in the catch
             ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-            descriptor.setAttributes(MessageAttributes.class.getName());
-            descriptor.setPayload(Collections.singletonList(Exception.class.getName()));
+            descriptor.setPayload(singletonList(Exception.class.getName()));
+            descriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
             return Optional.of(descriptor);
         }
     }
@@ -38,8 +39,8 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
     @Override
     public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, Collection<GraphNode> predecessors) {
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(Collections.singletonList(Object.class.getName()));
-        descriptor.setAttributes(MessageAttributes.class.getName());
+        descriptor.setPayload(singletonList(Object.class.getName()));
+        descriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
         return Optional.of(descriptor);
     }
 }

@@ -10,8 +10,9 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
+
+import static java.util.Collections.singletonList;
 
 public class RouterComponentDiscovery extends GenericComponentDiscovery {
 
@@ -27,8 +28,9 @@ public class RouterComponentDiscovery extends GenericComponentDiscovery {
     @Override
     public Optional<ComponentOutputDescriptor> compute(ComponentContext context, Collection<GraphNode> predecessors) {
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(Collections.singletonList(Object.class.getName()));
-        descriptor.setAttributes(MessageAttributes.class.getName());
+        descriptor.setPayload(singletonList(Object.class.getName()));
+        // TODO: merge attributes like in fork for each route branch.
+        descriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
         return Optional.of(descriptor);
     }
 }

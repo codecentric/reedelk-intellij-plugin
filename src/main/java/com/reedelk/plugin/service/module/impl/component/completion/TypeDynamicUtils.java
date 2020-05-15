@@ -7,7 +7,6 @@ import com.reedelk.runtime.api.message.MessagePayload;
 import java.util.Collection;
 import java.util.List;
 
-import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
@@ -46,8 +45,8 @@ public class TypeDynamicUtils {
     static List<String> resolve(Suggestion suggestion, ComponentOutputDescriptor descriptor) {
         String suggestionType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(suggestionType)) {
-            return descriptor != null && isNotBlank(descriptor.getAttributes()) ?
-                    singletonList(descriptor.getAttributes()) :
+            return descriptor != null && descriptor.getAttributes() != null ?
+                    descriptor.getAttributes() :
                     singletonList(MessageAttributes.class.getName());
 
         } else if (MessagePayload.class.getName().equals(suggestionType)) {

@@ -253,7 +253,7 @@ class CompletionFinderTest {
     void shouldReturnCorrectSuggestionsForAttributeType() {
         // Given
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setAttributes(MyAttributeType.class.getName());
+        descriptor.setAttributes(singletonList(MyAttributeType.class.getName()));
         String[] tokens = new String[] {"message", "attributes", ""};
 
         // When

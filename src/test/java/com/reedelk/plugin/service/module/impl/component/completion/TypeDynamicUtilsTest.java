@@ -13,6 +13,7 @@ import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -90,7 +91,7 @@ class TypeDynamicUtilsTest {
         // Given
         String expectedType = "com.test.MyType";
         ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
-        outputDescriptor.setAttributes(expectedType);
+        outputDescriptor.setAttributes(singletonList(expectedType));
 
         Suggestion attributes =
                 SuggestionTestUtils.createFunctionSuggestion("attributes()", MessageAttributes.class.getName());

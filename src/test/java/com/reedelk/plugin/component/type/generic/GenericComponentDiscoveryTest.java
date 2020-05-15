@@ -70,8 +70,8 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
 
         ComponentOutputDescriptor outputDescriptor = maybeActualOutput.get();
         assertThat(outputDescriptor.getDescription()).isNull();
-        assertThat(outputDescriptor.getAttributes()).isEqualTo(MessageAttributes.class.getName());
         assertThat(outputDescriptor.getPayload()).isEqualTo(singletonList(Object.class.getName()));
+        assertThat(outputDescriptor.getAttributes()).isEqualTo(singletonList(MessageAttributes.class.getName()));
     }
 
     @Test
@@ -93,8 +93,8 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
 
         ComponentOutputDescriptor actualOutputDescriptor = maybeActualOutput.get();
         assertThat(actualOutputDescriptor.getDescription()).isEqualTo("My description");
-        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo("com.test.MyAttributes");
         assertThat(actualOutputDescriptor.getPayload()).isEqualTo(asList("com.test.MyType1", "com.test.MyType2"));
+        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo(singletonList("com.test.MyAttributes"));
     }
 
     @Test
@@ -124,8 +124,8 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
 
         ComponentOutputDescriptor actualOutputDescriptor = maybeActualOutput.get();
         assertThat(actualOutputDescriptor.getDescription()).isEqualTo("My other description"); // description from component 1
-        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo("com.test.MyAttributes"); // attributes from component 2
         assertThat(actualOutputDescriptor.getPayload()).isEqualTo(singletonList("com.test.MyType1")); // payload from component 1
+        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo(singletonList("com.test.MyAttributes")); // attributes from component 2
     }
 
     @Test
@@ -155,8 +155,8 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
 
         ComponentOutputDescriptor actualOutputDescriptor = maybeActualOutput.get();
         assertThat(actualOutputDescriptor.getDescription()).isEqualTo("My description"); // description from component 1
-        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo("com.test.MyOtherAttributes"); // attributes from component 2
         assertThat(actualOutputDescriptor.getPayload()).isEqualTo(singletonList(String.class.getName())); // payload from component 1
+        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo(singletonList("com.test.MyOtherAttributes")); // attributes from component 2
     }
 
     @Test
@@ -167,7 +167,6 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
         doReturn(previousDescriptor)
                 .when(moduleService)
                 .componentDescriptorOf(ComponentRoot.class.getName());
-
 
         ComponentContext componentContext = new ComponentContext(graph, componentNode1);
 
@@ -180,15 +179,15 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
 
         ComponentOutputDescriptor actualOutputDescriptor = maybeActualOutput.get();
         assertThat(actualOutputDescriptor.getDescription()).isEqualTo(""); // the description is taken from the predecessor of root (which is missing)
-        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo("com.test.MyAttributes");
+        assertThat(actualOutputDescriptor.getAttributes()).isEqualTo(singletonList("com.test.MyAttributes"));
         assertThat(actualOutputDescriptor.getPayload()).isEqualTo(singletonList(Object.class.getName()));
     }
 
     private ComponentDescriptor createComponentDescriptor(String attribute, String description, String ...payload) {
         ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
+        outputDescriptor.setAttributes(singletonList(attribute));
         outputDescriptor.setDescription(description);
         outputDescriptor.setPayload(asList(payload));
-        outputDescriptor.setAttributes(attribute);
         ComponentDescriptor descriptor = new ComponentDescriptor();
         descriptor.setOutput(outputDescriptor);
         return descriptor;

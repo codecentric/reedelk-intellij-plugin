@@ -15,9 +15,10 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Collections.singletonList;
 
 public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
@@ -38,17 +39,17 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
                 ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
                 descriptor.setAttributes(previousComponentOutput.getAttributes());
                 if (StringUtils.isNotBlank(orDefault.listItemType())) {
-                    descriptor.setPayload(Collections.singletonList(orDefault.listItemType()));
+                    descriptor.setPayload(singletonList(orDefault.listItemType()));
                 } else {
-                    descriptor.setPayload(Collections.singletonList(precedingPayloadType));
+                    descriptor.setPayload(singletonList(precedingPayloadType));
                 }
                 return Optional.of(descriptor);
             }
         }
 
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(Collections.singletonList(Object.class.getName()));
-        descriptor.setAttributes(MessageAttributes.class.getName());
+        descriptor.setPayload(singletonList(Object.class.getName()));
+        descriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
         return Optional.of(descriptor);
     }
 
@@ -60,8 +61,8 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
             return Optional.of(descriptor);
         } else {
             ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
-            outputDescriptor.setPayload(Collections.singletonList(List.class.getName()));
-            outputDescriptor.setAttributes(MessageAttributes.class.getName());
+            outputDescriptor.setPayload(singletonList(List.class.getName()));
+            outputDescriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
             return Optional.of(outputDescriptor);
         }
     }
