@@ -100,7 +100,7 @@ public class CompletionFinder {
                 .findAny()
                 .orElseThrow(() -> new PluginException("Expected at least one dynamic suggestion."));
         List<String> possibleTypes = suggestions.stream()
-                .map(sugg -> TypeUtils.toSimpleName(sugg.getReturnType()))
+                .map(theSuggestion -> TypeUtils.toSimpleName(theSuggestion.getReturnType(), typeAndTrieMap))
                 .collect(toList());
         return Suggestion.create(suggestion.getType())
                 .insertValue(suggestion.getInsertValue())

@@ -31,7 +31,7 @@ public class TypeDynamicUtils {
                         .insertValue(suggestion.getInsertValue())
                         .lookupToken(suggestion.getLookupToken())
                         .tailText(suggestion.getTailText())
-                        .returnTypeDisplayValue(TypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
+                        .returnTypeDisplayValue(TypeUtils.toSimpleName(dynamicType, typeAndTrieMap, suggestion))
                         .returnType(dynamicType)
                         .build())
                 .collect(toList());

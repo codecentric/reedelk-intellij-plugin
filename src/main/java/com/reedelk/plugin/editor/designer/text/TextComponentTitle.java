@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class TextComponentTitle extends AbstractText {
 
-    private static final Pattern REGEX = Pattern.compile(".{1,18}(?:\\s|$)", Pattern.DOTALL);
+    private static final Pattern REGEX = Pattern.compile(".{1,17}(?:\\s|$)", Pattern.DOTALL);
 
     private final String title;
 

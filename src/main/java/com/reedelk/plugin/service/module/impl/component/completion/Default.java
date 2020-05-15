@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
-import static com.reedelk.plugin.service.module.impl.component.completion.TypeUtils.typeDisplayValueOf;
 
 public class Default {
 
@@ -22,13 +21,13 @@ public class Default {
         Suggestion message = Suggestion.create(PROPERTY)
                 .insertValue("message")
                 .returnType(Message.class.getName())
-                .returnTypeDisplayValue(TypeUtils.toSimpleName(Message.class.getName()))
+                .returnTypeDisplayValue(Message.class.getSimpleName())
                 .build();
         TRIE.insert(message);
         Suggestion context = Suggestion.create(PROPERTY)
                 .insertValue("context")
                 .returnType(FlowContext.class.getName())
-                .returnTypeDisplayValue(TypeUtils.toSimpleName(FlowContext.class.getName()))
+                .returnTypeDisplayValue(FlowContext.class.getSimpleName())
                 .build();
         TRIE.insert(context);
     }
@@ -44,7 +43,7 @@ public class Default {
                     .lookupToken("each")
                     .tailText("{ it }")
                     .returnType(List.class.getName())
-                    .returnTypeDisplayValue(typeDisplayValueOf(allTypes, List.class.getName()))
+                    .returnTypeDisplayValue(List.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
@@ -52,7 +51,7 @@ public class Default {
                     .tailText("{ it, i ->  }")
                     .lookupToken("eachWithIndex")
                     .returnType(List.class.getName())
-                    .returnTypeDisplayValue(typeDisplayValueOf(allTypes, List.class.getName()))
+                    .returnTypeDisplayValue(List.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
@@ -61,7 +60,7 @@ public class Default {
                     .lookupToken("collect")
                     .returnType(List.class.getName())
 
-                    .returnTypeDisplayValue(typeDisplayValueOf(allTypes, List.class.getName()))
+                    .returnTypeDisplayValue(List.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
             trieMap.put(List.class.getName(), trie);

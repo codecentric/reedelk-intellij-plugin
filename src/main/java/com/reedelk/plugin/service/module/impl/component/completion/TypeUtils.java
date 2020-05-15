@@ -13,9 +13,12 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class TypeUtils {
 
+    private static final String LIST_SIMPLE_NAME_FORMAT = "List<%s>";
+
     private TypeUtils() {
     }
 
+    // TODO: I don't know about this method, I think they should all go through the one with the type trie for consistency.
     // Converts a fully qualified type name to a simple name,
     // e.g: com.my.component.MyType > MyType
     public static String toSimpleName(String type) {
@@ -29,37 +32,43 @@ public class TypeUtils {
         return String.join(",", tmp);
     }
 
-    public static String toSimpleName(String type, Trie typeTrie) {
-        if (isNotBlank(typeTrie.listItemType())) {
+    @NotNull
+    public static String toSimpleName(@Nullable String type, @NotNull Trie typeTrie) {
+        if (type == null) {
+            return StringUtils.EMPTY;
+        } else if (isNotBlank(typeTrie.displayName())) {
+            return typeTrie.displayName();
+        } else if (isNotBlank(typeTrie.listItemType())) {
             // If exists a list item type, it is a list and we want to display it with: List<ItemType>
             String listItemType = typeTrie.listItemType();
-            return "List<" + TypeUtils.toSimpleName(listItemType) + ">";
+            return String.format(LIST_SIMPLE_NAME_FORMAT, TypeUtils.toSimpleName(listItemType));
         } else {
             return TypeUtils.toSimpleName(type);
         }
     }
 
-    public static String presentableTypeOf(Suggestion suggestion, String dynamicType, TypeAndTries typeAndTrieMap) {
+    @NotNull
+    public static String toSimpleName(@Nullable String type, @NotNull TypeAndTries allTypesMap) {
+        Trie typeTrie = allTypesMap.getOrDefault(type, Default.UNKNOWN);
+        return TypeUtils.toSimpleName(type, typeTrie);
+    }
+
+    @NotNull
+    public static String toSimpleName(@Nullable String type, @NotNull TypeAndTries allTypesMap, @NotNull Suggestion suggestion) {
+        // Used to create dynamic suggestions. For dynamic suggestions we always keep as simple name 'MessageAttributes'
+        // type without using the fully qualified name of the specific type.
         String originalType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(originalType)) {
-            return MessageAttributes.class.getSimpleName(); // We keep the message attributes.
+            // We keep the message attributes type simple name to avoid confusion and always display 'MessageAttributes' type.
+            return MessageAttributes.class.getSimpleName();
         } else {
-            Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, Default.UNKNOWN);
-            return TypeUtils.toSimpleName(dynamicType, dynamicTypeTrie);
+            // If the type is MessagePayload, we lookup the type and convert it to a simple name.
+            return toSimpleName(type, allTypesMap);
         }
     }
 
     public static String formatListDisplayType(String type, Trie typeTrie) {
         return TypeUtils.toSimpleName(type, typeTrie) + " : " + TypeUtils.toSimpleName(typeTrie.listItemType());
-    }
-
-    @Nullable
-    public static String typeDisplayValueOf(@NotNull TypeAndTries allTypesMap, @Nullable String type) {
-        if (type == null) return null;
-        Trie typeTrie = allTypesMap.getOrDefault(type, Default.UNKNOWN);
-        return StringUtils.isNotBlank(typeTrie.displayName()) ?
-                typeTrie.displayName() :
-                TypeUtils.toSimpleName(type, typeTrie);
     }
 
     public static String returnTypeOrDefault(String type) {

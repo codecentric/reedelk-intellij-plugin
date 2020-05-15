@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
 import static com.reedelk.plugin.service.module.impl.component.completion.TypeUtils.returnTypeOrDefault;
-import static com.reedelk.plugin.service.module.impl.component.completion.TypeUtils.typeDisplayValueOf;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeUtils.toSimpleName;
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
 public class SuggestionFactory {
@@ -21,7 +21,9 @@ public class SuggestionFactory {
         checkState(typeDescriptor.isGlobal(), "expected global type but it was not (%s).", typeDescriptor.getType());
         String returnType = returnTypeOrDefault(typeDescriptor.getType());
         // The global type token is always the simple class name or the display
-        // name if it was bound to the script engine with a different name.
+        // name if it was bound to the script engine with a different name. This also applies
+        // if the type would be a list with item type, it would still be displayed with the display name
+        // or the simple class name.
         String globalToken = StringUtils.isNotBlank(typeDescriptor.getDisplayName()) ?
                 typeDescriptor.getDisplayName() :
                 TypeUtils.toSimpleName(typeDescriptor.getType());
@@ -35,7 +37,7 @@ public class SuggestionFactory {
 
     static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull TypeFunctionDescriptor descriptor) {
         String returnType = returnTypeOrDefault(descriptor.getReturnType());
-        String presentableReturnType = typeDisplayValueOf(allTypesMap, returnType);
+        String presentableReturnType = toSimpleName(returnType, allTypesMap);
         return Suggestion.create(FUNCTION)
                 .tailText(descriptor.getSignature().substring(descriptor.getName().length())) // We remove from the signature the method name: the tail text will be (String param1, int param2) and so on.
                 .returnTypeDisplayValue(presentableReturnType)
@@ -48,7 +50,7 @@ public class SuggestionFactory {
 
     static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull TypePropertyDescriptor descriptor) {
         String propertyType = returnTypeOrDefault(descriptor.getType());
-        String presentableReturnType = typeDisplayValueOf(allTypesMap, propertyType);
+        String presentableReturnType = toSimpleName(propertyType, allTypesMap);
         return Suggestion.create(PROPERTY)
                 .returnTypeDisplayValue(presentableReturnType)
                 .insertValue(descriptor.getName())
@@ -58,7 +60,7 @@ public class SuggestionFactory {
 
     static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull ScriptSignatureArgument descriptor) {
         String argumentType = returnTypeOrDefault(descriptor.getArgumentType());
-        String argumentPresentableType = typeDisplayValueOf(allTypesMap, argumentType);
+        String argumentPresentableType = toSimpleName(argumentType, allTypesMap);
         return Suggestion.create(PROPERTY)
                 .returnTypeDisplayValue(argumentPresentableType)
                 .insertValue(descriptor.getArgumentName())
