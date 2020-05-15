@@ -19,8 +19,8 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     private final Module module;
     private final TypeAndTries typeAndAndTries;
     private final OnComponentMetadataEvent onComponentMetadataEvent;
-    private final ComponentInputDescriptorBuilder inputDescriptorBuilder;
-    private final ComponentOutputDescriptorBuilder outputDescriptorBuilder;
+    private final InputDescriptorBuilder inputDescriptorBuilder;
+    private final OutputDescriptorBuilder outputDescriptorBuilder;
     private final PlatformModuleService moduleService;
 
     public PlatformComponentMetadataService(@NotNull Module module,
@@ -30,8 +30,8 @@ class PlatformComponentMetadataService implements PlatformModuleService {
         this.module = module;
         this.moduleService = moduleService;
         this.typeAndAndTries = typesMap;
-        this.inputDescriptorBuilder = new ComponentInputDescriptorBuilder(moduleService, typeAndAndTries);
-        this.outputDescriptorBuilder = new ComponentOutputDescriptorBuilder(module, moduleService, completionFinder, typeAndAndTries);
+        this.inputDescriptorBuilder = new InputDescriptorBuilder(moduleService, typeAndAndTries);
+        this.outputDescriptorBuilder = new OutputDescriptorBuilder(module, moduleService, completionFinder, typeAndAndTries);
         this.onComponentMetadataEvent = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
@@ -45,9 +45,9 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     public void componentMetadataOf(@NotNull ComponentContext context) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
             try {
-                ComponentMetadataActualInputDTO actualInput = outputDescriptorBuilder.build(context);
-                ComponentMetadataExpectedInputDTO expectedInput = inputDescriptorBuilder.build(context);
-                ComponentMetadataDTO componentMetadata = new ComponentMetadataDTO(actualInput, expectedInput);
+                MetadataActualInputDTO actualInput = outputDescriptorBuilder.build(context);
+                MetadataExpectedInputDTO expectedInput = inputDescriptorBuilder.build(context);
+                MetadataDTO componentMetadata = new MetadataDTO(actualInput, expectedInput);
                 onComponentMetadataEvent.onComponentMetadataUpdated(componentMetadata);
 
             } catch (Exception exception) {

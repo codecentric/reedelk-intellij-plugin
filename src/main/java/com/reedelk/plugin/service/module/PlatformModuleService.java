@@ -5,7 +5,7 @@ import com.intellij.openapi.module.ModuleServiceManager;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataDTO;
+import com.reedelk.plugin.service.module.impl.component.metadata.MetadataDTO;
 import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +38,7 @@ public interface PlatformModuleService {
     }
 
     interface OnComponentMetadataEvent {
-        void onComponentMetadataUpdated(ComponentMetadataDTO componentMetadataDTO);
+        void onComponentMetadataUpdated(MetadataDTO metadataDTO);
         void onComponentMetadataError(Exception exception);
     }
 

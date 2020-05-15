@@ -2,7 +2,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import java.util.List;
 
-public class ComponentMetadataActualInputDTO {
+public class MetadataActualInputDTO {
 
     // Is multiple messages is true when the component is the first
     // after a fork or for each scope and the component itself has type JOIN,
@@ -13,16 +13,16 @@ public class ComponentMetadataActualInputDTO {
     private final MetadataTypeDTO attributes;
     private final List<MetadataTypeDTO> payload;
 
-    public ComponentMetadataActualInputDTO() {
+    public MetadataActualInputDTO() {
         this.isMultipleMessages = true;
         this.payloadDescription = null;
         this.attributes = null;
         this.payload = null;
     }
 
-    public ComponentMetadataActualInputDTO(MetadataTypeDTO attributes,
-                                           List<MetadataTypeDTO> payload,
-                                           String payloadDescription) {
+    public MetadataActualInputDTO(MetadataTypeDTO attributes,
+                                  List<MetadataTypeDTO> payload,
+                                  String payloadDescription) {
         this.isMultipleMessages = false;
         this.payloadDescription = payloadDescription;
         this.attributes = attributes;

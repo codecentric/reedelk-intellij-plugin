@@ -7,8 +7,8 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.editor.properties.commons.DisposableCollapsiblePane;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataActualInputDTO;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataDTO;
+import com.reedelk.plugin.service.module.impl.component.metadata.MetadataActualInputDTO;
+import com.reedelk.plugin.service.module.impl.component.metadata.MetadataDTO;
 import com.reedelk.plugin.service.module.impl.component.metadata.MetadataTypeDTO;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
@@ -23,8 +23,8 @@ import java.util.function.Consumer;
 public class MetadataActualInput extends AbstractMetadataInputPanel {
 
     @Override
-    void render(ComponentMetadataDTO componentMetadataDTO, DisposablePanel parent) {
-        Optional<ComponentMetadataActualInputDTO> actualInput = componentMetadataDTO.getActualInput();
+    void render(MetadataDTO metadataDTO, DisposablePanel parent) {
+        Optional<MetadataActualInputDTO> actualInput = metadataDTO.getActualInput();
         if (actualInput.isPresent()) {
             render(actualInput.get(), parent);
         } else {
@@ -32,7 +32,7 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
         }
     }
 
-    private void render(ComponentMetadataActualInputDTO input, DisposablePanel parent) {
+    private void render(MetadataActualInputDTO input, DisposablePanel parent) {
         if (input.isMultipleMessages()) {
             JBLabel label = new JBLabel(htmlLabel("Multiple messages: List<Message>", "", false));
             FormBuilder.get().addFullWidthAndHeight(label, parent);

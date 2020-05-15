@@ -1,11 +1,11 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-public class ComponentMetadataExpectedInputDTO {
+public class MetadataExpectedInputDTO {
 
     private final String description;
     private final String payload;
 
-    public ComponentMetadataExpectedInputDTO(String payload, String description) {
+    public MetadataExpectedInputDTO(String payload, String description) {
         this.payload = payload;
         this.description = description;
     }

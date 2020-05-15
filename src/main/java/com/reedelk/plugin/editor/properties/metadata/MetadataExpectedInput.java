@@ -5,8 +5,8 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataDTO;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataExpectedInputDTO;
+import com.reedelk.plugin.service.module.impl.component.metadata.MetadataDTO;
+import com.reedelk.plugin.service.module.impl.component.metadata.MetadataExpectedInputDTO;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
@@ -21,8 +21,8 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
     }
 
     @Override
-    void render(ComponentMetadataDTO componentMetadataDTO, DisposablePanel parent) {
-        Optional<ComponentMetadataExpectedInputDTO> expectedInput = componentMetadataDTO.getExpectedInput();
+    void render(MetadataDTO metadataDTO, DisposablePanel parent) {
+        Optional<MetadataExpectedInputDTO> expectedInput = metadataDTO.getExpectedInput();
         if (expectedInput.isPresent()) {
             render(expectedInput.get(), parent);
         } else {
@@ -30,7 +30,7 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
         }
     }
 
-    private void render(ComponentMetadataExpectedInputDTO input, DisposablePanel parent) {
+    private void render(MetadataExpectedInputDTO input, DisposablePanel parent) {
         String inputDescription = input.getDescription();
         if (StringUtils.isNotBlank(inputDescription)) {
             JBLabel description = new JBLabel(htmlLabel(inputDescription, "", false));

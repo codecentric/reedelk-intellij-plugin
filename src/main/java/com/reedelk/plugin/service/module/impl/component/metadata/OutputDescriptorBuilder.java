@@ -18,32 +18,32 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-public class ComponentOutputDescriptorBuilder {
+public class OutputDescriptorBuilder {
 
     private final CompletionFinder completionFinder;
     private final TypeAndTries typeAndTries;
     private final PlatformModuleService moduleService;
     private final Module module;
 
-    public ComponentOutputDescriptorBuilder(Module module, PlatformModuleService moduleService, CompletionFinder completionFinder, TypeAndTries typeAndTries) {
+    public OutputDescriptorBuilder(Module module, PlatformModuleService moduleService, CompletionFinder completionFinder, TypeAndTries typeAndTries) {
         this.completionFinder = completionFinder;
         this.typeAndTries = typeAndTries;
         this.moduleService = moduleService;
         this.module = module;
     }
 
-    public ComponentMetadataActualInputDTO build(ComponentContext context) {
+    public MetadataActualInputDTO build(ComponentContext context) {
         Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor =
                 DiscoveryStrategyFactory.get(module, moduleService, typeAndTries, context, context.node());
 
         return componentOutputDescriptor.map(descriptor -> {
             if (descriptor instanceof MultipleMessages) {
-                return new ComponentMetadataActualInputDTO();
+                return new MetadataActualInputDTO();
             } else {
                 String description = descriptor.getDescription();
                 MetadataTypeDTO outputAttributes = attributes(descriptor);
                 List<MetadataTypeDTO> outputPayload = payload(descriptor);
-                return new ComponentMetadataActualInputDTO(outputAttributes, outputPayload, description);
+                return new MetadataActualInputDTO(outputAttributes, outputPayload, description);
             }
         }).orElse(null);
     }

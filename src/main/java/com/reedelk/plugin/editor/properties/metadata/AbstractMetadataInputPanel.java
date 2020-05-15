@@ -7,7 +7,7 @@ import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataDTO;
+import com.reedelk.plugin.service.module.impl.component.metadata.MetadataDTO;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
@@ -27,13 +27,13 @@ abstract class AbstractMetadataInputPanel extends DisposableScrollPane implement
     }
 
     @Override
-    public void onComponentMetadataUpdated(ComponentMetadataDTO componentMetadataDTO) {
+    public void onComponentMetadataUpdated(MetadataDTO metadataDTO) {
         DisposablePanel theContent = new DisposablePanel(new GridBagLayout());
         theContent.setBackground(JBColor.WHITE);
         DisposablePanel panel = ContainerFactory.pushTop(theContent);
         panel.setBackground(JBColor.WHITE);
         panel.setBorder(empty(5, 2));
-        render(componentMetadataDTO, theContent);
+        render(metadataDTO, theContent);
         setViewportView(panel);
     }
 
@@ -48,7 +48,7 @@ abstract class AbstractMetadataInputPanel extends DisposableScrollPane implement
         setViewportView(panel);
     }
 
-    abstract void render(ComponentMetadataDTO componentMetadataDTO, DisposablePanel parent);
+    abstract void render(MetadataDTO metadataDTO, DisposablePanel parent);
 
 
     public void renderError(Exception exception, DisposablePanel parent) {

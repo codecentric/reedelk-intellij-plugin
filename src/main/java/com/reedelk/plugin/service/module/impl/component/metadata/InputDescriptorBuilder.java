@@ -12,17 +12,17 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
 
-public class ComponentInputDescriptorBuilder {
+public class InputDescriptorBuilder {
 
     private final PlatformModuleService moduleService;
     private final TypeAndTries typeAndTrie;
 
-    public ComponentInputDescriptorBuilder(PlatformModuleService moduleService, TypeAndTries typeAndTrie) {
+    public InputDescriptorBuilder(PlatformModuleService moduleService, TypeAndTries typeAndTrie) {
         this.moduleService = moduleService;
         this.typeAndTrie = typeAndTrie;
     }
 
-    public ComponentMetadataExpectedInputDTO build(ComponentContext context) {
+    public MetadataExpectedInputDTO build(ComponentContext context) {
         GraphNode componentGraphNode = context.node();
 
         String componentFullyQualifiedName =
@@ -39,7 +39,7 @@ public class ComponentInputDescriptorBuilder {
             String payload = descriptor.getPayload().stream()
                     .map(payloadType -> TypeUtils.toSimpleName(payloadType, typeAndTrie))
                     .collect(joining(", "));
-            return new ComponentMetadataExpectedInputDTO(payload, description);
+            return new MetadataExpectedInputDTO(payload, description);
 
         }).orElse(null);
     }

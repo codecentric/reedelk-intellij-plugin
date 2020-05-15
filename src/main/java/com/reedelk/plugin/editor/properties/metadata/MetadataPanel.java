@@ -11,7 +11,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.PanelWithText;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataDTO;
+import com.reedelk.plugin.service.module.impl.component.metadata.MetadataDTO;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -61,7 +61,7 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
     }
 
     @Override
-    public void onComponentMetadataUpdated(ComponentMetadataDTO componentMetadataDTO) {
+    public void onComponentMetadataUpdated(MetadataDTO metadataDTO) {
         ApplicationManager.getApplication().invokeLater(() -> {
             remove(loadingPanel);
             add(metadataActualInput, BorderLayout.CENTER);
@@ -69,8 +69,8 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
             repaint();
         });
 
-        metadataActualInput.onComponentMetadataUpdated(componentMetadataDTO);
-        metadataExpectedInput.onComponentMetadataUpdated(componentMetadataDTO);
+        metadataActualInput.onComponentMetadataUpdated(metadataDTO);
+        metadataExpectedInput.onComponentMetadataUpdated(metadataDTO);
     }
 
     @Override
