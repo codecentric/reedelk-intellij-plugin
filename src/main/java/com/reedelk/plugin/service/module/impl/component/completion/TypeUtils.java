@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,20 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Default.DEFAULT_RETURN_TYPE;
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class TypeUtils {
 
     private static final String LIST_SIMPLE_NAME_FORMAT = "List<%s>";
+    private static final String LIST_SIMPLE_NAME_AND_ITEM_TYPE_FORMAT = "%s : %s";
 
     private TypeUtils() {
     }
 
-    // TODO: I don't know about this method, I think they should all go through the one with the type trie for consistency.
-    // Converts a fully qualified type name to a simple name,
-    // e.g: com.my.component.MyType > MyType
+    // Converts a fully qualified type name to a simple name, e.g: com.my.component.MyType > MyType.
     public static String toSimpleName(String type) {
-        if (type == null) return StringUtils.EMPTY;
+        if (type == null) return EMPTY;
         String[] splits = type.split(","); // might be multiple types
         List<String> tmp = new ArrayList<>();
         for (String split : splits) {
@@ -35,7 +34,7 @@ public class TypeUtils {
     @NotNull
     public static String toSimpleName(@Nullable String type, @NotNull Trie typeTrie) {
         if (type == null) {
-            return StringUtils.EMPTY;
+            return EMPTY;
         } else if (isNotBlank(typeTrie.displayName())) {
             return typeTrie.displayName();
         } else if (isNotBlank(typeTrie.listItemType())) {
@@ -67,11 +66,15 @@ public class TypeUtils {
         }
     }
 
+    @NotNull
     public static String formatListDisplayType(String type, Trie typeTrie) {
-        return TypeUtils.toSimpleName(type, typeTrie) + " : " + TypeUtils.toSimpleName(typeTrie.listItemType());
+        return String.format(LIST_SIMPLE_NAME_AND_ITEM_TYPE_FORMAT,
+                TypeUtils.toSimpleName(type, typeTrie),
+                TypeUtils.toSimpleName(typeTrie.listItemType()));
     }
 
+    @NotNull
     public static String returnTypeOrDefault(String type) {
-        return StringUtils.isBlank(type) ? DEFAULT_RETURN_TYPE : type;
+        return isNotBlank(type) ? type : DEFAULT_RETURN_TYPE;
     }
 }
