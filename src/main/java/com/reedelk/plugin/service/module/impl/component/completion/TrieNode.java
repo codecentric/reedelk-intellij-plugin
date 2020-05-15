@@ -7,10 +7,8 @@ public class TrieNode {
     private Set<Suggestion> suggestions = new HashSet<>();
     private Map<Character, TrieNode> children = new HashMap<>();
 
-    public boolean isSuggestion() {
-        return (children.isEmpty() && !suggestions.isEmpty()) ||
-                (children.containsKey('.') && !suggestions.isEmpty()) ||
-                !suggestions.isEmpty();
+    public boolean existAnySuggestion() {
+        return !suggestions.isEmpty();
     }
 
     public Map<Character, TrieNode> getChildren() {

@@ -49,14 +49,10 @@ public class TrieImpl implements Trie {
         Set<Suggestion> suggestions = new HashSet<>();
         TrieNode current = root;
         int i = 0;
-        int lastWordIndex = -1;
         while (i < token.length()) {
             char c = token.charAt(i);
             Map<Character, TrieNode> children = current.getChildren();
             if (children.containsKey(c)) {
-                if (c == '.') {
-                    lastWordIndex = i;
-                }
                 current = children.get(c);
             } else {
                 return suggestions;
@@ -64,11 +60,12 @@ public class TrieImpl implements Trie {
             i++;
         }
 
-        if (current.isSuggestion()) {
+        if (current.existAnySuggestion()) {
             return new HashSet<>(current.getSuggestions());
         } else {
-            String prefix = lastWordIndex != -1 ? token.substring(lastWordIndex + 1) : token;
-            return traversal(current, suggestions, prefix);
+            // We need to complete the suggestion from the current token
+            // string until some suggestions are found.
+            return traversal(current, suggestions, token);
         }
     }
 
@@ -94,9 +91,13 @@ public class TrieImpl implements Trie {
     }
 
     private Set<Suggestion> traversal(TrieNode start, Set<Suggestion> suggestions, String current) {
-        if (start.isSuggestion()) {
+        if (start.existAnySuggestion()) {
+            // We add the suggestions from the current node to the list of suggestions
+            // to return and then we continue with the children to discover other suggestions
+            // matching the postfix below.
             suggestions.addAll(start.getSuggestions());
         }
+        // We must continue to find suggestions until there are no more children in the trie.
         start.getChildren().forEach((character, trieNode) -> {
             String newCurrent = current + character;
             traversal(trieNode, suggestions, newCurrent);
