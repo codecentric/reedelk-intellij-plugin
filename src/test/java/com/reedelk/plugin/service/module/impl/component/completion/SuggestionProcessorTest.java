@@ -1,6 +1,10 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.ScriptSignatureArgument;
+import com.reedelk.module.descriptor.model.property.ScriptSignatureDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
 import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
@@ -9,12 +13,12 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -106,5 +110,38 @@ class SuggestionProcessorTest {
         // Then
         Collection<Suggestion> suggestions = moduleGlobalTypes.autocomplete(StringUtils.EMPTY, allTypesMap);
         assertThat(suggestions).hasSize(1);
+        PluginAssertion.assertThat(suggestions)
+                .contains(GLOBAL, "FileType", "FileType", type, "FileType");
+    }
+
+    @Test
+    void shouldPopulateCorrectlyPropertiesScriptSignatures() {
+        // Given
+        ScriptSignatureArgument argument1 = new ScriptSignatureArgument("var1", "com.test.MyType");
+        ScriptSignatureDescriptor signatureDescriptor = new ScriptSignatureDescriptor();
+        signatureDescriptor.setArguments(singletonList(argument1));
+
+        PropertyDescriptor nameProperty = new PropertyDescriptor();
+        nameProperty.setName("name");
+        nameProperty.setScriptSignature(signatureDescriptor);
+
+        ComponentDescriptor componentDescriptor = new ComponentDescriptor();
+        componentDescriptor.setFullyQualifiedName("com.test.Component1");
+        componentDescriptor.setProperties(Arrays.asList(nameProperty));
+        ModuleDescriptor descriptor = new ModuleDescriptor();
+        descriptor.setName("module-xyz");
+        descriptor.setComponents(Arrays.asList(componentDescriptor));
+
+        // When
+        processor.populate(descriptor);
+
+        // Then
+        Trie signatureTrie = moduleSignatureTypes.get("com.test.Component1#name");
+        assertThat(signatureTrie).isNotNull();
+
+        Collection<Suggestion> suggestions = signatureTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
+        assertThat(suggestions).hasSize(1);
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY, "var1", "var1", "com.test.MyType", "MyType");
     }
 }
