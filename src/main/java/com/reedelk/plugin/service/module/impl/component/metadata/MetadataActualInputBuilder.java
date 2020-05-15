@@ -18,14 +18,14 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-public class OutputDescriptorBuilder {
+public class MetadataActualInputBuilder {
 
     private final CompletionFinder completionFinder;
     private final TypeAndTries typeAndTries;
     private final PlatformModuleService moduleService;
     private final Module module;
 
-    public OutputDescriptorBuilder(Module module, PlatformModuleService moduleService, CompletionFinder completionFinder, TypeAndTries typeAndTries) {
+    public MetadataActualInputBuilder(Module module, PlatformModuleService moduleService, CompletionFinder completionFinder, TypeAndTries typeAndTries) {
         this.completionFinder = completionFinder;
         this.typeAndTries = typeAndTries;
         this.moduleService = moduleService;

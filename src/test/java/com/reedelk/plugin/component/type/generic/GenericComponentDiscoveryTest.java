@@ -176,10 +176,10 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
                 discovery.compute(componentContext, root);
 
         // Then
-        assertThat(maybeActualOutput).isNotPresent();
+        assertThat(maybeActualOutput).isPresent();
 
         ComponentOutputDescriptor actualOutputDescriptor = maybeActualOutput.get();
-        assertThat(actualOutputDescriptor.getDescription()).isEqualTo("My description");
+        assertThat(actualOutputDescriptor.getDescription()).isEqualTo(""); // the description is taken from the predecessor of root (which is missing)
         assertThat(actualOutputDescriptor.getAttributes()).isEqualTo("com.test.MyAttributes");
         assertThat(actualOutputDescriptor.getPayload()).isEqualTo(singletonList(Object.class.getName()));
     }

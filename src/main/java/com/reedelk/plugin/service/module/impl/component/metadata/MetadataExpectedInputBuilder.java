@@ -12,12 +12,12 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
 
-public class InputDescriptorBuilder {
+public class MetadataExpectedInputBuilder {
 
     private final PlatformModuleService moduleService;
     private final TypeAndTries typeAndTrie;
 
-    public InputDescriptorBuilder(PlatformModuleService moduleService, TypeAndTries typeAndTrie) {
+    public MetadataExpectedInputBuilder(PlatformModuleService moduleService, TypeAndTries typeAndTrie) {
         this.moduleService = moduleService;
         this.typeAndTrie = typeAndTrie;
     }
