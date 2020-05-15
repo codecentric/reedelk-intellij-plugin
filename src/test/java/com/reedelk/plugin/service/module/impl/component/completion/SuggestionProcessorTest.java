@@ -13,7 +13,6 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,7 +116,9 @@ class SuggestionProcessorTest {
     @Test
     void shouldPopulateCorrectlyPropertiesScriptSignatures() {
         // Given
-        ScriptSignatureArgument argument1 = new ScriptSignatureArgument("var1", "com.test.MyType");
+
+        // Component 1
+        ScriptSignatureArgument argument1 = new ScriptSignatureArgument("var1", "com.test.MyType1");
         ScriptSignatureDescriptor signatureDescriptor = new ScriptSignatureDescriptor();
         signatureDescriptor.setArguments(singletonList(argument1));
 
@@ -125,23 +126,60 @@ class SuggestionProcessorTest {
         nameProperty.setName("name");
         nameProperty.setScriptSignature(signatureDescriptor);
 
-        ComponentDescriptor componentDescriptor = new ComponentDescriptor();
-        componentDescriptor.setFullyQualifiedName("com.test.Component1");
-        componentDescriptor.setProperties(Arrays.asList(nameProperty));
+        ComponentDescriptor component1Descriptor = new ComponentDescriptor();
+        component1Descriptor.setFullyQualifiedName("com.test.Component1");
+        component1Descriptor.setProperties(singletonList(nameProperty));
+
+
+        // Component 2
+        argument1 = new ScriptSignatureArgument("var1", "com.test.MyType1");
+        ScriptSignatureArgument argument2 = new ScriptSignatureArgument("var2", "com.test.MyType2");
+        signatureDescriptor = new ScriptSignatureDescriptor();
+        signatureDescriptor.setArguments(asList(argument1, argument2));
+
+        nameProperty = new PropertyDescriptor();
+        nameProperty.setName("name");
+        nameProperty.setScriptSignature(signatureDescriptor);
+
+        ScriptSignatureArgument argument3 = new ScriptSignatureArgument("var3", Integer.class.getName());
+        signatureDescriptor = new ScriptSignatureDescriptor();
+        signatureDescriptor.setArguments(singletonList(argument3));
+
+        PropertyDescriptor ageProperty = new PropertyDescriptor();
+        ageProperty.setName("age");
+        ageProperty.setScriptSignature(signatureDescriptor);
+
+        ComponentDescriptor component2Descriptor = new ComponentDescriptor();
+        component2Descriptor.setFullyQualifiedName("com.test.Component2");
+        component2Descriptor.setProperties(asList(nameProperty, ageProperty));
+
+
         ModuleDescriptor descriptor = new ModuleDescriptor();
         descriptor.setName("module-xyz");
-        descriptor.setComponents(Arrays.asList(componentDescriptor));
+        descriptor.setComponents(asList(component1Descriptor, component2Descriptor));
 
         // When
         processor.populate(descriptor);
 
-        // Then
+        // Then (component 1 script signatures added)
         Trie signatureTrie = moduleSignatureTypes.get("com.test.Component1#name");
-        assertThat(signatureTrie).isNotNull();
-
         Collection<Suggestion> suggestions = signatureTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
         assertThat(suggestions).hasSize(1);
         PluginAssertion.assertThat(suggestions)
-                .contains(PROPERTY, "var1", "var1", "com.test.MyType", "MyType");
+                .contains(PROPERTY, "var1", "var1", "com.test.MyType1", "MyType1");
+
+        // Then (component 2 script signatures added)
+        signatureTrie = moduleSignatureTypes.get("com.test.Component2#name");
+        suggestions = signatureTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
+        assertThat(suggestions).hasSize(2);
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY, "var1", "var1", "com.test.MyType1", "MyType1")
+                .contains(PROPERTY, "var2", "var2", "com.test.MyType2", "MyType2");
+
+        signatureTrie = moduleSignatureTypes.get("com.test.Component2#age");
+        suggestions = signatureTrie.autocomplete(StringUtils.EMPTY, allTypesMap);
+        assertThat(suggestions).hasSize(1);
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY, "var3", "var3", Integer.class.getName(), Integer.class.getSimpleName());
     }
 }
