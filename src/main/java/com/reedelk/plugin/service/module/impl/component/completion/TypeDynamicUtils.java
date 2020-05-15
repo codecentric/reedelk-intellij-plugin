@@ -17,19 +17,20 @@ public class TypeDynamicUtils {
     }
 
     // We need to create an artificial suggestion for each dynamic type found.
+    // We keep the original suggestion parameters, we only change the return type and its display value.
     // The dynamic types depend on the previous component output descriptor.
     // Note that there might be multiple dynamic types because a component
-    // could have multiple outputs.
-    public static Collection<Suggestion> createDynamicSuggestion(ComponentOutputDescriptor descriptor,
-                                                                 Suggestion suggestion,
-                                                                 TypeAndTries typeAndTrieMap) {
+    // could have multiple outputs such as RESTListener -> output String,byte[] or Map (attachments for multipart).
+    public static Collection<Suggestion> createDynamicSuggestions(ComponentOutputDescriptor descriptor,
+                                                                  Suggestion suggestion,
+                                                                  TypeAndTries typeAndTrieMap) {
         return TypeDynamicUtils.resolve(suggestion, descriptor).stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
-                        .returnTypeDisplayValue(TypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
                         .cursorOffset(suggestion.getCursorOffset())
                         .insertValue(suggestion.getInsertValue())
                         .lookupToken(suggestion.getLookupToken())
                         .tailText(suggestion.getTailText())
+                        .returnTypeDisplayValue(TypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
                         .returnType(dynamicType)
                         .build())
                 .collect(toList());

@@ -30,11 +30,11 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
         this.wrapped = descriptor;
 
         descriptionDescriptor = PropertyDescriptor.builder()
-                .type(TypePrimitiveDescriptors.STRING)
                 .name(Implementor.description())
-                .hintValue(message("component.description.hint"))
+                .type(TypePrimitiveDescriptors.STRING)
                 .displayName(DESCRIPTION_PROPERTY_DISPLAY_NAME)
-                .initValue(wrapped.getDisplayName())
+                .hintValue(message("component.description.hint"))
+                .initValue(message("component.description.init.value", wrapped.getDisplayName()))
                 .build();
 
         // The component properties are the union of the existing one + the description property.

@@ -78,7 +78,7 @@ public class CompletionFinder {
                                           List<Suggestion> suggestionList,
                                           boolean flatten) {
         Collection<Suggestion> dynamicSuggestions =
-                TypeDynamicUtils.createDynamicSuggestion(descriptor, originalSuggestion, typeAndTrieMap);
+                TypeDynamicUtils.createDynamicSuggestions(descriptor, originalSuggestion, typeAndTrieMap);
         if (flatten && dynamicSuggestions.size() > 1) {
             // If the suggestion is terminal, e.g. message.payload() we must flatten the dynamic suggestions into one.
             // the type of each separate suggestion is separated by a comma. This happens when a component might
