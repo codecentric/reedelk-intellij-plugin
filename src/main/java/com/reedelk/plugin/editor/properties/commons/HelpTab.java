@@ -82,7 +82,7 @@ public class HelpTab extends DisposableScrollPane {
 
     static class ImageCache extends Hashtable {
 
-        private final BufferedImage image;
+        private transient final BufferedImage image;
 
         ImageCache(BufferedImage image) {
             this.image = image;

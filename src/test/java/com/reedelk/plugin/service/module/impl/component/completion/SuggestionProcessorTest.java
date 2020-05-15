@@ -43,7 +43,7 @@ class SuggestionProcessorTest {
     }
 
     @Test
-    void shouldPopulateCorrectlyTrieForType() {
+    void shouldPopulateCorrectlyAllModuleTypes() {
         // Given
         String type = "com.test.internal.type.FileType";
         TypePropertyDescriptor idProperty = createStringPropertyDescriptor("id");
@@ -68,6 +68,7 @@ class SuggestionProcessorTest {
         PluginAssertion.assertThat(suggestions)
                 .contains(PROPERTY, "id", "id", String.class.getName(), String.class.getSimpleName())
                 .contains(PROPERTY, "age", "age", int.class.getName(), int.class.getSimpleName())
-                .contains(FUNCTION, "method1()", "method1", String.class.getName(), String.class.getSimpleName());
+                .contains(FUNCTION, "method1()", "method1", String.class.getName(), String.class.getSimpleName())
+                .contains(FUNCTION, "method2()", "method2", int.class.getName(), int.class.getSimpleName());
     }
 }

@@ -28,7 +28,7 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
     private final MetadataExpectedInput metadataExpectedInput;
 
     private final DisposablePanel loadingPanel;
-    private MessageBusConnection connection;
+    private transient MessageBusConnection connection;
 
     public MetadataPanel(@NotNull Module module, @NotNull ContainerContext context) {
         super(new BorderLayout());

@@ -79,11 +79,9 @@ public abstract class GraphManager implements FileEditorManagerListener,
     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(module.getProject()).getSelectedFiles();
         for (VirtualFile file : selectedFiles) {
-            if (file.equals(graphFile)) {
-                if (event.getNewEditor() instanceof DesignerEditor) {
-                    deserializeDocument();
-                    break;
-                }
+            if (file.equals(graphFile) && event.getNewEditor() instanceof DesignerEditor) {
+                deserializeDocument();
+                break;
             }
         }
     }

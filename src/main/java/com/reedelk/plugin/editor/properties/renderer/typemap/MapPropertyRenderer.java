@@ -47,10 +47,9 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
                     tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, new TabLabelHorizontal(propertyDisplayName));
                     return tabbedPane;
 
-                }).orElseGet(() -> {
-                    // No tab group
-                    return new MapTableContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
-                });
+                }).orElseGet(() ->
+                        // No tab group
+                        new MapTableContainer(module, columnAndModel.model, columnAndModel.columnModelFactory));
     }
 
     private MapColumnAndModel getColumnAndModel(@NotNull Module module,

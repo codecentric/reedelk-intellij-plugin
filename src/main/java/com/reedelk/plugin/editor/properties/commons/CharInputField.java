@@ -42,11 +42,6 @@ public class CharInputField extends InputField<String> {
         }
 
         @Override
-        public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-            super.remove(fb, offset, length);
-        }
-
-        @Override
         public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
             Document doc = fb.getDocument();
             if (text == null) return;

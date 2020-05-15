@@ -22,7 +22,7 @@ public class BooleanCheckbox extends JBCheckBox implements ActionListener {
     }
 
     public void setValue(Boolean value) {
-        setSelected(value == null ? false : value);
+        setSelected(value == null ? Boolean.FALSE : value);
     }
 
     public boolean getValue() {

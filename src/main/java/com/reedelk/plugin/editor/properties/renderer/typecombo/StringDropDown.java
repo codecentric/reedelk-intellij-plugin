@@ -34,11 +34,9 @@ public class StringDropDown extends JComboBox<String> implements ItemListener, C
 
     @Override
     public void itemStateChanged(ItemEvent event) {
-        if (event.getStateChange() == ItemEvent.SELECTED) {
-            if (listener != null) {
-                String item = (String) event.getItem();
-                listener.onChange(item);
-            }
+        if (event.getStateChange() == ItemEvent.SELECTED && listener != null) {
+            String item = (String) event.getItem();
+            listener.onChange(item);
         }
     }
 
@@ -62,11 +60,9 @@ public class StringDropDown extends JComboBox<String> implements ItemListener, C
         // If it is editable, then we notify a change with the currently
         // typed in value. If it is not editable the user must explicitly
         // select an item, which would in turn trigger 'itemStateChanged' above.
-        if (isEditable()) {
-            if (listener != null) {
-                String item = (String) getEditor().getItem();
-                listener.onChange(item);
-            }
+        if (isEditable() && listener != null) {
+            String item = (String) getEditor().getItem();
+            listener.onChange(item);
         }
     }
 }

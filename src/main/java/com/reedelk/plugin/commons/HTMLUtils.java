@@ -4,8 +4,11 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 public class HTMLUtils {
 
-    // Escapes HTML characters, e.g: List<Message> to List&lt;Message&gt;
+    private HTMLUtils() {
+    }
+
     public static String escape(String html) {
+        // Escapes HTML characters to be used in a string, e.g '<' to '&lt;' or '>' to '&gt;'.
         return StringEscapeUtils.escapeHtml(html);
     }
 }

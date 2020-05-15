@@ -26,9 +26,9 @@ public class ContainerContext implements Disposable {
     final FlowSnapshot snapshot;
     private final String componentPropertyPath;
 
-    private final transient List<JComponentHolder> componentHolders = new ArrayList<>();
-    private final transient Map<String, PropertyAccessor> changeAwarePropertyAccessor = new HashMap<>();
-    private final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
+    private final List<JComponentHolder> componentHolders = new ArrayList<>();
+    private final Map<String, PropertyAccessor> changeAwarePropertyAccessor = new HashMap<>();
+    private final Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
 
     private boolean disposed = false;
 

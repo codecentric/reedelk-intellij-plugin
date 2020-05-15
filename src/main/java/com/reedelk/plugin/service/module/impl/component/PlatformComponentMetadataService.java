@@ -47,8 +47,12 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     }
 
     ComponentOutputDescriptor componentOutputOf(ComponentContext context) {
-        return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, context.node())
-                .orElse(null);
+        return DiscoveryStrategyFactory.get(
+                module,
+                componentService,
+                typeAndAndTries,
+                context,
+                context.node()).orElse(null);
     }
 
     @Override

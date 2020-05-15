@@ -21,10 +21,8 @@ public class BelongToSameScope {
             return true;
         }
 
-        if (scope1.isPresent()) {
-            if (scope2.isPresent()) {
-                return scope1.get() == scope2.get();
-            }
+        if (scope1.isPresent() && scope2.isPresent()) {
+            return scope1.get() == scope2.get();
         }
 
         return false;

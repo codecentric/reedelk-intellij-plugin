@@ -19,21 +19,22 @@ class PlatformCompletionService implements PlatformModuleService {
 
     private static final Logger LOG = Logger.getInstance(PlatformCompletionService.class);
 
-    // GLOBAL MODULE TYPES MAPs
+    // Global module types map
     private final Trie flowControlModuleGlobalTypes = new TrieImpl();
     private final Trie mavenModulesGlobalTypes = new TrieImpl();
     private final Trie currentModuleGlobalTypes = new TrieImpl();
     private final TrieMultipleWrapper allGlobalTypes =
             new TrieMultipleWrapper(flowControlModuleGlobalTypes, mavenModulesGlobalTypes, currentModuleGlobalTypes);
 
-    // LOCAL MODULE TYPES MAPs
-    private final Map<String, Trie> flowControlTypes = new HashMap<>(); // Fully qualified name of the module.
+    // Local module types map: the keys are the fully qualified name of the type
+    private final Map<String, Trie> flowControlTypes = new HashMap<>();
     private final Map<String, Trie> mavenModulesTypes = new HashMap<>();
     private final Map<String, Trie> currentModuleTypes = new HashMap<>();
     private final TypeAndTries allTypes =
             new TypeAndTries(flowControlTypes, mavenModulesTypes, currentModuleTypes);
 
-    // COMPONENT SCRIPT PROPERTY SIGNATURE -> TYPES MAPs (maps to a Trie: signature variables for the property are the roots)
+    // Component script property signatures -> types Maps
+    // The value of a map is a trie where the input variables of the script are the roots.
     private final Map<String, Trie> flowControlSignatureTypes = new HashMap<>();
     private final Map<String, Trie> mavenModulesSignatureTypes = new HashMap<>();
     private final Map<String, Trie> currentModuleSignatureTypes = new HashMap<>();
@@ -42,7 +43,6 @@ class PlatformCompletionService implements PlatformModuleService {
     private final PlatformComponentMetadataService componentMetadataService;
 
     public PlatformCompletionService(Module module, PlatformComponentService componentTracker) {
-
         this.completionFinder = new CompletionFinder(allTypes);
         this.componentMetadataService = new PlatformComponentMetadataService(module, completionFinder, allTypes, componentTracker);
     }
@@ -99,7 +99,7 @@ class PlatformCompletionService implements PlatformModuleService {
                     moduleDescriptor.getName(),
                     moduleDescriptor.getDisplayName());
             LOG.warn(error, exception);
-            // Exception is not rethrown on purpose.
+            // Exception is not rethrown on purpose (we want to still be able to register the other modules).
         }
     }
 
@@ -116,7 +116,7 @@ class PlatformCompletionService implements PlatformModuleService {
                     moduleDescriptor.getName(),
                     moduleDescriptor.getDisplayName());
             LOG.warn(error, exception);
-            // Exception is not rethrown on purpose.
+            // Exception is not rethrown on purpose (we want to still be able to register the other modules).
         }
     }
 

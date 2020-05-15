@@ -22,11 +22,9 @@ public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements Ite
 
     @Override
     public void itemStateChanged(ItemEvent event) {
-        if (event.getStateChange() == ItemEvent.SELECTED) {
-            if (listener != null) {
-                ScriptResource item = (ScriptResource) event.getItem();
-                listener.onChange(item);
-            }
+        if (event.getStateChange() == ItemEvent.SELECTED && listener != null) {
+            ScriptResource item = (ScriptResource) event.getItem();
+            listener.onChange(item);
         }
     }
 

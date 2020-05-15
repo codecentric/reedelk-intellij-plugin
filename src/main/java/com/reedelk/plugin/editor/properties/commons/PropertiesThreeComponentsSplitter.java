@@ -16,7 +16,7 @@ import static com.intellij.util.ui.JBUI.Borders.customLine;
 public class PropertiesThreeComponentsSplitter extends DisposableThreeComponentsSplitter {
 
     private static final boolean HORIZONTAL = false;
-    private ContainerContext context;
+    private transient ContainerContext context;
 
     public PropertiesThreeComponentsSplitter(@NotNull Module module,
                                              @NotNull ContainerContext context,

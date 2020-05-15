@@ -17,7 +17,7 @@ import java.util.List;
 
 class ConfigurationPropertiesPanel extends DisposablePanel {
 
-    private ContainerContext context;
+    private transient ContainerContext context;
 
     ConfigurationPropertiesPanel(Module module, ConfigMetadata configMetadata, ObjectDescriptor objectDescriptor, boolean isNewConfig) {
 

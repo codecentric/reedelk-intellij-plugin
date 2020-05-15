@@ -25,18 +25,18 @@ public class MetadataPanelHeader extends DisposablePanel {
 
         header1Label.setAction(() -> {
             setActive(header1Label);
-            setNotActive(header2Label, true);
+            setNotActive(header2Label);
             header1Action.onClick();
         });
 
         header2Label.setAction(() -> {
             setActive(header2Label);
-            setNotActive(header1Label, false);
+            setNotActive(header1Label);
             header2Action.onClick();
         });
 
         setActive(header1Label);
-        setNotActive(header2Label, true);
+        setNotActive(header2Label);
 
         DisposablePanel panel = ContainerFactory.pushLeft(header2Label);
         Box horizontalBox = Box.createHorizontalBox();
@@ -60,7 +60,7 @@ public class MetadataPanelHeader extends DisposablePanel {
         component.setBorder(new CompoundBorder(new CompoundBorder(bottomLine, line), padding));
     }
 
-    private void setNotActive(JComponent component, boolean isLast) {
+    private void setNotActive(JComponent component) {
         component.setForeground(JBColor.DARK_GRAY);
         // Add right border
         Border line = customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);
