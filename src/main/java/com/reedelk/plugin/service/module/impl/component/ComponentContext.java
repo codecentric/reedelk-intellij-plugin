@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public class ComponentContext {
 
-    protected final FlowGraph graph;
     private final GraphNode node;
+    protected final FlowGraph graph;
 
     public ComponentContext(@NotNull FlowGraph graph, @Nullable GraphNode node) {
         this.node = node;
