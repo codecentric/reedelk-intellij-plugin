@@ -18,9 +18,9 @@ public class TypeUtils {
 
     // Converts a fully qualified type name to a simple name,
     // e.g: com.my.component.MyType > MyType
-    public static String from(String originalType) {
-        if (originalType == null) return StringUtils.EMPTY;
-        String[] splits = originalType.split(","); // might be multiple types
+    public static String toSimpleName(String type) {
+        if (type == null) return StringUtils.EMPTY;
+        String[] splits = type.split(","); // might be multiple types
         List<String> tmp = new ArrayList<>();
         for (String split : splits) {
             String[] segments = split.split("\\.");
@@ -29,13 +29,13 @@ public class TypeUtils {
         return String.join(",", tmp);
     }
 
-    public static String from(String type, Trie typeTrie) {
+    public static String toSimpleName(String type, Trie typeTrie) {
         if (isNotBlank(typeTrie.listItemType())) {
             // If exists a list item type, it is a list and we want to display it with: List<ItemType>
             String listItemType = typeTrie.listItemType();
-            return "List<" + TypeUtils.from(listItemType) + ">";
+            return "List<" + TypeUtils.toSimpleName(listItemType) + ">";
         } else {
-            return TypeUtils.from(type);
+            return TypeUtils.toSimpleName(type);
         }
     }
 
@@ -45,12 +45,12 @@ public class TypeUtils {
             return MessageAttributes.class.getSimpleName(); // We keep the message attributes.
         } else {
             Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, Default.UNKNOWN);
-            return TypeUtils.from(dynamicType, dynamicTypeTrie);
+            return TypeUtils.toSimpleName(dynamicType, dynamicTypeTrie);
         }
     }
 
     public static String formatListDisplayType(String type, Trie typeTrie) {
-        return TypeUtils.from(type, typeTrie) + " : " + TypeUtils.from(typeTrie.listItemType());
+        return TypeUtils.toSimpleName(type, typeTrie) + " : " + TypeUtils.toSimpleName(typeTrie.listItemType());
     }
 
     @Nullable
@@ -59,7 +59,7 @@ public class TypeUtils {
         Trie typeTrie = allTypesMap.getOrDefault(type, Default.UNKNOWN);
         return StringUtils.isNotBlank(typeTrie.displayName()) ?
                 typeTrie.displayName() :
-                TypeUtils.from(type, typeTrie);
+                TypeUtils.toSimpleName(type, typeTrie);
     }
 
     public static String returnTypeOrDefault(String type) {

@@ -119,7 +119,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
             return new MetadataTypeDTO(typeDisplay, typeDTOs);
 
         } else {
-            String typeDisplay = TypeUtils.from(type, typeTrie);
+            String typeDisplay = TypeUtils.toSimpleName(type, typeTrie);
             Collection<MetadataTypeItemDTO> typeDTOs = findAndMapDTO(output, typeTrie);
             return new MetadataTypeDTO(typeDisplay, typeDTOs);
         }

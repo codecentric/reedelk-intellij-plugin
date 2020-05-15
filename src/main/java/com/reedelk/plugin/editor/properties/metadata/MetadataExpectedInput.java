@@ -41,7 +41,7 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
         }
 
         String expectedPayloadTypes = input.getPayload().stream()
-                .map(TypeUtils::from)
+                .map(TypeUtils::toSimpleName)
                 .collect(Collectors.joining(", "));
         JBLabel expectedType = new JBLabel(htmlLabel("<b style=\"color: #666666\">Expected type: </b>" + expectedPayloadTypes, "", false));
         expectedType.setBorder(JBUI.Borders.empty(5));

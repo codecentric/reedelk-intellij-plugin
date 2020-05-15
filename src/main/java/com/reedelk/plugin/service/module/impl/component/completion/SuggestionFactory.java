@@ -24,7 +24,7 @@ public class SuggestionFactory {
         // name if it was bound to the script engine with a different name.
         String globalToken = StringUtils.isNotBlank(typeDescriptor.getDisplayName()) ?
                 typeDescriptor.getDisplayName() :
-                TypeUtils.from(typeDescriptor.getType());
+                TypeUtils.toSimpleName(typeDescriptor.getType());
         return Suggestion.create(GLOBAL)
                 .returnTypeDisplayValue(globalToken)
                 .insertValue(globalToken)

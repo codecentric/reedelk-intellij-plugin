@@ -15,7 +15,7 @@ class TypeUtilsTest {
         String input = null;
 
         // When
-        String actual = TypeUtils.from(input);
+        String actual = TypeUtils.toSimpleName(input);
 
         // Then
         assertThat(actual).isEqualTo(StringUtils.EMPTY);
@@ -27,7 +27,7 @@ class TypeUtilsTest {
         String input = Message.class.getName();
 
         // When
-        String actual = TypeUtils.from(input);
+        String actual = TypeUtils.toSimpleName(input);
 
         // Then
         assertThat(actual).isEqualTo("Message");
@@ -39,7 +39,7 @@ class TypeUtilsTest {
         String input = "Message";
 
         // When
-        String actual = TypeUtils.from(input);
+        String actual = TypeUtils.toSimpleName(input);
 
         // Then
         assertThat(actual).isEqualTo("Message");

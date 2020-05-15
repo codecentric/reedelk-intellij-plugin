@@ -22,13 +22,13 @@ public class Default {
         Suggestion message = Suggestion.create(PROPERTY)
                 .insertValue("message")
                 .returnType(Message.class.getName())
-                .returnTypeDisplayValue(TypeUtils.from(Message.class.getName()))
+                .returnTypeDisplayValue(TypeUtils.toSimpleName(Message.class.getName()))
                 .build();
         TRIE.insert(message);
         Suggestion context = Suggestion.create(PROPERTY)
                 .insertValue("context")
                 .returnType(FlowContext.class.getName())
-                .returnTypeDisplayValue(TypeUtils.from(FlowContext.class.getName()))
+                .returnTypeDisplayValue(TypeUtils.toSimpleName(FlowContext.class.getName()))
                 .build();
         TRIE.insert(context);
     }

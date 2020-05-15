@@ -24,7 +24,8 @@ public class TypeDynamicUtils {
     public static Collection<Suggestion> createDynamicSuggestions(ComponentOutputDescriptor descriptor,
                                                                   Suggestion suggestion,
                                                                   TypeAndTries typeAndTrieMap) {
-        return TypeDynamicUtils.resolve(suggestion, descriptor).stream()
+        return TypeDynamicUtils.resolve(suggestion, descriptor)
+                .stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())
                         .insertValue(suggestion.getInsertValue())
