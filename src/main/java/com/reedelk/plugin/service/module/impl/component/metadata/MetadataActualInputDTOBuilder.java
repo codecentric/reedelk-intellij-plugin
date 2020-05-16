@@ -5,19 +5,17 @@ import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-// TODO :Also add for each completion for each { it. }
+
 public class MetadataActualInputDTOBuilder {
 
     private final PlatformModuleService moduleService;
@@ -53,11 +51,33 @@ public class MetadataActualInputDTOBuilder {
 
     private MetadataTypeDTO attributes(ComponentOutputDescriptor descriptor) {
         List<MetadataTypeDTO> metadataTypes = descriptor.getAttributes().stream()
+                .distinct() // we want to avoid creating data for the same type.
                 .map(attributeType -> createMetadataType(attributeType, descriptor))
                 .collect(toList());
-        return metadataTypes.get(0);
+        return mergeMetadataTypes(metadataTypes);
     }
 
+    private MetadataTypeDTO mergeMetadataTypes(List<MetadataTypeDTO> metadataTypes) {
+        Map<String, MetadataTypeItemDTO> nameAndMetadataMappings = new HashMap<>();
+        metadataTypes.forEach(metadataTypeDTO -> {
+            metadataTypeDTO.getProperties().forEach(metadataTypeItemDTO -> {
+                MetadataTypeItemDTO item = nameAndMetadataMappings.get(metadataTypeItemDTO.name);
+                if (item != null) {
+                    MetadataTypeItemDTO merged = merge(metadataTypeItemDTO, item);
+                    nameAndMetadataMappings.put(metadataTypeItemDTO.name, merged);
+                } else {
+                    nameAndMetadataMappings.put(metadataTypeItemDTO.name, metadataTypeItemDTO);
+                }
+            });
+        });
+
+        return new MetadataTypeDTO(MessageAttributes.class.getName(), nameAndMetadataMappings.values());
+    }
+
+    private MetadataTypeItemDTO merge(MetadataTypeItemDTO dto1, MetadataTypeItemDTO dto2) {
+        return Objects.equals(dto1.value, dto2.value) ?
+                dto1 : new MetadataTypeItemDTO(dto1.name, dto1.value + ", " + dto2.value);
+    }
 
     private List<MetadataTypeDTO> payload(ComponentOutputDescriptor output) {
         List<String> outputPayloadTypes = output != null ?
@@ -92,17 +112,14 @@ public class MetadataActualInputDTOBuilder {
     private MetadataTypeItemDTO createTypeProperties(String lookupToken, String type, ComponentOutputDescriptor output) {
         List<Suggestion> typeSuggestions = suggestionsFromType(type, output);
         if (typeSuggestions.isEmpty()) {
-
             Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
             if (isNotBlank(typeTrie.listItemType())) {
                 MetadataTypeDTO listComplexType = unrollListType(output, typeTrie);
                 return new MetadataTypeItemDTO(lookupToken, listComplexType);
-
             } else {
                 String propertyDisplayType = TypeUtils.toSimpleName(type, typeAndTries);
                 return new MetadataTypeItemDTO(lookupToken, propertyDisplayType);
             }
-
         } else {
             MetadataTypeDTO metadataType = createMetadataType(type, output);
             return new MetadataTypeItemDTO(lookupToken, metadataType);
