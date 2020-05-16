@@ -5,27 +5,33 @@ import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
-import com.reedelk.runtime.api.message.MessageAttributes;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
+// TODO :Also add for each completion for each { it. }
 public class MetadataActualInputDTOBuilder {
 
+    private final PlatformModuleService moduleService;
     private final CompletionFinder completionFinder;
     private final TypeAndTries typeAndTries;
-    private final PlatformModuleService moduleService;
     private final Module module;
 
-    public MetadataActualInputDTOBuilder(Module module, PlatformModuleService moduleService, CompletionFinder completionFinder, TypeAndTries typeAndTries) {
+    public MetadataActualInputDTOBuilder(@NotNull Module module,
+                                         @NotNull PlatformModuleService moduleService,
+                                         @NotNull CompletionFinder completionFinder,
+                                         @NotNull TypeAndTries typeAndTries) {
         this.completionFinder = completionFinder;
-        this.typeAndTries = typeAndTries;
         this.moduleService = moduleService;
+        this.typeAndTries = typeAndTries;
         this.module = module;
     }
 
@@ -45,96 +51,84 @@ public class MetadataActualInputDTOBuilder {
         }).orElse(null);
     }
 
-    private MetadataTypeDTO attributes(ComponentOutputDescriptor output) {
-        Collection<MetadataTypeItemDTO> suggestions = output == null ?
-                findAndMapDTO(output, MessageAttributes.class.getName()) :
-                findAndMapDTO(output, output.getAttributes());
-        return new MetadataTypeDTO(MessageAttributes.class.getName(), suggestions);
+    private MetadataTypeDTO attributes(ComponentOutputDescriptor descriptor) {
+        List<MetadataTypeDTO> metadataTypes = descriptor.getAttributes().stream()
+                .map(attributeType -> createMetadataType(attributeType, descriptor))
+                .collect(toList());
+        return metadataTypes.get(0);
     }
+
 
     private List<MetadataTypeDTO> payload(ComponentOutputDescriptor output) {
-        List<String> outputPayloadTypes = output != null ? output.getPayload() : singletonList(Object.class.getName());
-        return outputPayloadTypes
-                .stream()
-                .map(outputType -> map(output, outputType))
+        List<String> outputPayloadTypes = output != null ?
+                output.getPayload() : singletonList(Object.class.getName());
+        return outputPayloadTypes.stream()
+                .distinct()
+                .map(payloadType -> {
+                    return createMetadataType(payloadType, output);
+                })
                 .collect(toList());
     }
 
-    private MetadataTypeDTO map(ComponentOutputDescriptor output, String type) {
+    private MetadataTypeDTO createMetadataType(String type, ComponentOutputDescriptor output) {
         Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
         if (isNotBlank(typeTrie.listItemType())) {
-            // It is  a List type, we need to find the suggestions for the List item type.
-            // The list type display is: List<FileType> : FileType
-            String typeDisplay = TypeUtils.formatListDisplayType(type, typeTrie);
-            String listItemType = typeTrie.listItemType();
-            Collection<MetadataTypeItemDTO> typeDTOs = findAndMapDTO(output, listItemType);
-            return new MetadataTypeDTO(typeDisplay, typeDTOs);
+            // Unroll list item type
+            return unrollListType(output, typeTrie);
 
         } else {
-            String typeDisplay = TypeUtils.toSimpleName(type, typeTrie);
-            Collection<MetadataTypeItemDTO> typeDTOs = findAndMapDTO(output, typeTrie);
-            return new MetadataTypeDTO(typeDisplay, typeDTOs);
+            List<Suggestion> typeSuggestions = suggestionsFromType(type, output);
+            String propertyDisplayType = TypeUtils.toSimpleName(type, typeAndTries);
+            Collection<MetadataTypeItemDTO> typeProperties = new ArrayList<>();
+            for (Suggestion suggestion : typeSuggestions) {
+                MetadataTypeItemDTO typeProperty =
+                        createTypeProperties(suggestion.getLookupToken(), suggestion.getReturnType(), output);
+                typeProperties.add(typeProperty);
+            }
+            return new MetadataTypeDTO(propertyDisplayType, typeProperties);
         }
     }
 
-    private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, List<String> types) {
-        Collection<MetadataTypeItemDTO> allTypeItems = new ArrayList<>();
-        for (String type : types) {
-            Collection<MetadataTypeItemDTO> mappedTypeItems = findAndMapDTO(output, type);
-            allTypeItems.addAll(mappedTypeItems);
-        }
-        return allTypeItems;
-    }
+    private MetadataTypeItemDTO createTypeProperties(String lookupToken, String type, ComponentOutputDescriptor output) {
+        List<Suggestion> typeSuggestions = suggestionsFromType(type, output);
+        if (typeSuggestions.isEmpty()) {
 
-    private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, String type) {
-        Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
-        return findAndMapDTO(output, typeTrie);
-    }
-
-    private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, Trie typeTrie) {
-        return find(typeTrie, output)
-                .stream()
-                .sorted(Comparator.comparing(Suggestion::getInsertValue))
-                .map(mapper(output))
-                .collect(toList());
-    }
-
-    private Function<Suggestion, MetadataTypeItemDTO> mapper(ComponentOutputDescriptor output) {
-        return suggestion -> {
-            String type = suggestion.getReturnType();
             Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
             if (isNotBlank(typeTrie.listItemType())) {
-                // Unroll the list type
-                String listItemType = typeTrie.listItemType();
-                Trie listItemTrie = typeAndTries.getOrDefault(listItemType, Default.UNKNOWN);
-                // The list type display is: List<FileType> : FileType
-                String typeDisplay = TypeUtils.formatListDisplayType(type, typeTrie);
-                return asTypeDTO(output, listItemType, listItemTrie,
-                        suggestion.getInsertValue(),
-                        typeDisplay);
-            } else {
-                return asTypeDTO(output, type, typeTrie,
-                        suggestion.getInsertValue(),
-                        suggestion.getReturnTypeDisplayValue());
-            }
-        };
-    }
+                MetadataTypeDTO listComplexType = unrollListType(output, typeTrie);
+                return new MetadataTypeItemDTO(lookupToken, listComplexType);
 
-    private MetadataTypeItemDTO asTypeDTO(ComponentOutputDescriptor output, String type, Trie typeTrie, String propertyName, String propertyType) {
-        Collection<Suggestion> suggestions = find(typeTrie, output);
-        if (suggestions.isEmpty()) {
-            // Simple name/value
-            return new MetadataTypeItemDTO(propertyName, propertyType);
+            } else {
+                String propertyDisplayType = TypeUtils.toSimpleName(type, typeAndTries);
+                return new MetadataTypeItemDTO(lookupToken, propertyDisplayType);
+            }
+
         } else {
-            // Complex type
-            String finalPropertyName = propertyName + " : " + propertyType;
-            MetadataTypeDTO metadataTypeDTO = map(output, type);
-            return new MetadataTypeItemDTO(finalPropertyName, metadataTypeDTO);
+            MetadataTypeDTO metadataType = createMetadataType(type, output);
+            return new MetadataTypeItemDTO(lookupToken, metadataType);
         }
     }
 
-    private Collection<Suggestion> find(Trie trie, ComponentOutputDescriptor output) {
-        return completionFinder.find(trie, output)
+    @NotNull
+    private MetadataTypeDTO unrollListType(ComponentOutputDescriptor output, Trie typeTrie) {
+        // Unroll list item type
+        String listItemType = typeTrie.listItemType();
+
+        List<Suggestion> listTypeSuggestions = suggestionsFromType(listItemType, output);
+        Collection<MetadataTypeItemDTO> listTypeProperties = new ArrayList<>();
+        for (Suggestion suggestion : listTypeSuggestions) {
+            MetadataTypeItemDTO typeProperty =
+                    createTypeProperties(suggestion.getLookupToken(), suggestion.getReturnType(), output);
+            listTypeProperties.add(typeProperty);
+        }
+
+        String listDisplayType = TypeUtils.formatListDisplayType(listItemType, typeTrie);
+        return new MetadataTypeDTO(listDisplayType, listTypeProperties);
+    }
+
+    private List<Suggestion> suggestionsFromType(String type, ComponentOutputDescriptor output) {
+        Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
+        return completionFinder.find(typeTrie, output)
                 .stream()
                 .filter(suggestion -> PROPERTY.equals(suggestion.getType()))
                 .collect(toList());

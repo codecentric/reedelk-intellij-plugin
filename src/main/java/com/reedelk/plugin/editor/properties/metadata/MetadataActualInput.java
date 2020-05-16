@@ -4,6 +4,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.commons.HTMLUtils;
 import com.reedelk.plugin.editor.properties.commons.DisposableCollapsiblePane;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
@@ -120,7 +121,7 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                 } else {
                     MetadataTypeDTO complex = iotypeDTO.complex;
-                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, ""), complex, parentPadding, true, false);
+                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, HTMLUtils.escape(complex.getType())), complex, parentPadding, true, false);
                     payload.setBorder(JBUI.Borders.empty());
                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
                     FormBuilder.get().addFullWidthAndHeight(payload, content);

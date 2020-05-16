@@ -25,6 +25,7 @@ import java.util.Set;
 //  |     C3       |
 //  |          C4  |
 //  ----------------
+@SuppressWarnings("UnnecessaryLocalVariable")
 public abstract class ScopeBox {
 
     private static final int LEFT_PADDING = 3;
