@@ -52,9 +52,10 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         if (collect.size() == 1) {
             // All the outputs have the same type
             // Output List<Type> : Type -> Unroll properties...
+            // TODO: I need a type resolve which dynamically creates types
             Map.Entry<String, List<MetadataTypeDTO>> next = collect.entrySet().iterator().next();
             String type = next.getValue().get(0).getFullyQualifiedType();
-            Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
+            Trie typeTrie = typeAndTries.getOrDefault(type);
             MetadataTypeDTO sameTypeElementsList = unrollListType(completionFinder, typeAndTries, typeTrie, type);
             return Collections.singletonList(sameTypeElementsList);
 

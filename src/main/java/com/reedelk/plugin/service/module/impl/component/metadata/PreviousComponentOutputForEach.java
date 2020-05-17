@@ -38,7 +38,7 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
         if (metadataTypeDTOS.size() == 1) {
             MetadataTypeDTO metadataTypeDTO = metadataTypeDTOS.stream().findFirst().get();
             String fullyQualifiedType = metadataTypeDTO.getFullyQualifiedType();
-            Trie orDefault = typeAndTries.getOrDefault(fullyQualifiedType, Default.UNKNOWN);
+            Trie orDefault = typeAndTries.getOrDefault(fullyQualifiedType);
             String listItemType = orDefault.listItemType();
             if (StringUtils.isNotBlank(listItemType)) {
                 String typeSimpleName = TypeUtils.toSimpleName(listItemType, typeAndTries);

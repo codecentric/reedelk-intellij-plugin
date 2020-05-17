@@ -13,7 +13,8 @@ public class Default {
 
     public static final String DEFAULT_RETURN_TYPE = "void";
 
-    public static final Trie UNKNOWN = new TrieImpl();
+    // The root of all the objects is 'Object'.
+    public static final Trie OBJECT = new TrieImpl(Object.class.getName(), null, null);
 
     // Default script signature is message and context.
     public static final Trie TRIE = new TrieImpl();

@@ -38,7 +38,7 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
     }
 
     protected MetadataTypeDTO createMetadataType(CompletionFinder completionFinder, TypeAndTries typeAndTries, String type) {
-        Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
+        Trie typeTrie = typeAndTries.getOrDefault(type);
         if (isNotBlank(typeTrie.listItemType())) {
             // Unroll list item type
             return unrollListType(completionFinder, typeAndTries, typeTrie, type);
@@ -59,7 +59,7 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
     protected MetadataTypeItemDTO createTypeProperties(CompletionFinder completionFinder, TypeAndTries typeAndTries, String lookupToken, String type) {
         List<Suggestion> typeSuggestions = suggestionsFromType(completionFinder, typeAndTries, type);
         if (typeSuggestions.isEmpty()) {
-            Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
+            Trie typeTrie = typeAndTries.getOrDefault(type);
             if (isNotBlank(typeTrie.listItemType())) {
                 MetadataTypeDTO listComplexType = unrollListType(completionFinder, typeAndTries, typeTrie, type);
                 return new MetadataTypeItemDTO(lookupToken, listComplexType);
@@ -91,7 +91,7 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
     }
 
     protected List<Suggestion> suggestionsFromType(CompletionFinder completionFinder, TypeAndTries typeAndTries, String type) {
-        Trie typeTrie = typeAndTries.getOrDefault(type, Default.UNKNOWN);
+        Trie typeTrie = typeAndTries.getOrDefault(type);
         return completionFinder.find(typeTrie, this)
                 .stream()
                 .filter(suggestion -> PROPERTY.equals(suggestion.getType()))

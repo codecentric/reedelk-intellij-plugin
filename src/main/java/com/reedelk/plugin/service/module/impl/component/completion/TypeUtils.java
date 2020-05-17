@@ -42,7 +42,7 @@ public class TypeUtils {
 
     @NotNull
     public static String toSimpleName(@Nullable String type, @NotNull TypeAndTries allTypesMap) {
-        Trie typeTrie = allTypesMap.getOrDefault(type, Default.UNKNOWN);
+        Trie typeTrie = allTypesMap.getOrDefault(type);
         return TypeUtils.toSimpleName(type, typeTrie);
     }
 

@@ -20,12 +20,11 @@ public class TypeAndTries {
         return false;
     }
 
-    // TODO :It is pointless to keep asking for default one because it is always the same UNKNOWN trie!!
-    public Trie getOrDefault(String fullyQualifiedTypeName, Trie defaultOne) {
+    public Trie getOrDefault(String fullyQualifiedTypeName) {
         for (Map<String, Trie> typeAndTrie : typeAndTries) {
             Trie typeInfo = typeAndTrie.get(fullyQualifiedTypeName);
             if (typeInfo != null) return typeInfo;
         }
-        return defaultOne;
+        return Default.OBJECT;
     }
 }
