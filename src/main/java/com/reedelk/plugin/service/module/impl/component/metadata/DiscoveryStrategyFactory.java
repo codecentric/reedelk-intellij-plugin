@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceComponentDiscovery;
 import com.reedelk.plugin.component.type.foreach.ForEachComponentDiscovery;
@@ -45,7 +44,7 @@ public class DiscoveryStrategyFactory {
         DISCOVERY = Collections.unmodifiableMap(tmp);
     }
 
-    public static Optional<? extends ComponentOutputDescriptor> get(@NotNull Module module,
+    public static Optional<PreviousComponentOutput> get(@NotNull Module module,
                                                                     @NotNull PlatformModuleService moduleService,
                                                                     @NotNull TypeAndTries typeAndAndTries,
                                                                     @NotNull ComponentContext context,
@@ -71,7 +70,7 @@ public class DiscoveryStrategyFactory {
                     if (outermostScope.isPresent()) {
                         String fullyQualifiedScopeNodeName = outermostScope.get().componentData().getFullyQualifiedName();
                         DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, fullyQualifiedScopeNodeName);
-                        return strategy.compute(context, predecessors);
+                        return strategy.compute(context, outermostScope.get());
                     } else {
                         return Optional.empty();
                     }
@@ -90,7 +89,10 @@ public class DiscoveryStrategyFactory {
             // with multiple predecessor for the scope node it is joining.
             String fullyQualifiedScopeNodeName = maybeScopedGraphNode.get().componentData().getFullyQualifiedName();
             DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, fullyQualifiedScopeNodeName);
-            return strategy.compute(context, predecessors);
+            // TODO: This should be strategy.compute(context, maybeScopedGraphNode.get(), nodeToFindInputMessage)
+            //   this would allow us to understand if the scope node is JOIN or Not (we pass null as current nodeToFindInput message).
+            //  the case where there are multple nested scope can be handled by passing null nodeToFindInputMessage.
+            return strategy.compute(context, maybeScopedGraphNode.get());
 
         } else {
             // The current node does not join any scope, therefore its predecessors must be at most 1.

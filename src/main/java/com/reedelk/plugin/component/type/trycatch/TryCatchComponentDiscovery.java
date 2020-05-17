@@ -3,13 +3,14 @@ package com.reedelk.plugin.component.type.trycatch;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
+import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         List<GraphNode> successors = context.successors(nodeWeWantOutputFrom);
         if (successors.get(0).equals(context.node())) {
             // Try branch (we take the one before the try-catch.
@@ -32,15 +33,15 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
             ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
             descriptor.setPayload(singletonList(Exception.class.getName()));
             descriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
-            return Optional.of(descriptor);
+            return Optional.empty();
         }
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, Collection<GraphNode> predecessors) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
         descriptor.setPayload(singletonList(Object.class.getName()));
         descriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
-        return Optional.of(descriptor);
+        return Optional.empty();
     }
 }

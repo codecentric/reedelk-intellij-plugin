@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutors;
@@ -11,33 +10,36 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.Optional;
+
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.lang.String.format;
 
 class PlatformComponentMetadataService implements PlatformModuleService {
 
     private final Module module;
-    private final TypeAndTries typeAndAndTries;
+    private final TypeAndTries typeAndTries;
     private final OnComponentMetadataEvent onComponentMetadataEvent;
     private final MetadataExpectedInputDTOBuilder metadataExpectedInputDTOBuilder;
-    private final MetadataActualInputDTOBuilder metadataActualInputBuilder;
     private final PlatformModuleService moduleService;
+    private final CompletionFinder completionFinder;
 
     public PlatformComponentMetadataService(@NotNull Module module,
                                             @NotNull PlatformModuleService moduleService,
                                             @NotNull CompletionFinder completionFinder,
-                                            @NotNull TypeAndTries typesMap) {
+                                            @NotNull TypeAndTries typeAndTries) {
         this.module = module;
         this.moduleService = moduleService;
-        this.typeAndAndTries = typesMap;
-        this.metadataExpectedInputDTOBuilder = new MetadataExpectedInputDTOBuilder(moduleService, typeAndAndTries);
-        this.metadataActualInputBuilder = new MetadataActualInputDTOBuilder(module, moduleService, completionFinder, typeAndAndTries);
+        this.completionFinder = completionFinder;
+        this.typeAndTries = typeAndTries;
+        this.metadataExpectedInputDTOBuilder = new MetadataExpectedInputDTOBuilder(moduleService, this.typeAndTries);
         this.onComponentMetadataEvent = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
-    ComponentOutputDescriptor componentOutputOf(ComponentContext context) {
+    PreviousComponentOutput componentOutputOf(ComponentContext context) {
         return DiscoveryStrategyFactory
-                .get(module, moduleService, typeAndAndTries, context, context.node())
+                .get(module, moduleService, typeAndTries, context, context.node())
                 .orElse(null);
     }
 
@@ -45,8 +47,17 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     public void componentMetadataOf(@NotNull ComponentContext context) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
             try {
-                MetadataActualInputDTO actualInput = metadataActualInputBuilder.build(context);
-                MetadataExpectedInputDTO expectedInput = metadataExpectedInputDTOBuilder.build(context);
+                Optional<PreviousComponentOutput> componentOutput =
+                        DiscoveryStrategyFactory.get(module, moduleService, typeAndTries, context, context.node());
+
+                // TODO: Get might fail, consider to return default output!
+                PreviousComponentOutput previousComponentOutput = componentOutput.get();
+                List<MetadataTypeDTO> payload = previousComponentOutput.mapPayload(completionFinder, typeAndTries);
+                MetadataTypeDTO attributes = previousComponentOutput.mapAttributes(completionFinder, typeAndTries);
+                String description = previousComponentOutput.description();
+
+                MetadataActualInputDTO actualInput = new MetadataActualInputDTO(attributes, payload, description);
+                        MetadataExpectedInputDTO expectedInput = metadataExpectedInputDTOBuilder.build(context);
                 MetadataDTO componentMetadata = new MetadataDTO(actualInput, expectedInput);
                 onComponentMetadataEvent.onComponentMetadataUpdated(componentMetadata);
 

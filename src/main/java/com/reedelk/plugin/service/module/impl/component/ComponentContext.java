@@ -3,8 +3,7 @@ package com.reedelk.plugin.service.module.impl.component;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
-import com.reedelk.plugin.graph.utils.FindJoiningScope;
-import com.reedelk.plugin.graph.utils.FindScopes;
+import com.reedelk.plugin.graph.utils.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +41,12 @@ public class ComponentContext {
         return FindJoiningScope.of(graph, target);
     }
 
+    public Optional<GraphNode> findFirstNodeOutsideCurrentScope(ScopedGraphNode graphNode) {
+        return FindFirstNodeOutsideCurrentScope.of(graph, graphNode);
+    }
+
     public Optional<ScopedGraphNode> outermostScopeOf(List<GraphNode> targets) {
+        // TODO: There is a function already written for this, oterwise create one.
         if (targets.isEmpty()) return Optional.empty();
         GraphNode target = targets.get(0);
         Stack<ScopedGraphNode> stack = FindScopes.of(graph, target);
@@ -51,5 +55,13 @@ public class ComponentContext {
             current = stack.pop();
         }
         return Optional.ofNullable(current);
+    }
+
+    public List<GraphNode> listLastNodesOfScope(ScopedGraphNode scopedGraphNode) {
+        return ListLastNodesOfScope.from(graph, scopedGraphNode);
+    }
+
+    public Optional<ScopedGraphNode> findScopeOf(GraphNode predecessor) {
+        return FindScope.of(graph, predecessor);
     }
 }

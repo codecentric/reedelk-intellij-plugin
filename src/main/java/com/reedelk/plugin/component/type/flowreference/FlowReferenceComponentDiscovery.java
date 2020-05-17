@@ -7,7 +7,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphProvider;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
@@ -21,6 +20,7 @@ import com.reedelk.plugin.service.module.SubflowService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
+import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 import com.reedelk.runtime.commons.JsonParser;
 
@@ -37,7 +37,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
 
     // TODO: Fixme
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         // List
         CountDownLatch latch = new CountDownLatch(1);
         FlowGraph[] deserialize = new FlowGraph[1];

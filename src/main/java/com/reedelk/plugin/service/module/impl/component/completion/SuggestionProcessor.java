@@ -57,12 +57,11 @@ public class SuggestionProcessor {
         });
 
         // Signatures by component's properties
-        moduleDescriptor.getComponents().forEach(componentDescriptor -> {
-            componentDescriptor.getProperties().forEach(propertyDescriptor -> {
-                String parent = componentDescriptor.getFullyQualifiedName();
-                populate(propertyDescriptor, parent);
-            });
-        });
+        moduleDescriptor.getComponents().forEach(componentDescriptor ->
+                componentDescriptor.getProperties().forEach(propertyDescriptor -> {
+                    String parent = componentDescriptor.getFullyQualifiedName();
+                    populate(propertyDescriptor, parent);
+                }));
     }
 
     // For each type we must:

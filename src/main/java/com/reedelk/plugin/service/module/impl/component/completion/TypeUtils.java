@@ -15,6 +15,12 @@ public class TypeUtils {
 
     private static final String LIST_SIMPLE_NAME_FORMAT = "List<%s>";
     private static final String LIST_SIMPLE_NAME_AND_ITEM_TYPE_FORMAT = "%s : %s";
+    private static final String FORMAT_LIST = "List<%s> : %s";
+
+    // Used by join
+    public static String formatList(String listItemType) {
+        return String.format(FORMAT_LIST, listItemType, listItemType);
+    }
 
     private TypeUtils() {
     }

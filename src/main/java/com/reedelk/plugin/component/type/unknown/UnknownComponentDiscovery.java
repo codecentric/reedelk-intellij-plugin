@@ -1,12 +1,12 @@
 package com.reedelk.plugin.component.type.unknown;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
+import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ public class UnknownComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<ComponentOutputDescriptor> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         // The output of this component can not be determined because
         // this component is unknown, therefore we return empty.
         return Optional.empty();

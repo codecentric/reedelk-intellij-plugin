@@ -1,24 +1,17 @@
 package com.reedelk.plugin.component.type.foreach;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.completion.Default;
-import com.reedelk.plugin.service.module.impl.component.completion.Trie;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
-import com.reedelk.plugin.service.module.impl.component.metadata.MultipleMessages;
-import com.reedelk.runtime.api.commons.StringUtils;
-import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.plugin.service.module.impl.component.metadata.*;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.Collections.singletonList;
 
 public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
@@ -28,42 +21,50 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
     // TODO: Bug: For each followed by fork, displays List instead of Object
     @Override
-    public Optional<ComponentOutputDescriptor> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
-        Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = discover(context, nodeWeWantOutputFrom);
-        if (componentOutputDescriptor.isPresent()) {
-            ComponentOutputDescriptor previousComponentOutput = componentOutputDescriptor.get();
-            List<String> payload = previousComponentOutput.getPayload();
-            if (payload != null && payload.size() == 1) {
-                String precedingPayloadType = payload.get(0);
-                Trie orDefault = typeAndAndTries.getOrDefault(precedingPayloadType, Default.UNKNOWN);
-                ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-                descriptor.setAttributes(previousComponentOutput.getAttributes());
-                if (StringUtils.isNotBlank(orDefault.listItemType())) {
-                    descriptor.setPayload(singletonList(orDefault.listItemType()));
-                } else {
-                    descriptor.setPayload(singletonList(precedingPayloadType));
-                }
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+
+        // If previous is list, we must extract...
+        // TODO: Note that the previous could also be need to add type List<Object>, then it would work for generics too... like when you exit from a fork
+        Optional<PreviousComponentOutput> previous = discover(context, nodeWeWantOutputFrom);
+        return previous.map(PreviousComponentOutputForEach::new);
+    }
+
+    @Override
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
+
+        // The current scope
+        Optional<GraphNode> node = context.findFirstNodeOutsideCurrentScope(scopedGraphNode);
+        if (node.isPresent()) {
+            // If the node is JOIN, multiple messages.
+            ComponentType componentType = node.get().getComponentType();
+            if (ComponentType.JOIN.equals(componentType)) {
+                PreviousComponentOutputMultipleMessages descriptor = new PreviousComponentOutputMultipleMessages();
                 return Optional.of(descriptor);
             }
         }
 
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(singletonList(Object.class.getName()));
-        descriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
-        return Optional.of(descriptor);
-    }
+        List<PreviousComponentOutput> outputs = new ArrayList<>();
+        List<GraphNode> lastNodesOfScope = context.listLastNodesOfScope(scopedGraphNode);
 
-    @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, Collection<GraphNode> predecessors) {
-        ComponentType componentClass = context.node().getComponentType();
-        if (ComponentType.JOIN.equals(componentClass)) {
-            MultipleMessages descriptor = new MultipleMessages();
-            return Optional.of(descriptor);
-        } else {
-            ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
-            outputDescriptor.setPayload(singletonList(List.class.getName()));
-            outputDescriptor.setAttributes(singletonList(MessageAttributes.class.getName()));
-            return Optional.of(outputDescriptor);
+        for (GraphNode lastNodeOfScope : lastNodesOfScope) {
+
+            // Extract a method for each node
+            Optional<ScopedGraphNode> theScopeOfLastNode = context.findScopeOf(lastNodeOfScope);
+            if (theScopeOfLastNode.isPresent() && theScopeOfLastNode.get() != scopedGraphNode) {
+                // In a different scope and there is no JOIN in the middle need to lookup for the scope
+                String innerScopeFullyQualifiedName = theScopeOfLastNode.get().componentData().getFullyQualifiedName();
+                DiscoveryStrategy strategy =
+                        DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, innerScopeFullyQualifiedName);
+                strategy.compute(context, theScopeOfLastNode.get()).ifPresent(outputs::add);
+
+            } else {
+                String nodeFullyQualifiedName = lastNodeOfScope.componentData().getFullyQualifiedName();
+                DiscoveryStrategy strategy =
+                        DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, nodeFullyQualifiedName);
+                strategy.compute(context, lastNodeOfScope).ifPresent(outputs::add);
+            }
         }
+
+        return Optional.of(new PreviousComponentOutputJoin(outputs));
     }
 }

@@ -3,9 +3,9 @@ package com.reedelk.plugin.service.module.impl.component;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +49,10 @@ class PlatformCompletionService implements PlatformModuleService {
 
     @Override
     public Collection<Suggestion> suggestionsOf(@NotNull ComponentContext context, @NotNull String componentPropertyPath, String[] tokens) {
-        ComponentOutputDescriptor previousComponentOutput = componentMetadataService.componentOutputOf(context);
+        // TODO: You don't need the previous component OUTPUT ANY TIME, only if it is a dynamic type!!
+        //  this logic slows down suggestion for nothing here, you should fetch the previous component output
+        //  if and only if the suggestion refers to message.payload() or message.attributes().
+        PreviousComponentOutput previousComponentOutput = componentMetadataService.componentOutputOf(context);
         // A suggestion for a property is computed as follows:
         // Get signature for component property path from either flow control, maven modules or current module.
         // if does not exists use the default.
