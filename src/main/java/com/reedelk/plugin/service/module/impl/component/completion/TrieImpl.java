@@ -11,7 +11,6 @@ public class TrieImpl implements Trie {
     private final String extendsType;
     private final String displayName;
     private final String listItemType;
-    private final String fullyQualifiedTypeName;
     private TrieNode root;
 
     public TrieImpl() {
@@ -19,15 +18,13 @@ public class TrieImpl implements Trie {
         this.extendsType = null;
         this.listItemType = null;
         this.displayName = null;
-        this.fullyQualifiedTypeName = null;
     }
 
-    public TrieImpl(String fullyQualifiedTypeName, String extendsType, String listItemType, String displayName) {
+    public TrieImpl(String extendsType, String listItemType, String displayName) {
         this.root = new TrieNode();
         this.displayName = displayName;
         this.extendsType = extendsType;
         this.listItemType = listItemType;
-        this.fullyQualifiedTypeName = fullyQualifiedTypeName;
     }
 
     @Override
@@ -76,11 +73,6 @@ public class TrieImpl implements Trie {
     @Override
     public String displayName() {
         return displayName;
-    }
-
-    @Override
-    public String fullyQualifiedName() {
-        return fullyQualifiedTypeName;
     }
 
     @Override

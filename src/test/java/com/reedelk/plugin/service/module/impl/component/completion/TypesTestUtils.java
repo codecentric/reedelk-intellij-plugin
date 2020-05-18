@@ -29,7 +29,7 @@ public class TypesTestUtils {
 
         @Override
         public void register(Map<String, Trie> trieMap) {
-            Trie trie = new TrieImpl(fullyQualifiedTypeName, extendsType, listItemType, displayName);
+            Trie trie = new TrieImpl();
             trie.insert(createFunctionSuggestion("size", int.class.getName()));
             trie.insert(createFunctionSuggestion("each", Void.class.getName()));
             trie.insert(createFunctionSuggestion("eachWithIndex", Void.class.getName()));
@@ -136,7 +136,7 @@ public class TypesTestUtils {
 
         @Override
         public void register(Map<String, Trie> trieMap) {
-            Trie trie = new TrieImpl(fullyQualifiedTypeName, extendsType, listItemType, displayName);
+            Trie trie = new TrieImpl();
             trie.insert(createPropertySuggestion("component", String.class.getName()));
             trieMap.put(MessageAttributes.class.getName(), trie);
         }
@@ -171,7 +171,7 @@ public class TypesTestUtils {
 
         @Override
         public void register(Map<String, Trie> trieMap) {
-            Trie trie = new TrieImpl(fullyQualifiedTypeName, extendsType, listItemType, displayName);
+            Trie trie = new TrieImpl();
             trie.insert(SuggestionTestUtils.createFunctionSuggestion("method1", String.class.getName()));
             trieMap.put(MyItemType.class.getName(), trie);
         }
@@ -191,7 +191,7 @@ public class TypesTestUtils {
 
         @Override
         public void register(Map<String, Trie> trieMap) {
-            Trie trie = new TrieImpl(fullyQualifiedTypeName, extendsType, listItemType, displayName);
+            Trie trie = new TrieImpl();
             trie.insert(createFunctionSuggestion("payload", MessagePayload.class.getName()));
             trie.insert(createFunctionSuggestion("attributes", MessageAttributes.class.getName()));
             trieMap.put(Message.class.getName(), trie);

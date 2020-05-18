@@ -4,17 +4,15 @@ import java.util.Collection;
 
 public interface Trie {
 
+    String displayName();
+
     String extendsType();
 
     String listItemType();
 
-    String displayName();
-
-    String fullyQualifiedName();
+    Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap);
 
     void clear();
 
     void insert(Suggestion suggestion);
-
-    Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap);
 }
