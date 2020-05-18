@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface DiscoveryStrategy {
 
-    Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode nodeWeWantOutputFrom);
+    Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom);
 
-    Optional<PreviousComponentOutput> computeForScope(ComponentContext context, ScopedGraphNode scopedGraphNode);
+    Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode);
 }

@@ -21,13 +21,13 @@ public class ForkComponentDiscovery extends GenericComponentDiscovery {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode currentNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
         // Skip one
         return discover(context, currentNode);
     }
 
     @Override
-    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, ScopedGraphNode scopedGraphNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
 
         // The current scope
         Optional<GraphNode> node = context.findFirstNodeOutsideCurrentScope(scopedGraphNode);
@@ -52,13 +52,13 @@ public class ForkComponentDiscovery extends GenericComponentDiscovery {
                 String innerScopeFullyQualifiedName = theScopeOfLastNode.get().componentData().getFullyQualifiedName();
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, innerScopeFullyQualifiedName);
-                strategy.computeForScope(context, theScopeOfLastNode.get()).ifPresent(outputs::add);
+                strategy.compute(context, theScopeOfLastNode.get()).ifPresent(outputs::add);
 
             } else {
                 String nodeFullyQualifiedName = lastNodeOfScope.componentData().getFullyQualifiedName();
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, nodeFullyQualifiedName);
-                strategy.computeForScope(context, lastNodeOfScope).ifPresent(outputs::add);
+                strategy.compute(context, lastNodeOfScope).ifPresent(outputs::add);
             }
         }
 

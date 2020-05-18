@@ -26,7 +26,7 @@ public abstract class AbstractDiscoveryStrategy implements DiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, ScopedGraphNode scopedGraphNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
         throw new UnsupportedOperationException();
     }
 }

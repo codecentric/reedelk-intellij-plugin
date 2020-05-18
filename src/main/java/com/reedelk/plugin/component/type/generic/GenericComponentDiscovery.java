@@ -26,7 +26,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode currentNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
         String componentFullyQualifiedName = currentNode.componentData().getFullyQualifiedName();
         ComponentDescriptor componentDescriptor = moduleService.componentDescriptorOf(componentFullyQualifiedName);
 

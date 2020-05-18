@@ -17,7 +17,7 @@ public class StopComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         throw new UnsupportedOperationException();
     }
 }

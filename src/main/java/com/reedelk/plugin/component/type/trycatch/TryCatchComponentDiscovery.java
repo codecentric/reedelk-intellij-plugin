@@ -23,7 +23,7 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         List<GraphNode> successors = context.successors(nodeWeWantOutputFrom);
         if (successors.get(0).equals(context.node())) {
             // Try branch (we take the one before the try-catch.
@@ -39,7 +39,7 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, ScopedGraphNode scopedGraphNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
 
         // The output is either from the try or from the catch
         List<PreviousComponentOutput> outputs = new ArrayList<>();
@@ -54,13 +54,13 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
                 String innerScopeFullyQualifiedName = theScopeOfLastNode.get().componentData().getFullyQualifiedName();
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, innerScopeFullyQualifiedName);
-                strategy.computeForScope(context, theScopeOfLastNode.get()).ifPresent(outputs::add);
+                strategy.compute(context, theScopeOfLastNode.get()).ifPresent(outputs::add);
 
             } else {
                 String nodeFullyQualifiedName = lastNodeOfScope.componentData().getFullyQualifiedName();
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, nodeFullyQualifiedName);
-                strategy.computeForScope(context, lastNodeOfScope).ifPresent(outputs::add);
+                strategy.compute(context, lastNodeOfScope).ifPresent(outputs::add);
             }
         }
 

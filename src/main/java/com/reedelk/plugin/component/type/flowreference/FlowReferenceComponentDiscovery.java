@@ -37,7 +37,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
 
     // TODO: Fixme
     @Override
-    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         // List
         CountDownLatch latch = new CountDownLatch(1);
         FlowGraph[] deserialize = new FlowGraph[1];

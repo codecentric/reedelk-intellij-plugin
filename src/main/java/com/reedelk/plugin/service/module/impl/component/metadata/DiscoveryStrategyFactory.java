@@ -63,14 +63,14 @@ public class DiscoveryStrategyFactory {
                     GraphNode predecessor = lastNodesOfFlow.get(0);
                     String predecessorFullyQualifiedName = lastNodesOfFlow.get(0).componentData().getFullyQualifiedName();
                     DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, predecessorFullyQualifiedName);
-                    return strategy.computeForScope(context, predecessor);
+                    return strategy.compute(context, predecessor);
                 } else {
                     // We need to find the outermost scope
                     Optional<ScopedGraphNode> outermostScope = context.outermostScopeOf(lastNodesOfFlow);
                     if (outermostScope.isPresent()) {
                         String fullyQualifiedScopeNodeName = outermostScope.get().componentData().getFullyQualifiedName();
                         DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, fullyQualifiedScopeNodeName);
-                        return strategy.computeForScope(context, outermostScope.get());
+                        return strategy.compute(context, outermostScope.get());
                     } else {
                         return Optional.empty();
                     }
@@ -92,7 +92,7 @@ public class DiscoveryStrategyFactory {
             // TODO: This should be strategy.compute(context, maybeScopedGraphNode.get(), nodeToFindInputMessage)
             //   this would allow us to understand if the scope node is JOIN or Not (we pass null as current nodeToFindInput message).
             //  the case where there are multple nested scope can be handled by passing null nodeToFindInputMessage.
-            return strategy.computeForScope(context, maybeScopedGraphNode.get());
+            return strategy.compute(context, maybeScopedGraphNode.get());
 
         } else {
             // The current node does not join any scope, therefore its predecessors must be at most 1.
@@ -102,7 +102,7 @@ public class DiscoveryStrategyFactory {
             GraphNode predecessor = predecessors.get(0);
             String predecessorFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
             DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, predecessorFullyQualifiedName);
-            return strategy.computeForScope(context, predecessor);
+            return strategy.compute(context, predecessor);
         }
     }
 
