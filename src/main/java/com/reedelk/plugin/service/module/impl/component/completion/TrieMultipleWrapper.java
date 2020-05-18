@@ -42,6 +42,11 @@ public class TrieMultipleWrapper implements Trie {
     }
 
     @Override
+    public String fullyQualifiedName() {
+        return null;
+    }
+
+    @Override
     public void clear() {
         throw new UnsupportedOperationException();
     }

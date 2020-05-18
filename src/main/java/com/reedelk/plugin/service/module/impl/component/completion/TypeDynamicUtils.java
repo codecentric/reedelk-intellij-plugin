@@ -11,6 +11,7 @@ public class TypeDynamicUtils {
     // TODO: I think that this one could be a method in the TypeProxy.
     public static boolean is(Suggestion suggestion) {
         return MessagePayload.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName()) ||
-                MessageAttributes.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName());
+                MessageAttributes.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName()) ||
+                Closure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName());
     }
 }

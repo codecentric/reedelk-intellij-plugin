@@ -89,9 +89,6 @@ public class DiscoveryStrategyFactory {
             // with multiple predecessor for the scope node it is joining.
             String fullyQualifiedScopeNodeName = maybeScopedGraphNode.get().componentData().getFullyQualifiedName();
             DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, fullyQualifiedScopeNodeName);
-            // TODO: This should be strategy.compute(context, maybeScopedGraphNode.get(), nodeToFindInputMessage)
-            //   this would allow us to understand if the scope node is JOIN or Not (we pass null as current nodeToFindInput message).
-            //  the case where there are multple nested scope can be handled by passing null nodeToFindInputMessage.
             return strategy.compute(context, maybeScopedGraphNode.get());
 
         } else {

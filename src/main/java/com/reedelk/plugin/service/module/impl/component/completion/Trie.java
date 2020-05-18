@@ -10,6 +10,8 @@ public interface Trie {
 
     String displayName();
 
+    String fullyQualifiedName();
+
     void clear();
 
     void insert(Suggestion suggestion);

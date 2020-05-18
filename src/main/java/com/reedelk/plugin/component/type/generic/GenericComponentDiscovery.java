@@ -68,9 +68,9 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
             // type must be taken from the previous component.
             return discover(context, currentNode)
                     .orElse(new PreviousComponentOutputDefault(
-                            singletonList(DEFAULT_ATTRIBUTES),
-                            singletonList(DEFAULT_PAYLOAD),
-                            DEFAULT_DESCRIPTION));
+                                    singletonList(DEFAULT_ATTRIBUTES),
+                                    singletonList(DEFAULT_PAYLOAD),
+                                    DEFAULT_DESCRIPTION));
 
         } else {
             return new PreviousComponentOutputDefault(
@@ -101,6 +101,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
     private static final String DEFAULT_DESCRIPTION = StringUtils.EMPTY;
     private static final String DEFAULT_PAYLOAD = Object.class.getName();
     private static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
+
     static {
         DEFAULT = new ComponentOutputDescriptor();
         DEFAULT.setPayload(singletonList(DEFAULT_PAYLOAD));

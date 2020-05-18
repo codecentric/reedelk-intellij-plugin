@@ -30,7 +30,7 @@ public interface TypeProxy {
 
     String listItemType(TypeAndTries typeAndTries);
 
-    class TypeProxyDefault implements TypeProxy {
+    public static class TypeProxyDefault implements TypeProxy {
 
         private String typeFullyQualifiedName;
 

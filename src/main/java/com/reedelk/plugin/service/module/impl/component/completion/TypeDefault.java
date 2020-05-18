@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 
-public class Default {
+public class TypeDefault {
 
     public static final String DEFAULT_RETURN_TYPE = Void.class.getSimpleName();
     public static final TypeProxy DEFAULT_RETURN_TYPE_PROXY = TypeProxy.create(Void.class);
@@ -46,26 +47,27 @@ public class Default {
                     .insertValue("each { it }")
                     .lookupToken("each")
                     .tailText("{ it }")
-                    .returnType(TypeProxy.create(List.class))
-                    .returnTypeDisplayValue(List.class.getSimpleName())
+                    .returnType(TypeProxy.create(Closure.class))
+                    .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
                     .insertValue("eachWithIndex { it, i ->  }")
                     .tailText("{ it, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.create(List.class))
-                    .returnTypeDisplayValue(List.class.getSimpleName())
+                    .returnType(TypeProxy.create(Closure.class))
+                    .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
                     .insertValue("collect { it }")
                     .tailText("{ it }")
                     .lookupToken("collect")
-                    .returnType(TypeProxy.create(List.class))
-                    .returnTypeDisplayValue(List.class.getSimpleName())
+                    .returnType(TypeProxy.create(Closure.class))
+                    .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
+            // TODO: Add to string
             trieMap.put(List.class.getName(), trie);
 
             Trie arrayList = new TrieImpl(ArrayList.class.getName(), List.class.getName(), null, null);
@@ -80,6 +82,7 @@ public class Default {
                     .returnTypeDisplayValue(Map.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
+            // TODO: Add to string
             mapTrie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
                     .insertValue("eachWithIndex { entry, i ->  }")
                     .tailText("{ entry, i ->  }")
@@ -88,11 +91,13 @@ public class Default {
                     .returnTypeDisplayValue(Map.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
+            // TODO: Add to string method
 
             trieMap.put(Map.class.getName(), mapTrie);
 
             Trie hashMap = new TrieImpl(HashMap.class.getName(), Map.class.getName(), null, null);
             trieMap.put(HashMap.class.getName(), hashMap);
+
         }
     }
 }

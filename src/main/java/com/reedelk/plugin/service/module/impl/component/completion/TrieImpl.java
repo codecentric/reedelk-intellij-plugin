@@ -1,11 +1,11 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 import com.reedelk.runtime.api.commons.StringUtils;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TrieImpl implements Trie {
 
@@ -44,8 +44,28 @@ public class TrieImpl implements Trie {
     @Override
     public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
         Set<Suggestion> autocomplete = autocomplete(word);
-        addExtendsTypeSuggestions(this, typeAndTrieMap, word, autocomplete);
-        return autocomplete;
+        List<Suggestion> suggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
+        autocomplete.addAll(suggestions);
+
+        return autocomplete.stream().map(new Function<Suggestion, Suggestion>() {
+            @Override
+            public Suggestion apply(Suggestion suggestion) {
+                if (Closure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName()) &&
+                        listItemType != null) {
+                    ListAwareProxy listAwareProxy = new ListAwareProxy(listItemType);
+                    return Suggestion.create(Suggestion.Type.PROPERTY)
+                            .tailText(suggestion.getTailText())
+                            .cursorOffset(suggestion.getCursorOffset())
+                            .lookupToken(suggestion.getLookupToken())
+                            .insertValue(suggestion.getInsertValue())
+                            .returnType(listAwareProxy)
+                            .returnTypeDisplayValue(listAwareProxy.toSimpleName(typeAndTrieMap))
+                            .build();
+                } else {
+                    return suggestion;
+                }
+            }
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -61,6 +81,11 @@ public class TrieImpl implements Trie {
     @Override
     public String displayName() {
         return displayName;
+    }
+
+    @Override
+    public String fullyQualifiedName() {
+        return fullyQualifiedTypeName;
     }
 
     @Override
@@ -108,15 +133,64 @@ public class TrieImpl implements Trie {
         return suggestions;
     }
 
-    private static void addExtendsTypeSuggestions(Trie current, TypeAndTries typeAndTrieMap, String token, Collection<Suggestion> suggestions) {
+    // All the extends type must contain the original
+    private List<Suggestion> addExtendsTypeSuggestions(Trie current, TypeAndTries typeAndTrieMap, String token) {
         // TODO: Check on default object, otherwise we would go on stackoverflow
-        if (current != Default.OBJECT && current != null && StringUtils.isNotBlank(current.extendsType())) {
+        List<Suggestion> suggestions = new ArrayList<>();
+        if (current != TypeDefault.OBJECT && current != null && StringUtils.isNotBlank(current.extendsType())) {
             String extendsType = current.extendsType();
             Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType);
             Collection<Suggestion> autocomplete = currentTypeTrie.autocomplete(token, typeAndTrieMap);
-            // TODO: These autocomplete for the supertype must have the same type of the child.
             suggestions.addAll(autocomplete);
-            addExtendsTypeSuggestions(currentTypeTrie, typeAndTrieMap, token, suggestions);
+            List<Suggestion> suggestions1 = addExtendsTypeSuggestions(currentTypeTrie, typeAndTrieMap, token);
+            suggestions.addAll(suggestions1);
+        }
+        return suggestions;
+    }
+
+    static class ListClosureTrie extends TrieImpl {
+
+        public ListClosureTrie(String type, TypeAndTries typeAndTries) {
+            insert(Suggestion.create(Suggestion.Type.PROPERTY)
+                    .lookupToken("it")
+                    .insertValue("it")
+                    .returnTypeDisplayValue(TypeProxy.create(type).toSimpleName(typeAndTries))
+                    .returnType(TypeProxy.create(type))
+                    .build());
+        }
+    }
+
+    static class ListAwareProxy implements TypeProxy {
+
+        private final String type;
+
+        public ListAwareProxy(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public boolean isList(TypeAndTries typeAndTries) {
+            return false;
+        }
+
+        @Override
+        public Trie resolve(TypeAndTries typeAndTries) {
+            return new ListClosureTrie(type, typeAndTries);
+        }
+
+        @Override
+        public String toSimpleName(TypeAndTries typeAndTries) {
+            return TypeUtils.toSimpleName(type, typeAndTries);
+        }
+
+        @Override
+        public String getTypeFullyQualifiedName() {
+            return Closure.class.getName();
+        }
+
+        @Override
+        public String listItemType(TypeAndTries typeAndTries) {
+            return type;
         }
     }
 }
