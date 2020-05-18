@@ -5,28 +5,28 @@ import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-// TODO: Fixme
 public class PreviousComponentOutputMultipleMessages implements PreviousComponentOutput {
 
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public String description() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public MetadataTypeDTO mapAttributes(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<MetadataTypeDTO> mapPayload(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -16,14 +17,12 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
 
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        // TODO: Fixme
-        return null;
+        return previousComponentOutput.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
     }
 
     @Override
     public String description() {
-        // TODO: Fixme
-        return null;
+        return StringUtils.EMPTY;
     }
 
     @Override
