@@ -5,7 +5,10 @@ import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.runtime.api.commons.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -21,7 +24,13 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
 
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        return Collections.emptyList();
+        List<Suggestion> suggestions = new ArrayList<>();
+        for (PreviousComponentOutput output : outputs) {
+            Collection<Suggestion> currentSuggestions =
+                    output.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
+            suggestions.addAll(currentSuggestions);
+        }
+        return suggestions;
     }
 
     @Override
