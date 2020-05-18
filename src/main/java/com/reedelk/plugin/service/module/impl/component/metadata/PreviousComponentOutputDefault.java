@@ -60,7 +60,7 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     }
 
     // Resolves the dynamic type from the output descriptor
-    private List<String> resolve(Suggestion suggestion) {
+    protected List<String> resolve(Suggestion suggestion) {
         String suggestionType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(suggestionType)) {
             return attributes.isEmpty() ? singletonList(MessageAttributes.class.getName()) : attributes;

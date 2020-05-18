@@ -3,6 +3,8 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.plugin.service.module.impl.component.completion.CompletionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,26 +13,27 @@ public class PreviousComponentOutputCompound implements PreviousComponentOutput 
 
     private final PreviousComponentOutput attributes;
     private final PreviousComponentOutput payload;
-    private final String description;
 
     public PreviousComponentOutputCompound(PreviousComponentOutput attributes, PreviousComponentOutput payload) {
         this.attributes = attributes;
         this.payload = payload;
-        this.description = "Fixme"; // TODO: Fixme
     }
 
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        // TODO: Fixme
-        Collection<Suggestion> attributesSuggetions = attributes.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
-        Collection<Suggestion> payloadSuggestions = payload.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
-        attributesSuggetions.addAll(payloadSuggestions);
-        return attributesSuggetions;
+        String suggestionType = suggestion.getReturnType();
+        if (MessageAttributes.class.getName().equals(suggestionType)) {
+            return attributes.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
+        } else if (MessagePayload.class.getName().equals(suggestionType)) {
+            return payload.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
+        }  else {
+            throw new IllegalStateException("Resolve must be called only if the suggestion type is dynamic");
+        }
     }
 
     @Override
     public String description() {
-        return description;
+        return payload.description();
     }
 
     @Override
