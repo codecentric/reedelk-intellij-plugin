@@ -1,5 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,12 +16,7 @@ public class TypeUtils {
 
     private static final String LIST_SIMPLE_NAME_FORMAT = "List<%s>";
     private static final String LIST_SIMPLE_NAME_AND_ITEM_TYPE_FORMAT = "%s : %s";
-    private static final String FORMAT_LIST = "List<%s> : %s";
-
-    // Used by join
-    public static String formatList(String listItemType) {
-        return String.format(FORMAT_LIST, listItemType, listItemType);
-    }
+    private static final String FORMAT_LIST = "List<%s>";
 
     private TypeUtils() {
     }
@@ -60,11 +56,17 @@ public class TypeUtils {
         }
     }
 
+    // Used by join
+    public static String formatList(TypeProxy typeProxy, TypeAndTries typeAndTries) {
+        String listItemType = TypeUtils.toSimpleName(typeProxy.listItemType(typeAndTries), typeAndTries);
+        return String.format(FORMAT_LIST, listItemType);
+    }
+
     @NotNull
-    public static String formatListDisplayType(String type, Trie typeTrie) {
+    public static String formatUnrolledListDisplayType(TypeProxy typeProxy, TypeAndTries typeAndTries) {
         return String.format(LIST_SIMPLE_NAME_AND_ITEM_TYPE_FORMAT,
-                TypeUtils.toSimpleName(type, typeTrie),
-                TypeUtils.toSimpleName(typeTrie.listItemType()));
+                formatList(typeProxy, typeAndTries),
+                TypeUtils.toSimpleName(typeProxy.listItemType(typeAndTries)));
     }
 
     @NotNull

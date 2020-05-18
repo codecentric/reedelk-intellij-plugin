@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.completion.*;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -37,12 +36,18 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
         List<MetadataTypeDTO> metadataTypeDTOS = previousComponentOutput.mapPayload(completionFinder, typeAndTries);
         if (metadataTypeDTOS.size() == 1) {
             MetadataTypeDTO metadataTypeDTO = metadataTypeDTOS.stream().findFirst().get();
-            String fullyQualifiedType = metadataTypeDTO.getFullyQualifiedType();
-            Trie orDefault = typeAndTries.getOrDefault(fullyQualifiedType);
-            String listItemType = orDefault.listItemType();
-            if (StringUtils.isNotBlank(listItemType)) {
+            TypeProxy typeProxy = metadataTypeDTO.getTypeProxy();
+
+            // we extract the items one by one from the for each list.
+            // TODO: This is maybe applicable for maps as well!?
+            if (typeProxy.isList(typeAndTries)) {
+                Trie trie = typeProxy.resolve(typeAndTries);
+                String listItemType = trie.listItemType();
                 String typeSimpleName = TypeUtils.toSimpleName(listItemType, typeAndTries);
-                return Collections.singletonList(new MetadataTypeDTO(typeSimpleName, listItemType, metadataTypeDTO.getProperties()));
+                MetadataTypeDTO unrolledList = new MetadataTypeDTO(typeSimpleName,
+                        TypeProxy.create(listItemType),
+                        metadataTypeDTO.getProperties());
+                return Collections.singletonList(unrolledList);
             }
         }
 

@@ -106,7 +106,8 @@ public class TrieImpl implements Trie {
     }
 
     private static void addExtendsTypeSuggestions(Trie current, TypeAndTries typeAndTrieMap, String token, Collection<Suggestion> suggestions) {
-        if (current != null && StringUtils.isNotBlank(current.extendsType())) {
+        // TODO: Check on default object, otherwise we would go on stackoverflow
+        if (current != Default.OBJECT && current != null && StringUtils.isNotBlank(current.extendsType())) {
             String extendsType = current.extendsType();
             Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType);
             suggestions.addAll(currentTypeTrie.autocomplete(token, typeAndTrieMap));

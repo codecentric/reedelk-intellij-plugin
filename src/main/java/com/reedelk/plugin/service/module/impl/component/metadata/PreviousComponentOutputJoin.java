@@ -2,8 +2,13 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.*;
 
 public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput {
@@ -46,29 +51,64 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
                 .forEach(allTypes::addAll);
 
         // Logic should be if all types have the same type
-        Map<String, List<MetadataTypeDTO>> collect = allTypes.stream()
-                .collect(groupingBy(MetadataTypeDTO::getFullyQualifiedType));
+        Map<TypeProxy, List<MetadataTypeDTO>> collect = allTypes
+                .stream()
+                .collect(groupingBy(MetadataTypeDTO::getTypeProxy));
 
         if (collect.size() == 1) {
-            // All the outputs have the same type
-            // Output List<Type> : Type -> Unroll properties...
-            // TODO: I need a type resolve which dynamically creates types
-            Map.Entry<String, List<MetadataTypeDTO>> next = collect.entrySet().iterator().next();
-            String type = next.getValue().get(0).getFullyQualifiedType();
-            Trie typeTrie = typeAndTries.getOrDefault(type);
-            MetadataTypeDTO sameTypeElementsList = unrollListType(completionFinder, typeAndTries, typeTrie, type);
-            return Collections.singletonList(sameTypeElementsList);
+            // All the outputs have the same type (we must unroll the list type properties (List<Type> : Type)
+            Map.Entry<TypeProxy, List<MetadataTypeDTO>> next = collect.entrySet().iterator().next();
+            TypeProxy typeProxy = next.getKey();
+
+            OnTheFlyTypeProxy onTheFlyTypeProxy = new OnTheFlyTypeProxy(typeProxy.getTypeFullyQualifiedName());
+            MetadataTypeDTO sameTypeElementsList = unrollListType(completionFinder, typeAndTries, onTheFlyTypeProxy);
+            return singletonList(sameTypeElementsList);
 
         } else {
             // Output List<Type1,Type2,Type3> ... do not unroll the properties
             String listArgs = collect.keySet()
                     .stream()
-                    .map(theType -> TypeUtils.toSimpleName(theType, typeAndTries))
+                    .map(theType -> theType.toSimpleName(typeAndTries))
                     .collect(joining(","));
             MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO("List<" + listArgs + ">",
-                    List.class.getName(),
-                    Collections.emptyList());
-            return Collections.singletonList(metadataTypeDTO);
+                    TypeProxy.create(List.class),
+                    emptyList());
+            return singletonList(metadataTypeDTO);
+        }
+    }
+
+    static class OnTheFlyTypeProxy implements TypeProxy {
+
+
+        private final String listItem;
+
+        public OnTheFlyTypeProxy(String listItem) {
+            this.listItem = listItem;
+        }
+
+        @Override
+        public boolean isList(TypeAndTries typeAndTries) {
+            return true;
+        }
+
+        @Override
+        public Trie resolve(TypeAndTries typeAndTries) {
+            return typeAndTries.getOrDefault(List.class.getName());
+        }
+
+        @Override
+        public String toSimpleName(TypeAndTries typeAndTries) {
+            return TypeUtils.formatUnrolledListDisplayType(this, typeAndTries);
+        }
+
+        @Override
+        public String getTypeFullyQualifiedName() {
+            return List.class.getSimpleName();
+        }
+
+        @Override
+        public String listItemType(TypeAndTries typeAndTries) {
+            return listItem;
         }
     }
 }

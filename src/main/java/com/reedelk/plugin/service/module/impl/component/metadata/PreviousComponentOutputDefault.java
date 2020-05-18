@@ -95,7 +95,7 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     protected MetadataTypeDTO attributes(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> metadataTypes = attributes.stream()
                         .distinct() // we want to avoid creating data for the same type.
-                        .map(attributeType -> createMetadataType(completionFinder, typeAndTries, attributeType))
+                        .map(attributeType -> createMetadataType(completionFinder, typeAndTries, TypeProxy.create(attributeType)))
                         .collect(toList());
         return mergeMetadataTypes(metadataTypes);
     }
@@ -103,7 +103,7 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     protected List<MetadataTypeDTO> payload(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
         return payload.stream()
                 .distinct()
-                .map(payloadType -> createMetadataType(completionFinder, typeAndTries, payloadType))
+                .map(payloadType -> createMetadataType(completionFinder, typeAndTries, TypeProxy.create(payloadType)))
                 .collect(toList());
     }
 }

@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
-import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.stream.Collectors.toList;
 
 abstract class AbstractPreviousComponentOutput implements PreviousComponentOutput {
@@ -26,72 +25,72 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
             });
         });
 
-        return new MetadataTypeDTO(
-                MessageAttributes.class.getName(),
-                MessageAttributes.class.getName(),
-                nameAndMetadataMappings.values());
+        // TODO: Replace with defaults the Message Attributes.class.
+        return new MetadataTypeDTO(MessageAttributes.class, nameAndMetadataMappings.values());
     }
 
     public static MetadataTypeItemDTO merge(MetadataTypeItemDTO dto1, MetadataTypeItemDTO dto2) {
         return Objects.equals(dto1.value, dto2.value) ?
-                dto1 : new MetadataTypeItemDTO(dto1.name, dto1.value + ", " + dto2.value);
+                dto1 :
+                new MetadataTypeItemDTO(dto1.name, dto1.value + ", " + dto2.value);
     }
 
-    protected MetadataTypeDTO createMetadataType(CompletionFinder completionFinder, TypeAndTries typeAndTries, String type) {
-        Trie typeTrie = typeAndTries.getOrDefault(type);
-        if (isNotBlank(typeTrie.listItemType())) {
-            // Unroll list item type
-            return unrollListType(completionFinder, typeAndTries, typeTrie, type);
-
+    protected MetadataTypeDTO createMetadataType(CompletionFinder completionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {
+        if (typeProxy.isList(typeAndTries)) {
+            return unrollListType(completionFinder, typeAndTries, typeProxy);
         } else {
-            List<Suggestion> typeSuggestions = suggestionsFromType(completionFinder, typeAndTries, type);
-            String propertyDisplayType = TypeUtils.toSimpleName(type, typeAndTries);
+            List<Suggestion> typeSuggestions = suggestionsFromType(completionFinder, typeAndTries, typeProxy);
+            String propertyDisplayType = typeProxy.toSimpleName(typeAndTries);
             Collection<MetadataTypeItemDTO> typeProperties = new ArrayList<>();
             for (Suggestion suggestion : typeSuggestions) {
+                String returnType = suggestion.getReturnType();
+                TypeProxy returnTypeProxy = TypeProxy.create(returnType);
                 MetadataTypeItemDTO typeProperty =
-                        createTypeProperties(completionFinder, typeAndTries, suggestion.getLookupToken(), suggestion.getReturnType());
+                        createTypeProperties(completionFinder, typeAndTries, suggestion.getLookupToken(), returnTypeProxy);
                 typeProperties.add(typeProperty);
             }
-            return new MetadataTypeDTO(propertyDisplayType, type, typeProperties);
+            return new MetadataTypeDTO(propertyDisplayType, typeProxy, typeProperties);
         }
     }
 
-    protected MetadataTypeItemDTO createTypeProperties(CompletionFinder completionFinder, TypeAndTries typeAndTries, String lookupToken, String type) {
-        List<Suggestion> typeSuggestions = suggestionsFromType(completionFinder, typeAndTries, type);
+    protected MetadataTypeItemDTO createTypeProperties(CompletionFinder completionFinder, TypeAndTries typeAndTries, String lookupToken, TypeProxy typeProxy) {
+        List<Suggestion> typeSuggestions = suggestionsFromType(completionFinder, typeAndTries, typeProxy);
         if (typeSuggestions.isEmpty()) {
-            Trie typeTrie = typeAndTries.getOrDefault(type);
-            if (isNotBlank(typeTrie.listItemType())) {
-                MetadataTypeDTO listComplexType = unrollListType(completionFinder, typeAndTries, typeTrie, type);
+            if (typeProxy.isList(typeAndTries)) {
+                MetadataTypeDTO listComplexType = unrollListType(completionFinder, typeAndTries, typeProxy);
                 return new MetadataTypeItemDTO(lookupToken, listComplexType);
             } else {
-                String propertyDisplayType = TypeUtils.toSimpleName(type, typeAndTries);
+                String propertyDisplayType = typeProxy.toSimpleName(typeAndTries);
                 return new MetadataTypeItemDTO(lookupToken, propertyDisplayType);
             }
         } else {
-            MetadataTypeDTO metadataType = createMetadataType(completionFinder, typeAndTries, type);
+            MetadataTypeDTO metadataType = createMetadataType(completionFinder, typeAndTries, typeProxy);
             return new MetadataTypeItemDTO(lookupToken, metadataType);
         }
     }
 
     @NotNull
-    protected MetadataTypeDTO unrollListType(CompletionFinder completionFinder, TypeAndTries typeAndTries, Trie typeTrie, String type) {
+    protected MetadataTypeDTO unrollListType(CompletionFinder completionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {
         // Unroll list item type
-        String listItemType = typeTrie.listItemType();
+        String listItemType = typeProxy.listItemType(typeAndTries);
 
-        List<Suggestion> listTypeSuggestions = suggestionsFromType(completionFinder, typeAndTries, listItemType);
+        List<Suggestion> listTypeSuggestions = suggestionsFromType(completionFinder, typeAndTries, typeProxy);
         Collection<MetadataTypeItemDTO> listTypeProperties = new ArrayList<>();
+
         for (Suggestion suggestion : listTypeSuggestions) {
+            String returnType = suggestion.getReturnType();
             MetadataTypeItemDTO typeProperty =
-                    createTypeProperties(completionFinder, typeAndTries, suggestion.getLookupToken(), suggestion.getReturnType());
+                    createTypeProperties(completionFinder, typeAndTries, suggestion.getLookupToken(), TypeProxy.create(returnType));
             listTypeProperties.add(typeProperty);
         }
 
-        String listDisplayType = TypeUtils.formatListDisplayType(listItemType, typeTrie);
-        return new MetadataTypeDTO(listDisplayType, type, listTypeProperties);
+        // List<ItemType> : ItemType
+        String listDisplayType = TypeUtils.formatUnrolledListDisplayType(typeProxy, typeAndTries);
+        return new MetadataTypeDTO(listDisplayType, TypeProxy.create(listItemType), listTypeProperties);
     }
 
-    protected List<Suggestion> suggestionsFromType(CompletionFinder completionFinder, TypeAndTries typeAndTries, String type) {
-        Trie typeTrie = typeAndTries.getOrDefault(type);
+    protected List<Suggestion> suggestionsFromType(CompletionFinder completionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {
+        Trie typeTrie = typeProxy.resolve(typeAndTries);
         return completionFinder.find(typeTrie, this)
                 .stream()
                 .filter(suggestion -> PROPERTY.equals(suggestion.getType()))

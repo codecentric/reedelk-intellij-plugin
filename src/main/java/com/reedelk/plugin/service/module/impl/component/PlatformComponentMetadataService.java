@@ -1,5 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.exception.PluginException;
@@ -17,6 +18,8 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.lang.String.format;
 
 class PlatformComponentMetadataService implements PlatformModuleService {
+
+    private static final Logger LOG = Logger.getInstance(PlatformComponentMetadataService.class);
 
     private final Module module;
     private final TypeAndTries typeAndTries;
@@ -62,6 +65,8 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 onComponentMetadataEvent.onComponentMetadataUpdated(componentMetadata);
 
             } catch (Exception exception) {
+                LOG.warn(exception);
+
                 String componentFullyQualifiedName = context.node().componentData().getFullyQualifiedName();
                 String errorMessage =
                         format("Component metadata could not be found for component=[%s], cause=[%s]", componentFullyQualifiedName, exception);

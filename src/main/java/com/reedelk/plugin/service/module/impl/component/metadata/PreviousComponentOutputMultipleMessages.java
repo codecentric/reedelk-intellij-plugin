@@ -7,6 +7,7 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import java.util.Collection;
 import java.util.List;
 
+// TODO: Fixme
 public class PreviousComponentOutputMultipleMessages implements PreviousComponentOutput {
 
     @Override

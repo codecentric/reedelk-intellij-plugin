@@ -3,7 +3,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 public class MetadataTypeItemDTO {
 
     public final String name;
-    public final String value;
+    public final String value; // TODO: this is basically the simple type
     public final MetadataTypeDTO complex;
 
     public MetadataTypeItemDTO(String name, String value) {
