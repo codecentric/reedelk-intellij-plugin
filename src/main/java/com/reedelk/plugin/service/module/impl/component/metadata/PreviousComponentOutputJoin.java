@@ -1,11 +1,9 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.runtime.api.commons.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -30,7 +28,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
     @Override
     public String description() {
-        return "List of multiple payloads";
+        return StringUtils.EMPTY;
     }
 
     @Override
@@ -59,11 +57,18 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             // All the outputs have the same type (we must unroll the list type properties (List<Type> : Type)
             Map.Entry<TypeProxy, List<MetadataTypeDTO>> next = collect.entrySet().iterator().next();
             TypeProxy typeProxy = next.getKey();
-
-            OnTheFlyTypeProxy onTheFlyTypeProxy = new OnTheFlyTypeProxy(typeProxy.getTypeFullyQualifiedName());
-            MetadataTypeDTO sameTypeElementsList = unrollListType(completionFinder, typeAndTries, onTheFlyTypeProxy);
-            return singletonList(sameTypeElementsList);
-
+            // Otherwise it would be a list of lists
+            if (!typeProxy.isList(typeAndTries)) {
+                OnTheFlyTypeProxy onTheFlyTypeProxy = new OnTheFlyTypeProxy(typeProxy.getTypeFullyQualifiedName());
+                MetadataTypeDTO sameTypeElementsList = unrollListType(completionFinder, typeAndTries, onTheFlyTypeProxy);
+                return singletonList(sameTypeElementsList);
+            } else {
+                // Output List<List<Type1>> ... do not unroll the properties
+                MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO("List<" + typeProxy.toSimpleName(typeAndTries) + ">",
+                        TypeProxy.create(List.class),
+                        emptyList());
+                return singletonList(metadataTypeDTO);
+            }
         } else {
             // Output List<Type1,Type2,Type3> ... do not unroll the properties
             String listArgs = collect.keySet()
@@ -77,8 +82,9 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         }
     }
 
+    // TODO: The equals here should be consistent. If they are both a list, and they have
+    // the same list item, then equal, independently from the list type.
     static class OnTheFlyTypeProxy implements TypeProxy {
-
 
         private final String listItem;
 
@@ -98,7 +104,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
-            return TypeUtils.formatUnrolledListDisplayType(this, typeAndTries);
+            return TypeUtils.formatList(this, typeAndTries);
         }
 
         @Override
@@ -109,6 +115,19 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         @Override
         public String listItemType(TypeAndTries typeAndTries) {
             return listItem;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            OnTheFlyTypeProxy that = (OnTheFlyTypeProxy) o;
+            return Objects.equals(listItem, that.listItem);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(listItem);
         }
     }
 }

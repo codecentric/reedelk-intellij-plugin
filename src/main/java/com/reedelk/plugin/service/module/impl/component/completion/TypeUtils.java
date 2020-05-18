@@ -65,7 +65,7 @@ public class TypeUtils {
     @NotNull
     public static String formatUnrolledListDisplayType(TypeProxy typeProxy, TypeAndTries typeAndTries) {
         return String.format(LIST_SIMPLE_NAME_AND_ITEM_TYPE_FORMAT,
-                formatList(typeProxy, typeAndTries),
+                typeProxy.toSimpleName(typeAndTries),
                 TypeUtils.toSimpleName(typeProxy.listItemType(typeAndTries)));
     }
 
