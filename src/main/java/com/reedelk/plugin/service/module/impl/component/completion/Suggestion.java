@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 
 import javax.swing.*;
 
@@ -11,12 +12,12 @@ public class Suggestion {
     private final Type type;
     // the tail text shown next to the lookup token (e.g: function arguments)
     private final String tailText;
-    // the value inserted in the editor when the user presses enter.
+    // the value inserted in the editor when the user presses enter
     private final String insertValue;
     // the value shown in the suggestion popup
     private final String lookupToken;
-    // the fully qualified type of the return type of the suggestion
-    private final String returnType;
+    // the type proxy of the return type
+    private final TypeProxy returnType;
     // the display value to be shown in the suggestion popup of the return value
     private final String returnTypeDisplayValue;
     // for functions taking arguments, the cursor could be placed between ( and ) by setting an offset to the cursor.
@@ -25,7 +26,7 @@ public class Suggestion {
     private Suggestion(Type type,
                        String insertValue,
                        String lookupToken,
-                       String returnType,
+                       TypeProxy returnType,
                        String returnTypeDisplayValue,
                        String tailText,
                        int cursorOffset) {
@@ -54,7 +55,7 @@ public class Suggestion {
         return lookupToken;
     }
 
-    public String getReturnType() {
+    public TypeProxy getReturnType() {
         return returnType;
     }
 
@@ -89,7 +90,7 @@ public class Suggestion {
         private String tailText;
         private String insertValue;
         private String lookupToken;
-        private String returnType;
+        private TypeProxy returnType;
         private String returnTypeDisplayValue;
         private int cursorOffset;
 
@@ -103,7 +104,7 @@ public class Suggestion {
             return this;
         }
 
-        public Builder returnType(String returnType) {
+        public Builder returnType(TypeProxy returnType) {
             this.returnType = returnType;
             return this;
         }
@@ -133,15 +134,7 @@ public class Suggestion {
             checkNotNull(returnType, "returnType (" + insertValue + ")");
             checkNotNull(insertValue, "insertValue");
             if (lookupToken == null) lookupToken = insertValue;
-
-            return new Suggestion(
-                    type,
-                    insertValue,
-                    lookupToken,
-                    returnType,
-                    returnTypeDisplayValue,
-                    tailText,
-                    cursorOffset);
+            return new Suggestion(type, insertValue, lookupToken, returnType, returnTypeDisplayValue, tailText, cursorOffset);
         }
     }
 }

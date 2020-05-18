@@ -43,8 +43,7 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
             String propertyDisplayType = typeProxy.toSimpleName(typeAndTries);
             Collection<MetadataTypeItemDTO> typeProperties = new ArrayList<>();
             for (Suggestion suggestion : typeSuggestions) {
-                String returnType = suggestion.getReturnType();
-                TypeProxy returnTypeProxy = TypeProxy.create(returnType);
+                TypeProxy returnTypeProxy = suggestion.getReturnType();
                 MetadataTypeItemDTO typeProperty =
                         createTypeProperties(completionFinder, typeAndTries, suggestion.getLookupToken(), returnTypeProxy);
                 typeProperties.add(typeProperty);
@@ -78,9 +77,9 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
         Collection<MetadataTypeItemDTO> listTypeProperties = new ArrayList<>();
 
         for (Suggestion suggestion : listTypeSuggestions) {
-            String returnType = suggestion.getReturnType();
+            TypeProxy returnType = suggestion.getReturnType();
             MetadataTypeItemDTO typeProperty =
-                    createTypeProperties(completionFinder, typeAndTries, suggestion.getLookupToken(), TypeProxy.create(returnType));
+                    createTypeProperties(completionFinder, typeAndTries, suggestion.getLookupToken(), returnType);
             listTypeProperties.add(typeProperty);
         }
 

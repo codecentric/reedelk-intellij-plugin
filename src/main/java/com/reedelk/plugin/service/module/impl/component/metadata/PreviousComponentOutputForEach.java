@@ -17,7 +17,25 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
 
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        return previousComponentOutput.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
+        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestion, typeAndTrieMap, false);
+        // We need to provide alternatives, and flatten only at the end
+        if (suggestions.size() == 1) {
+            // TODO: What if it is a list of lists!?
+            Suggestion next = suggestions.iterator().next();
+            if (next.getReturnType().isList(typeAndTrieMap)) {
+                // Create a suggestion with only return type.
+                TypeProxy listItemTypeProxy = TypeProxy.create(next.getReturnType().listItemType(typeAndTrieMap));
+                return Collections.singletonList(Suggestion.create(suggestion.getType())
+                        .cursorOffset(suggestion.getCursorOffset())
+                        .insertValue(suggestion.getInsertValue())
+                        .lookupToken(suggestion.getLookupToken())
+                        .tailText(suggestion.getTailText())
+                        .returnTypeDisplayValue(listItemTypeProxy.toSimpleName(typeAndTrieMap))
+                        .returnType(listItemTypeProxy)
+                        .build());
+            }
+        }
+        return suggestions;
     }
 
     @Override

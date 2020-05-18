@@ -1,5 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 
@@ -12,7 +13,8 @@ import static com.reedelk.plugin.service.module.impl.component.completion.Sugges
 
 public class Default {
 
-    public static final String DEFAULT_RETURN_TYPE = "void";
+    public static final String DEFAULT_RETURN_TYPE = Void.class.getSimpleName();
+    public static final TypeProxy DEFAULT_RETURN_TYPE_PROXY = TypeProxy.create(Void.class);
 
     // The root of all the objects is 'Object'.
     public static final Trie OBJECT = new TrieImpl(Object.class.getName(), null, null);
@@ -22,13 +24,13 @@ public class Default {
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .insertValue("message")
-                .returnType(Message.class.getName())
+                .returnType(TypeProxy.create(Message.class))
                 .returnTypeDisplayValue(Message.class.getSimpleName())
                 .build();
         TRIE.insert(message);
         Suggestion context = Suggestion.create(PROPERTY)
                 .insertValue("context")
-                .returnType(FlowContext.class.getName())
+                .returnType(TypeProxy.create(FlowContext.class))
                 .returnTypeDisplayValue(FlowContext.class.getSimpleName())
                 .build();
         TRIE.insert(context);
@@ -44,7 +46,7 @@ public class Default {
                     .insertValue("each { it }")
                     .lookupToken("each")
                     .tailText("{ it }")
-                    .returnType(List.class.getName())
+                    .returnType(TypeProxy.create(List.class))
                     .returnTypeDisplayValue(List.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
@@ -52,7 +54,7 @@ public class Default {
                     .insertValue("eachWithIndex { it, i ->  }")
                     .tailText("{ it, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(List.class.getName())
+                    .returnType(TypeProxy.create(List.class))
                     .returnTypeDisplayValue(List.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
@@ -60,8 +62,7 @@ public class Default {
                     .insertValue("collect { it }")
                     .tailText("{ it }")
                     .lookupToken("collect")
-                    .returnType(List.class.getName())
-
+                    .returnType(TypeProxy.create(List.class))
                     .returnTypeDisplayValue(List.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
@@ -75,7 +76,7 @@ public class Default {
                     .insertValue("each { entry }")
                     .lookupToken("each")
                     .tailText("{ entry }")
-                    .returnType(Map.class.getName())
+                    .returnType(TypeProxy.create(Map.class))
                     .returnTypeDisplayValue(Map.class.getSimpleName())
                     .cursorOffset(2)
                     .build());
@@ -83,7 +84,7 @@ public class Default {
                     .insertValue("eachWithIndex { entry, i ->  }")
                     .tailText("{ entry, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(Map.class.getName())
+                    .returnType(TypeProxy.create(Map.class))
                     .returnTypeDisplayValue(Map.class.getSimpleName())
                     .cursorOffset(2)
                     .build());

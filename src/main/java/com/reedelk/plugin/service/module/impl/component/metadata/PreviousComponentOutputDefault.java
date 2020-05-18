@@ -1,7 +1,10 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.exception.PluginException;
-import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.plugin.service.module.impl.component.completion.CompletionFinder;
+import com.reedelk.plugin.service.module.impl.component.completion.Default;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 
@@ -30,12 +33,13 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
         List<Suggestion> dynamicSuggestions = resolve(suggestion)
                 .stream()
+                .map(TypeProxy::create) // This is wrong, the type proxy might be join and so on....
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())
                         .insertValue(suggestion.getInsertValue())
                         .lookupToken(suggestion.getLookupToken())
                         .tailText(suggestion.getTailText())
-                        .returnTypeDisplayValue(TypeUtils.toSimpleName(dynamicType, typeAndTrieMap, suggestion))
+                        .returnTypeDisplayValue(dynamicType.toSimpleName(typeAndTrieMap))
                         .returnType(dynamicType)
                         .build())
                 .collect(toList());
@@ -61,10 +65,10 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
 
     // Resolves the dynamic type from the output descriptor
     protected List<String> resolve(Suggestion suggestion) {
-        String suggestionType = suggestion.getReturnType();
-        if (MessageAttributes.class.getName().equals(suggestionType)) {
+        TypeProxy suggestionType = suggestion.getReturnType();
+        if (MessageAttributes.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
             return attributes.isEmpty() ? singletonList(MessageAttributes.class.getName()) : attributes;
-        } else if (MessagePayload.class.getName().equals(suggestionType)) {
+        } else if (MessagePayload.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
             return payload.isEmpty() ? singletonList(Object.class.getName()) : payload;
         } else {
             throw new IllegalStateException("Resolve must be called only if the suggestion type is dynamic");
@@ -80,14 +84,14 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
                 .findAny()
                 .orElseThrow(() -> new PluginException("Expected at least one dynamic suggestion."));
         List<String> possibleTypes = suggestions.stream()
-                .map(theSuggestion -> TypeUtils.toSimpleName(theSuggestion.getReturnType(), typeAndTrieMap))
+                .map(theSuggestion -> theSuggestion.getReturnType().toSimpleName(typeAndTrieMap))
                 .collect(toList());
         return Suggestion.create(suggestion.getType())
                 .insertValue(suggestion.getInsertValue())
                 .tailText(suggestion.getTailText())
                 .lookupToken(suggestion.getLookupToken())
                 // The return type for 'flattened' suggestions is never used because this suggestion is only created for a terminal token.
-                .returnType(Default.DEFAULT_RETURN_TYPE)
+                .returnType(Default.DEFAULT_RETURN_TYPE_PROXY)
                 .returnTypeDisplayValue(String.join(",", possibleTypes))
                 .build();
     }

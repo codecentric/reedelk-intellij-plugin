@@ -21,10 +21,10 @@ public class PreviousComponentOutputCompound implements PreviousComponentOutput 
 
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        String suggestionType = suggestion.getReturnType();
-        if (MessageAttributes.class.getName().equals(suggestionType)) {
+        TypeProxy suggestionType = suggestion.getReturnType();
+        if (MessageAttributes.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
             return attributes.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
-        } else if (MessagePayload.class.getName().equals(suggestionType)) {
+        } else if (MessagePayload.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
             return payload.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
         }  else {
             throw new IllegalStateException("Resolve must be called only if the suggestion type is dynamic");

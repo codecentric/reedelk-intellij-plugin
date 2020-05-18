@@ -19,7 +19,7 @@ public class SuggestionAssertion {
     }
 
     public SuggestionAssertion hasReturnType(String expectedReturnType) {
-        String actualReturnType = suggestion.getReturnType();
+        String actualReturnType = suggestion.getReturnType().getTypeFullyQualifiedName();
         assertThat(actualReturnType).isEqualTo(expectedReturnType);
         return this;
     }

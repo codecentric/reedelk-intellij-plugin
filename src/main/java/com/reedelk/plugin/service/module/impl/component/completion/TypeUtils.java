@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
-import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,20 +39,6 @@ public class TypeUtils {
     public static String toSimpleName(@Nullable String type, @NotNull TypeAndTries allTypesMap) {
         Trie typeTrie = allTypesMap.getOrDefault(type);
         return TypeUtils.toSimpleName(type, typeTrie);
-    }
-
-    @NotNull
-    public static String toSimpleName(@Nullable String type, @NotNull TypeAndTries allTypesMap, @NotNull Suggestion suggestion) {
-        // Used to create dynamic suggestions. For dynamic suggestions we always keep as simple name 'MessageAttributes'
-        // type without using the fully qualified name of the specific type.
-        String originalType = suggestion.getReturnType();
-        if (MessageAttributes.class.getName().equals(originalType)) {
-            // We keep the message attributes type simple name to avoid confusion and always display 'MessageAttributes' type.
-            return MessageAttributes.class.getSimpleName();
-        } else {
-            // If the type is MessagePayload, we lookup the type and convert it to a simple name.
-            return toSimpleName(type, allTypesMap);
-        }
     }
 
     // Used by join

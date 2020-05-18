@@ -3,6 +3,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.plugin.service.module.impl.component.completion.Trie;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeUtils;
+import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Objects;
 
@@ -57,7 +58,13 @@ public interface TypeProxy {
 
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
-            return TypeUtils.toSimpleName(typeFullyQualifiedName, typeAndTries);
+            if (MessageAttributes.class.getName().equals(typeFullyQualifiedName)) {
+                // We keep the message attributes type simple name to avoid confusion and always display 'MessageAttributes' type.
+                return MessageAttributes.class.getSimpleName();
+            } else {
+                // If the type is MessagePayload, we lookup the type and convert it to a simple name.
+                return TypeUtils.toSimpleName(typeFullyQualifiedName, typeAndTries);
+            }
         }
 
         @Override

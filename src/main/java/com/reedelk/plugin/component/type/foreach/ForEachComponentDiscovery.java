@@ -19,12 +19,8 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
         super(module, moduleService, typeAndAndTries);
     }
 
-    // TODO: Bug: For each followed by fork, displays List instead of Object
     @Override
     public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
-
-        // If previous is list, we must extract...
-        // TODO: Note that the previous could also be need to add type List<Object>, then it would work for generics too... like when you exit from a fork
         Optional<PreviousComponentOutput> previous = discover(context, nodeWeWantOutputFrom);
         return previous.map(PreviousComponentOutputForEach::new);
     }
