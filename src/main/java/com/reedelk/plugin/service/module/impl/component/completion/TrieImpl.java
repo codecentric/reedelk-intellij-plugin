@@ -1,10 +1,9 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
+import com.reedelk.plugin.service.module.impl.component.metadata.TypeListProxy;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class TrieImpl implements Trie {
@@ -47,23 +46,19 @@ public class TrieImpl implements Trie {
         List<Suggestion> suggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
         autocomplete.addAll(suggestions);
 
-        return autocomplete.stream().map(new Function<Suggestion, Suggestion>() {
-            @Override
-            public Suggestion apply(Suggestion suggestion) {
-                if (Closure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName()) &&
-                        listItemType != null) {
-                    ListAwareProxy listAwareProxy = new ListAwareProxy(listItemType);
-                    return Suggestion.create(Suggestion.Type.PROPERTY)
-                            .tailText(suggestion.getTailText())
-                            .cursorOffset(suggestion.getCursorOffset())
-                            .lookupToken(suggestion.getLookupToken())
-                            .insertValue(suggestion.getInsertValue())
-                            .returnType(listAwareProxy)
-                            .returnTypeDisplayValue(listAwareProxy.toSimpleName(typeAndTrieMap))
-                            .build();
-                } else {
-                    return suggestion;
-                }
+        return autocomplete.stream().map(suggestion -> {
+            if (Closure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName()) && listItemType != null) {
+                TypeListProxy listAwareProxy = new TypeListProxy(listItemType);
+                return Suggestion.create(Suggestion.Type.PROPERTY)
+                        .tailText(suggestion.getTailText())
+                        .cursorOffset(suggestion.getCursorOffset())
+                        .lookupToken(suggestion.getLookupToken())
+                        .insertValue(suggestion.getInsertValue())
+                        .returnType(listAwareProxy)
+                        .returnTypeDisplayValue(listAwareProxy.toSimpleName(typeAndTrieMap))
+                        .build();
+            } else {
+                return suggestion;
             }
         }).collect(Collectors.toList());
     }
@@ -146,51 +141,5 @@ public class TrieImpl implements Trie {
             suggestions.addAll(suggestions1);
         }
         return suggestions;
-    }
-
-    static class ListClosureTrie extends TrieImpl {
-
-        public ListClosureTrie(String type, TypeAndTries typeAndTries) {
-            insert(Suggestion.create(Suggestion.Type.PROPERTY)
-                    .lookupToken("it")
-                    .insertValue("it")
-                    .returnTypeDisplayValue(TypeProxy.create(type).toSimpleName(typeAndTries))
-                    .returnType(TypeProxy.create(type))
-                    .build());
-        }
-    }
-
-    static class ListAwareProxy implements TypeProxy {
-
-        private final String type;
-
-        public ListAwareProxy(String type) {
-            this.type = type;
-        }
-
-        @Override
-        public boolean isList(TypeAndTries typeAndTries) {
-            return false;
-        }
-
-        @Override
-        public Trie resolve(TypeAndTries typeAndTries) {
-            return new ListClosureTrie(type, typeAndTries);
-        }
-
-        @Override
-        public String toSimpleName(TypeAndTries typeAndTries) {
-            return TypeUtils.toSimpleName(type, typeAndTries);
-        }
-
-        @Override
-        public String getTypeFullyQualifiedName() {
-            return Closure.class.getName();
-        }
-
-        @Override
-        public String listItemType(TypeAndTries typeAndTries) {
-            return type;
-        }
     }
 }
