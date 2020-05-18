@@ -17,7 +17,7 @@ public class UnknownComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         // The output of this component can not be determined because
         // this component is unknown, therefore we return empty.
         return Optional.empty();

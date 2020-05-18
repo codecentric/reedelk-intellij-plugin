@@ -17,7 +17,7 @@ public class PlaceholderComponentDiscovery extends GenericComponentDiscovery {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
+    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode currentNode) {
         return Optional.empty();
     }
 }

@@ -21,7 +21,7 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
     // TODO: Bug: For each followed by fork, displays List instead of Object
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
 
         // If previous is list, we must extract...
         // TODO: Note that the previous could also be need to add type List<Object>, then it would work for generics too... like when you exit from a fork
@@ -30,7 +30,7 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
+    public Optional<PreviousComponentOutput> computeForScope(ComponentContext context, ScopedGraphNode scopedGraphNode) {
 
         // The current scope
         Optional<GraphNode> node = context.findFirstNodeOutsideCurrentScope(scopedGraphNode);
@@ -55,13 +55,13 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
                 String innerScopeFullyQualifiedName = theScopeOfLastNode.get().componentData().getFullyQualifiedName();
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, innerScopeFullyQualifiedName);
-                strategy.compute(context, theScopeOfLastNode.get()).ifPresent(outputs::add);
+                strategy.computeForScope(context, theScopeOfLastNode.get()).ifPresent(outputs::add);
 
             } else {
                 String nodeFullyQualifiedName = lastNodeOfScope.componentData().getFullyQualifiedName();
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, nodeFullyQualifiedName);
-                strategy.compute(context, lastNodeOfScope).ifPresent(outputs::add);
+                strategy.computeForScope(context, lastNodeOfScope).ifPresent(outputs::add);
             }
         }
 
