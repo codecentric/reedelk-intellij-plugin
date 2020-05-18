@@ -37,10 +37,11 @@ public class SuggestionProcessor {
         moduleDescriptor.getTypes().forEach(typeDescriptor -> {
             // We first must register all the tries and then the functions. Because one function
             // might depend on a trie of another type previously defined in the same module.
+            String fullyQualifiedTypeName = typeDescriptor.getType();
             String extendsType = typeDescriptor.getExtendsType();
             String listItemType = typeDescriptor.getListItemType();
             String displayName = typeDescriptor.getDisplayName();
-            Trie typeTrie = new TrieImpl(extendsType, listItemType, displayName);
+            Trie typeTrie = new TrieImpl(fullyQualifiedTypeName, extendsType, listItemType, displayName);
             moduleTypes.put(typeDescriptor.getType(), typeTrie);
         });
 

@@ -212,4 +212,17 @@ class TokenFinderTest {
         assertThat(actual)
                 .contains(new String[]{"HttpPartBuilder","create","attribute", "binary", ""});
     }
+
+    @Test
+    void shouldCorrectlyFindTokenWhenListIteratorClosure() {
+        // Given
+        String input = "message.payload().collect { it.IntellijIdeaRulezzz  }";
+
+        // When
+        Optional<String[]> actual = TokenFinder.findLastToken(input, 31);
+
+        // Then
+        assertThat(actual)
+                .contains(new String[] {"message", "payload", "collect", "it", ""});
+    }
 }

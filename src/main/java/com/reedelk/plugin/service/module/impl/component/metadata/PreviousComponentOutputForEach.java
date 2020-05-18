@@ -20,6 +20,7 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
         Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestion, typeAndTrieMap, false);
         // We need to provide alternatives, and flatten only at the end
         if (suggestions.size() == 1) {
+            // You need to extract  the list of all predecessors
             // TODO: You might have output suggestions with multiple list of different types, you
             //  should merge them all... this might happen when the for each joins a fork with List<Type1>, List<Type2>
             // TODO: What if it is a list of lists!?

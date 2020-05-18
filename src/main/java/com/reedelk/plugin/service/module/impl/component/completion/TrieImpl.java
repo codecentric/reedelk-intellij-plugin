@@ -12,6 +12,7 @@ public class TrieImpl implements Trie {
     private final String extendsType;
     private final String displayName;
     private final String listItemType;
+    private final String fullyQualifiedTypeName;
     private TrieNode root;
 
     public TrieImpl() {
@@ -19,13 +20,15 @@ public class TrieImpl implements Trie {
         this.extendsType = null;
         this.listItemType = null;
         this.displayName = null;
+        this.fullyQualifiedTypeName = null;
     }
 
-    public TrieImpl(String extendsType, String listItemType, String displayName) {
+    public TrieImpl(String fullyQualifiedTypeName, String extendsType, String listItemType, String displayName) {
         this.root = new TrieNode();
-        this.listItemType = listItemType;
         this.displayName = displayName;
         this.extendsType = extendsType;
+        this.listItemType = listItemType;
+        this.fullyQualifiedTypeName = fullyQualifiedTypeName;
     }
 
     @Override
@@ -43,6 +46,27 @@ public class TrieImpl implements Trie {
         Set<Suggestion> autocomplete = autocomplete(word);
         addExtendsTypeSuggestions(this, typeAndTrieMap, word, autocomplete);
         return autocomplete;
+    }
+
+    @Override
+    public String extendsType() {
+        return extendsType;
+    }
+
+    @Override
+    public String listItemType() {
+        return listItemType;
+    }
+
+    @Override
+    public String displayName() {
+        return displayName;
+    }
+
+    @Override
+    public void clear() {
+        this.root = null;
+        this.root = new TrieNode();
     }
 
     private Set<Suggestion> autocomplete(String token) {
@@ -69,27 +93,6 @@ public class TrieImpl implements Trie {
         }
     }
 
-    @Override
-    public String extendsType() {
-        return extendsType;
-    }
-
-    @Override
-    public String listItemType() {
-        return listItemType;
-    }
-
-    @Override
-    public String displayName() {
-        return displayName;
-    }
-
-    @Override
-    public void clear() {
-        this.root = null;
-        this.root = new TrieNode();
-    }
-
     private Set<Suggestion> traversal(TrieNode start, Set<Suggestion> suggestions, String current) {
         if (start.existAnySuggestion()) {
             // We add the suggestions from the current node to the list of suggestions
@@ -110,7 +113,9 @@ public class TrieImpl implements Trie {
         if (current != Default.OBJECT && current != null && StringUtils.isNotBlank(current.extendsType())) {
             String extendsType = current.extendsType();
             Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType);
-            suggestions.addAll(currentTypeTrie.autocomplete(token, typeAndTrieMap));
+            Collection<Suggestion> autocomplete = currentTypeTrie.autocomplete(token, typeAndTrieMap);
+            // TODO: These autocomplete for the supertype must have the same type of the child.
+            suggestions.addAll(autocomplete);
             addExtendsTypeSuggestions(currentTypeTrie, typeAndTrieMap, token, suggestions);
         }
     }

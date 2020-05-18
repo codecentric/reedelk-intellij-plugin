@@ -17,7 +17,7 @@ public class Default {
     public static final TypeProxy DEFAULT_RETURN_TYPE_PROXY = TypeProxy.create(Void.class);
 
     // The root of all the objects is 'Object'.
-    public static final Trie OBJECT = new TrieImpl(Object.class.getName(), null, null);
+    public static final Trie OBJECT = new TrieImpl(Object.class.getName(), null, null, null);
 
     // Default script signature is message and context.
     public static final Trie TRIE = new TrieImpl();
@@ -68,7 +68,7 @@ public class Default {
                     .build());
             trieMap.put(List.class.getName(), trie);
 
-            Trie arrayList = new TrieImpl(List.class.getName(), null, null);
+            Trie arrayList = new TrieImpl(ArrayList.class.getName(), List.class.getName(), null, null);
             trieMap.put(ArrayList.class.getName(), arrayList);
 
             Trie mapTrie = new TrieImpl();
@@ -91,7 +91,7 @@ public class Default {
 
             trieMap.put(Map.class.getName(), mapTrie);
 
-            Trie hashMap = new TrieImpl(Map.class.getName(), null, null);
+            Trie hashMap = new TrieImpl(HashMap.class.getName(), Map.class.getName(), null, null);
             trieMap.put(HashMap.class.getName(), hashMap);
         }
     }

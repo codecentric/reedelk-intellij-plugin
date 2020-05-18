@@ -4,6 +4,7 @@ import com.reedelk.module.descriptor.model.property.ScriptSignatureArgument;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
 import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
+import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 
 import java.util.List;
 
@@ -12,14 +13,14 @@ public class SuggestionTestUtils {
     public static Suggestion createFunctionSuggestion(String insertValue, String returnType) {
         return Suggestion.create(Suggestion.Type.FUNCTION)
                 .insertValue(insertValue)
-                .returnType(returnType)
+                .returnType(TypeProxy.create(returnType))
                 .build();
     }
 
     public static Suggestion createPropertySuggestion(String insertValue, String returnType) {
         return Suggestion.create(Suggestion.Type.PROPERTY)
                 .insertValue(insertValue)
-                .returnType(returnType)
+                .returnType(TypeProxy.create(returnType))
                 .build();
     }
 

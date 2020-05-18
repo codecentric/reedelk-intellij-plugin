@@ -17,12 +17,11 @@ class TokenNormalizer {
         String result = input.replaceAll("\\n", EMPTY);
         result = result.replaceAll("\\t", EMPTY);
         result = result.replaceAll(" ", EMPTY);
-
+        result = result.replaceAll("\\{", ".");
         String[] tokens = tokenize(result);
         if (input.endsWith(".")) {
             tokens = ArrayUtils.concatenate(tokens, EMPTY_ARRAY);
         }
-
         return tokens;
     }
 

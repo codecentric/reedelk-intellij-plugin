@@ -51,9 +51,13 @@ public class TokenFinder {
             }
 
             if (c == '.') {
-                Optional<Integer> isBuilder = existsDotBefore(text, count);
+                Optional<Integer> isBuilder = isBuilder(text, count);
                 if (isBuilder.isPresent()) {
                     count = isBuilder.get() + 1;
+                }
+                Optional<Integer> isListIterator = isListIterator(text, count);
+                if (isListIterator.isPresent()) {
+                    count = isListIterator.get() + 1;
                 }
             }
 
@@ -70,7 +74,35 @@ public class TokenFinder {
         return StringUtils.isBlank(token) ? Optional.empty() : Optional.of(token);
     }
 
-    private static Optional<Integer> existsDotBefore(String text, int count) {
+    private static final String matchingPattern = "collect{it";
+
+    // message.payload().collect { it.IntellijIdeaRulezzz  }
+    private static Optional<Integer> isListIterator(String text, int count) {
+        int current = count - 1;
+        char c = text.charAt(current);
+        int patternMatchingCount = matchingPattern.length() - 1;
+        boolean patternMatches = c == matchingPattern.charAt(patternMatchingCount);
+        while (patternMatches && current > 0) {
+            current--;
+            c = text.charAt(current);
+            if (c == '\n' || c == ' ' || c == '\t') {
+                continue;
+            }
+
+            patternMatchingCount--;
+
+            patternMatches = c == matchingPattern.charAt(patternMatchingCount);
+            if (patternMatches && patternMatchingCount == 0) {
+                // Matches.
+                return Optional.of(current);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    // Consumes the characters until it finds the previous end of method call e.g message.payload().super().text();
+    private static Optional<Integer> isBuilder(String text, int count) {
         int current = count - 1;
         char c = text.charAt(current);
         while ((c == '\n' || c == ' ' || c == '\t') && current > 0) {
