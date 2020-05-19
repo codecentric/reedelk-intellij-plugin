@@ -129,7 +129,7 @@ class SuggestionFactoryTest {
     void shouldCorrectlyCreateSuggestionFromTypeFunctionDescriptorWhenReturnListWithItemType() {
         // Given
         Map<String, Trie> moduleTypes = new HashMap<>();
-        moduleTypes.put("com.test.MyListItem", new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", null));
+        moduleTypes.put("com.test.MyListItem", new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", null, null, null));
         TypeAndTries allTypesMap = new TypeAndTries(moduleTypes);
 
         TypeFunctionDescriptor method =
@@ -154,7 +154,7 @@ class SuggestionFactoryTest {
         // Given
         String displayName = "MyListItemDisplayName";
         Map<String, Trie> moduleTypes = new HashMap<>();
-        moduleTypes.put("com.test.MyListItem", new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", displayName));
+        moduleTypes.put("com.test.MyListItem", new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", displayName, null, null));
         TypeAndTries allTypesMap = new TypeAndTries(moduleTypes);
 
         TypeFunctionDescriptor method =
@@ -199,7 +199,7 @@ class SuggestionFactoryTest {
         // Given
         String returnType = "com.test.MyListItem";
         Map<String, Trie> moduleTypes = new HashMap<>();
-        moduleTypes.put(returnType, new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", null));
+        moduleTypes.put(returnType, new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", null, null, null));
         TypeAndTries allTypesMap = new TypeAndTries(moduleTypes);
         TypePropertyDescriptor propertyDescriptor = createPropertyDescriptor("myProperty", returnType);
 
@@ -223,7 +223,7 @@ class SuggestionFactoryTest {
         // Given
         String argumentType = "com.test.MyListItem";
         Map<String, Trie> moduleTypes = new HashMap<>();
-        moduleTypes.put(argumentType, new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", null));
+        moduleTypes.put(argumentType, new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", null, null, null));
         TypeAndTries allTypesMap = new TypeAndTries(moduleTypes);
         ScriptSignatureArgument scriptSignatureArgument = createScriptSignatureArgument("argument1", argumentType);
 
@@ -247,7 +247,7 @@ class SuggestionFactoryTest {
         String argumentType = "com.test.MyListItem";
         String displayName = "MyListItemDisplayName";
         Map<String, Trie> moduleTypes = new HashMap<>();
-        moduleTypes.put(argumentType, new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", displayName));
+        moduleTypes.put(argumentType, new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", displayName, null, null));
         TypeAndTries allTypesMap = new TypeAndTries(moduleTypes);
 
         ScriptSignatureArgument scriptSignatureArgument = createScriptSignatureArgument("argument1", argumentType);

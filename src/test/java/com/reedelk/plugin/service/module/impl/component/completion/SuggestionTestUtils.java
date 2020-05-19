@@ -4,7 +4,6 @@ import com.reedelk.module.descriptor.model.property.ScriptSignatureArgument;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
 import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
-import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 
 import java.util.List;
 

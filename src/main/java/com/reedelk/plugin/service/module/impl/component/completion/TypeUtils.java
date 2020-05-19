@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

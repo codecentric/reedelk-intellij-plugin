@@ -59,6 +59,10 @@ public class TokenFinder {
                 if (isListIterator.isPresent()) {
                     count = isListIterator.get() + 1;
                 }
+                Optional<Integer> isMapEach = isMapEachIterator(text, count);
+                if (isMapEach.isPresent()) {
+                    count = isMapEach.get() + 1;
+                }
             }
 
             // It is the end of the token
@@ -92,6 +96,33 @@ public class TokenFinder {
             patternMatchingCount--;
 
             patternMatches = c == matchingPattern.charAt(patternMatchingCount);
+            if (patternMatches && patternMatchingCount == 0) {
+                // Matches.
+                return Optional.of(current);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    private static final String matchingEachPattern = "each{entry";
+
+    // message.payload().collect { it.IntellijIdeaRulezzz  }
+    private static Optional<Integer> isMapEachIterator(String text, int count) {
+        int current = count - 1;
+        char c = text.charAt(current);
+        int patternMatchingCount = matchingEachPattern.length() - 1;
+        boolean patternMatches = c == matchingEachPattern.charAt(patternMatchingCount);
+        while (patternMatches && current > 0) {
+            current--;
+            c = text.charAt(current);
+            if (c == '\n' || c == ' ' || c == '\t') {
+                continue;
+            }
+
+            patternMatchingCount--;
+
+            patternMatches = c == matchingEachPattern.charAt(patternMatchingCount);
             if (patternMatches && patternMatchingCount == 0) {
                 // Matches.
                 return Optional.of(current);

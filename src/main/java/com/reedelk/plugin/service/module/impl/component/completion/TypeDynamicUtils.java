@@ -12,6 +12,6 @@ public class TypeDynamicUtils {
     public static boolean is(Suggestion suggestion) {
         return MessagePayload.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName()) ||
                 MessageAttributes.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName()) ||
-                Closure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName());
+                TypeClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName());
     }
 }

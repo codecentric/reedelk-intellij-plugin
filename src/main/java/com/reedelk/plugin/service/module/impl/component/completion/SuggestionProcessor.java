@@ -40,7 +40,9 @@ public class SuggestionProcessor {
             String extendsType = typeDescriptor.getExtendsType();
             String listItemType = typeDescriptor.getListItemType();
             String displayName = typeDescriptor.getDisplayName();
-            Trie typeTrie = new TrieImpl(extendsType, listItemType, displayName);
+            String mapKeyType = typeDescriptor.getMapKeyType();
+            String mapValueType = typeDescriptor.getMapValueType();
+            Trie typeTrie = new TrieImpl(extendsType, listItemType, displayName, mapKeyType, mapValueType);
             moduleTypes.put(typeDescriptor.getType(), typeTrie);
         });
 

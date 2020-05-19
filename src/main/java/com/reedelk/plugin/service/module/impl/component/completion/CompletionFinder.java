@@ -68,7 +68,7 @@ public class CompletionFinder {
             // create ListClosure tree suggestion with the type taken from list item type from the current trie,
             // otherwise handle the map case.
             if (TypeDynamicUtils.is(suggestion)) {
-                if (Closure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
+                if (TypeClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
                     withDynamicSuggestions.add(suggestion);
                 } else {
                     Collection<Suggestion> dynamicSuggestions =

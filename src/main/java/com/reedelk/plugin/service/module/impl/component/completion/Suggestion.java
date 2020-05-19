@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 
 import javax.swing.*;
 

@@ -3,6 +3,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.plugin.service.module.impl.component.completion.CompletionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.ArrayList;

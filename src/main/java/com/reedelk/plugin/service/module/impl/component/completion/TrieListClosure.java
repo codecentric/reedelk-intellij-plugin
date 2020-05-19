@@ -1,16 +1,23 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
-
 // TODO: This should be generated from defaults
 public class TrieListClosure extends TrieImpl {
 
-    public TrieListClosure(String type, TypeAndTries typeAndTries) {
+    public TrieListClosure(String listItemType, TypeAndTries typeAndTries) {
+        TypeProxy listItemTypeProxy = TypeProxy.create(listItemType);
         insert(Suggestion.create(Suggestion.Type.PROPERTY)
                 .lookupToken("it")
                 .insertValue("it")
-                .returnTypeDisplayValue(TypeProxy.create(type).toSimpleName(typeAndTries))
-                .returnType(TypeProxy.create(type))
+                .returnTypeDisplayValue(listItemTypeProxy.toSimpleName(typeAndTries))
+                .returnType(listItemTypeProxy)
+                .build());
+
+        TypeProxy indexType = TypeProxy.create(int.class);
+        insert(Suggestion.create(Suggestion.Type.PROPERTY)
+                .returnTypeDisplayValue(indexType.toSimpleName(typeAndTries))
+                .returnType(indexType)
+                .lookupToken("i")
+                .insertValue("i")
                 .build());
     }
 }

@@ -1,8 +1,5 @@
-package com.reedelk.plugin.service.module.impl.component.metadata;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.completion.Trie;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Objects;

@@ -1,5 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
+import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
+
 import java.util.Collection;
 
 public class MetadataTypeDTO {

@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.metadata.TypeProxy;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
@@ -17,8 +16,10 @@ public class TypeDefault {
     public static final String DEFAULT_RETURN_TYPE = Void.class.getSimpleName();
     public static final TypeProxy DEFAULT_RETURN_TYPE_PROXY = TypeProxy.create(Void.class);
 
+    // TODO: All the type must extend from this if they don't explicitly extend from anything,
+    //  also the OBJECT must add the toString() method as well.
     // The root of all the objects is 'Object'.
-    public static final Trie OBJECT = new TrieImpl(null, null, null);
+    public static final Trie OBJECT = new TrieImpl();
 
     // Default script signature is message and context.
     public static final Trie MESSAGE_AND_CONTEXT = new TrieImpl();
@@ -47,7 +48,7 @@ public class TypeDefault {
                     .insertValue("each { it }")
                     .lookupToken("each")
                     .tailText("{ it }")
-                    .returnType(TypeProxy.create(Closure.class))
+                    .returnType(TypeProxy.create(TypeClosure.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -55,7 +56,7 @@ public class TypeDefault {
                     .insertValue("eachWithIndex { it, i ->  }")
                     .tailText("{ it, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.create(Closure.class))
+                    .returnType(TypeProxy.create(TypeClosure.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -63,14 +64,14 @@ public class TypeDefault {
                     .insertValue("collect { it }")
                     .tailText("{ it }")
                     .lookupToken("collect")
-                    .returnType(TypeProxy.create(Closure.class))
+                    .returnType(TypeProxy.create(TypeClosure.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
-            // TODO: Add to string
+            // TODO: Add to string (to string should be inherited from object?)
             trieMap.put(List.class.getName(), trie);
 
-            Trie arrayList = new TrieImpl(List.class.getName(), null, null);
+            Trie arrayList = new TrieImpl(List.class.getName(), null, null, null, null);
             trieMap.put(ArrayList.class.getName(), arrayList);
 
             Trie mapTrie = new TrieImpl();
@@ -78,24 +79,24 @@ public class TypeDefault {
                     .insertValue("each { entry }")
                     .lookupToken("each")
                     .tailText("{ entry }")
-                    .returnType(TypeProxy.create(Map.class))
-                    .returnTypeDisplayValue(Map.class.getSimpleName())
+                    .returnType(TypeProxy.create(TypeClosure.class))
+                    .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
-            // TODO: Add to string
+            // TODO: Add to string (to string should be inherited from object?)
             mapTrie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
                     .insertValue("eachWithIndex { entry, i ->  }")
                     .tailText("{ entry, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.create(Map.class))
-                    .returnTypeDisplayValue(Map.class.getSimpleName())
+                    .returnType(TypeProxy.create(TypeClosure.class))
+                    .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
             // TODO: Add to string method
 
             trieMap.put(Map.class.getName(), mapTrie);
 
-            Trie hashMap = new TrieImpl(Map.class.getName(), null, null);
+            Trie hashMap = new TrieImpl(Map.class.getName(), null, null, null, null);
             trieMap.put(HashMap.class.getName(), hashMap);
 
         }

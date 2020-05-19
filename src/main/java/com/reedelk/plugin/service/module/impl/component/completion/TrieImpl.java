@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.metadata.TypeListProxy;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.*;
@@ -11,20 +10,26 @@ public class TrieImpl implements Trie {
     private final String extendsType;
     private final String displayName;
     private final String listItemType;
+    private final String mapKeyType;
+    private final String mapValueType;
     private TrieNode root;
 
     public TrieImpl() {
         this.root = new TrieNode();
-        this.extendsType = null;
-        this.listItemType = null;
         this.displayName = null;
+        this.extendsType = null;
+        this.mapKeyType = null;
+        this.mapValueType = null;
+        this.listItemType = null;
     }
 
-    public TrieImpl(String extendsType, String listItemType, String displayName) {
+    public TrieImpl(String extendsType, String listItemType, String displayName, String mapKeyType, String mapValueType) {
         this.root = new TrieNode();
         this.displayName = displayName;
         this.extendsType = extendsType;
         this.listItemType = listItemType;
+        this.mapKeyType = mapKeyType;
+        this.mapValueType = mapValueType;
     }
 
     @Override
@@ -44,16 +49,31 @@ public class TrieImpl implements Trie {
         autocomplete.addAll(suggestions);
 
         return autocomplete.stream().map(suggestion -> {
-            if (Closure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName()) && listItemType != null) {
-                TypeListProxy listAwareProxy = new TypeListProxy(listItemType);
-                return Suggestion.create(Suggestion.Type.PROPERTY)
-                        .tailText(suggestion.getTailText())
-                        .cursorOffset(suggestion.getCursorOffset())
-                        .lookupToken(suggestion.getLookupToken())
-                        .insertValue(suggestion.getInsertValue())
-                        .returnType(listAwareProxy)
-                        .returnTypeDisplayValue(listAwareProxy.toSimpleName(typeAndTrieMap))
-                        .build();
+            if (TypeClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
+
+                if (listItemType != null) {
+                    TypeClosureListProxy listAwareProxy = new TypeClosureListProxy(listItemType);
+                    return Suggestion.create(Suggestion.Type.PROPERTY)
+                            .tailText(suggestion.getTailText())
+                            .cursorOffset(suggestion.getCursorOffset())
+                            .lookupToken(suggestion.getLookupToken())
+                            .insertValue(suggestion.getInsertValue())
+                            .returnType(listAwareProxy)
+                            .returnTypeDisplayValue(listAwareProxy.toSimpleName(typeAndTrieMap))
+                            .build();
+                } else if (mapValueType != null) {
+                    TypeClosureMapProxy mapAwareProxy = new TypeClosureMapProxy(mapKeyType, mapValueType);
+                    return Suggestion.create(Suggestion.Type.PROPERTY)
+                            .tailText(suggestion.getTailText())
+                            .cursorOffset(suggestion.getCursorOffset())
+                            .lookupToken(suggestion.getLookupToken())
+                            .insertValue(suggestion.getInsertValue())
+                            .returnType(mapAwareProxy)
+                            .returnTypeDisplayValue(mapAwareProxy.toSimpleName(typeAndTrieMap))
+                            .build();
+                } else {
+                    return suggestion;
+                }
             } else {
                 return suggestion;
             }
@@ -122,7 +142,7 @@ public class TrieImpl implements Trie {
 
     // All the extends type must contain the original
     private List<Suggestion> addExtendsTypeSuggestions(Trie current, TypeAndTries typeAndTrieMap, String token) {
-        // TODO: Check on default object, otherwise we would go on stackoverflow
+        // TODO: Check on default object, otherwise we would go on stackoverflow (the type object check should not be needed, it was needed because I used it as extends type!!)
         List<Suggestion> suggestions = new ArrayList<>();
         if (current != TypeDefault.OBJECT && current != null && StringUtils.isNotBlank(current.extendsType())) {
             String extendsType = current.extendsType();
