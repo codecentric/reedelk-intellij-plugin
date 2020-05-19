@@ -15,7 +15,7 @@ class TypeProxyClosureList implements TypeProxy {
 
     @Override
     public Trie resolve(TypeAndTries typeAndTries) {
-        return new TrieListClosure(listItemType, typeAndTries);
+        return new TrieList(null, null, listItemType, typeAndTries);
     }
 
     @Override

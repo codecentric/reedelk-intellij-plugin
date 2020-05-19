@@ -20,9 +20,9 @@ class PlatformCompletionService implements PlatformModuleService {
     private static final Logger LOG = Logger.getInstance(PlatformCompletionService.class);
 
     // Global module types map
-    private final Trie flowControlModuleGlobalTypes = new TrieImpl();
-    private final Trie mavenModulesGlobalTypes = new TrieImpl();
-    private final Trie currentModuleGlobalTypes = new TrieImpl();
+    private final Trie flowControlModuleGlobalTypes = new TrieDefault();
+    private final Trie mavenModulesGlobalTypes = new TrieDefault();
+    private final Trie currentModuleGlobalTypes = new TrieDefault();
     private final TrieMultipleWrapper allGlobalTypes =
             new TrieMultipleWrapper(flowControlModuleGlobalTypes, mavenModulesGlobalTypes, currentModuleGlobalTypes);
 

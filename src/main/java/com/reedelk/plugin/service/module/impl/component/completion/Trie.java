@@ -8,11 +8,14 @@ public interface Trie {
 
     String extendsType();
 
-    String listItemType();
-
     Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap);
 
     void clear();
 
     void insert(Suggestion suggestion);
+
+    // TODO: DO I need this? Is there a way to encapsulate it?
+    default String listItemType() {
+        return null;
+    }
 }

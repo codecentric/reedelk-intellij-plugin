@@ -19,10 +19,10 @@ public class TypeDefault {
     // TODO: All the type must extend from this if they don't explicitly extend from anything,
     //  also the OBJECT must add the toString() method as well.
     // The root of all the objects is 'Object'.
-    public static final Trie OBJECT = new TrieImpl();
+    public static final Trie OBJECT = new TrieDefault();
 
     // Default script signature is message and context.
-    public static final Trie MESSAGE_AND_CONTEXT = new TrieImpl();
+    public static final Trie MESSAGE_AND_CONTEXT = new TrieDefault();
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .insertValue("message")
@@ -43,7 +43,7 @@ public class TypeDefault {
         // TODO: Add lists, maps and so on ...
         public static void register(TypeAndTries allTypes, Map<String, Trie> trieMap) {
             // Lists
-            Trie trie = new TrieImpl();
+            Trie trie = new TrieDefault();
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
                     .insertValue("each { it }")
                     .lookupToken("each")
@@ -71,10 +71,10 @@ public class TypeDefault {
             // TODO: Add to string (to string should be inherited from object?)
             trieMap.put(List.class.getName(), trie);
 
-            Trie arrayList = new TrieImpl(List.class.getName(), null, null, null, null);
+            Trie arrayList = new TrieList(List.class.getName(), List.class.getSimpleName(), Object.class.getName(), allTypes);
             trieMap.put(ArrayList.class.getName(), arrayList);
 
-            Trie mapTrie = new TrieImpl();
+            Trie mapTrie = new TrieDefault();
             mapTrie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
                     .insertValue("each { entry }")
                     .lookupToken("each")
@@ -96,7 +96,7 @@ public class TypeDefault {
 
             trieMap.put(Map.class.getName(), mapTrie);
 
-            Trie hashMap = new TrieImpl(Map.class.getName(), null, null, null, null);
+            Trie hashMap = new TrieMap(Map.class.getName(), Map.class.getSimpleName(), Object.class.getName(), Object.class.getName(), allTypes);
             trieMap.put(HashMap.class.getName(), hashMap);
 
         }

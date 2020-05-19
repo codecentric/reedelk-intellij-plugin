@@ -17,7 +17,7 @@ class TypeProxyClosureMap implements TypeProxy {
 
     @Override
     public Trie resolve(TypeAndTries typeAndTries) {
-        return new TrieMapClosure(mapKeyType, mapValueType, typeAndTries);
+        return new TrieMap(null, null, mapKeyType, mapValueType, typeAndTries);
     }
 
     @Override

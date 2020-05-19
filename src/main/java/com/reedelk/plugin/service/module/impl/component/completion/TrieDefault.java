@@ -3,33 +3,24 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class TrieImpl implements Trie {
+public class TrieDefault implements Trie {
 
     private final String extendsType;
     private final String displayName;
-    private final String listItemType;
-    private final String mapKeyType;
-    private final String mapValueType;
+
     private TrieNode root;
 
-    public TrieImpl() {
+    public TrieDefault() {
         this.root = new TrieNode();
         this.displayName = null;
         this.extendsType = null;
-        this.mapKeyType = null;
-        this.mapValueType = null;
-        this.listItemType = null;
     }
 
-    public TrieImpl(String extendsType, String listItemType, String displayName, String mapKeyType, String mapValueType) {
+    public TrieDefault(String extendsType, String displayName) {
         this.root = new TrieNode();
         this.displayName = displayName;
         this.extendsType = extendsType;
-        this.listItemType = listItemType;
-        this.mapKeyType = mapKeyType;
-        this.mapValueType = mapValueType;
     }
 
     @Override
@@ -45,32 +36,14 @@ public class TrieImpl implements Trie {
     @Override
     public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
         Set<Suggestion> autocomplete = autocomplete(word);
-        List<Suggestion> suggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
-        autocomplete.addAll(suggestions);
-        return autocomplete.stream().map(suggestion -> {
-            // If it is a closure, we must return the type of the closure arguments,
-            // such as it, entry ...
-            if (TypeClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
-                if (listItemType != null) {
-                    TypeProxy typeProxy = TypeProxy.createList(listItemType);
-                    return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, typeProxy);
-                } else if (mapValueType != null) {
-                    TypeProxy typeProxy = TypeProxy.createMap(mapKeyType, mapValueType);
-                    return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, typeProxy);
-                }
-            }
-            return suggestion;
-        }).collect(Collectors.toList());
+        List<Suggestion> extendsSuggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
+        autocomplete.addAll(extendsSuggestions);
+        return autocomplete;
     }
 
     @Override
     public String extendsType() {
         return extendsType;
-    }
-
-    @Override
-    public String listItemType() {
-        return listItemType;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.ScriptSignatureDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -42,7 +43,14 @@ public class SuggestionProcessor {
             String displayName = typeDescriptor.getDisplayName();
             String mapKeyType = typeDescriptor.getMapKeyType();
             String mapValueType = typeDescriptor.getMapValueType();
-            Trie typeTrie = new TrieImpl(extendsType, listItemType, displayName, mapKeyType, mapValueType);
+            Trie typeTrie;
+            if (StringUtils.isNotBlank(listItemType)) {
+                typeTrie = new TrieList(extendsType, displayName, listItemType, allTypesMap);
+            } else if (StringUtils.isNotBlank(mapValueType)) {
+                typeTrie = new TrieMap(extendsType, displayName, mapKeyType, mapValueType, allTypesMap);
+            } else {
+                typeTrie = new TrieDefault(extendsType, displayName);
+            }
             moduleTypes.put(typeDescriptor.getType(), typeTrie);
         });
 
@@ -111,7 +119,7 @@ public class SuggestionProcessor {
     }
 
     private Trie createTrieFromScriptSignature(@NotNull ScriptSignatureDescriptor descriptor) {
-        Trie trie = new TrieImpl();
+        Trie trie = new TrieDefault();
         descriptor.getArguments()
                 .stream()
                 .map(scriptSignatureArgument -> SuggestionFactory.create(allTypesMap, scriptSignatureArgument))
