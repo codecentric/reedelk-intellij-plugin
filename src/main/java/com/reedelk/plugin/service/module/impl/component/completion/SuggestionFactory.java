@@ -70,4 +70,17 @@ public class SuggestionFactory {
                 .returnType(argumentType)
                 .build();
     }
+
+    static Suggestion copyWithType(@NotNull TypeAndTries allTypesMap,
+                                   @NotNull Suggestion suggestion,
+                                   @NotNull TypeProxy typeProxy) {
+        return Suggestion.create(PROPERTY)
+                .returnTypeDisplayValue(typeProxy.toSimpleName(allTypesMap))
+                .cursorOffset(suggestion.getCursorOffset())
+                .lookupToken(suggestion.getLookupToken())
+                .insertValue(suggestion.getInsertValue())
+                .tailText(suggestion.getTailText())
+                .returnType(typeProxy)
+                .build();
+    }
 }

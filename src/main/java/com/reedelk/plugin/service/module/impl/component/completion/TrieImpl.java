@@ -48,27 +48,15 @@ public class TrieImpl implements Trie {
         List<Suggestion> suggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
         autocomplete.addAll(suggestions);
         return autocomplete.stream().map(suggestion -> {
+            // If it is a closure, we must return the type of the closure arguments,
+            // such as it, entry ...
             if (TypeClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
                 if (listItemType != null) {
-                    TypeProxyClosureList listAwareProxy = new TypeProxyClosureList(listItemType);
-                    return Suggestion.create(Suggestion.Type.PROPERTY)
-                            .tailText(suggestion.getTailText())
-                            .cursorOffset(suggestion.getCursorOffset())
-                            .lookupToken(suggestion.getLookupToken())
-                            .insertValue(suggestion.getInsertValue())
-                            .returnType(listAwareProxy)
-                            .returnTypeDisplayValue(listAwareProxy.toSimpleName(typeAndTrieMap))
-                            .build();
+                    TypeProxy typeProxy = TypeProxy.createList(listItemType);
+                    return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, typeProxy);
                 } else if (mapValueType != null) {
-                    TypeProxyClosureMap mapAwareProxy = new TypeProxyClosureMap(mapKeyType, mapValueType);
-                    return Suggestion.create(Suggestion.Type.PROPERTY)
-                            .tailText(suggestion.getTailText())
-                            .cursorOffset(suggestion.getCursorOffset())
-                            .lookupToken(suggestion.getLookupToken())
-                            .insertValue(suggestion.getInsertValue())
-                            .returnType(mapAwareProxy)
-                            .returnTypeDisplayValue(mapAwareProxy.toSimpleName(typeAndTrieMap))
-                            .build();
+                    TypeProxy typeProxy = TypeProxy.createMap(mapKeyType, mapValueType);
+                    return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, typeProxy);
                 }
             }
             return suggestion;
