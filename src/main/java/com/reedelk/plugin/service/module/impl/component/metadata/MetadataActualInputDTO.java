@@ -13,13 +13,6 @@ public class MetadataActualInputDTO {
     private final MetadataTypeDTO attributes;
     private final List<MetadataTypeDTO> payload;
 
-    public MetadataActualInputDTO() {
-        this.isMultipleMessages = true;
-        this.payloadDescription = null;
-        this.attributes = null;
-        this.payload = null;
-    }
-
     public MetadataActualInputDTO(MetadataTypeDTO attributes,
                                   List<MetadataTypeDTO> payload,
                                   String payloadDescription) {
