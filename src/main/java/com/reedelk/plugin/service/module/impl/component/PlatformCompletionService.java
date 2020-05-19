@@ -49,7 +49,7 @@ class PlatformCompletionService implements PlatformModuleService {
 
     @Override
     public Collection<Suggestion> suggestionsOf(@NotNull ComponentContext context, @NotNull String componentPropertyPath, String[] tokens) {
-        // TODO: You don't need the previous component OUTPUT ANY TIME, only if it is a dynamic type!!
+        // TODO: You don't need the previous component OUTPUT EVERY TIME, only if it is a dynamic type!!
         //  this logic slows down suggestion for nothing here, you should fetch the previous component output
         //  if and only if the suggestion refers to message.payload() or message.attributes().
         PreviousComponentOutput previousComponentOutput = componentMetadataService.componentOutputOf(context);
@@ -59,7 +59,7 @@ class PlatformCompletionService implements PlatformModuleService {
         Trie trie = flowControlSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = mavenModulesSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = currentModuleSignatureTypes.get(componentPropertyPath);
-        if (trie == null) trie = TypeDefault.TRIE;
+        if (trie == null) trie = TypeDefault.MESSAGE_AND_CONTEXT;
 
         Collection<Suggestion> globalSuggestions = completionFinder.find(allGlobalTypes, tokens, previousComponentOutput);
         Collection<Suggestion> localSuggestions = completionFinder.find(trie, tokens, previousComponentOutput);

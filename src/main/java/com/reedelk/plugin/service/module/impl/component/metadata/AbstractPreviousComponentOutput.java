@@ -1,5 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
@@ -94,5 +95,26 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
                 .stream()
                 .filter(suggestion -> PROPERTY.equals(suggestion.getType()))
                 .collect(toList());
+    }
+
+    /**
+     * Takes a group of suggestions which refer to the same lookup string and collapses them into one
+     * single suggestion with type equal to a comma separated list of all the suggestions in the group.
+     */
+    protected Suggestion flatten(Collection<Suggestion> suggestions, TypeAndTries typeAndTrieMap) {
+        Suggestion suggestion = suggestions.stream()
+                .findAny()
+                .orElseThrow(() -> new PluginException("Expected at least one dynamic suggestion."));
+        List<String> possibleTypes = suggestions.stream()
+                .map(theSuggestion -> theSuggestion.getReturnType().toSimpleName(typeAndTrieMap))
+                .collect(toList());
+        return Suggestion.create(suggestion.getType())
+                .insertValue(suggestion.getInsertValue())
+                .tailText(suggestion.getTailText())
+                .lookupToken(suggestion.getLookupToken())
+                // The return type for 'flattened' suggestions is never used because this suggestion is only created for a terminal token.
+                .returnType(TypeDefault.DEFAULT_RETURN_TYPE_PROXY)
+                .returnTypeDisplayValue(String.join(",", possibleTypes))
+                .build();
     }
 }

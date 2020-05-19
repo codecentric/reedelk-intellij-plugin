@@ -9,12 +9,17 @@ import java.util.List;
 
 public interface PreviousComponentOutput {
 
-    Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten);
-
     String description();
 
-    MetadataTypeDTO mapAttributes(CompletionFinder completionFinder, TypeAndTries typeAndTries);
+    MetadataTypeDTO mapAttributes(CompletionFinder completionFinder,
+                                  TypeAndTries typeAndTries);
 
-    List<MetadataTypeDTO> mapPayload(CompletionFinder completionFinder, TypeAndTries typeAndTries);
+    List<MetadataTypeDTO> mapPayload(CompletionFinder completionFinder,
+                                     TypeAndTries typeAndTries);
+
+    Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder,
+                                                   Suggestion suggestion,
+                                                   TypeAndTries typeAndTrieMap,
+                                                   boolean flatten);
 
 }

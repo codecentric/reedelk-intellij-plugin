@@ -22,7 +22,7 @@ public class TokenFinder {
         return findLastToken(text, offset);
     }
 
-    static Optional<String[]> findLastToken(String text, int offset) {
+    public static Optional<String[]> findLastToken(String text, int offset) {
         try {
             return internalFindLastToken(text, offset).map(TokenNormalizer::normalize);
         } catch (Exception exception) {

@@ -18,13 +18,13 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
         // TODO: Create artificial type proxy because it is a list of the suggestions ....
 
         // Output is List<Of all the types>
         List<Suggestion> suggestions = new ArrayList<>();
         outputs.forEach(previousComponentOutput ->
-                suggestions.addAll(previousComponentOutput.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten)));
+                suggestions.addAll(previousComponentOutput.buildDynamicSuggestions(completionFinder, suggestion, typeAndTrieMap, flatten)));
         return suggestions;
     }
 

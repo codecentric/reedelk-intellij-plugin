@@ -23,11 +23,11 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
         List<Suggestion> suggestions = new ArrayList<>();
         for (PreviousComponentOutput output : outputs) {
             Collection<Suggestion> currentSuggestions =
-                    output.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
+                    output.buildDynamicSuggestions(completionFinder, suggestion, typeAndTrieMap, flatten);
             suggestions.addAll(currentSuggestions);
         }
         return suggestions;

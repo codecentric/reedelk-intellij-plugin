@@ -11,7 +11,7 @@ import java.util.List;
 public class PreviousComponentOutputMultipleMessages implements PreviousComponentOutput {
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
         return Collections.emptyList();
     }
 

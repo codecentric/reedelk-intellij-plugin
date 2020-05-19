@@ -72,7 +72,7 @@ public class CompletionFinder {
                     withDynamicSuggestions.add(suggestion);
                 } else {
                     Collection<Suggestion> dynamicSuggestions =
-                            descriptor.buildDynamicSuggestions(suggestion, typeAndTrieMap, flatten);
+                            descriptor.buildDynamicSuggestions(this, suggestion, typeAndTrieMap, flatten);
                     withDynamicSuggestions.addAll(dynamicSuggestions);
                 }
             } else {

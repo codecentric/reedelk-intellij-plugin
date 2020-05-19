@@ -16,8 +16,8 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestion, typeAndTrieMap, false);
+    public Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(completionFinder, suggestion, typeAndTrieMap, false);
         // We need to provide alternatives, and flatten only at the end
         if (suggestions.size() == 1) {
             // You need to extract  the list of all predecessors

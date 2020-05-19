@@ -21,20 +21,20 @@ public class TypeDefault {
     public static final Trie OBJECT = new TrieImpl(null, null, null);
 
     // Default script signature is message and context.
-    public static final Trie TRIE = new TrieImpl();
+    public static final Trie MESSAGE_AND_CONTEXT = new TrieImpl();
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .insertValue("message")
                 .returnType(TypeProxy.create(Message.class))
                 .returnTypeDisplayValue(Message.class.getSimpleName())
                 .build();
-        TRIE.insert(message);
+        MESSAGE_AND_CONTEXT.insert(message);
         Suggestion context = Suggestion.create(PROPERTY)
                 .insertValue("context")
                 .returnType(TypeProxy.create(FlowContext.class))
                 .returnTypeDisplayValue(FlowContext.class.getSimpleName())
                 .build();
-        TRIE.insert(context);
+        MESSAGE_AND_CONTEXT.insert(context);
     }
 
     public static class Types {
