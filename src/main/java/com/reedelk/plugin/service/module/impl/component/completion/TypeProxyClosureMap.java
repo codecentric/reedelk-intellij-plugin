@@ -1,11 +1,11 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-public class TypeClosureMapProxy implements TypeProxy {
+class TypeProxyClosureMap implements TypeProxy {
 
     private final String mapKeyType;
     private final String mapValueType;
 
-    public TypeClosureMapProxy(String mapKeyType, String mapValueType) {
+    TypeProxyClosureMap(String mapKeyType, String mapValueType) {
         this.mapKeyType = mapKeyType;
         this.mapValueType = mapValueType;
     }

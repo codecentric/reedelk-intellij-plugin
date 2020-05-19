@@ -47,12 +47,10 @@ public class TrieImpl implements Trie {
         Set<Suggestion> autocomplete = autocomplete(word);
         List<Suggestion> suggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
         autocomplete.addAll(suggestions);
-
         return autocomplete.stream().map(suggestion -> {
             if (TypeClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
-
                 if (listItemType != null) {
-                    TypeClosureListProxy listAwareProxy = new TypeClosureListProxy(listItemType);
+                    TypeProxyClosureList listAwareProxy = new TypeProxyClosureList(listItemType);
                     return Suggestion.create(Suggestion.Type.PROPERTY)
                             .tailText(suggestion.getTailText())
                             .cursorOffset(suggestion.getCursorOffset())
@@ -62,7 +60,7 @@ public class TrieImpl implements Trie {
                             .returnTypeDisplayValue(listAwareProxy.toSimpleName(typeAndTrieMap))
                             .build();
                 } else if (mapValueType != null) {
-                    TypeClosureMapProxy mapAwareProxy = new TypeClosureMapProxy(mapKeyType, mapValueType);
+                    TypeProxyClosureMap mapAwareProxy = new TypeProxyClosureMap(mapKeyType, mapValueType);
                     return Suggestion.create(Suggestion.Type.PROPERTY)
                             .tailText(suggestion.getTailText())
                             .cursorOffset(suggestion.getCursorOffset())
@@ -71,12 +69,9 @@ public class TrieImpl implements Trie {
                             .returnType(mapAwareProxy)
                             .returnTypeDisplayValue(mapAwareProxy.toSimpleName(typeAndTrieMap))
                             .build();
-                } else {
-                    return suggestion;
                 }
-            } else {
-                return suggestion;
             }
+            return suggestion;
         }).collect(Collectors.toList());
     }
 

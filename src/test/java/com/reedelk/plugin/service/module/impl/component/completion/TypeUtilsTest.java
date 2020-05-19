@@ -61,7 +61,7 @@ class TypeUtilsTest {
     void shouldCorrectlyConvertToSimpleNameWithTypeTrie() {
         // Given
         String input = "com.test.MyType";
-        Trie typeTrie = new TrieImpl(null, null, null);
+        Trie typeTrie = new TrieImpl(null, null, null, null, null);
 
         // When
         String actual = TypeUtils.toSimpleName(input, typeTrie);
@@ -73,7 +73,7 @@ class TypeUtilsTest {
     @Test
     void shouldCorrectlyConvertToSimpleNameWithTypeTrieAndListItemType() {
         // Given
-        Trie typeTrie = new TrieImpl(null, "MyItemType", null);
+        Trie typeTrie = new TrieImpl(null, "MyItemType", null, null, null);
         String input = "com.test.MyType";
 
         // When
@@ -86,7 +86,7 @@ class TypeUtilsTest {
     @Test
     void shouldCorrectlyConvertToSimpleNameWithTypeTrieAndDisplayName() {
         // Given
-        Trie typeTrie = new TrieImpl(null, null, "MyTypeDisplayName");
+        Trie typeTrie = new TrieImpl(null, null, "MyTypeDisplayName", null, null);
         String input = "com.test.MyType";
 
         // When
@@ -99,7 +99,7 @@ class TypeUtilsTest {
     @Test
     void shouldCorrectlyConvertToSimpleNameWithTypeTrieAndListItemTypeAndDisplayName() {
         // Given
-        Trie typeTrie = new TrieImpl(null, "MyItemType", "MyTypeDisplayName");
+        Trie typeTrie = new TrieImpl(null, "MyItemType", "MyTypeDisplayName", null, null);
         String input = "com.test.MyType";
 
         // When
@@ -113,7 +113,7 @@ class TypeUtilsTest {
     void shouldCorrectlyConvertToSimpleNameWithTypeTries() {
         // Given
         String input = "com.test.MyType";
-        Trie typeTrie = new TrieImpl(null, "MyItemType", "MyTypeDisplayName");
+        Trie typeTrie = new TrieImpl(null, "MyItemType", "MyTypeDisplayName", null, null);
         Map<String, Trie> typeAndTrie = new HashMap<>();
         typeAndTrie.put(input, typeTrie);
 

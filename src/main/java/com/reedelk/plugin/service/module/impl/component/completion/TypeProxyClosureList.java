@@ -1,10 +1,10 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-public class TypeClosureListProxy implements TypeProxy {
+class TypeProxyClosureList implements TypeProxy {
 
     private final String listItemType;
 
-    public TypeClosureListProxy(String listItemType) {
+    TypeProxyClosureList(String listItemType) {
         this.listItemType = listItemType;
     }
 
