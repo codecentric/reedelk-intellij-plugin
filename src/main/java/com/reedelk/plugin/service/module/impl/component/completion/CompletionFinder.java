@@ -62,19 +62,10 @@ public class CompletionFinder {
         Collection<Suggestion> suggestions = current.autocomplete(token, typeAndTrieMap);
         List<Suggestion> withDynamicSuggestions = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
-            // Here I get suggestion with :
-            // com.reedelk.plugin.service.module.impl.component.completion.Closure
-            // I need to determine if it is a list or a map, if it is a list, then
-            // create ListClosure tree suggestion with the type taken from list item type from the current trie,
-            // otherwise handle the map case.
             if (TypeDynamicUtils.is(suggestion)) {
-                if (TypeClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
-                    withDynamicSuggestions.add(suggestion);
-                } else {
-                    Collection<Suggestion> dynamicSuggestions =
-                            descriptor.buildDynamicSuggestions(this, suggestion, typeAndTrieMap, flatten);
-                    withDynamicSuggestions.addAll(dynamicSuggestions);
-                }
+                Collection<Suggestion> dynamicSuggestions =
+                        descriptor.buildDynamicSuggestions(this, suggestion, typeAndTrieMap, flatten);
+                withDynamicSuggestions.addAll(dynamicSuggestions);
             } else {
                 withDynamicSuggestions.add(suggestion);
             }

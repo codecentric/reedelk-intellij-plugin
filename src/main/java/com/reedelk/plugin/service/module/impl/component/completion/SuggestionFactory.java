@@ -74,7 +74,7 @@ public class SuggestionFactory {
     static Suggestion copyWithType(@NotNull TypeAndTries allTypesMap,
                                    @NotNull Suggestion suggestion,
                                    @NotNull TypeProxy typeProxy) {
-        return Suggestion.create(PROPERTY)
+        return Suggestion.create(FUNCTION)
                 .returnTypeDisplayValue(typeProxy.toSimpleName(allTypesMap))
                 .cursorOffset(suggestion.getCursorOffset())
                 .lookupToken(suggestion.getLookupToken())

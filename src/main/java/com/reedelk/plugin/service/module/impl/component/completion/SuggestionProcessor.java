@@ -45,9 +45,9 @@ public class SuggestionProcessor {
             String mapValueType = typeDescriptor.getMapValueType();
             Trie typeTrie;
             if (StringUtils.isNotBlank(listItemType)) {
-                typeTrie = new TrieList(extendsType, displayName, listItemType, allTypesMap);
+                typeTrie = new TrieList(extendsType, displayName, listItemType);
             } else if (StringUtils.isNotBlank(mapValueType)) {
-                typeTrie = new TrieMap(extendsType, displayName, mapKeyType, mapValueType, allTypesMap);
+                typeTrie = new TrieMap(extendsType, displayName, mapKeyType, mapValueType);
             } else {
                 typeTrie = new TrieDefault(extendsType, displayName);
             }

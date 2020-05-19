@@ -48,7 +48,7 @@ public class TypeDefault {
                     .insertValue("each { it }")
                     .lookupToken("each")
                     .tailText("{ it }")
-                    .returnType(TypeProxy.create(TypeClosure.class))
+                    .returnType(TypeProxy.create(TypeListClosure.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -56,7 +56,7 @@ public class TypeDefault {
                     .insertValue("eachWithIndex { it, i ->  }")
                     .tailText("{ it, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.create(TypeClosure.class))
+                    .returnType(TypeProxy.create(TypeListClosure.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -64,14 +64,14 @@ public class TypeDefault {
                     .insertValue("collect { it }")
                     .tailText("{ it }")
                     .lookupToken("collect")
-                    .returnType(TypeProxy.create(TypeClosure.class))
+                    .returnType(TypeProxy.create(TypeListClosure.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
             // TODO: Add to string (to string should be inherited from object?)
             trieMap.put(List.class.getName(), trie);
 
-            Trie arrayList = new TrieList(List.class.getName(), List.class.getSimpleName(), Object.class.getName(), allTypes);
+            Trie arrayList = new TrieList(List.class.getName(), List.class.getSimpleName(), Object.class.getName());
             trieMap.put(ArrayList.class.getName(), arrayList);
 
             Trie mapTrie = new TrieDefault();
@@ -79,7 +79,7 @@ public class TypeDefault {
                     .insertValue("each { entry }")
                     .lookupToken("each")
                     .tailText("{ entry }")
-                    .returnType(TypeProxy.create(TypeClosure.class))
+                    .returnType(TypeProxy.create(TypeMapClosure.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -88,7 +88,7 @@ public class TypeDefault {
                     .insertValue("eachWithIndex { entry, i ->  }")
                     .tailText("{ entry, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.create(TypeClosure.class))
+                    .returnType(TypeProxy.create(TypeMapClosure.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -96,7 +96,7 @@ public class TypeDefault {
 
             trieMap.put(Map.class.getName(), mapTrie);
 
-            Trie hashMap = new TrieMap(Map.class.getName(), Map.class.getSimpleName(), Object.class.getName(), Object.class.getName(), allTypes);
+            Trie hashMap = new TrieMap(Map.class.getName(), Map.class.getSimpleName(), Object.class.getName(), Object.class.getName());
             trieMap.put(HashMap.class.getName(), hashMap);
 
         }

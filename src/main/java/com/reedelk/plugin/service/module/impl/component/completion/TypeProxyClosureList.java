@@ -15,7 +15,7 @@ class TypeProxyClosureList implements TypeProxy {
 
     @Override
     public Trie resolve(TypeAndTries typeAndTries) {
-        return new TrieList(null, null, listItemType, typeAndTries);
+        return new TrieListClosure(typeAndTries);
     }
 
     @Override
@@ -25,11 +25,30 @@ class TypeProxyClosureList implements TypeProxy {
 
     @Override
     public String getTypeFullyQualifiedName() {
-        return TypeClosure.class.getName();
+        return TypeMapClosure.class.getName();
     }
 
     @Override
     public String listItemType(TypeAndTries typeAndTries) {
         return listItemType;
+    }
+
+    private class TrieListClosure extends TrieDefault {
+
+        public TrieListClosure(TypeAndTries typeAndTries) {
+            TypeProxy listItemTypeProxy = TypeProxy.create(listItemType);
+            insert(Suggestion.create(Suggestion.Type.PROPERTY)
+                    .returnTypeDisplayValue(listItemTypeProxy.toSimpleName(typeAndTries))
+                    .returnType(listItemTypeProxy)
+                    .insertValue("it")
+                    .build());
+
+            TypeProxy indexType = TypeProxy.create(int.class);
+            insert(Suggestion.create(Suggestion.Type.PROPERTY)
+                    .returnTypeDisplayValue(indexType.toSimpleName(typeAndTries))
+                    .returnType(indexType)
+                    .insertValue("i")
+                    .build());
+        }
     }
 }

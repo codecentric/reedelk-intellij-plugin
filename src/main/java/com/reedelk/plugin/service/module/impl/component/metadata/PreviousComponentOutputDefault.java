@@ -1,11 +1,13 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.plugin.service.module.impl.component.completion.CompletionFinder;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -66,8 +68,6 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
             return attributes.isEmpty() ? singletonList(MessageAttributes.class.getName()) : attributes;
         } else if (MessagePayload.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
             return payload.isEmpty() ? singletonList(Object.class.getName()) : payload;
-        } else if (TypeClosure.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return Collections.singletonList("Closure");
         } else {
             throw new IllegalStateException("Resolve must be called only if the suggestion type is dynamic");
         }

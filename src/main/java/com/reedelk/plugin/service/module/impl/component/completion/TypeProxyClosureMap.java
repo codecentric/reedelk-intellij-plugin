@@ -1,5 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+
 class TypeProxyClosureMap implements TypeProxy {
 
     private final String mapKeyType;
@@ -17,7 +19,7 @@ class TypeProxyClosureMap implements TypeProxy {
 
     @Override
     public Trie resolve(TypeAndTries typeAndTries) {
-        return new TrieMap(null, null, mapKeyType, mapValueType, typeAndTries);
+        return new TrieMapClosure(typeAndTries);
     }
 
     @Override
@@ -29,11 +31,30 @@ class TypeProxyClosureMap implements TypeProxy {
 
     @Override
     public String getTypeFullyQualifiedName() {
-        return TypeClosure.class.getName();
+        return TypeMapClosure.class.getName();
     }
 
     @Override
     public String listItemType(TypeAndTries typeAndTries) {
         return null;
+    }
+
+    private class TrieMapClosure extends TrieDefault {
+
+        public TrieMapClosure(TypeAndTries typeAndTries) {
+            TypeProxy mapValueTypeProxy = TypeProxy.create(mapValueType);
+            insert(Suggestion.create(PROPERTY)
+                    .returnTypeDisplayValue(mapValueTypeProxy.toSimpleName(typeAndTries))
+                    .returnType(mapValueTypeProxy)
+                    .insertValue("entry")
+                    .build());
+
+            TypeProxy mapKeyTypeProxy = TypeProxy.create(mapKeyType);
+            insert(Suggestion.create(PROPERTY)
+                    .returnTypeDisplayValue(mapKeyTypeProxy.toSimpleName(typeAndTries))
+                    .returnType(mapKeyTypeProxy)
+                    .insertValue("i")
+                    .build());
+        }
     }
 }
