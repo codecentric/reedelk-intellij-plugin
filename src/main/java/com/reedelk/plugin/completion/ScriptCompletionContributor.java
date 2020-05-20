@@ -33,7 +33,7 @@ public class ScriptCompletionContributor extends CompletionContributor {
             Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
             if (module == null) return;
 
-            TokenFinder.find(parameters).ifPresent(tokens -> {
+            new TokenFinder().find(parameters).ifPresent(tokens -> {
                 PlatformModuleService instance = PlatformModuleService.getInstance(module);
                 Collection<Suggestion> suggestions = instance.suggestionsOf(context, componentPropertyPath, tokens);
                 suggestions.forEach(suggestion -> addSuggestion(result, suggestion));

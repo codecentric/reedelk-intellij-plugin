@@ -11,9 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
@@ -69,9 +67,9 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     @NotNull
     private Collection<Suggestion> suggestionsFromDynamicExpression(CompletionFinder completionFinder) {
         String unwrap = ScriptUtils.unwrap(dynamicExpression);
-        Optional<String[]> tokens = TokenFinder.findLastToken(unwrap, unwrap.length());
-        return tokens
-                .map(expressionTokens -> completionFinder.find(TypeDefault.MESSAGE_AND_CONTEXT, expressionTokens, previousOutput))
-                .orElse(emptyList());
+        List<String> tokens = new TokenFinder().find(unwrap, unwrap.length());
+        String[] strings = tokens.toArray(new String[0]);
+        // TODO: Fixme.
+        return completionFinder.find(TypeDefault.MESSAGE_AND_CONTEXT, strings, previousOutput);
     }
 }

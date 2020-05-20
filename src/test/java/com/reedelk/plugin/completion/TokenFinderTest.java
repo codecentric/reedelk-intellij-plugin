@@ -2,46 +2,38 @@ package com.reedelk.plugin.completion;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TokenFinderTest {
-    
+
+    TokenFinder tokenFinderNew = new TokenFinder();
+
     @Test
-    void shouldCorrectlyFindLastTokenStartingWithTab() {
+    void shouldDoSomethingEmpty() {
+
         // Given
-        String text = "\tmess";
+        String text = "";
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, 5);
+        List<String> actual = tokenFinderNew.find(text, text.length());
 
         //  Then
-        assertThat(actual).contains(new String[] {"mess"});
+        assertThat(actual).isEmpty();
     }
 
     @Test
-    void shouldCorrectlyFindLastTokenStartingWithWhiteSpaces() {
+    void shouldDoSomething() {
+
         // Given
         String text = "  messa";
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, 7);
+        List<String> actual = tokenFinderNew.find(text, 7);
 
         //  Then
-        assertThat(actual).contains(new String[] {"messa"});
-    }
-
-    @Test
-    void shouldCorrectlyFindLastTokenStartingWithWhiteNewLine() {
-        // Given
-        String text = "\nmessa";
-
-        // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, 6);
-
-        //  Then
-        assertThat(actual).contains(new String[]{"messa"});
+        assertThat(actual).containsExactly("messa");
     }
 
     @Test
@@ -50,10 +42,10 @@ class TokenFinderTest {
         String text = "\n\tmessa";
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, 7);
+        List<String> actual = tokenFinderNew.find(text, 7);
 
         //  Then
-        assertThat(actual).contains(new String[]{"messa"});
+        assertThat(actual).containsExactly("messa");
     }
 
     @Test
@@ -68,11 +60,11 @@ class TokenFinderTest {
         int offset = 98;
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, offset);
+        List<String> actual = tokenFinderNew.find(text, offset);
 
         // Then
         assertThat(actual)
-                .contains(new String[]{"HttpPartBuilder", "create", "text", ""});
+                .containsExactly("HttpPartBuilder", "create", "text", "");
     }
 
     @Test
@@ -87,11 +79,11 @@ class TokenFinderTest {
         int offset = 99;
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, offset);
+        List<String> actual = tokenFinderNew.find(text, offset);
 
         // Then
         assertThat(actual)
-                .contains(new String[]{"HttpPartBuilder", "create", "text", ""});
+                .containsExactly("HttpPartBuilder", "create", "text", "");
     }
 
     @Test
@@ -102,10 +94,10 @@ class TokenFinderTest {
         int offset = 16;
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, offset);
+        List<String> actual = tokenFinderNew.find(text, offset);
 
         // Then
-        assertThat(actual).isNotPresent();
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -116,10 +108,10 @@ class TokenFinderTest {
         int offset = 21;
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, offset);
+        List<String> actual = tokenFinderNew.find(text, offset);
 
         // Then
-        assertThat(actual).contains(new String[]{"Util", "text", ""});
+        assertThat(actual).containsExactly("Util", "text", "");
     }
 
     @Test
@@ -130,10 +122,22 @@ class TokenFinderTest {
         int offset = 36;
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(text, offset);
+        List<String> actual = tokenFinderNew.find(text, offset);
 
         // Then
-        assertThat(actual).contains(new String[]{"Util","text",""});
+        assertThat(actual).containsExactly("Util","text", "");
+    }
+
+    @Test
+    void shouldReturnCorrectlyWhenTextInsideSquareBracketsAndBoh() {
+        // Given
+        String text = "Util.text([message.";
+
+        // When
+        List<String> actual = tokenFinderNew.find(text, text.length());
+
+        // Then
+        assertThat(actual).containsExactly("message", "");
     }
 
     @Test
@@ -148,13 +152,11 @@ class TokenFinderTest {
 
         int offset = 98;
 
-        Optional<String[]> lastToken = TokenFinder.findLastToken(given, offset);
+        List<String> actual = tokenFinderNew.find(given, offset);
 
-        assertThat(lastToken)
-                .contains(new String[]{"HttpPartBuilder","create","name", ""});
+        assertThat(actual)
+                .containsExactly("HttpPartBuilder","create","name", "");
     }
-
-
 
     @Test
     void shouldReturnCorrectTokensWhenNewLineFollowedBySpaces() {
@@ -165,10 +167,10 @@ class TokenFinderTest {
                 "}";
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(input, 73);
+        List<String> actual = tokenFinderNew.find(input, 73);
 
         // Then
-        assertThat(actual).contains(new String[]{"HttpPartBuilder", "create", ""});
+        assertThat(actual).containsExactly("HttpPartBuilder", "create", "");
     }
 
     @Test
@@ -177,22 +179,10 @@ class TokenFinderTest {
         String input = "HttpPartBuilder.IntellijIdeaRulezzz ";
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(input, 16);
+        List<String> actual = tokenFinderNew.find(input, 16);
 
         // Then
-        assertThat(actual).contains(new String[]{"HttpPartBuilder", ""});
-    }
-
-    @Test
-    void shouldCorrectlyTokenizeEmptyString() {
-        // Given
-        String input = "";
-
-        // When
-        Optional<String[]> actual = TokenFinder.findLastToken(input, 0);
-
-        // Then
-        assertThat(actual).isEmpty();
+        assertThat(actual).containsExactly("HttpPartBuilder", "");
     }
 
     @Test
@@ -206,23 +196,87 @@ class TokenFinderTest {
                 "}";
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(input, 147);
+        List<String> actual = tokenFinderNew.find(input, 147);
 
         // Then
         assertThat(actual)
-                .contains(new String[]{"HttpPartBuilder","create","attribute", "binary", ""});
+                .containsExactly("HttpPartBuilder","create","attribute", "binary", "");
+    }
+
+    @Test
+    void shouldCorrectlyTokenizeNestedBuilderString() {
+        // Given
+        String input = "message.payload(Util.";
+
+        // When
+        List<String> actual = tokenFinderNew.find(input, input.length());
+
+        // Then
+        assertThat(actual)
+                .containsExactly("Util", "");
+    }
+
+    @Test
+    void shouldNested() {
+        String input = "def myFunction(context, message) {\n" +
+                "    HttpPartBuilder.create()\n" +
+                "        .attribute('myFile', 'myName')\n" +
+                "        .binary(message.)" +
+                "}";
+
+        // When
+        List<String> actual = tokenFinderNew.find(input, input.length() - 2);
+
+        // Then
+        assertThat(actual)
+                .containsExactly("message", "");
     }
 
     @Test
     void shouldCorrectlyFindTokenWhenListIteratorClosure() {
         // Given
+        String input = "message.payload().collect { it, each -> it.something(message.payload()) each.";
+
+        // When
+        List<String> actual = tokenFinderNew.find(input, input.length());
+
+        // Then
+        assertThat(actual).containsExactly("message", "payload", "collect", "{", "each", "");
+    }
+
+    @Test
+    void shouldCorrectlyFindTokenWhenListIteratorClosureWithMessage() {
+        // Given
+        String input = "message.payload().collect { it, each -> it.something(Util.";
+
+        // When
+        List<String> actual = tokenFinderNew.find(input, input.length());
+
+        // Then
+        assertThat(actual).containsExactly("Util", "");
+    }
+
+    @Test
+    void shouldCorrectlyFindTokenWhenListIteratorClosureWithMessageNestedClosure() {
+        // Given
+        String input = "message.payload().collect { it, each -> each.collect { it.super(message.";
+
+        // When
+        List<String> actual = tokenFinderNew.find(input, input.length());
+
+        // Then
+        assertThat(actual).containsExactly("message", "");
+    }
+
+    @Test
+    void shouldCorrectlyFindTokenWhenEndOfClosure() {
+        // Given
         String input = "message.payload().collect { it.IntellijIdeaRulezzz  }";
 
         // When
-        Optional<String[]> actual = TokenFinder.findLastToken(input, 31);
+        List<String> actual = tokenFinderNew.find(input, input.length());
 
         // Then
-        assertThat(actual)
-                .contains(new String[] {"message", "payload", "collect", "it", ""});
+        assertThat(actual).containsExactly("message", "payload", "collect");
     }
 }
