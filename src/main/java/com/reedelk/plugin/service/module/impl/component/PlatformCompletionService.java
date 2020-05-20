@@ -126,7 +126,7 @@ class PlatformCompletionService implements PlatformModuleService {
     public void registerFlowControl(ModuleDescriptor moduleDescriptor) {
         try {
             // Init Language Core types such as List, Map, ArrayList, HashMap and so on.
-            TypeDefault.Types.register(allTypes, flowControlTypes);
+            TypeDefault.Types.register(flowControlTypes);
 
             SuggestionProcessor processor = new SuggestionProcessor(
                     allTypes,

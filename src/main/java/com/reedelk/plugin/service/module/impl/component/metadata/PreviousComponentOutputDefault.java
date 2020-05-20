@@ -41,9 +41,12 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
                         .build())
                 .collect(toList());
 
-        return flatten ?
-                singletonList(flatten(dynamicSuggestions, typeAndTrieMap)) :
-                dynamicSuggestions;
+        if (flatten) {
+            Suggestion flattenedSuggestions = flatten(dynamicSuggestions, typeAndTrieMap);
+            return singletonList(flattenedSuggestions);
+        } else {
+            return dynamicSuggestions;
+        }
     }
 
     @Override

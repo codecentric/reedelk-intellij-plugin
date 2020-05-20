@@ -102,6 +102,8 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
      * single suggestion with type equal to a comma separated list of all the suggestions in the group.
      */
     protected Suggestion flatten(Collection<Suggestion> suggestions, TypeAndTries typeAndTrieMap) {
+        if (suggestions.size() == 1) return suggestions.iterator().next();
+
         Suggestion suggestion = suggestions.stream()
                 .findAny()
                 .orElseThrow(() -> new PluginException("Expected at least one dynamic suggestion."));
@@ -113,7 +115,7 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
                 .tailText(suggestion.getTailText())
                 .lookupToken(suggestion.getLookupToken())
                 // The return type for 'flattened' suggestions is never used because this suggestion is only created for a terminal token.
-                .returnType(TypeDefault.DEFAULT_RETURN_TYPE_PROXY)
+                .returnType(TypeDefault.FLATTENED_RETURN_TYPE_PROXY)
                 .returnTypeDisplayValue(String.join(",", possibleTypes))
                 .build();
     }

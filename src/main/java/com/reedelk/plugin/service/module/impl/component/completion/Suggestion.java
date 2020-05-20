@@ -68,6 +68,7 @@ public class Suggestion {
 
     public enum Type {
 
+        CLOSURE(Icons.Script.Function),
         FUNCTION(Icons.Script.Function),
         PROPERTY(Icons.Script.Property),
         GLOBAL(Icons.Script.Global);

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
@@ -9,10 +10,14 @@ public class TrieList extends TrieDefault {
 
     private final String listItemType;
 
-    public TrieList(String typeFullyQualifiedName, String extendsType, String displayName, String listItemType) {
-        super(typeFullyQualifiedName, extendsType, displayName);
+    public TrieList(String typeFullyQualifiedName, String displayName, String listItemType) {
+        super(typeFullyQualifiedName, List.class.getName(), displayName);
         checkNotNull(listItemType, "listItemType");
         this.listItemType = listItemType;
+    }
+
+    public TrieList(String typeFullyQualifiedName, String listItemType) {
+        this(typeFullyQualifiedName, List.class.getSimpleName(), listItemType);
     }
 
     @Override
