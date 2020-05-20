@@ -32,7 +32,7 @@ public class TrieMap extends TrieDefault {
                 TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName, mapKeyType, mapValueType);
                 return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
             } else {
-                return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, TypeProxy.create(fullyQualifiedName));
+                return suggestion;
             }
         }).collect(toList());
     }
