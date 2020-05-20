@@ -1,6 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.completion.TokenFinder;
+import com.reedelk.plugin.completion.Tokenizer;
 import com.reedelk.plugin.service.module.impl.component.completion.CompletionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
@@ -67,9 +67,7 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     @NotNull
     private Collection<Suggestion> suggestionsFromDynamicExpression(CompletionFinder completionFinder) {
         String unwrap = ScriptUtils.unwrap(dynamicExpression);
-        List<String> tokens = new TokenFinder().find(unwrap, unwrap.length());
-        String[] strings = tokens.toArray(new String[0]);
-        // TODO: Fixme.
-        return completionFinder.find(TypeDefault.MESSAGE_AND_CONTEXT, strings, previousOutput);
+        String[] tokens = Tokenizer.tokenize(unwrap, unwrap.length());
+        return completionFinder.find(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
     }
 }

@@ -1,43 +1,45 @@
 package com.reedelk.plugin.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
 import com.reedelk.runtime.api.commons.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.lang.lexer.GroovyLexer;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyElementTypes;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-public class TokenFinder {
+public class Tokenizer {
+
+    private static final String[] EMPTY = new String[0];
 
     private GroovyLexer lexer;
-    public TokenFinder() {
+
+    private Tokenizer() {
         lexer = new GroovyLexer();
     }
 
-    public Optional<String[]> find(@NotNull CompletionParameters parameters) {
-        String text = parameters.getPosition().getText();
-        int offset = parameters.getOffset();
+    public static String[] tokenize(String text, int offset) {
+        return new Tokenizer()._tokenize(text, offset);
+    }
+
+    String[] _tokenize(String text, int offset) {
         try {
-            List<String> strings = find(text, offset);
-            return Optional.of(strings.toArray(new String[0]));
+
+            lexer.start(text, 0, offset);
+
+            List<Token> tokens = new Parser(lexer).find();
+
+            List<String> processedTokens = process(tokens);
+
+            return processedTokens.toArray(new String[0]);
+
         } catch (Exception e) {
-            return Optional.empty();
+            return EMPTY;
         }
     }
 
-    public List<String> find(String text, int offset) {
-        lexer.start(text, 0, offset);
 
-        List<Token> tokens = new Parser(lexer).find();
-
-        return postProcess(tokens);
-    }
-
-    private List<String> postProcess(List<Token> tokensArray) {
+    private List<String> process(List<Token> tokensArray) {
         // Add an empty string if it ends with '.'.
         if (!tokensArray.isEmpty() &&
                 tokensArray.get(tokensArray.size() - 1).tokenText.equals(".")) {
