@@ -1,6 +1,7 @@
 package com.reedelk.plugin.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.lang.lexer.GroovyLexer;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyElementTypes;
@@ -37,9 +38,10 @@ public class TokenFinder {
     }
 
     private List<String> postProcess(List<Token> tokensArray) {
-        if (!tokensArray.isEmpty() && tokensArray.get(tokensArray.size() - 1).tokenText.equals(".")) {
-            // Add an empty
-            tokensArray.add(new Token(null, ""));
+        // Add an empty string if it ends with '.'.
+        if (!tokensArray.isEmpty() &&
+                tokensArray.get(tokensArray.size() - 1).tokenText.equals(".")) {
+            tokensArray.add(new Token(null, StringUtils.EMPTY));
         }
         return tokensArray.stream()
                 .filter(token -> token.tokenType != GroovyElementTypes.T_DOT)

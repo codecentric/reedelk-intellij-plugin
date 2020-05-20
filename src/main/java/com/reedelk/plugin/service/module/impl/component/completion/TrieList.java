@@ -9,8 +9,8 @@ public class TrieList extends TrieDefault {
 
     private final String listItemType;
 
-    public TrieList(String extendsType, String displayName, String listItemType) {
-        super(extendsType, displayName);
+    public TrieList(String typeFullyQualifiedName, String extendsType, String displayName, String listItemType) {
+        super(typeFullyQualifiedName, extendsType, displayName);
         checkNotNull(listItemType, "listItemType");
         this.listItemType = listItemType;
     }

@@ -11,6 +11,19 @@ class TokenFinderTest {
     TokenFinder tokenFinderNew = new TokenFinder();
 
     @Test
+    void booh() {
+
+        // Given
+        String text = "message.payload().each { entry.attributes().each { entry.";
+
+        // When
+        List<String> actual = tokenFinderNew.find(text, text.length());
+
+        //  Then
+        assertThat(actual).contains("payload", "each", "{", "entry", "attributes", "each", "{", "entry", "");
+    }
+
+    @Test
     void shouldDoSomethingEmpty() {
 
         // Given

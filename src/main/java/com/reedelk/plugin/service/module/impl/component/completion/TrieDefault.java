@@ -6,6 +6,7 @@ import java.util.*;
 
 public class TrieDefault implements Trie {
 
+    protected final String fullyQualifiedName;
     private final String extendsType;
     private final String displayName;
 
@@ -15,10 +16,12 @@ public class TrieDefault implements Trie {
         this.root = new TrieNode();
         this.displayName = null;
         this.extendsType = null;
+        this.fullyQualifiedName = null;
     }
 
-    public TrieDefault(String extendsType, String displayName) {
+    public TrieDefault(String fullyQualifiedName, String extendsType, String displayName) {
         this.root = new TrieNode();
+        this.fullyQualifiedName = fullyQualifiedName;
         this.displayName = displayName;
         this.extendsType = extendsType;
     }

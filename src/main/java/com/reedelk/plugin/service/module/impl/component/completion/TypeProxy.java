@@ -14,10 +14,6 @@ public interface TypeProxy {
         return new TypeProxyClosureList(listItemType);
     }
 
-    static TypeProxy createMap(String mapKeyType, String mapValueType) {
-        return new TypeProxyClosureMap(mapKeyType, mapValueType);
-    }
-
     boolean isList(TypeAndTries typeAndTries);
 
     Trie resolve(TypeAndTries typeAndTries);

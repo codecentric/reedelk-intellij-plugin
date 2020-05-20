@@ -38,6 +38,7 @@ public class SuggestionProcessor {
         moduleDescriptor.getTypes().forEach(typeDescriptor -> {
             // We first must register all the tries and then the functions. Because one function
             // might depend on a trie of another type previously defined in the same module.
+            String typeFullyQualifiedName = typeDescriptor.getType();
             String extendsType = typeDescriptor.getExtendsType();
             String listItemType = typeDescriptor.getListItemType();
             String displayName = typeDescriptor.getDisplayName();
@@ -45,13 +46,13 @@ public class SuggestionProcessor {
             String mapValueType = typeDescriptor.getMapValueType();
             Trie typeTrie;
             if (StringUtils.isNotBlank(listItemType)) {
-                typeTrie = new TrieList(extendsType, displayName, listItemType);
+                typeTrie = new TrieList(typeFullyQualifiedName, extendsType, displayName, listItemType);
             } else if (StringUtils.isNotBlank(mapValueType)) {
-                typeTrie = new TrieMap(extendsType, displayName, mapKeyType, mapValueType);
+                typeTrie = new TrieMap(typeFullyQualifiedName, extendsType, displayName, mapKeyType, mapValueType);
             } else {
-                typeTrie = new TrieDefault(extendsType, displayName);
+                typeTrie = new TrieDefault(typeFullyQualifiedName, extendsType, displayName);
             }
-            moduleTypes.put(typeDescriptor.getType(), typeTrie);
+            moduleTypes.put(typeFullyQualifiedName, typeTrie);
         });
 
         // Then populate global type, functions and properties for each type.

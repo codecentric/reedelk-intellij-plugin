@@ -70,7 +70,7 @@ public class Parser {
         // if right paren not found, then inner stack should be used.
         lexer.advance();
         List<Token> subTokens = new Parser(lexer).find();
-        if (lexer.getTokenType() != GroovyElementTypes.T_RPAREN) {
+        if (!isCurrentTokenOfType(GroovyElementTypes.T_RPAREN)) {
             // We skip the parenthesis, they are not consumed.
             tokens.clear();
             tokens.add(lparenToken);
@@ -83,22 +83,24 @@ public class Parser {
     private void lbrace() {
         // An lbrace might be the beginning of a function or of a lambda.
         // It is the beginning of a lambda if and only if the previous element is an identifier.
-        if (isLastTokenOfType(GroovyElementTypes.IDENTIFIER)) {
-            Token lBraceToken = Token.create(lexer);
-            lexer.advance();
-            List<Token> subTokens = new Parser(lexer).find();
-            if (lexer.getTokenType() != GroovyElementTypes.T_RBRACE) {
-                // It is a new statement, e.g 'each.collect { it.super(message.', we want messge
-                if (isFirstTokenOfType(subTokens, GroovyElementTypes.T_LPAREN)) {
-                    tokens.clear();
-                    tokens.addAll(subTokens);
-                } else {
-                    // We skip the parenthesis, they are not consumed.
-                    tokens.add(lBraceToken);
-                    tokens.addAll(subTokens);
-                }
-            } // Otherwise they were consumed and we don't care... we just continue
+        if (!isLastTokenOfType(GroovyElementTypes.IDENTIFIER)) {
+            return;
         }
+        Token lBraceToken = Token.create(lexer);
+        lexer.advance();
+        List<Token> subTokens = new Parser(lexer).find();
+        if (lexer.getTokenType() != GroovyElementTypes.T_RBRACE) {
+            // It is a new statement, e.g 'each.collect { it.super(message.', we want messge
+            if (isFirstTokenOfType(subTokens, GroovyElementTypes.T_LPAREN)) {
+                tokens.clear();
+                tokens.addAll(subTokens);
+            } else {
+                // We skip the parenthesis, they are not consumed.
+                tokens.add(lBraceToken);
+                tokens.addAll(subTokens);
+            }
+        }
+        // Otherwise they were consumed... we just continue
     }
 
     private boolean isFirstTokenOfType(List<Token> collection, IElementType target) {
