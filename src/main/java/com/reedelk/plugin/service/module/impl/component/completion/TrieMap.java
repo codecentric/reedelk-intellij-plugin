@@ -75,7 +75,7 @@ public class TrieMap extends TrieDefault {
         private static final String ARG_ENTRY = "entry";
         private static final String ARG_I = "i";
 
-        public TrieMapClosureArguments(TypeProxy mapValueType, TypeProxy mapKeyType, TypeAndTries typeAndTries) {
+        public TrieMapClosureArguments(TypeProxy mapKeyType, TypeProxy mapValueType, TypeAndTries typeAndTries) {
             insert(Suggestion.create(PROPERTY)
                     .returnTypeDisplayValue(mapValueType.resolve(typeAndTries).toSimpleName(typeAndTries))
                     .returnType(mapValueType)

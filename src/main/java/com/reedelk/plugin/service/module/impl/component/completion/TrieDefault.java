@@ -16,16 +16,11 @@ public class TrieDefault implements Trie {
     private TrieNode root;
 
     public TrieDefault() {
-        this.root = new TrieNode();
-        this.displayName = null;
-        this.extendsType = null;
-        this.fullyQualifiedName = null;
+        this(null, null, null);
     }
 
     public TrieDefault(String fullyQualifiedName) {
-        this.fullyQualifiedName = fullyQualifiedName;
-        this.extendsType = Object.class.getName();
-        this.displayName = null;
+        this(fullyQualifiedName, null, null);
     }
 
     public TrieDefault(String fullyQualifiedName, String extendsType, String displayName) {

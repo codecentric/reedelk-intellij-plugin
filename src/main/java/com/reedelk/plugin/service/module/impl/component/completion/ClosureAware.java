@@ -47,14 +47,20 @@ public class ClosureAware {
         public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
             if (word.equals(BEGIN_CLOSURE_SYMBOL)) {
                 // beginning of a closure
-                Suggestion build = Suggestion.create(FUNCTION)
-                        .returnType(typeProxy)
+                Suggestion closureSymbolSuggestion = Suggestion.create(FUNCTION)
                         .insertValue(BEGIN_CLOSURE_SYMBOL)
+                        .returnType(typeProxy)
                         .build();
-                return singletonList(SuggestionFactory.copyWithType(typeAndTrieMap, build, typeProxy));
+                return singletonList(closureSymbolSuggestion);
             } else {
                 return originalTypeTrie.autocomplete(word, typeAndTrieMap);
             }
+        }
+
+        // The simple name is taken from the original type trie.
+        @Override
+        public String toSimpleName(TypeAndTries typeAndTries) {
+            return originalTypeTrie.toSimpleName(typeAndTries);
         }
     }
 }

@@ -138,8 +138,9 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieDefault();
-            trie.insert(createFunctionSuggestion("method1", String.class.getName()));
+            Suggestion method1 = createFunctionSuggestion("method1", String.class.getName());
+            Trie trie = new TrieDefault(MyItemType.class.getName());
+            trie.insert(method1);
             trieMap.put(MyItemType.class.getName(), trie);
         }
     }
@@ -154,7 +155,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieDefault();
+            Trie trie = new TrieDefault(Message.class.getName());
             trie.insert(createFunctionSuggestion("payload", MessagePayload.class.getName()));
             trie.insert(createFunctionSuggestion("attributes", MessageAttributes.class.getName()));
             trieMap.put(Message.class.getName(), trie);

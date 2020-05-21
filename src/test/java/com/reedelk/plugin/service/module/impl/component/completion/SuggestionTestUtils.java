@@ -11,8 +11,8 @@ public class SuggestionTestUtils {
 
     public static Suggestion createFunctionSuggestion(String insertValue, String returnType) {
         return Suggestion.create(Suggestion.Type.FUNCTION)
-                .insertValue(insertValue)
                 .returnType(TypeProxy.create(returnType))
+                .insertValue(insertValue)
                 .build();
     }
 

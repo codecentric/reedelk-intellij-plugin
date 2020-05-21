@@ -74,9 +74,18 @@ class SuggestionFinderTest {
 
         // Then the closure has two properties: 'i' and 'each' to iterate the map content. 'i' and 'each' must
         // have the type of the 'MapFirstType' (<String, Serializable>).
-        PluginAssertion.assertThat(suggestions).hasSize(2)
-                .contains(PROPERTY, "i", "i", String.class.getName(), String.class.getSimpleName())
-                .contains(PROPERTY, "entry", "entry", Serializable.class.getName(), Serializable.class.getSimpleName());
+        PluginAssertion.assertThat(suggestions)
+                .hasSize(3)
+                .contains(PROPERTY,
+                        "i",
+                        "i",
+                        String.class.getName(),
+                        String.class.getSimpleName())
+                .contains(PROPERTY,
+                        "entry",
+                        "entry",
+                        Serializable.class.getName(),
+                        Serializable.class.getSimpleName());
     }
 
     @Test
@@ -148,21 +157,21 @@ class SuggestionFinderTest {
                         "eachWithIndex { it, i ->  }",
                         "eachWithIndex",
                         ListMapFirstType.class.getName(),
-                        "List<MapFirstType>");
+                        "List<Map<String,Serializable>>");
 
         PluginAssertion.assertThat(suggestions)
                 .contains(FUNCTION,
                         "each { it }",
                         "each",
                         ListMapFirstType.class.getName(),
-                        "List<MapFirstType>");
+                        "List<Map<String,Serializable>>");
 
         PluginAssertion.assertThat(suggestions)
                 .contains(FUNCTION,
                         "collect { it }",
                         "collect",
                         ListMapFirstType.class.getName(),
-                        "List<MapFirstType>");
+                        "List<Map<String,Serializable>>");
     }
 
     @Test
