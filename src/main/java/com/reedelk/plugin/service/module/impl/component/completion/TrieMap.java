@@ -3,9 +3,7 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class TrieMap extends TrieDefault {
@@ -29,7 +27,8 @@ public class TrieMap extends TrieDefault {
         Collection<Suggestion> autocomplete = super.autocomplete(word, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
             if (suggestion.getType() == Suggestion.Type.CLOSURE) {
-                TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName, mapKeyType, mapValueType);
+                // If the method accepts a closure in input
+                TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName);
                 return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
             } else {
                 return suggestion;
@@ -38,58 +37,31 @@ public class TrieMap extends TrieDefault {
     }
 
 
-    private static class TypeClosureAware extends TypeProxyDefault {
+    private class TypeClosureAware extends TypeProxyDefault {
 
-        private final String mapKeyType;
-        private final String mapValueType;
-
-        TypeClosureAware(String typeFullyQualifiedName, String mapKeyType, String mapValueType) {
+        TypeClosureAware(String typeFullyQualifiedName) {
             super(typeFullyQualifiedName);
-            this.mapKeyType = mapKeyType;
-            this.mapValueType = mapValueType;
-        }
-
-        @Override
-        public boolean isList(TypeAndTries typeAndTries) {
-            return false;
         }
 
         @Override
         public Trie resolve(TypeAndTries typeAndTries) {
-            Trie orDefault = typeAndTries.getOrDefault(getTypeFullyQualifiedName());
-            return new TrieClosureAware(orDefault, mapKeyType, mapValueType);
+            Trie originalTypeTrie = typeAndTries.getOrDefault(fullyQualifiedName);
+            TypeProxy mapTypeProxy = new TypeProxyClosureMap();
+            return new TrieClosureAware(originalTypeTrie, mapTypeProxy);
         }
     }
 
-    private static class TypeProxyClosureMap implements TypeProxy {
-
-        private final String mapKeyType;
-        private final String mapValueType;
-
-        TypeProxyClosureMap(String mapKeyType, String mapValueType) {
-            this.mapKeyType = mapKeyType;
-            this.mapValueType = mapValueType;
-        }
-
-        @Override
-        public boolean isList(TypeAndTries typeAndTries) {
-            return false;
-        }
-
-        @Override
-        public boolean isDynamic() {
-            return false;
-        }
+    private class TypeProxyClosureMap implements TypeProxy {
 
         @Override
         public Trie resolve(TypeAndTries typeAndTries) {
-            return new TrieMapClosure(mapValueType, mapKeyType, typeAndTries);
+            return new TrieMapClosureArguments(mapValueType, mapKeyType, typeAndTries);
         }
 
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
-            String keyTypeSimpleName = TypeUtils.toSimpleName(mapKeyType, typeAndTries);
-            String valueTypeSimpleName = TypeUtils.toSimpleName(mapValueType, typeAndTries);
+            String keyTypeSimpleName = FullyQualifiedName.toSimpleName(mapKeyType, typeAndTries);
+            String valueTypeSimpleName = FullyQualifiedName.toSimpleName(mapValueType, typeAndTries);
             return String.format("Map<%s,%s>", keyTypeSimpleName, valueTypeSimpleName);
         }
 
@@ -97,45 +69,11 @@ public class TrieMap extends TrieDefault {
         public String getTypeFullyQualifiedName() {
             return TypeMapClosure.class.getName();
         }
-
-        @Override
-        public String listItemType(TypeAndTries typeAndTries) {
-            return null;
-        }
     }
 
-    private static class TrieClosureAware extends TrieDefault {
+    static class TrieMapClosureArguments extends TrieDefault {
 
-        private final String mapKeyType;
-        private final String mapValueType;
-        private final Trie trieDefault;
-
-        public TrieClosureAware(Trie trieDefault, String mapKeyType, String mapValueType) {
-            this.trieDefault = trieDefault;
-            this.mapKeyType = mapKeyType;
-            this.mapValueType = mapValueType;
-        }
-
-        @Override
-        public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
-            if (word.equals("{")) {
-                // beginning of a closure
-                TypeProxy typeProxy = new TypeProxyClosureMap(mapKeyType, mapValueType);
-                Suggestion build = Suggestion.create(FUNCTION)
-                        .insertValue("{")
-                        .returnType(typeProxy)
-                        .build();
-                return singletonList(
-                        SuggestionFactory.copyWithType(typeAndTrieMap, build, typeProxy));
-            } else {
-                return trieDefault.autocomplete(word, typeAndTrieMap);
-            }
-        }
-    }
-
-    static class TrieMapClosure extends TrieDefault {
-
-        public TrieMapClosure(String mapValueType, String mapKeyType, TypeAndTries typeAndTries) {
+        public TrieMapClosureArguments(String mapValueType, String mapKeyType, TypeAndTries typeAndTries) {
 
             TypeProxy mapValueTypeProxy = TypeProxy.create(mapValueType);
             insert(Suggestion.create(PROPERTY)

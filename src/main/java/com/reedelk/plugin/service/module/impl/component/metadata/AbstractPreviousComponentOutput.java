@@ -72,9 +72,9 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
     @NotNull
     protected MetadataTypeDTO unrollListType(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {
         // Unroll list item type
-        String listItemType = typeProxy.listItemType(typeAndTries);
+        TypeProxy listItemType = typeProxy.listItemType(typeAndTries);
 
-        List<Suggestion> listTypeSuggestions = suggestionsFromType(suggestionFinder, typeAndTries, TypeProxy.create(listItemType));
+        List<Suggestion> listTypeSuggestions = suggestionsFromType(suggestionFinder, typeAndTries, listItemType);
         Collection<MetadataTypeItemDTO> listTypeProperties = new ArrayList<>();
 
         for (Suggestion suggestion : listTypeSuggestions) {
@@ -85,7 +85,7 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
         }
 
         // List<ItemType> : ItemType
-        String listDisplayType = TypeUtils.formatUnrolledListDisplayType(typeProxy, typeAndTries);
+        String listDisplayType = FullyQualifiedName.formatUnrolledListDisplayType(typeProxy, typeAndTries);
         return new MetadataTypeDTO(listDisplayType, typeProxy, listTypeProperties);
     }
 

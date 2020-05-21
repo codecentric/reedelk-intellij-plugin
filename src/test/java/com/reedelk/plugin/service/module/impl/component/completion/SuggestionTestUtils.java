@@ -16,10 +16,12 @@ public class SuggestionTestUtils {
                 .build();
     }
 
-    public static Suggestion createPropertySuggestion(String insertValue, String returnType) {
+    public static Suggestion createPropertySuggestion(String insertValue, String returnType, TypeAndTries typeAndTries) {
+        TypeProxy typeProxy = TypeProxy.create(returnType);
         return Suggestion.create(Suggestion.Type.PROPERTY)
+                .returnTypeDisplayValue(typeProxy.toSimpleName(typeAndTries))
                 .insertValue(insertValue)
-                .returnType(TypeProxy.create(returnType))
+                .returnType(typeProxy)
                 .build();
     }
 

@@ -29,7 +29,7 @@ public class TypeMapClosure implements TypeProxy {
     }
 
     @Override
-    public String listItemType(TypeAndTries typeAndTries) {
+    public TypeProxy listItemType(TypeAndTries typeAndTries) {
         return null;
     }
 

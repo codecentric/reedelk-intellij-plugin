@@ -2,10 +2,12 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 class TypeProxyDefault implements TypeProxy {
@@ -19,8 +21,8 @@ class TypeProxyDefault implements TypeProxy {
 
     @Override
     public boolean isList(TypeAndTries typeAndTries) {
-        String listItemType = listItemType(typeAndTries);
-        return isNotBlank(listItemType);
+        TypeProxy listItemType = listItemType(typeAndTries);
+        return listItemType != null;
     }
 
     @Override
@@ -30,9 +32,11 @@ class TypeProxyDefault implements TypeProxy {
     }
 
     @Override
-    public String listItemType(TypeAndTries typeAndTries) {
+    @Nullable
+    public TypeProxy listItemType(TypeAndTries typeAndTries) {
         Trie listItemTypeTrie = resolve(typeAndTries);
-        return listItemTypeTrie.listItemType();
+        String listItemType = listItemTypeTrie.listItemType();
+        return isBlank(listItemType) ? null : TypeProxy.create(listItemType);
     }
 
     @Override
@@ -48,7 +52,7 @@ class TypeProxyDefault implements TypeProxy {
             return MessageAttributes.class.getSimpleName();
         } else {
             // In any other case
-            return TypeUtils.toSimpleName(typeFullyQualifiedName, typeAndTries);
+            return FullyQualifiedName.toSimpleName(typeFullyQualifiedName, typeAndTries);
         }
     }
 

@@ -7,17 +7,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
-import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.MapFirstType;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.*;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SuggestionFinderTest {
@@ -28,11 +24,8 @@ class SuggestionFinderTest {
     @BeforeAll
     static void setUp() {
         Map<String, Trie> defaultTypesAndTries = new HashMap<>();
-
-        TypeTestUtils.ALL_TYPES.forEach(trieProvider -> trieProvider.register(defaultTypesAndTries));
-
         TypeAndTries typeAndTries = new TypeAndTries(defaultTypesAndTries);
-
+        ALL_TYPES.forEach(trieProvider -> trieProvider.register(typeAndTries, defaultTypesAndTries));
         FINDER = new SuggestionFinder(typeAndTries);
     }
 
@@ -40,9 +33,7 @@ class SuggestionFinderTest {
     @Test
     void shouldReturnCorrectSuggestionsForTypeString() {
         // Given
-        List<String> attributes = emptyList();
-        List<String> payload = singletonList(String.class.getName());
-        PreviousComponentOutput output = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+        PreviousComponentOutput output = createOutput(String.class);
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
@@ -56,9 +47,7 @@ class SuggestionFinderTest {
     @Test
     void shouldReturnCorrectSuggestionsForTypeMap() {
         // Given
-        List<String> attributes = emptyList();
-        List<String> payload = singletonList(MapFirstType.class.getName());
-        PreviousComponentOutput output = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+        PreviousComponentOutput output = createOutput(MapFirstType.class);
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
@@ -72,9 +61,7 @@ class SuggestionFinderTest {
     @Test
     void shouldReturnCorrectSuggestionsForClosure() {
         // Given
-        List<String> attributes = emptyList();
-        List<String> payload = singletonList(MapFirstType.class.getName());
-        PreviousComponentOutput output = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+        PreviousComponentOutput output = createOutput(MapFirstType.class);
         String[] tokens = new String[] {"message", "payload", "each", "{", ""};
 
         // When
@@ -90,9 +77,7 @@ class SuggestionFinderTest {
     @Test
     void shouldReturnCorrectMessagePayloadTypeListOfSomeKnownType() {
         // Given
-        List<String> attributes = emptyList();
-        List<String> payload = singletonList(TypeTestUtils.ListMyItemType.class.getName());
-        PreviousComponentOutput output = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+        PreviousComponentOutput output = createOutput(ListMyItemType.class);
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
@@ -103,16 +88,14 @@ class SuggestionFinderTest {
                 .contains(FUNCTION,
                         "payload",
                         "payload",
-                        TypeTestUtils.ListMyItemType.class.getName(), "List<TypeTestUtils$MyItemType>");
+                        ListMyItemType.class.getName(), "List<TypeTestUtils$MyItemType>");
     }
 
     // A type which was not registered in the type map tree structure.
     @Test
     void shouldReturnCorrectMessagePayloadTypeListOfSomeUnknownType() {
         // Given
-        List<String> attributes = emptyList();
-        List<String> payload = singletonList(TypeTestUtils.ListMyUnknownType.class.getName());
-        PreviousComponentOutput descriptor = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+        PreviousComponentOutput descriptor = createOutput(ListMyUnknownType.class);
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
@@ -123,70 +106,128 @@ class SuggestionFinderTest {
                 .contains(FUNCTION,
                         "payload",
                         "payload",
-                        TypeTestUtils.ListMyUnknownType.class.getName(),
+                        ListMyUnknownType.class.getName(),
                         "List<TypeTestUtils$MyUnknownType>");
     }
 
-    /**
     @Test
-    void shouldReturnCorrectMessagePayloadTypeListOfSomeMapType() {
+    void shouldReturnToStringForListType() {
         // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(singletonList(ListMapFirstType.class.getName()));
-        String[] tokens = new String[] {"message", "paylo"};
-
-        // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
-
-        // Then
-        assertThat(suggestions).hasSize(1);
-
-        Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<TypesTestUtils$MapFirstType>");
-        assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
-    }
-
-    @Test
-    void shouldReturnCorrectMessagePayloadTypeMultiples() {
-        // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(asList(MapFirstType.class.getName(), "byte[]", String.class.getName()));
-        String[] tokens = new String[] {"message", "paylo"};
-
-        // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
-
-        // Then
-        assertThat(suggestions).hasSize(1);
-
-        Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("TypesTestUtils$MapFirstType,byte[],String");
-        assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
-    }
-
-    // -------------------------------- Tests for --------------------------------
-    // message.payload() (we check that there are the correct suggestions for the dynamic payload type)
-    // ---------------------------------------------------------------------------
-    @Test
-    void shouldReturnCorrectSuggestionsForPayloadTypeMap() {
-        // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(singletonList(MapFirstType.class.getName()));
+        PreviousComponentOutput descriptor = createOutput(ListMyUnknownType.class);
         String[] tokens = new String[] {"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
 
         // Then
-        assertThat(suggestions).hasSize(6);
-        assertExistSuggestionWithName(suggestions, "find");
-        assertExistSuggestionWithName(suggestions, "size");
-        assertExistSuggestionWithName(suggestions, "each");
-        assertExistSuggestionWithName(suggestions, "eachWithIndex");
-        assertExistSuggestionWithName(suggestions, "firstProperty1");
-        assertExistSuggestionWithName(suggestions, "firstProperty2");
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "toString()",
+                        "toString",
+                        String.class.getName(),
+                        String.class.getSimpleName());
     }
 
+    @Test
+    void shouldReturnClosureSuggestionsForListType() {
+        // Given
+        PreviousComponentOutput descriptor = createOutput(ListMapFirstType.class);
+        String[] tokens = new String[] {"message", "payload", ""};
+
+        // When
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
+
+        // Then
+        PluginAssertion.assertThat(suggestions)
+                .contains(CLOSURE,
+                        "eachWithIndex { it, i ->  }",
+                        "eachWithIndex",
+                        TypeListClosure.class.getName(),
+                        EMPTY);
+
+        PluginAssertion.assertThat(suggestions)
+                .contains(CLOSURE,
+                        "each { it }",
+                        "each",
+                        TypeListClosure.class.getName(),
+                        EMPTY);
+
+        PluginAssertion.assertThat(suggestions)
+                .contains(CLOSURE,
+                        "collect { it }",
+                        "collect",
+                        TypeListClosure.class.getName(),
+                        EMPTY);
+    }
+
+    @Test
+    void shouldCorrectlyFlattenReturnTypesWhenMultiple() {
+        // Given
+        PreviousComponentOutput output = createOutput(MapFirstType.class, Integer.class, String.class);
+        String[] tokens = new String[] {"message", "paylo"};
+
+        // When
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+
+        // Then
+        PluginAssertion.assertThat(suggestions).hasSize(1)
+                .contains(FUNCTION,
+                        "payload",
+                        "payload",
+                        FlattenedReturnType.class.getName(),
+                        "MapFirstType,Integer,String");
+    }
+
+    // Multiple output suggestions not flattened.
+    @Test
+    void shouldReturnCorrectSuggestionsForPayloadTypeMap() {
+        // Given
+        PreviousComponentOutput output = createOutput(MapFirstType.class, MapSecondType.class, String.class);
+        String[] tokens = new String[] {"message", "payload", ""};
+
+        // When
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+
+        // Then
+        assertThat(suggestions).hasSize(7);
+
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY,
+                        "firstProperty1",
+                        "firstProperty1",
+                        String.class.getName(),
+                        String.class.getSimpleName());
+
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY,
+                        "firstProperty2",
+                        "firstProperty2",
+                        String.class.getName(),
+                        String.class.getSimpleName());
+
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY,
+                        "secondProperty1",
+                        "secondProperty1",
+                        String.class.getName(),
+                        String.class.getSimpleName());
+
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY,
+                        "secondProperty2",
+                        "secondProperty2",
+                        long.class.getName(),
+                        long.class.getSimpleName());
+
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "toString()",
+                        "toString",
+                        String.class.getName(),
+                        String.class.getSimpleName());
+    }
+
+    /**
     @Test
     void shouldReturnCorrectSuggestionsForPayloadWithMultipleReturnValues() {
         // Given
@@ -284,6 +325,12 @@ class SuggestionFinderTest {
         assertThat(suggestions).hasSize(1);
         assertExistSuggestionWithName(suggestions, "component");
     }*/
+
+private PreviousComponentOutput createOutput(Class<?> ...payloadType) {
+    List<String> attributes = emptyList();
+    List<String> payload = Arrays.stream(payloadType).map(Class::getName).collect(toList());
+    return new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+}
 
     private void assertExistSuggestionWithName(Collection<Suggestion> suggestions, String expectedName) {
         boolean found = suggestions.stream().anyMatch(suggestion -> expectedName.equals(suggestion.getInsertValue()));

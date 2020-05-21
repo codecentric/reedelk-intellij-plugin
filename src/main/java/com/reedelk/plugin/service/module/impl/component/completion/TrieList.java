@@ -38,4 +38,23 @@ public class TrieList extends TrieDefault {
             return suggestion;
         }).collect(Collectors.toList());
     }
+
+    private class TrieListClosure extends TrieDefault {
+
+        public TrieListClosure(TypeAndTries typeAndTries) {
+            TypeProxy listItemTypeProxy = TypeProxy.create(listItemType);
+            insert(Suggestion.create(Suggestion.Type.PROPERTY)
+                    .returnTypeDisplayValue(listItemTypeProxy.toSimpleName(typeAndTries))
+                    .returnType(listItemTypeProxy)
+                    .insertValue("it")
+                    .build());
+
+            TypeProxy indexType = TypeProxy.create(int.class);
+            insert(Suggestion.create(Suggestion.Type.PROPERTY)
+                    .returnTypeDisplayValue(indexType.toSimpleName(typeAndTries))
+                    .returnType(indexType)
+                    .insertValue("i")
+                    .build());
+        }
+    }
 }

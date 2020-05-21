@@ -84,8 +84,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         }
     }
 
-    // TODO: The equals here should be consistent. If they are both a list, and they have
-    // the same list item, then equal, independently from the list type.
+
     static class OnTheFlyTypeProxy implements TypeProxy {
 
         private final String listItem;
@@ -106,7 +105,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
-            return TypeUtils.formatList(this, typeAndTries);
+            return FullyQualifiedName.formatList(listItem, typeAndTries);
         }
 
         @Override
@@ -115,8 +114,8 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         }
 
         @Override
-        public String listItemType(TypeAndTries typeAndTries) {
-            return listItem;
+        public TypeProxy listItemType(TypeAndTries typeAndTries) {
+            return TypeProxy.create(listItem);
         }
 
         @Override

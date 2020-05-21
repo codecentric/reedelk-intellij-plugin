@@ -1,5 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface TypeProxy {
 
     static TypeProxy create(Class<?> typeClazz) {
@@ -17,7 +19,10 @@ public interface TypeProxy {
 
     String getTypeFullyQualifiedName();
 
-    String listItemType(TypeAndTries typeAndTries);
+    @Nullable
+    default TypeProxy listItemType(TypeAndTries typeAndTries) {
+        return null;
+    }
 
     default boolean isList(TypeAndTries typeAndTries) {
         return false;
