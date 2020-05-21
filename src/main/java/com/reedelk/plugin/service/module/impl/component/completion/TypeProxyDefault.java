@@ -1,8 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.runtime.api.message.MessageAttributes;
-import com.reedelk.runtime.api.message.MessagePayload;
-
 import java.util.Objects;
 
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
@@ -15,12 +12,6 @@ public class TypeProxyDefault implements TypeProxy {
     public TypeProxyDefault(String typeFullyQualifiedName) {
         checkState(isNotBlank(typeFullyQualifiedName), "null type fully qualified name");
         this.typeFullyQualifiedName = typeFullyQualifiedName;
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return MessagePayload.class.getName().equals(typeFullyQualifiedName) ||
-                MessageAttributes.class.getName().equals(typeFullyQualifiedName);
     }
 
     @Override

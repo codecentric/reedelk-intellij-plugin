@@ -1,8 +1,16 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import com.reedelk.runtime.api.flow.FlowContext;
+import com.reedelk.runtime.api.message.Message;
+import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.runtime.api.message.MessagePayload;
+
 public interface TypeProxy {
 
-    TypeProxy VOID = TypeProxy.create(Void.class.getSimpleName());
+    TypeProxy INT = TypeProxy.create(int.class);
+    TypeProxy VOID = TypeProxy.create(Void.class);
+    TypeProxy MESSAGE = TypeProxy.create(Message.class);
+    TypeProxy FLOW_CONTEXT = TypeProxy.create(FlowContext.class);
     TypeProxy FLATTENED = TypeProxy.create(FlattenedReturnType.class);
 
     static TypeProxy create(Class<?> typeClazz) {
@@ -13,7 +21,6 @@ public interface TypeProxy {
         return new TypeProxyDefault(typeFullyQualifiedName);
     }
 
-
     String getTypeFullyQualifiedName();
 
     String toSimpleName(TypeAndTries typeAndTries);
@@ -21,7 +28,7 @@ public interface TypeProxy {
     Trie resolve(TypeAndTries typeAndTries);
 
     default boolean isDynamic() {
-        return false;
+        return MessagePayload.class.getName().equals(getTypeFullyQualifiedName()) ||
+                MessageAttributes.class.getName().equals(getTypeFullyQualifiedName());
     }
-
 }

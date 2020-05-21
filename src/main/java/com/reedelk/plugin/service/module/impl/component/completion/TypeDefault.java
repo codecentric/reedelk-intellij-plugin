@@ -22,16 +22,16 @@ public class TypeDefault {
     public static final Trie MESSAGE_AND_CONTEXT = new TrieRoot();
     static {
         Suggestion message = Suggestion.create(PROPERTY)
-                .insertValue("message")
-                .returnType(TypeProxy.create(Message.class))
                 .returnTypeDisplayValue(Message.class.getSimpleName())
+                .returnType(TypeProxy.MESSAGE)
+                .insertValue("message")
                 .build();
         MESSAGE_AND_CONTEXT.insert(message);
 
         Suggestion context = Suggestion.create(PROPERTY)
-                .insertValue("context")
-                .returnType(TypeProxy.create(FlowContext.class))
                 .returnTypeDisplayValue(FlowContext.class.getSimpleName())
+                .returnType(TypeProxy.FLOW_CONTEXT)
+                .insertValue("context")
                 .build();
         MESSAGE_AND_CONTEXT.insert(context);
     }
@@ -41,6 +41,7 @@ public class TypeDefault {
     }
 
     private static class TypeMap implements BuiltInType {
+
         @Override
         public void register(Map<String, Trie> typeTrieMap) {
             Trie mapTrie = new TrieDefault(Map.class.getName(), Object.class.getName(), Map.class.getSimpleName());
@@ -70,6 +71,7 @@ public class TypeDefault {
     }
 
     private static class TypeList implements BuiltInType {
+
         @Override
         public void register(Map<String, Trie> typeTrieMap) {
             Trie trie = new TrieDefault(List.class.getName(), Object.class.getName(), List.class.getSimpleName());

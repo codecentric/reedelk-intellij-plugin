@@ -80,8 +80,7 @@ public class TrieList extends TrieDefault {
                     .insertValue(ARG_IT)
                     .build());
 
-            // TODO: Create default type proxy clazz with all default types.
-            TypeProxy indexType = TypeProxy.create(int.class);
+            TypeProxy indexType = TypeProxy.INT; // the index is int
             insert(Suggestion.create(PROPERTY)
                     .returnTypeDisplayValue(indexType.resolve(typeAndTries).toSimpleName(typeAndTries))
                     .returnType(indexType)

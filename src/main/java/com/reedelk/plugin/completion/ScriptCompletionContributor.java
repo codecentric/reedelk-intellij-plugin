@@ -38,6 +38,23 @@ public class ScriptCompletionContributor extends CompletionContributor {
             String[] tokens = Tokenizer.tokenize(text, offset);
 
             PlatformModuleService instance = PlatformModuleService.getInstance(module);
+
+
+            // TODO: Fixme, this is to allow suggestions of types inside a closure block.
+            int closureStart = -1;
+            for (int i = tokens.length - 1; i >= 0; i--) {
+                if (tokens[i].equals("{")) {
+                    closureStart = i;
+                    break;
+                }
+            }
+
+            if (closureStart >= 0) {
+                String[] closure = new String[tokens.length - closureStart - 1];
+                System.arraycopy(tokens, closureStart + 1, closure, 0, tokens.length - closureStart - 1);
+                Collection<Suggestion> suggestions = instance.suggestionsOf(context, componentPropertyPath, closure);
+                suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
+            }
             Collection<Suggestion> suggestions = instance.suggestionsOf(context, componentPropertyPath, tokens);
             suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
         }
