@@ -66,6 +66,19 @@ public class Suggestion {
         return cursorOffset;
     }
 
+    @Override
+    public String toString() {
+        return "Suggestion{" +
+                "type=" + type +
+                ", tailText='" + tailText + '\'' +
+                ", insertValue='" + insertValue + '\'' +
+                ", lookupToken='" + lookupToken + '\'' +
+                ", returnType=" + returnType +
+                ", returnTypeDisplayValue='" + returnTypeDisplayValue + '\'' +
+                ", cursorOffset=" + cursorOffset +
+                '}';
+    }
+
     public enum Type {
 
         CLOSURE(Icons.Script.Function),

@@ -25,6 +25,6 @@ public class TypeAndTries {
             Trie typeInfo = typeAndTrie.get(fullyQualifiedTypeName);
             if (typeInfo != null) return typeInfo;
         }
-        return TypeDefault.OBJECT;
+        return TypeDefault.EMPTY;
     }
 }

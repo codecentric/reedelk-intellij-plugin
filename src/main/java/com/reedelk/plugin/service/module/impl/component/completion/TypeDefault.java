@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.CLOSURE;
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
 
 public class TypeDefault {
 
@@ -25,10 +24,7 @@ public class TypeDefault {
     public static final String DEFAULT_RETURN_TYPE = Void.class.getSimpleName();
     public static final TypeProxy FLATTENED_RETURN_TYPE_PROXY = TypeProxy.create(FlattenedReturnType.class);
 
-    // TODO: All the type must extend from this if they don't explicitly extend from anything,
-    //  also the OBJECT must add the toString() method as well.
-    // The root of all the objects is 'Object'.
-    public static final Trie OBJECT = new TrieDefault();
+    public static final Trie EMPTY = new TrieDefault();
 
     // Default script signature is message and context.
     public static final Trie MESSAGE_AND_CONTEXT = new TrieDefault();
@@ -39,6 +35,7 @@ public class TypeDefault {
                 .returnTypeDisplayValue(Message.class.getSimpleName())
                 .build();
         MESSAGE_AND_CONTEXT.insert(message);
+
         Suggestion context = Suggestion.create(PROPERTY)
                 .insertValue("context")
                 .returnType(TypeProxy.create(FlowContext.class))
@@ -51,6 +48,18 @@ public class TypeDefault {
 
         // TODO: Add lists, maps and so on ...
         public static void register(Map<String, Trie> trieMap) {
+            // Object
+            Trie objectTrie = new TrieDefault(Object.class.getName(), null, Object.class.getSimpleName());
+            TypeProxy stringType = TypeProxy.create(String.class.getName());
+            objectTrie.insert(Suggestion.create(FUNCTION)
+                    .lookupToken("toString")
+                    .insertValue("toString()")
+                    .tailText("()")
+                    .returnType(stringType)
+                    .returnTypeDisplayValue(String.class.getSimpleName())
+                    .build());
+            trieMap.put(Object.class.getName(), objectTrie);
+
             // Lists
             Trie trie = new TrieDefault();
             trie.insert(Suggestion.create(CLOSURE)

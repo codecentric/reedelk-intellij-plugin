@@ -10,11 +10,6 @@ public interface TypeProxy {
         return new TypeProxyDefault(typeFullyQualifiedName);
     }
 
-    static TypeProxy createList(String listItemType) {
-        return new TypeProxyClosureList(listItemType);
-    }
-
-
 
     Trie resolve(TypeAndTries typeAndTries);
 

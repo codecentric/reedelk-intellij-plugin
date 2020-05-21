@@ -31,8 +31,8 @@ class TypeProxyDefault implements TypeProxy {
 
     @Override
     public String listItemType(TypeAndTries typeAndTries) {
-        Trie orDefault = resolve(typeAndTries);
-        return orDefault.listItemType();
+        Trie listItemTypeTrie = resolve(typeAndTries);
+        return listItemTypeTrie.listItemType();
     }
 
     @Override
@@ -42,11 +42,12 @@ class TypeProxyDefault implements TypeProxy {
 
     @Override
     public String toSimpleName(TypeAndTries typeAndTries) {
-        if (MessageAttributes.class.getName().equals(typeFullyQualifiedName)) {
+        Trie typeTrie = resolve(typeAndTries);
+        if (MessageAttributes.class.getName().equals(typeTrie.extendsType())) {
             // We keep the message attributes type simple name to avoid confusion and always display 'MessageAttributes' type.
             return MessageAttributes.class.getSimpleName();
         } else {
-            // If the type is MessagePayload, we lookup the type and convert it to a simple name.
+            // In any other case
             return TypeUtils.toSimpleName(typeFullyQualifiedName, typeAndTries);
         }
     }

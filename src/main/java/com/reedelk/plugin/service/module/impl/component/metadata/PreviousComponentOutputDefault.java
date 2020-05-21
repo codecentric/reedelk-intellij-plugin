@@ -26,7 +26,8 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
 
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        List<Suggestion> dynamicSuggestions = resolveDynamicTypes(suggestion).stream()
+        List<Suggestion> dynamicSuggestions = resolveDynamicTypes(suggestion)
+                .stream()
                 .map(TypeProxy::create) // TODO: This is wrong, the type proxy might be join and so on....
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())

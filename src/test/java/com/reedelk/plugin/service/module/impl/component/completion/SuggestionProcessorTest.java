@@ -39,11 +39,8 @@ class SuggestionProcessorTest {
         moduleGlobalTypes = new TrieDefault();
         moduleSignatureTypes = new HashMap<>();
         allTypesMap = new TypeAndTries(moduleTypes);
-        processor = new SuggestionProcessor(
-                allTypesMap,
-                moduleGlobalTypes,
-                moduleTypes,
-                moduleSignatureTypes);
+        processor =
+                new SuggestionProcessor(allTypesMap, moduleGlobalTypes, moduleTypes, moduleSignatureTypes);
     }
 
     @Test

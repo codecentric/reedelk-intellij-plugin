@@ -87,24 +87,26 @@ class SuggestionFinderTest {
                 .contains(PROPERTY, "entry", "entry", Serializable.class.getName(), Serializable.class.getSimpleName());
     }
 
-    /**
     @Test
     void shouldReturnCorrectMessagePayloadTypeListOfSomeKnownType() {
         // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(singletonList(ListMyItemType.class.getName()));
+        List<String> attributes = emptyList();
+        List<String> payload = singletonList(TypeTestUtils.ListMyItemType.class.getName());
+        PreviousComponentOutput descriptor = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
 
         // Then
-        assertThat(suggestions).hasSize(1);
-        Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<TypesTestUtils$MyItemType>");
-        assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
+        PluginAssertion.assertThat(suggestions).hasSize(1)
+                .contains(FUNCTION,
+                        "payload",
+                        "payload",
+                        TypeTestUtils.ListMyItemType.class.getName(), "List<TypeTestUtils$MyItemType>");
     }
 
+    /**
     // A type which was not registered in the type map tree structure.
     @Test
     void shouldReturnCorrectMessagePayloadTypeListOfSomeUnknownType() {

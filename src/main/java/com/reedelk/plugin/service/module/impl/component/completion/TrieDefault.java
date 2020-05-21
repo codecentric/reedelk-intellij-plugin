@@ -4,6 +4,8 @@ import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.*;
 
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
+
 public class TrieDefault implements Trie {
 
     protected final String fullyQualifiedName;
@@ -23,7 +25,7 @@ public class TrieDefault implements Trie {
         this.root = new TrieNode();
         this.fullyQualifiedName = fullyQualifiedName;
         this.displayName = displayName;
-        this.extendsType = extendsType;
+        this.extendsType = StringUtils.isBlank(extendsType) ? Object.class.getName() : extendsType;
     }
 
     @Override
@@ -39,8 +41,11 @@ public class TrieDefault implements Trie {
     @Override
     public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
         Set<Suggestion> autocomplete = autocomplete(word);
-        List<Suggestion> extendsSuggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
-        autocomplete.addAll(extendsSuggestions);
+
+        if (!Object.class.getName().equals(fullyQualifiedName)) {
+            List<Suggestion> extendsSuggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
+            autocomplete.addAll(extendsSuggestions);
+        }
         return autocomplete;
     }
 
@@ -100,11 +105,10 @@ public class TrieDefault implements Trie {
     }
 
     // All the extends type must contain the original
-    private List<Suggestion> addExtendsTypeSuggestions(Trie current, TypeAndTries typeAndTrieMap, String token) {
-        // TODO: Check on default object, otherwise we would go on stackoverflow (the type object check should not be needed, it was needed because I used it as extends type!!)
+    private List<Suggestion> addExtendsTypeSuggestions(Trie currentTrie, TypeAndTries typeAndTrieMap, String token) {
         List<Suggestion> suggestions = new ArrayList<>();
-        if (current != TypeDefault.OBJECT && current != null && StringUtils.isNotBlank(current.extendsType())) {
-            String extendsType = current.extendsType();
+        if (isNotBlank(currentTrie.extendsType())) {
+            String extendsType = currentTrie.extendsType();
             Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType);
             Collection<Suggestion> autocomplete = currentTypeTrie.autocomplete(token, typeAndTrieMap);
             suggestions.addAll(autocomplete);

@@ -17,7 +17,12 @@ public class TrieList extends TrieDefault {
     }
 
     public TrieList(String typeFullyQualifiedName, String listItemType) {
-        this(typeFullyQualifiedName, List.class.getSimpleName(), listItemType);
+        this(typeFullyQualifiedName, null, listItemType);
+    }
+
+    @Override
+    public String listItemType() {
+        return listItemType;
     }
 
     @Override
@@ -26,8 +31,9 @@ public class TrieList extends TrieDefault {
         return autocomplete.stream().map(suggestion -> {
             // If it is a closure, we must return the type of the closure arguments, such as it, entry ...
             if (TypeListClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
-                TypeProxy typeProxy = TypeProxy.createList(listItemType);
-                return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, typeProxy);
+                // TODO: Fixme
+              //  TypeProxy typeProxy = TypeProxy.createList(listItemType);
+                //return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, typeProxy);
             }
             return suggestion;
         }).collect(Collectors.toList());

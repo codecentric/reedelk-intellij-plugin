@@ -33,7 +33,9 @@ public class SuggestionsAssertion {
                     Objects.equals(actualTypeProxy, TypeProxy.create(expectedReturnTypeFullyQualifiedName)) &&
                     Objects.equals(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
                 });
-        assertThat(found).isTrue();
+        assertThat(found)
+                .withFailMessage("Could not find suggestion from collection: " + suggestions.toString())
+                .isTrue();
         return this;
     }
 
