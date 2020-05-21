@@ -3,6 +3,7 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
+import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +19,10 @@ public class TypeDefault {
 
     }
 
+    public static final String DEFAULT_PAYLOAD = Object.class.getName();
+    public static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
+
     public static final String DEFAULT_RETURN_TYPE = Void.class.getSimpleName();
-    public static final TypeProxy DEFAULT_RETURN_TYPE_PROXY = TypeProxy.create(Void.class);
     public static final TypeProxy FLATTENED_RETURN_TYPE_PROXY = TypeProxy.create(FlattenedReturnType.class);
 
     // TODO: All the type must extend from this if they don't explicitly extend from anything,

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.assertion.suggestion;
 
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -16,22 +17,20 @@ public class SuggestionsAssertion {
     }
 
     public SuggestionsAssertion contains(Suggestion.Type expectedType,
-                                         String expectedLookup,
+                                         String expectedInsertValue,
                                          String expectedLookupDisplayValue,
-                                         String expectedReturnType,
+                                         String expectedReturnTypeFullyQualifiedName,
                                          String expectedReturnTypeDisplayValue) {
         boolean found = suggestions.stream().anyMatch(suggestion -> {
             Suggestion.Type actualType = suggestion.getType();
-            String actualLookup = suggestion.getInsertValue();
-            String actualLookupDisplayValue = suggestion.getLookupToken();
-            // TODO: Fixme
-            //String actualReturnType = suggestion.getReturnType();
+            String actualInsertValue = suggestion.getInsertValue();
+            String actualLookupToken = suggestion.getLookupToken();
+            TypeProxy actualTypeProxy = suggestion.getReturnType();
             String actualReturnTypeDisplayValue = suggestion.getReturnTypeDisplayValue();
             return Objects.equals(actualType, expectedType) &&
-                    Objects.equals(actualLookup, expectedLookup) &&
-                    Objects.equals(actualLookupDisplayValue, expectedLookupDisplayValue) &&
-                    // TODO: Fixme
-                   // Objects.equals(actualReturnType, expectedReturnType) &&
+                    Objects.equals(actualInsertValue, expectedInsertValue) &&
+                    Objects.equals(actualLookupToken, expectedLookupDisplayValue) &&
+                    Objects.equals(actualTypeProxy, TypeProxy.create(expectedReturnTypeFullyQualifiedName)) &&
                     Objects.equals(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
                 });
         assertThat(found).isTrue();

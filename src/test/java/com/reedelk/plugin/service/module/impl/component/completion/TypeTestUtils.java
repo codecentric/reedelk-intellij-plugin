@@ -10,9 +10,9 @@ import java.util.*;
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createFunctionSuggestion;
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createPropertySuggestion;
 
-public class TypesTestUtils {
+public class TypeTestUtils {
 
-    public static List<TrieProvider> TEST_TYPES = Arrays.asList(
+    public static List<TrieProvider> ALL_TYPES = Arrays.asList(
       new GenericMapTypeFunctions(),
             new ListMapFirstType(),
             new ListMyItemType(),

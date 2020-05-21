@@ -18,13 +18,13 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
         // TODO: Create artificial type proxy because it is a list of the suggestions ....
 
         // Output is List<Of all the types>
         List<Suggestion> suggestions = new ArrayList<>();
         outputs.forEach(previousComponentOutput ->
-                suggestions.addAll(previousComponentOutput.buildDynamicSuggestions(completionFinder, suggestion, typeAndTrieMap, flatten)));
+                suggestions.addAll(previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flatten)));
         return suggestions;
     }
 
@@ -34,20 +34,20 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
+    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> attributesToMerge = outputs.stream()
-                .map(previousComponentOutput -> previousComponentOutput.mapAttributes(completionFinder, typeAndTries))
+                .map(previousComponentOutput -> previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries))
                 .collect(toList());
-        return PreviousComponentOutputDefault.mergeMetadataTypes(attributesToMerge);
+        return PreviousComponentOutputDefault.mergeMetadataTypes(attributesToMerge, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
+    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
         // The output is a List of types, if the types are all the same
         List<MetadataTypeDTO> allTypes = new ArrayList<>();
 
         outputs.stream()
-                .map(previousComponentOutput -> previousComponentOutput.mapPayload(completionFinder, typeAndTries))
+                .map(previousComponentOutput -> previousComponentOutput.mapPayload(suggestionFinder, typeAndTries))
                 .forEach(allTypes::addAll);
 
         // Logic should be if all types have the same type
@@ -62,7 +62,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             // Otherwise it would be a list of lists
             if (!typeProxy.isList(typeAndTries)) {
                 OnTheFlyTypeProxy onTheFlyTypeProxy = new OnTheFlyTypeProxy(typeProxy.getTypeFullyQualifiedName());
-                MetadataTypeDTO sameTypeElementsList = unrollListType(completionFinder, typeAndTries, onTheFlyTypeProxy);
+                MetadataTypeDTO sameTypeElementsList = unrollListType(suggestionFinder, typeAndTries, onTheFlyTypeProxy);
                 return singletonList(sameTypeElementsList);
             } else {
                 // Output List<List<Type1>> ... do not unroll the properties

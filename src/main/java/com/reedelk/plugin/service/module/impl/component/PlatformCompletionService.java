@@ -39,12 +39,12 @@ class PlatformCompletionService implements PlatformModuleService {
     private final Map<String, Trie> mavenModulesSignatureTypes = new HashMap<>();
     private final Map<String, Trie> currentModuleSignatureTypes = new HashMap<>();
 
-    private final CompletionFinder completionFinder;
+    private final SuggestionFinder suggestionFinder;
     private final PlatformComponentMetadataService componentMetadataService;
 
     public PlatformCompletionService(Module module, PlatformModuleService moduleService) {
-        this.completionFinder = new CompletionFinder(allTypes);
-        this.componentMetadataService = new PlatformComponentMetadataService(module, moduleService, completionFinder, allTypes);
+        this.suggestionFinder = new SuggestionFinder(allTypes);
+        this.componentMetadataService = new PlatformComponentMetadataService(module, moduleService, suggestionFinder, allTypes);
     }
 
     @Override
@@ -61,8 +61,8 @@ class PlatformCompletionService implements PlatformModuleService {
         if (trie == null) trie = currentModuleSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = TypeDefault.MESSAGE_AND_CONTEXT;
 
-        Collection<Suggestion> globalSuggestions = completionFinder.find(allGlobalTypes, tokens, previousComponentOutput);
-        Collection<Suggestion> localSuggestions = completionFinder.find(trie, tokens, previousComponentOutput);
+        Collection<Suggestion> globalSuggestions = suggestionFinder.suggest(allGlobalTypes, tokens, previousComponentOutput);
+        Collection<Suggestion> localSuggestions = suggestionFinder.suggest(trie, tokens, previousComponentOutput);
         globalSuggestions.addAll(localSuggestions);
         return globalSuggestions;
     }

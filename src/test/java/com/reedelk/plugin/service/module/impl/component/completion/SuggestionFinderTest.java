@@ -1,103 +1,90 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type;
+import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutputDefault;
-import com.reedelk.runtime.api.message.Message;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createPropertySuggestion;
-import static com.reedelk.plugin.service.module.impl.component.completion.TypesTestUtils.MapFirstType;
-import static com.reedelk.plugin.service.module.impl.component.completion.TypesTestUtils.TEST_TYPES;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.MapFirstType;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CompletionFinderTest {
+class SuggestionFinderTest {
 
-    private static Trie messageRootTrie;
-    private static CompletionFinder finder;
-    private static TypeAndTries typeAndTries;
+    private static Trie MESSAGE_AND_CONTEXT_TRIE = TypeDefault.MESSAGE_AND_CONTEXT;
+    private static SuggestionFinder FINDER;
 
     @BeforeAll
     static void setUp() {
         Map<String, Trie> defaultTypesAndTries = new HashMap<>();
-        TEST_TYPES.forEach(trieProvider -> trieProvider.register(defaultTypesAndTries));
-        typeAndTries = new TypeAndTries(defaultTypesAndTries);
 
-        Suggestion message = createPropertySuggestion("message", Message.class.getName());
-        messageRootTrie = new TrieDefault();
-        messageRootTrie.insert(message);
+        TypeTestUtils.ALL_TYPES.forEach(trieProvider -> trieProvider.register(defaultTypesAndTries));
 
-        finder = new CompletionFinder(typeAndTries);
+        TypeAndTries typeAndTries = new TypeAndTries(defaultTypesAndTries);
+
+        FINDER = new SuggestionFinder(typeAndTries);
     }
 
-    // -------------------------------- Tests for --------------------------------
-    // message.paylo (we check the dynamic return type)
-    // ---------------------------------------------------------------------------
+    // Verify dynamic return type computed correctly.
     @Test
-    void shouldReturnCorrectMessagePayloadTypeString() {
+    void shouldReturnCorrectSuggestionsForTypeString() {
         // Given
         List<String> attributes = emptyList();
         List<String> payload = singletonList(String.class.getName());
-        PreviousComponentOutput previousOutput = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+        PreviousComponentOutput output = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, previousOutput);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
         // Then
-        assertThat(suggestions).hasSize(1);
-
-        Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnType().getTypeFullyQualifiedName()).isEqualTo(String.class.getName());
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo(String.class.getSimpleName());
-        assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
+        PluginAssertion.assertThat(suggestions).hasSize(1)
+                .contains(FUNCTION,"payload", "payload", String.class.getName(), String.class.getSimpleName());
     }
 
     @Test
-    void shouldReturnCorrectMessagePayloadTypeMap() {
+    void shouldReturnCorrectSuggestionsForTypeMap() {
         // Given
         List<String> attributes = emptyList();
         List<String> payload = singletonList(MapFirstType.class.getName());
-        PreviousComponentOutput previousOutput = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+        PreviousComponentOutput output = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, previousOutput);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
         // Then
-        assertThat(suggestions).hasSize(1);
-
-        Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo(MapFirstType.class.getSimpleName());
-        assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
+        PluginAssertion.assertThat(suggestions).hasSize(1)
+                .contains(FUNCTION, "payload", "payload", MapFirstType.class.getName(), MapFirstType.class.getSimpleName());
     }
 
     @Test
-    void shouldReturnCorrectMessagePayloadTypeMapEachAnd() {
+    void shouldReturnCorrectSuggestionsForClosure() {
         // Given
         List<String> attributes = emptyList();
         List<String> payload = singletonList(MapFirstType.class.getName());
-        PreviousComponentOutput previousOutput = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
+        PreviousComponentOutput output = new PreviousComponentOutputDefault(attributes, payload, EMPTY);
         String[] tokens = new String[] {"message", "payload", "each", "{", ""};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, previousOutput);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
-        // Then
-        assertThat(suggestions).hasSize(1);
-
-        Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo(MapFirstType.class.getSimpleName());
-        assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
+        // Then the closure has two properties: 'i' and 'each' to iterate the map content. 'i' and 'each' must
+        // have the type of the 'MapFirstType' (<String, Serializable>).
+        PluginAssertion.assertThat(suggestions).hasSize(2)
+                .contains(PROPERTY, "i", "i", String.class.getName(), String.class.getSimpleName())
+                .contains(PROPERTY, "each", "each", Serializable.class.getName(), Serializable.class.getSimpleName());
     }
 
     /**

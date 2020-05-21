@@ -6,7 +6,7 @@ import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.PlatformModuleService;
-import com.reedelk.plugin.service.module.impl.component.completion.CompletionFinder;
+import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import org.jetbrains.annotations.NotNull;
@@ -26,15 +26,15 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     private final OnComponentMetadataEvent onComponentMetadataEvent;
     private final MetadataExpectedInputDTOBuilder metadataExpectedInputDTOBuilder;
     private final PlatformModuleService moduleService;
-    private final CompletionFinder completionFinder;
+    private final SuggestionFinder suggestionFinder;
 
     public PlatformComponentMetadataService(@NotNull Module module,
                                             @NotNull PlatformModuleService moduleService,
-                                            @NotNull CompletionFinder completionFinder,
+                                            @NotNull SuggestionFinder suggestionFinder,
                                             @NotNull TypeAndTries typeAndTries) {
         this.module = module;
         this.moduleService = moduleService;
-        this.completionFinder = completionFinder;
+        this.suggestionFinder = suggestionFinder;
         this.typeAndTries = typeAndTries;
         this.metadataExpectedInputDTOBuilder = new MetadataExpectedInputDTOBuilder(moduleService, this.typeAndTries);
         this.onComponentMetadataEvent = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
@@ -55,8 +55,8 @@ class PlatformComponentMetadataService implements PlatformModuleService {
 
                 // TODO: Get might fail, consider to return default output!
                 PreviousComponentOutput previousComponentOutput = componentOutput.get();
-                List<MetadataTypeDTO> payload = previousComponentOutput.mapPayload(completionFinder, typeAndTries);
-                MetadataTypeDTO attributes = previousComponentOutput.mapAttributes(completionFinder, typeAndTries);
+                List<MetadataTypeDTO> payload = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
+                MetadataTypeDTO attributes = previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries);
                 String description = previousComponentOutput.description();
 
                 MetadataActualInputDTO actualInput = new MetadataActualInputDTO(attributes, payload, description);

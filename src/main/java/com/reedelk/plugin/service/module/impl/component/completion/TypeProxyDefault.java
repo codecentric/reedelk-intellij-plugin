@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.util.Objects;
 
@@ -20,6 +21,12 @@ class TypeProxyDefault implements TypeProxy {
     public boolean isList(TypeAndTries typeAndTries) {
         String listItemType = listItemType(typeAndTries);
         return isNotBlank(listItemType);
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return MessagePayload.class.getName().equals(typeFullyQualifiedName) ||
+                MessageAttributes.class.getName().equals(typeFullyQualifiedName);
     }
 
     @Override

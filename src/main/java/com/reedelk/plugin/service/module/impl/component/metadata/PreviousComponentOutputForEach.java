@@ -16,8 +16,8 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(completionFinder, suggestion, typeAndTrieMap, false);
+    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, false);
         // We need to provide alternatives, and flatten only at the end
         if (suggestions.size() == 1) {
             // You need to extract  the list of all predecessors
@@ -47,13 +47,13 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
-        return previousComponentOutput.mapAttributes(completionFinder, typeAndTries);
+    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+        return previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
-        List<MetadataTypeDTO> metadataTypeDTOS = previousComponentOutput.mapPayload(completionFinder, typeAndTries);
+    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+        List<MetadataTypeDTO> metadataTypeDTOS = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
         if (metadataTypeDTOS.size() == 1) {
             MetadataTypeDTO metadataTypeDTO = metadataTypeDTOS.stream().findFirst().get();
             TypeProxy typeProxy = metadataTypeDTO.getTypeProxy();

@@ -1,8 +1,8 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.completion.Tokenizer;
-import com.reedelk.plugin.service.module.impl.component.completion.CompletionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
 import com.reedelk.runtime.api.commons.ScriptUtils;
@@ -26,8 +26,8 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        Collection<Suggestion> dynamicSuggestions = suggestionsFromDynamicExpression(completionFinder)
+    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+        Collection<Suggestion> dynamicSuggestions = suggestionsFromDynamicExpression(suggestionFinder)
                 .stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())
@@ -50,24 +50,24 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
-        return previousOutput.mapAttributes(completionFinder, typeAndTries);
+    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+        return previousOutput.mapAttributes(suggestionFinder, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
-        Collection<Suggestion> suggestions = suggestionsFromDynamicExpression(completionFinder);
+    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+        Collection<Suggestion> suggestions = suggestionsFromDynamicExpression(suggestionFinder);
         return suggestions
                 .stream()
                 .map(Suggestion::getReturnType)
-                .map(typeProxy -> createMetadataType(completionFinder, typeAndTries, typeProxy))
+                .map(typeProxy -> createMetadataType(suggestionFinder, typeAndTries, typeProxy))
                 .collect(toList());
     }
 
     @NotNull
-    private Collection<Suggestion> suggestionsFromDynamicExpression(CompletionFinder completionFinder) {
+    private Collection<Suggestion> suggestionsFromDynamicExpression(SuggestionFinder suggestionFinder) {
         String unwrap = ScriptUtils.unwrap(dynamicExpression);
         String[] tokens = Tokenizer.tokenize(unwrap, unwrap.length());
-        return completionFinder.find(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
+        return suggestionFinder.suggest(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
     }
 }

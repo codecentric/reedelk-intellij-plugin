@@ -8,10 +8,10 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import com.reedelk.runtime.api.annotation.ComponentOutput;
 import com.reedelk.runtime.api.commons.StringUtils;
-import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +33,8 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         // If the component output has not been defined for this component we return empty.
         if (componentOutput == null) return Optional.of(
                 new PreviousComponentOutputDefault(
-                        singletonList(DEFAULT_ATTRIBUTES),
-                        singletonList(DEFAULT_PAYLOAD), DEFAULT_DESCRIPTION));
+                        singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
+                        singletonList(TypeDefault.DEFAULT_PAYLOAD), DEFAULT_DESCRIPTION));
 
         // Here you might have components having 'PreviousComponent' only on attributes (e.g payload set),
         // this means that the payload type would be from the current component output but the attributes
@@ -59,8 +59,8 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
                 // this is because otherwise we might continuously loop to the previous component
                 // when all the components specified the 'PreviousComponent' constraint in the payload type.
                 return new PreviousComponentOutputDefault(
-                        singletonList(DEFAULT_ATTRIBUTES),
-                        singletonList(DEFAULT_PAYLOAD),
+                        singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
+                        singletonList(TypeDefault.DEFAULT_PAYLOAD),
                         DEFAULT_DESCRIPTION);
             }
 
@@ -68,8 +68,8 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
             // type must be taken from the previous component.
             return discover(context, currentNode)
                     .orElse(new PreviousComponentOutputDefault(
-                            singletonList(DEFAULT_ATTRIBUTES),
-                            singletonList(DEFAULT_PAYLOAD),
+                            singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
+                            singletonList(TypeDefault.DEFAULT_PAYLOAD),
                             DEFAULT_DESCRIPTION));
 
         } else if (payload.contains(ComponentOutput.InferFromDynamicProperty.class.getName())) {
@@ -86,8 +86,8 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
             // previous component.
             PreviousComponentOutput componentOutput = discover(context, currentNode)
                     .orElse(new PreviousComponentOutputDefault(
-                            singletonList(DEFAULT_ATTRIBUTES),
-                            singletonList(DEFAULT_PAYLOAD),
+                            singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
+                            singletonList(TypeDefault.DEFAULT_PAYLOAD),
                             DEFAULT_DESCRIPTION));
 
             return new PreviousComponentOutputInferFromDynamicExpression(componentOutput, dynamicExpression);
@@ -103,8 +103,8 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
             // type must be taken from the previous component.
             return discover(context, currentNode)
                     .orElse(new PreviousComponentOutputDefault(
-                            singletonList(DEFAULT_ATTRIBUTES),
-                            singletonList(DEFAULT_PAYLOAD),
+                            singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
+                            singletonList(TypeDefault.DEFAULT_PAYLOAD),
                             DEFAULT_DESCRIPTION));
         } else {
             return new PreviousComponentOutputDefault(
@@ -116,11 +116,9 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
 
     private static final ComponentOutputDescriptor DEFAULT;
     private static final String DEFAULT_DESCRIPTION = StringUtils.EMPTY;
-    private static final String DEFAULT_PAYLOAD = Object.class.getName();
-    private static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
     static {
         DEFAULT = new ComponentOutputDescriptor();
-        DEFAULT.setPayload(singletonList(DEFAULT_PAYLOAD));
-        DEFAULT.setAttributes(singletonList(DEFAULT_ATTRIBUTES));
+        DEFAULT.setPayload(singletonList(TypeDefault.DEFAULT_PAYLOAD));
+        DEFAULT.setAttributes(singletonList(TypeDefault.DEFAULT_ATTRIBUTES));
     }
 }

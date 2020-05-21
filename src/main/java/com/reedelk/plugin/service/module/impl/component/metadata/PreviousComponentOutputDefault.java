@@ -1,9 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.service.module.impl.component.completion.CompletionFinder;
-import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
+import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 
@@ -22,13 +19,13 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     public PreviousComponentOutputDefault(List<String> attributes, List<String> payload, String description) {
         this.description = description;
         this.attributes = attributes == null || attributes.isEmpty() ?
-                singletonList(MessageAttributes.class.getName()) : attributes;
+                singletonList(TypeDefault.DEFAULT_ATTRIBUTES) : attributes;
         this.payload = payload == null || payload.isEmpty() ?
-                singletonList(Object.class.getName()) : payload;
+                singletonList(TypeDefault.DEFAULT_PAYLOAD) : payload;
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(CompletionFinder completionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
         List<Suggestion> dynamicSuggestions = resolveDynamicTypes(suggestion).stream()
                 .map(TypeProxy::create) // TODO: This is wrong, the type proxy might be join and so on....
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
@@ -55,39 +52,39 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
-        return attributes(completionFinder, typeAndTries);
+    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+        return attributes(suggestionFinder, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
-        return payload(completionFinder, typeAndTries);
+    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+        return payload(suggestionFinder, typeAndTries);
     }
 
     // Resolves the dynamic type from the output descriptor
     protected List<String> resolveDynamicTypes(Suggestion suggestion) {
         TypeProxy suggestionType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return attributes.isEmpty() ? singletonList(MessageAttributes.class.getName()) : attributes;
+            return attributes.isEmpty() ? singletonList(TypeDefault.DEFAULT_ATTRIBUTES) : attributes;
         } else if (MessagePayload.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return payload.isEmpty() ? singletonList(Object.class.getName()) : payload;
+            return payload.isEmpty() ? singletonList(TypeDefault.DEFAULT_PAYLOAD) : payload;
         } else {
             throw new IllegalStateException("Resolve must be called only if the suggestion type is dynamic");
         }
     }
 
-    protected MetadataTypeDTO attributes(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
+    protected MetadataTypeDTO attributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> metadataTypes = attributes.stream()
                 .distinct() // we want to avoid creating data for the same type.
-                .map(attributeType -> createMetadataType(completionFinder, typeAndTries, TypeProxy.create(attributeType)))
+                .map(attributeType -> createMetadataType(suggestionFinder, typeAndTries, TypeProxy.create(attributeType)))
                 .collect(toList());
-        return mergeMetadataTypes(metadataTypes);
+        return mergeMetadataTypes(metadataTypes, typeAndTries);
     }
 
-    protected List<MetadataTypeDTO> payload(CompletionFinder completionFinder, TypeAndTries typeAndTries) {
+    protected List<MetadataTypeDTO> payload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
         return payload.stream()
                 .distinct()
-                .map(payloadType -> createMetadataType(completionFinder, typeAndTries, TypeProxy.create(payloadType)))
+                .map(payloadType -> createMetadataType(suggestionFinder, typeAndTries, TypeProxy.create(payloadType)))
                 .collect(toList());
     }
 }

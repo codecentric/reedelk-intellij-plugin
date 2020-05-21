@@ -14,7 +14,7 @@ public interface TypeProxy {
         return new TypeProxyClosureList(listItemType);
     }
 
-    boolean isList(TypeAndTries typeAndTries);
+
 
     Trie resolve(TypeAndTries typeAndTries);
 
@@ -23,5 +23,13 @@ public interface TypeProxy {
     String getTypeFullyQualifiedName();
 
     String listItemType(TypeAndTries typeAndTries);
+
+    default boolean isList(TypeAndTries typeAndTries) {
+        return false;
+    }
+
+    default boolean isDynamic() {
+        return false;
+    }
 
 }

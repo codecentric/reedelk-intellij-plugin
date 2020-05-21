@@ -77,6 +77,11 @@ public class TrieMap extends TrieDefault {
         }
 
         @Override
+        public boolean isDynamic() {
+            return false;
+        }
+
+        @Override
         public Trie resolve(TypeAndTries typeAndTries) {
             return new TrieMapClosure(mapValueType, mapKeyType, typeAndTries);
         }
