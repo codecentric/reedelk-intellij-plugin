@@ -1,5 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 public class TypeAndTries {
@@ -20,6 +22,7 @@ public class TypeAndTries {
         return false;
     }
 
+    @NotNull
     public Trie getOrDefault(String fullyQualifiedTypeName) {
         for (Map<String, Trie> typeAndTrie : typeAndTries) {
             Trie typeInfo = typeAndTrie.get(fullyQualifiedTypeName);

@@ -28,9 +28,9 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
             //  should merge them all... this might happen when the for each joins a fork with List<Type1>, List<Type2>
             // TODO: What if it is a list of lists!?
             Suggestion next = suggestions.iterator().next();
-            if (next.getReturnType().isList(typeAndTrieMap)) {
+            if (next.getReturnType().resolve(typeAndTrieMap).isList()) {
                 // Create a suggestion with only return type.
-                TypeProxy listItemTypeProxy = next.getReturnType().listItemType(typeAndTrieMap);
+                TypeProxy listItemTypeProxy = next.getReturnType().resolve(typeAndTrieMap).listItemType(typeAndTrieMap);
                 return Collections.singletonList(Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())
                         .insertValue(suggestion.getInsertValue())
@@ -63,8 +63,8 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
 
             // we extract the items one by one from the for each list.
             // TODO: This is maybe applicable for maps as well!?
-            if (typeProxy.isList(typeAndTries)) {
-                TypeProxy listItemTypeProxy = typeProxy.listItemType(typeAndTries);
+            if (typeProxy.resolve(typeAndTries).isList()) {
+                TypeProxy listItemTypeProxy = typeProxy.resolve(typeAndTries).listItemType(typeAndTries);
                 MetadataTypeDTO unrolledList = new MetadataTypeDTO(
                         listItemTypeProxy.toSimpleName(typeAndTries),
                         listItemTypeProxy,

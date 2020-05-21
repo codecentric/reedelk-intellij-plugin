@@ -8,6 +8,8 @@ import static java.util.stream.Collectors.toList;
 
 public class TrieMap extends TrieDefault {
 
+    private static final String FORMAT_MAP = "Map<%s,%s>";
+
     private final String mapKeyType;
     private final String mapValueType;
 
@@ -37,41 +39,53 @@ public class TrieMap extends TrieDefault {
         }).collect(toList());
     }
 
+    @Override
+    public TypeProxy mapKeyType(TypeAndTries typeAndTries) {
+        return TypeProxy.create(mapKeyType);
+    }
 
-    private class TypeProxyClosureMap implements TypeProxy {
+    @Override
+    public TypeProxy mapValueType(TypeAndTries typeAndTries) {
+        return TypeProxy.create(mapValueType);
+    }
+
+    @Override
+    public String toSimpleName(TypeAndTries typeAndTries) {
+        String keyTypeSimpleName = mapKeyType(typeAndTries).toSimpleName(typeAndTries);
+        String valueTypeSimpleName = mapValueType(typeAndTries).toSimpleName(typeAndTries);
+        return String.format(FORMAT_MAP, keyTypeSimpleName, valueTypeSimpleName);
+    }
+
+    private class TypeProxyClosureMap extends TypeProxyDefault {
+
+        TypeProxyClosureMap() {
+            super(TypeProxyClosureMap.class.getName());
+        }
 
         @Override
         public Trie resolve(TypeAndTries typeAndTries) {
-            return new TrieMapClosureArguments(mapValueType, mapKeyType, typeAndTries);
-        }
-
-        @Override
-        public String toSimpleName(TypeAndTries typeAndTries) {
-            return FullyQualifiedName.formatMap(mapKeyType, mapValueType, typeAndTries);
-        }
-
-        @Override
-        public String getTypeFullyQualifiedName() {
-            return TypeProxyClosureMap.class.getName();
+            TypeProxy mapValueTypeProxy = TypeProxy.create(mapValueType);
+            TypeProxy mapKeyTypeProxy = TypeProxy.create(mapKeyType);
+            return new TrieMapClosureArguments(mapKeyTypeProxy, mapValueTypeProxy, typeAndTries);
         }
     }
 
     static class TrieMapClosureArguments extends TrieDefault {
 
-        public TrieMapClosureArguments(String mapValueType, String mapKeyType, TypeAndTries typeAndTries) {
+        private static final String ARG_ENTRY = "entry";
+        private static final String ARG_I = "i";
 
-            TypeProxy mapValueTypeProxy = TypeProxy.create(mapValueType);
+        public TrieMapClosureArguments(TypeProxy mapValueType, TypeProxy mapKeyType, TypeAndTries typeAndTries) {
             insert(Suggestion.create(PROPERTY)
-                    .returnTypeDisplayValue(mapValueTypeProxy.toSimpleName(typeAndTries))
-                    .returnType(mapValueTypeProxy)
-                    .insertValue("entry")
+                    .returnTypeDisplayValue(mapValueType.resolve(typeAndTries).toSimpleName(typeAndTries))
+                    .returnType(mapValueType)
+                    .insertValue(ARG_ENTRY)
                     .build());
 
-            TypeProxy mapKeyTypeProxy = TypeProxy.create(mapKeyType);
             insert(Suggestion.create(PROPERTY)
-                    .returnTypeDisplayValue(mapKeyTypeProxy.toSimpleName(typeAndTries))
-                    .returnType(mapKeyTypeProxy)
-                    .insertValue("i")
+                    .returnTypeDisplayValue(mapKeyType.resolve(typeAndTries).toSimpleName(typeAndTries))
+                    .returnType(mapKeyType)
+                    .insertValue(ARG_I)
                     .build());
         }
     }

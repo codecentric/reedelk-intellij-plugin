@@ -4,25 +4,24 @@ import com.reedelk.module.descriptor.model.property.ScriptSignatureArgument;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
 import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
-import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class SuggestionFactory {
 
     private SuggestionFactory() {
     }
 
-    static Suggestion create(@NotNull TypeDescriptor typeDescriptor) {
+    static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull TypeDescriptor typeDescriptor) {
         checkState(typeDescriptor.isGlobal(), "expected global type but it was not (%s).", typeDescriptor.getType());
         String fullyQualifiedTypeName = typeDescriptor.getType();
         TypeProxy returnType = TypeProxy.create(fullyQualifiedTypeName);
         // The global type token is always the simple class name or the display name.
-        String globalToken = StringUtils.isNotBlank(typeDescriptor.getDisplayName()) ?
-                typeDescriptor.getDisplayName() :
-                FullyQualifiedName.toSimpleName(typeDescriptor.getType());
+        String globalToken = isNotBlank(typeDescriptor.getDisplayName()) ?
+                typeDescriptor.getDisplayName() : returnType.toSimpleName(allTypesMap);
         return Suggestion.create(GLOBAL)
                 .returnTypeDisplayValue(globalToken)
                 .insertValue(globalToken)

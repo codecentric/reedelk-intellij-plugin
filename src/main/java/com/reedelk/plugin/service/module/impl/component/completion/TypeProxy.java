@@ -1,7 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import org.jetbrains.annotations.Nullable;
-
 public interface TypeProxy {
 
     TypeProxy VOID = TypeProxy.create(Void.class.getSimpleName());
@@ -16,20 +14,11 @@ public interface TypeProxy {
     }
 
 
-    Trie resolve(TypeAndTries typeAndTries);
+    String getTypeFullyQualifiedName();
 
     String toSimpleName(TypeAndTries typeAndTries);
 
-    String getTypeFullyQualifiedName();
-
-    @Nullable
-    default TypeProxy listItemType(TypeAndTries typeAndTries) {
-        return null;
-    }
-
-    default boolean isList(TypeAndTries typeAndTries) {
-        return false;
-    }
+    Trie resolve(TypeAndTries typeAndTries);
 
     default boolean isDynamic() {
         return false;

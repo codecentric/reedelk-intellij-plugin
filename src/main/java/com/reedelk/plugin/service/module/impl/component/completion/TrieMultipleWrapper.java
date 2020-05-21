@@ -27,18 +27,8 @@ public class TrieMultipleWrapper implements Trie {
     }
 
     @Override
-    public String extendsType() {
-        return null;
-    }
-
-    @Override
-    public String listItemType() {
-        return null;
-    }
-
-    @Override
-    public String displayName() {
-        return null;
+    public String toSimpleName(TypeAndTries typeAndTries) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

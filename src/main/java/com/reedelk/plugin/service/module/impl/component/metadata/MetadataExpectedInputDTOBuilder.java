@@ -5,8 +5,8 @@ import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.completion.FullyQualifiedName;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ public class MetadataExpectedInputDTOBuilder {
         return componentInputDescriptor.map(descriptor -> {
             String description = descriptor.getDescription();
             String payload = descriptor.getPayload().stream()
-                    .map(payloadType -> FullyQualifiedName.toSimpleName(payloadType, typeAndTrie))
+                    .map(payloadType -> TypeProxy.create(payloadType).resolve(typeAndTrie).toSimpleName(typeAndTrie))
                     .collect(joining(", "));
             return new MetadataExpectedInputDTO(payload, description);
 

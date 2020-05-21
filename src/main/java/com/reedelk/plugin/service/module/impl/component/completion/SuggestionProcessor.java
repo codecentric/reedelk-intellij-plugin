@@ -82,7 +82,7 @@ public class SuggestionProcessor {
     private void populate(TypeDescriptor typeDescriptor, Trie typeTrie) {
         // Global root type
         if (typeDescriptor.isGlobal()) {
-            Suggestion globalTypeSuggestion = SuggestionFactory.create(typeDescriptor);
+            Suggestion globalTypeSuggestion = SuggestionFactory.create(allTypesMap, typeDescriptor);
             moduleGlobalTypes.insert(globalTypeSuggestion);
         }
 

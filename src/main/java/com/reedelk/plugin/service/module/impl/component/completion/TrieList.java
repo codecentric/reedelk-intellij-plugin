@@ -3,10 +3,15 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 import java.util.Collection;
 import java.util.List;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.CLOSURE;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.stream.Collectors.toList;
 
 public class TrieList extends TrieDefault {
+
+    private static final String FORMAT_LIST = "List<%s>";
 
     private final String listItemType;
 
@@ -21,15 +26,15 @@ public class TrieList extends TrieDefault {
     }
 
     @Override
-    public String listItemType() {
-        return listItemType;
+    public TypeProxy listItemType(TypeAndTries typeAndTries) {
+        return TypeProxy.create(listItemType);
     }
 
     @Override
     public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
         Collection<Suggestion> autocomplete = super.autocomplete(word, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
-            if (suggestion.getType() == Suggestion.Type.CLOSURE) {
+            if (suggestion.getType() == CLOSURE) {
                 // If the method accepts a closure in input
                 TypeProxy listTypeProxy = new TypeProxyClosureList();
                 ClosureAware.TypeClosureAware newType = new ClosureAware.TypeClosureAware(fullyQualifiedName, listTypeProxy);
@@ -40,39 +45,47 @@ public class TrieList extends TrieDefault {
         }).collect(toList());
     }
 
-    private class TypeProxyClosureList implements TypeProxy {
-
-        @Override
-        public Trie resolve(TypeAndTries typeAndTries) {
-            return new TrieListClosureArguments(typeAndTries);
-        }
-
-        @Override
-        public String toSimpleName(TypeAndTries typeAndTries) {
-            return FullyQualifiedName.formatList(listItemType, typeAndTries);
-        }
-
-        @Override
-        public String getTypeFullyQualifiedName() {
-            return TypeProxyClosureList.class.getName();
+    @Override
+    public String toSimpleName(TypeAndTries typeAndTries) {
+        if (isNotBlank(displayName)) {
+            return displayName;
+        } else {
+            String listItemTypeSimpleName = listItemType(typeAndTries).toSimpleName(typeAndTries);
+            return String.format(FORMAT_LIST, listItemTypeSimpleName);
         }
     }
 
-    private class TrieListClosureArguments extends TrieDefault {
+    private class TypeProxyClosureList extends TypeProxyDefault {
 
-        public TrieListClosureArguments(TypeAndTries typeAndTries) {
+        TypeProxyClosureList() {
+            super(TypeProxyClosureList.class.getName());
+        }
+
+        @Override
+        public Trie resolve(TypeAndTries typeAndTries) {
             TypeProxy listItemTypeProxy = TypeProxy.create(listItemType);
-            insert(Suggestion.create(Suggestion.Type.PROPERTY)
-                    .returnTypeDisplayValue(listItemTypeProxy.toSimpleName(typeAndTries))
+            return new TrieListClosureArguments(typeAndTries, listItemTypeProxy);
+        }
+    }
+
+    private static class TrieListClosureArguments extends TrieDefault {
+
+        private static final String ARG_IT = "it";
+        private static final String ARG_I = "i";
+
+        public TrieListClosureArguments(TypeAndTries typeAndTries, TypeProxy listItemTypeProxy) {
+            insert(Suggestion.create(PROPERTY)
+                    .returnTypeDisplayValue(listItemTypeProxy.resolve(typeAndTries).toSimpleName(typeAndTries))
                     .returnType(listItemTypeProxy)
-                    .insertValue("it")
+                    .insertValue(ARG_IT)
                     .build());
 
+            // TODO: Create default type proxy clazz with all default types.
             TypeProxy indexType = TypeProxy.create(int.class);
-            insert(Suggestion.create(Suggestion.Type.PROPERTY)
-                    .returnTypeDisplayValue(indexType.toSimpleName(typeAndTries))
+            insert(Suggestion.create(PROPERTY)
+                    .returnTypeDisplayValue(indexType.resolve(typeAndTries).toSimpleName(typeAndTries))
                     .returnType(indexType)
-                    .insertValue("i")
+                    .insertValue(ARG_I)
                     .build());
         }
     }

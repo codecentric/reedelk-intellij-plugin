@@ -4,18 +4,31 @@ import java.util.Collection;
 
 public interface Trie {
 
-    String displayName();
-
-    String extendsType();
-
-    Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap);
+    String toSimpleName(TypeAndTries typeAndTries);
 
     void clear();
 
     void insert(Suggestion suggestion);
 
-    // TODO: DO I need this? Is there a way to encapsulate it?
-    default String listItemType() {
-        return null;
+    Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap);
+
+    default boolean isList() {
+        return false;
+    }
+
+    default boolean isMap() {
+        return false;
+    }
+
+    default TypeProxy listItemType(TypeAndTries typeAndTries) {
+        throw new UnsupportedOperationException();
+    }
+
+    default TypeProxy mapKeyType(TypeAndTries typeAndTries) {
+        throw new UnsupportedOperationException();
+    }
+
+    default TypeProxy mapValueType(TypeAndTries typeAndTries) {
+        throw new UnsupportedOperationException();
     }
 }

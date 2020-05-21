@@ -37,7 +37,7 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
     }
 
     protected MetadataTypeDTO createMetadataType(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {
-        if (typeProxy.isList(typeAndTries)) {
+        if (typeProxy.resolve(typeAndTries).isList()) {
             return unrollListType(suggestionFinder, typeAndTries, typeProxy);
         } else {
             List<Suggestion> typeSuggestions = suggestionsFromType(suggestionFinder, typeAndTries, typeProxy);
@@ -56,7 +56,7 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
     protected MetadataTypeItemDTO createTypeProperties(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, String lookupToken, TypeProxy typeProxy) {
         List<Suggestion> typeSuggestions = suggestionsFromType(suggestionFinder, typeAndTries, typeProxy);
         if (typeSuggestions.isEmpty()) {
-            if (typeProxy.isList(typeAndTries)) {
+            if (typeProxy.resolve(typeAndTries).isList()) {
                 MetadataTypeDTO listComplexType = unrollListType(suggestionFinder, typeAndTries, typeProxy);
                 return new MetadataTypeItemDTO(lookupToken, listComplexType);
             } else {
@@ -70,9 +70,9 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
     }
 
     @NotNull
-    protected MetadataTypeDTO unrollListType(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {
+    protected MetadataTypeDTO unrollListType(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, TypeProxy listTypeProxy) {
         // Unroll list item type
-        TypeProxy listItemType = typeProxy.listItemType(typeAndTries);
+        TypeProxy listItemType = listTypeProxy.resolve(typeAndTries).listItemType(typeAndTries);
 
         List<Suggestion> listTypeSuggestions = suggestionsFromType(suggestionFinder, typeAndTries, listItemType);
         Collection<MetadataTypeItemDTO> listTypeProperties = new ArrayList<>();
@@ -85,8 +85,10 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
         }
 
         // List<ItemType> : ItemType
-        String listDisplayType = FullyQualifiedName.formatUnrolledListDisplayType(typeProxy, typeAndTries);
-        return new MetadataTypeDTO(listDisplayType, typeProxy, listTypeProperties);
+        String listTypeProxySimpleName = listTypeProxy.toSimpleName(typeAndTries);
+        String listItemTypeProxySimpleName = listItemType.resolve(typeAndTries).toSimpleName(typeAndTries);
+        String listDisplayType = listTypeProxySimpleName + " : " + listItemTypeProxySimpleName;
+        return new MetadataTypeDTO(listDisplayType, listTypeProxy, listTypeProperties);
     }
 
     protected List<Suggestion> suggestionsFromType(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {

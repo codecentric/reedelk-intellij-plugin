@@ -3,7 +3,10 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -60,16 +63,17 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             Map.Entry<TypeProxy, List<MetadataTypeDTO>> next = collect.entrySet().iterator().next();
             TypeProxy typeProxy = next.getKey();
             // Otherwise it would be a list of lists
-            if (!typeProxy.isList(typeAndTries)) {
+            if (typeProxy.resolve(typeAndTries).isList()) {
+                // Output List<List<Type1>> ... do not unroll the properties
+                String listSimpleName = typeProxy.toSimpleName(typeAndTries);
+                MetadataTypeDTO metadataTypeDTO =
+                        new MetadataTypeDTO(listSimpleName, TypeProxy.create(List.class), emptyList());
+                return singletonList(metadataTypeDTO);
+
+            } else {
                 OnTheFlyTypeProxy onTheFlyTypeProxy = new OnTheFlyTypeProxy(typeProxy.getTypeFullyQualifiedName());
                 MetadataTypeDTO sameTypeElementsList = unrollListType(suggestionFinder, typeAndTries, onTheFlyTypeProxy);
                 return singletonList(sameTypeElementsList);
-            } else {
-                // Output List<List<Type1>> ... do not unroll the properties
-                MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO("List<" + typeProxy.toSimpleName(typeAndTries) + ">",
-                        TypeProxy.create(List.class),
-                        emptyList());
-                return singletonList(metadataTypeDTO);
             }
         } else {
             // Output List<Type1,Type2,Type3> ... do not unroll the properties
@@ -85,50 +89,19 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     }
 
 
-    static class OnTheFlyTypeProxy implements TypeProxy {
+    static class OnTheFlyTypeProxy extends TypeProxyDefault {
 
         private final String listItem;
 
         public OnTheFlyTypeProxy(String listItem) {
+            super(List.class.getSimpleName());
             this.listItem = listItem;
         }
 
         @Override
-        public boolean isList(TypeAndTries typeAndTries) {
-            return true;
-        }
-
-        @Override
         public Trie resolve(TypeAndTries typeAndTries) {
-            return typeAndTries.getOrDefault(List.class.getName());
+            return new TrieList(OnTheFlyTypeProxy.class.getName(), listItem);
         }
 
-        @Override
-        public String toSimpleName(TypeAndTries typeAndTries) {
-            return FullyQualifiedName.formatList(listItem, typeAndTries);
-        }
-
-        @Override
-        public String getTypeFullyQualifiedName() {
-            return List.class.getSimpleName();
-        }
-
-        @Override
-        public TypeProxy listItemType(TypeAndTries typeAndTries) {
-            return TypeProxy.create(listItem);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            OnTheFlyTypeProxy that = (OnTheFlyTypeProxy) o;
-            return Objects.equals(listItem, that.listItem);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(listItem);
-        }
     }
 }
