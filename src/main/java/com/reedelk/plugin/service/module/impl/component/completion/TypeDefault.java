@@ -61,7 +61,7 @@ public class TypeDefault {
             trieMap.put(Object.class.getName(), objectTrie);
 
             // Lists
-            Trie trie = new TrieDefault();
+            Trie trie = new TrieDefault(List.class.getName(), Object.class.getName(), List.class.getSimpleName());
             trie.insert(Suggestion.create(CLOSURE)
                     .insertValue("each { it }")
                     .lookupToken("each")
@@ -92,7 +92,7 @@ public class TypeDefault {
             Trie arrayList = new TrieList(ArrayList.class.getName(), Object.class.getName());
             trieMap.put(ArrayList.class.getName(), arrayList);
 
-            Trie mapTrie = new TrieDefault();
+            Trie mapTrie = new TrieDefault(Map.class.getName(), Object.class.getName(), Map.class.getSimpleName());
             mapTrie.insert(Suggestion.create(CLOSURE)
                     .insertValue("each { entry }")
                     .lookupToken("each")
@@ -101,7 +101,7 @@ public class TypeDefault {
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
-            // TODO: Add to string (to string should be inherited from object?)
+
             mapTrie.insert(Suggestion.create(CLOSURE)
                     .insertValue("eachWithIndex { entry, i ->  }")
                     .tailText("{ entry, i ->  }")
@@ -110,7 +110,6 @@ public class TypeDefault {
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
-            // TODO: Add to string method
 
             trieMap.put(Map.class.getName(), mapTrie);
 
