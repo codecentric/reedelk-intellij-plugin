@@ -4,7 +4,6 @@ import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
@@ -43,22 +42,16 @@ public class TrieDefault extends TrieAbstract {
     @Override
     public Collection<Suggestion> autocomplete(String token, TypeAndTries typeAndTrieMap) {
         Collection<Suggestion> autocomplete = super.autocomplete(token, typeAndTrieMap);
-        if (!Object.class.getName().equals(fullyQualifiedName)) {
-            Collection<Suggestion> extendsSuggestions = addExtendsTypeSuggestions(typeAndTrieMap, token);
+        // Object is the supertype of all types, therefore we don't look
+        // for extends suggestions for object types, otherwise we add suggestions,
+        // from the supertype.
+        if (!Object.class.getName().equals(fullyQualifiedName) && isNotBlank(extendsType)) {
+            Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType);
+            Collection<Suggestion> extendsSuggestions = currentTypeTrie.autocomplete(token, typeAndTrieMap);
             autocomplete.addAll(extendsSuggestions);
         }
+
         return autocomplete;
-    }
-
-
-    // All the extends type must contain the original
-    private Collection<Suggestion> addExtendsTypeSuggestions(TypeAndTries typeAndTrieMap, String token) {
-        if (isNotBlank(extendsType)) {
-            Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType);
-            return currentTypeTrie.autocomplete(token, typeAndTrieMap);
-        } else {
-            return Collections.emptyList();
-        }
     }
 
     protected String toSimpleName() {
