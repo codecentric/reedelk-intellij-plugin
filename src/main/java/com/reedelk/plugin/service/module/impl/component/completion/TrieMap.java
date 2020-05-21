@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.stream.Collectors.toList;
 
 public class TrieMap extends TrieDefault {
@@ -20,7 +21,7 @@ public class TrieMap extends TrieDefault {
     }
 
     public TrieMap(String typeFullyQualifiedName, String mapKeyType, String mapValueType) {
-        this(typeFullyQualifiedName, Map.class.getSimpleName(), mapKeyType, mapValueType);
+        this(typeFullyQualifiedName, null, mapKeyType, mapValueType);
     }
 
     // We always return the type, unless it starts with { in that case we return tye closure
@@ -51,9 +52,13 @@ public class TrieMap extends TrieDefault {
 
     @Override
     public String toSimpleName(TypeAndTries typeAndTries) {
-        String keyTypeSimpleName = mapKeyType(typeAndTries).toSimpleName(typeAndTries);
-        String valueTypeSimpleName = mapValueType(typeAndTries).toSimpleName(typeAndTries);
-        return String.format(FORMAT_MAP, keyTypeSimpleName, valueTypeSimpleName);
+        if (isNotBlank(displayName)) {
+            return displayName;
+        } else {
+            String keyTypeSimpleName = mapKeyType(typeAndTries).toSimpleName(typeAndTries);
+            String valueTypeSimpleName = mapValueType(typeAndTries).toSimpleName(typeAndTries);
+            return String.format(FORMAT_MAP, keyTypeSimpleName, valueTypeSimpleName);
+        }
     }
 
     private class TypeProxyClosureMap extends TypeProxyDefault {

@@ -97,7 +97,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieDefault(MapSecondType.class.getName(), String.class.getName(), Serializable.class.getName());
+            Trie trie = new TrieMap(MapSecondType.class.getName(), String.class.getName(), Serializable.class.getName());
             trie.insert(createPropertySuggestion("secondProperty1", String.class.getName(), typeAndTries));
             trie.insert(createPropertySuggestion("secondProperty2", long.class.getName(), typeAndTries));
             trieMap.put(MapSecondType.class.getName(), trie);

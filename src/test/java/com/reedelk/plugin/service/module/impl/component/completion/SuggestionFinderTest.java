@@ -61,6 +61,24 @@ class SuggestionFinderTest {
                         "payload",
                         "payload",
                         MapFirstType.class.getName(),
+                        "MapFirstType");
+    }
+
+    @Test
+    void shouldReturnCorrectSuggestionsForTypeMapWithoutDisplayName() {
+        // Given
+        PreviousComponentOutput output = createOutput(MapSecondType.class);
+        String[] tokens = new String[]{"message", "paylo"};
+
+        // When
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+
+        // Then
+        PluginAssertion.assertThat(suggestions).hasSize(1)
+                .contains(FUNCTION,
+                        "payload",
+                        "payload",
+                        MapSecondType.class.getName(),
                         "Map<String,Serializable>");
     }
 
@@ -158,21 +176,21 @@ class SuggestionFinderTest {
                         "eachWithIndex { it, i ->  }",
                         "eachWithIndex",
                         ListMapFirstType.class.getName(),
-                        "List<Map<String,Serializable>>");
+                        "List<MapFirstType>");
 
         PluginAssertion.assertThat(suggestions)
                 .contains(FUNCTION,
                         "each { it }",
                         "each",
                         ListMapFirstType.class.getName(),
-                        "List<Map<String,Serializable>>");
+                        "List<MapFirstType>");
 
         PluginAssertion.assertThat(suggestions)
                 .contains(FUNCTION,
                         "collect { it }",
                         "collect",
                         ListMapFirstType.class.getName(),
-                        "List<Map<String,Serializable>>");
+                        "List<MapFirstType>");
     }
 
     @Test
@@ -190,7 +208,7 @@ class SuggestionFinderTest {
                         "payload",
                         "payload",
                         FlattenedReturnType.class.getName(),
-                        "Map<String,Serializable>,Integer,String");
+                        "MapFirstType,Integer,String");
     }
 
     // Multiple output suggestions not flattened.
