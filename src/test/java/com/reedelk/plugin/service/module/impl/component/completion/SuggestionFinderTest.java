@@ -14,6 +14,7 @@ import static com.reedelk.plugin.service.module.impl.component.completion.Sugges
 import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.*;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,21 +36,21 @@ class SuggestionFinderTest {
     void shouldReturnCorrectSuggestionsForTypeString() {
         // Given
         PreviousComponentOutput output = createOutput(String.class);
-        String[] tokens = new String[] {"message", "paylo"};
+        String[] tokens = new String[]{"message", "paylo"};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(1)
-                .contains(FUNCTION,"payload", "payload", String.class.getName(), String.class.getSimpleName());
+                .contains(FUNCTION, "payload", "payload", String.class.getName(), String.class.getSimpleName());
     }
 
     @Test
     void shouldReturnCorrectSuggestionsForTypeMap() {
         // Given
         PreviousComponentOutput output = createOutput(MapFirstType.class);
-        String[] tokens = new String[] {"message", "paylo"};
+        String[] tokens = new String[]{"message", "paylo"};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
@@ -67,7 +68,7 @@ class SuggestionFinderTest {
     void shouldReturnCorrectSuggestionsForClosure() {
         // Given
         PreviousComponentOutput output = createOutput(MapFirstType.class);
-        String[] tokens = new String[] {"message", "payload", "each", "{", ""};
+        String[] tokens = new String[]{"message", "payload", "each", "{", ""};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
@@ -92,7 +93,7 @@ class SuggestionFinderTest {
     void shouldReturnCorrectMessagePayloadTypeListOfSomeKnownType() {
         // Given
         PreviousComponentOutput output = createOutput(ListMyItemType.class);
-        String[] tokens = new String[] {"message", "paylo"};
+        String[] tokens = new String[]{"message", "paylo"};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
@@ -110,7 +111,7 @@ class SuggestionFinderTest {
     void shouldReturnCorrectMessagePayloadTypeListOfSomeUnknownType() {
         // Given
         PreviousComponentOutput descriptor = createOutput(ListMyUnknownType.class);
-        String[] tokens = new String[] {"message", "paylo"};
+        String[] tokens = new String[]{"message", "paylo"};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
@@ -128,7 +129,7 @@ class SuggestionFinderTest {
     void shouldReturnToStringForListType() {
         // Given
         PreviousComponentOutput descriptor = createOutput(ListMyUnknownType.class);
-        String[] tokens = new String[] {"message", "payload", ""};
+        String[] tokens = new String[]{"message", "payload", ""};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
@@ -146,7 +147,7 @@ class SuggestionFinderTest {
     void shouldReturnClosureSuggestionsForListType() {
         // Given
         PreviousComponentOutput descriptor = createOutput(ListMapFirstType.class);
-        String[] tokens = new String[] {"message", "payload", ""};
+        String[] tokens = new String[]{"message", "payload", ""};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
@@ -178,7 +179,7 @@ class SuggestionFinderTest {
     void shouldCorrectlyFlattenReturnTypesWhenMultiple() {
         // Given
         PreviousComponentOutput output = createOutput(MapFirstType.class, Integer.class, String.class);
-        String[] tokens = new String[] {"message", "paylo"};
+        String[] tokens = new String[]{"message", "paylo"};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
@@ -197,7 +198,7 @@ class SuggestionFinderTest {
     void shouldReturnCorrectSuggestionsForPayloadTypeMap() {
         // Given
         PreviousComponentOutput output = createOutput(MapFirstType.class, MapSecondType.class, String.class);
-        String[] tokens = new String[] {"message", "payload", ""};
+        String[] tokens = new String[]{"message", "payload", ""};
 
         // When
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
@@ -241,69 +242,60 @@ class SuggestionFinderTest {
                         String.class.getSimpleName());
     }
 
-    /**
     @Test
-    void shouldReturnCorrectSuggestionsForPayloadWithMultipleReturnValues() {
+    void shouldReturnOnlyToStringWhenPreviousOutputIsNull() {
         // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(asList(MapFirstType.class.getName(), MapSecondType.class.getName()));
-        String[] tokens = new String[] {"message", "payload", ""};
+        String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, null);
 
         // Then
-        assertThat(suggestions).hasSize(8);
-        assertExistSuggestionWithName(suggestions, "find");
-        assertExistSuggestionWithName(suggestions, "size");
-        assertExistSuggestionWithName(suggestions, "each");
-        assertExistSuggestionWithName(suggestions, "eachWithIndex");
-        assertExistSuggestionWithName(suggestions, "firstProperty1");
-        assertExistSuggestionWithName(suggestions, "firstProperty2");
-        assertExistSuggestionWithName(suggestions, "secondProperty1");
-        assertExistSuggestionWithName(suggestions, "secondProperty2");
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "toString()",
+                        "toString",
+                        String.class.getName(),
+                        String.class.getSimpleName());
     }
 
     @Test
-    void shouldReturnEmptySuggestionsWhenMessagePayloadAndNullOutputDescriptor() {
+    void shouldReturnOnlyToStringWhenPreviousOutputHasEmptyPayloadTypes() {
         // Given
-        ComponentOutputDescriptor descriptor = null;
-        String[] tokens = new String[] {"message", "payload", ""};
+        PreviousComponentOutput output = createOutput(MapFirstType.class, MapSecondType.class, String.class);
+        String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
         // Then
-        assertThat(suggestions).isEmpty();
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "toString()",
+                        "toString",
+                        String.class.getName(),
+                        String.class.getSimpleName());
     }
 
+    // MyUnknown type is not registered.
     @Test
-    void shouldReturnEmptySuggestionsWhenMessagePayloadAndNullPayload() {
+    void shouldReturnOnlyToStringWhenPreviousOutputUnknownType() {
         // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(null);
-        String[] tokens = new String[] {"message", "payload", ""};
+        PreviousComponentOutput output = createOutput(MyUnknownType.class);
+        String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
         // Then
-        assertThat(suggestions).isEmpty();
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "toString()",
+                        "toString",
+                        String.class.getName(),
+                        String.class.getSimpleName());
     }
 
-    @Test
-    void shouldReturnEmptySuggestionsWhenMessagePayloadTypeIsUnknown() {
-        // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(singletonList(MyUnknownType.class.getName()));
-        String[] tokens = new String[] {"message", "payload", ""};
-
-        // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
-
-        // Then
-        assertThat(suggestions).isEmpty();
-    }
 
     // -------------------------------- Tests for --------------------------------
     // message.attributes() (we check that there are the correct suggestions for the dynamic attributes type)
@@ -311,45 +303,64 @@ class SuggestionFinderTest {
     @Test
     void shouldReturnCorrectSuggestionsForAttributeType() {
         // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setAttributes(singletonList(MyAttributeType.class.getName()));
-        String[] tokens = new String[] {"message", "attributes", ""};
+        PreviousComponentOutput output =
+                new PreviousComponentOutputDefault(singletonList(MyAttributeType.class.getName()), emptyList(), EMPTY);
+        String[] tokens = new String[]{"message", "attributes", ""};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
         // Then
-        assertThat(suggestions).hasSize(3);
-        assertExistSuggestionWithName(suggestions, "attributeProperty1");
-        assertExistSuggestionWithName(suggestions, "attributeProperty2");
-        assertExistSuggestionWithName(suggestions, "component");
+        PluginAssertion.assertThat(suggestions).hasSize(4)
+                .contains(PROPERTY,
+                        "attributeProperty1",
+                        "attributeProperty1",
+                        String.class.getName(),
+                        String.class.getSimpleName())
+                .contains(PROPERTY,
+                        "attributeProperty2",
+                        "attributeProperty2",
+                        long.class.getName(),
+                        long.class.getSimpleName())
+                .contains(PROPERTY,
+                        "component",
+                        "component",
+                        String.class.getName(),
+                        String.class.getSimpleName())
+                .contains(FUNCTION,
+                        "toString()",
+                        "toString",
+                        String.class.getName(),
+                        String.class.getSimpleName());
     }
 
     @Test
-    void shouldReturnCorrectDefaultSuggestionsForNullAttributeType() {
+    void shouldReturnCorrectDefaultSuggestionsForEmptyAttributeType() {
         // Given
-        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setAttributes(null);
-        String[] tokens = new String[] {"message", "attributes", ""};
+        PreviousComponentOutput output =
+                new PreviousComponentOutputDefault(emptyList(), emptyList(), EMPTY);
+        String[] tokens = new String[]{"message", "attributes", ""};
 
         // When
-        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
         // Then
-        assertThat(suggestions).hasSize(1);
-        assertExistSuggestionWithName(suggestions, "component");
-    }*/
+        PluginAssertion.assertThat(suggestions)
+                .contains(PROPERTY,
+                        "component",
+                        "component",
+                        String.class.getName(),
+                        String.class.getSimpleName())
+                .contains(FUNCTION,
+                        "toString()",
+                        "toString",
+                        String.class.getName(),
+                        String.class.getSimpleName());
+    }
 
-private PreviousComponentOutput createOutput(Class<?> ...payloadType) {
-    List<String> attributes = emptyList();
-    List<String> payload = Arrays.stream(payloadType).map(Class::getName).collect(toList());
-    return new PreviousComponentOutputDefault(attributes, payload, EMPTY);
-}
-
-    private void assertExistSuggestionWithName(Collection<Suggestion> suggestions, String expectedName) {
-        boolean found = suggestions.stream().anyMatch(suggestion -> expectedName.equals(suggestion.getInsertValue()));
-        assertThat(found)
-                .withFailMessage("Could not find suggestion with expected name=<%s>", expectedName)
-                .isTrue();
+    private PreviousComponentOutput createOutput(Class<?>... payloadType) {
+        List<String> attributes = emptyList();
+        List<String> payload = Arrays.stream(payloadType).map(Class::getName).collect(toList());
+        return new PreviousComponentOutputDefault(attributes, payload, EMPTY);
     }
 }

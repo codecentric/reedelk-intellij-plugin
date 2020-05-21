@@ -104,19 +104,6 @@ public class TypeTestUtils {
         }
     }
 
-    public static class MessageAttributeType implements TrieProvider {
-
-        private MessageAttributeType() {
-        }
-
-        @Override
-        public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieDefault();
-            trie.insert(createPropertySuggestion("component", String.class.getName(), typeAndTries));
-            trieMap.put(MessageAttributes.class.getName(), trie);
-        }
-    }
-
     public static class MyAttributeType extends MessageAttributes implements TrieProvider {
 
         private MyAttributeType() {
@@ -146,6 +133,19 @@ public class TypeTestUtils {
     }
 
     public static class MyUnknownType {
+    }
+
+    public static class MessageAttributeType implements TrieProvider {
+
+        private MessageAttributeType() {
+        }
+
+        @Override
+        public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
+            Trie trie = new TrieDefault(MessageAttributes.class.getName());
+            trie.insert(createPropertySuggestion("component", String.class.getName(), typeAndTries));
+            trieMap.put(MessageAttributes.class.getName(), trie);
+        }
     }
 
     public static class MessageType implements TrieProvider {

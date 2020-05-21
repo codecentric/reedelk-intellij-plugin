@@ -66,13 +66,16 @@ public class SuggestionFinder {
         return suggestionResults;
     }
 
-    private Collection<Suggestion> autocomplete(Trie current, String token, PreviousComponentOutput descriptor, boolean flatten) {
+    private Collection<Suggestion> autocomplete(Trie current, String token, PreviousComponentOutput previousOutput, boolean flatten) {
         Collection<Suggestion> suggestions = current.autocomplete(token, typeAndTrieMap);
         List<Suggestion> withDynamicSuggestions = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
-            if (suggestion.getReturnType().isDynamic()) {
+            // If there is no previous component output, we cannot infer anything, therefore
+            // there is no op to be done here, otherwise we call the output to build dynamic
+            // suggestions.
+            if (suggestion.getReturnType().isDynamic() && previousOutput != null) {
                 Collection<Suggestion> dynamicSuggestions =
-                        descriptor.buildDynamicSuggestions(this, suggestion, typeAndTrieMap, flatten);
+                        previousOutput.buildDynamicSuggestions(this, suggestion, typeAndTrieMap, flatten);
                 withDynamicSuggestions.addAll(dynamicSuggestions);
             } else {
                 withDynamicSuggestions.add(suggestion);
