@@ -84,7 +84,7 @@ class SuggestionFinderTest {
         // have the type of the 'MapFirstType' (<String, Serializable>).
         PluginAssertion.assertThat(suggestions).hasSize(2)
                 .contains(PROPERTY, "i", "i", String.class.getName(), String.class.getSimpleName())
-                .contains(PROPERTY, "each", "each", Serializable.class.getName(), Serializable.class.getSimpleName());
+                .contains(PROPERTY, "entry", "entry", Serializable.class.getName(), Serializable.class.getSimpleName());
     }
 
     /**
