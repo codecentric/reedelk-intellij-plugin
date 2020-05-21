@@ -12,8 +12,6 @@ import static java.util.Arrays.asList;
 
 public class TypeDefault {
 
-    public static final Trie EMPTY = new TrieDefault();
-
     public static final String DEFAULT_PAYLOAD = Object.class.getName();
     public static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
 
@@ -21,7 +19,7 @@ public class TypeDefault {
             asList(new TypeObject(), new TypeList(), new TypeMap());
 
     // Default script signature is message and context.
-    public static final Trie MESSAGE_AND_CONTEXT = new TrieDefault();
+    public static final Trie MESSAGE_AND_CONTEXT = new TrieRoot();
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .insertValue("message")

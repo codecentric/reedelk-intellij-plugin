@@ -31,8 +31,8 @@ public class TrieList extends TrieDefault {
     }
 
     @Override
-    public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
-        Collection<Suggestion> autocomplete = super.autocomplete(word, typeAndTrieMap);
+    public Collection<Suggestion> autocomplete(String token, TypeAndTries typeAndTrieMap) {
+        Collection<Suggestion> autocomplete = super.autocomplete(token, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
             if (suggestion.getType() == CLOSURE) {
                 // If the method accepts a closure in input
@@ -68,7 +68,7 @@ public class TrieList extends TrieDefault {
         }
     }
 
-    private static class TrieListClosureArguments extends TrieDefault {
+    private static class TrieListClosureArguments extends TrieRoot {
 
         private static final String ARG_IT = "it";
         private static final String ARG_I = "i";

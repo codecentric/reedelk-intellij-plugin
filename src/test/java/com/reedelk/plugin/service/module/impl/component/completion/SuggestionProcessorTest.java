@@ -36,7 +36,7 @@ class SuggestionProcessorTest {
     @BeforeEach
     void setUp() {
         moduleTypes = new HashMap<>();
-        moduleGlobalTypes = new TrieDefault();
+        moduleGlobalTypes = new TrieRoot();
         moduleSignatureTypes = new HashMap<>();
         allTypesMap = new TypeAndTries(moduleTypes);
         processor =

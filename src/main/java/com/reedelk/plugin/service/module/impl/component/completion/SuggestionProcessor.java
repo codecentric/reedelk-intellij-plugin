@@ -120,7 +120,7 @@ public class SuggestionProcessor {
     }
 
     private Trie createTrieFromScriptSignature(@NotNull ScriptSignatureDescriptor descriptor) {
-        Trie trie = new TrieDefault();
+        Trie trie = new TrieRoot();
         descriptor.getArguments()
                 .stream()
                 .map(scriptSignatureArgument -> SuggestionFactory.create(allTypesMap, scriptSignatureArgument))

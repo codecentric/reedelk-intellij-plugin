@@ -26,8 +26,8 @@ public class TrieMap extends TrieDefault {
 
     // We always return the type, unless it starts with { in that case we return tye closure
     @Override
-    public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
-        Collection<Suggestion> autocomplete = super.autocomplete(word, typeAndTrieMap);
+    public Collection<Suggestion> autocomplete(String token, TypeAndTries typeAndTrieMap) {
+        Collection<Suggestion> autocomplete = super.autocomplete(token, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
             if (suggestion.getType() == Suggestion.Type.CLOSURE) {
                 // If the method accepts a closure in input
@@ -75,7 +75,7 @@ public class TrieMap extends TrieDefault {
         }
     }
 
-    static class TrieMapClosureArguments extends TrieDefault {
+    static class TrieMapClosureArguments extends TrieRoot {
 
         private static final String ARG_ENTRY = "entry";
         private static final String ARG_I = "i";

@@ -94,7 +94,7 @@ class SuggestionFinderTest {
         // Then the closure has two properties: 'i' and 'each' to iterate the map content. 'i' and 'each' must
         // have the type of the 'MapFirstType' (<String, Serializable>).
         PluginAssertion.assertThat(suggestions)
-                .hasSize(3)
+                .hasSize(2)
                 .contains(PROPERTY,
                         "i",
                         "i",
@@ -222,7 +222,7 @@ class SuggestionFinderTest {
         Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
 
         // Then
-        assertThat(suggestions).hasSize(7);
+        assertThat(suggestions).hasSize(7); // TODO: Need to flatten the foreach for the two map types!
 
         PluginAssertion.assertThat(suggestions)
                 .contains(PROPERTY,

@@ -44,8 +44,8 @@ public class ClosureAware {
         }
 
         @Override
-        public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
-            if (word.equals(BEGIN_CLOSURE_SYMBOL)) {
+        public Collection<Suggestion> autocomplete(String token, TypeAndTries typeAndTrieMap) {
+            if (token.equals(BEGIN_CLOSURE_SYMBOL)) {
                 // beginning of a closure
                 Suggestion closureSymbolSuggestion = Suggestion.create(FUNCTION)
                         .insertValue(BEGIN_CLOSURE_SYMBOL)
@@ -53,7 +53,7 @@ public class ClosureAware {
                         .build();
                 return singletonList(closureSymbolSuggestion);
             } else {
-                return originalTypeTrie.autocomplete(word, typeAndTrieMap);
+                return originalTypeTrie.autocomplete(token, typeAndTrieMap);
             }
         }
 
