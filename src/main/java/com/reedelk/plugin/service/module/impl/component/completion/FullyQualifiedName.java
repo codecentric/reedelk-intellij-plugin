@@ -13,6 +13,7 @@ public class FullyQualifiedName {
 
     private static final String LIST_SIMPLE_NAME_AND_ITEM_TYPE_FORMAT = "%s : %s";
     private static final String FORMAT_LIST = "List<%s>";
+    private static final String FORMAT_MAP = "Map<%s,%s>";
 
     public static String toSimpleName(String original) {
         if (original == null) return EMPTY;
@@ -48,9 +49,14 @@ public class FullyQualifiedName {
 
     // Used by join
     public static String formatList(String listItemType, TypeAndTries typeAndTries) {
-        Trie listItemTypeTrie = typeAndTries.getOrDefault(listItemType);
-        String listItemTrieSimpleName = toSimpleName(listItemType, listItemTypeTrie, typeAndTries);
+        String listItemTrieSimpleName = toSimpleName(listItemType, typeAndTries);
         return String.format(FORMAT_LIST, listItemTrieSimpleName);
+    }
+
+    public static String formatMap(String mapKeyType, String mapValueType, TypeAndTries typeAndTries) {
+        String keyTypeSimpleName = toSimpleName(mapKeyType, typeAndTries);
+        String valueTypeSimpleName = toSimpleName(mapValueType, typeAndTries);
+        return String.format(FORMAT_MAP, keyTypeSimpleName, valueTypeSimpleName);
     }
 
     @NotNull

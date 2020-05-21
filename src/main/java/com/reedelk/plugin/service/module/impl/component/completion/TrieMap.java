@@ -28,7 +28,8 @@ public class TrieMap extends TrieDefault {
         return autocomplete.stream().map(suggestion -> {
             if (suggestion.getType() == Suggestion.Type.CLOSURE) {
                 // If the method accepts a closure in input
-                TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName);
+                TypeProxy mapTypeProxy = new TypeProxyClosureMap();
+                ClosureAware.TypeClosureAware newType = new ClosureAware.TypeClosureAware(fullyQualifiedName, mapTypeProxy);
                 return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
             } else {
                 return suggestion;
@@ -36,20 +37,6 @@ public class TrieMap extends TrieDefault {
         }).collect(toList());
     }
 
-
-    private class TypeClosureAware extends TypeProxyDefault {
-
-        TypeClosureAware(String typeFullyQualifiedName) {
-            super(typeFullyQualifiedName);
-        }
-
-        @Override
-        public Trie resolve(TypeAndTries typeAndTries) {
-            Trie originalTypeTrie = typeAndTries.getOrDefault(fullyQualifiedName);
-            TypeProxy mapTypeProxy = new TypeProxyClosureMap();
-            return new TrieClosureAware(originalTypeTrie, mapTypeProxy);
-        }
-    }
 
     private class TypeProxyClosureMap implements TypeProxy {
 
@@ -60,14 +47,12 @@ public class TrieMap extends TrieDefault {
 
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
-            String keyTypeSimpleName = FullyQualifiedName.toSimpleName(mapKeyType, typeAndTries);
-            String valueTypeSimpleName = FullyQualifiedName.toSimpleName(mapValueType, typeAndTries);
-            return String.format("Map<%s,%s>", keyTypeSimpleName, valueTypeSimpleName);
+            return FullyQualifiedName.formatMap(mapKeyType, mapValueType, typeAndTries);
         }
 
         @Override
         public String getTypeFullyQualifiedName() {
-            return TypeMapClosure.class.getName();
+            return TypeProxyClosureMap.class.getName();
         }
     }
 

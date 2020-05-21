@@ -4,6 +4,9 @@ import org.jetbrains.annotations.Nullable;
 
 public interface TypeProxy {
 
+    TypeProxy VOID = TypeProxy.create(Void.class.getSimpleName());
+    TypeProxy FLATTENED = TypeProxy.create(FlattenedReturnType.class);
+
     static TypeProxy create(Class<?> typeClazz) {
         return new TypeProxyDefault(typeClazz.getName());
     }

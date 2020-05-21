@@ -17,9 +17,6 @@ public class TypeDefault {
     public static final String DEFAULT_PAYLOAD = Object.class.getName();
     public static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
 
-    public static final String DEFAULT_RETURN_TYPE = Void.class.getSimpleName();
-    public static final TypeProxy FLATTENED_RETURN_TYPE_PROXY = TypeProxy.create(FlattenedReturnType.class);
-
     public static final Collection<BuiltInType> BUILT_IN_TYPE =
             asList(new TypeObject(), new TypeList(), new TypeMap());
 
@@ -55,7 +52,7 @@ public class TypeDefault {
                     .insertValue("each { entry }")
                     .lookupToken("each")
                     .tailText("{ entry }")
-                    .returnType(TypeProxy.create(TypeMapClosure.class))
+                    .returnType(TypeProxy.VOID)
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -64,7 +61,7 @@ public class TypeDefault {
                     .insertValue("eachWithIndex { entry, i ->  }")
                     .tailText("{ entry, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.create(TypeMapClosure.class))
+                    .returnType(TypeProxy.VOID)
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -84,7 +81,7 @@ public class TypeDefault {
                     .insertValue("each { it }")
                     .lookupToken("each")
                     .tailText("{ it }")
-                    .returnType(TypeProxy.create(TypeListClosure.class))
+                    .returnType(TypeProxy.VOID)
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -93,7 +90,7 @@ public class TypeDefault {
                     .insertValue("eachWithIndex { it, i ->  }")
                     .tailText("{ it, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.create(TypeListClosure.class))
+                    .returnType(TypeProxy.VOID)
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -102,7 +99,7 @@ public class TypeDefault {
                     .insertValue("collect { it }")
                     .tailText("{ it }")
                     .lookupToken("collect")
-                    .returnType(TypeProxy.create(TypeListClosure.class))
+                    .returnType(TypeProxy.VOID)
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -113,6 +110,7 @@ public class TypeDefault {
     }
 
     private static class TypeObject implements BuiltInType {
+
         @Override
         public void register(Map<String, Trie> typeTrieMap) {
             Trie objectTrie = new TrieDefault(Object.class.getName(), null, Object.class.getSimpleName());

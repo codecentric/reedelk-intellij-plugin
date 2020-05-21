@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.io.Serializable;
 import java.util.*;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.*;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Collections.emptyList;
@@ -139,25 +140,25 @@ class SuggestionFinderTest {
 
         // Then
         PluginAssertion.assertThat(suggestions)
-                .contains(CLOSURE,
+                .contains(FUNCTION,
                         "eachWithIndex { it, i ->  }",
                         "eachWithIndex",
-                        TypeListClosure.class.getName(),
-                        EMPTY);
+                        ListMapFirstType.class.getName(),
+                        "List<MapFirstType>");
 
         PluginAssertion.assertThat(suggestions)
-                .contains(CLOSURE,
+                .contains(FUNCTION,
                         "each { it }",
                         "each",
-                        TypeListClosure.class.getName(),
-                        EMPTY);
+                        ListMapFirstType.class.getName(),
+                        "List<MapFirstType>");
 
         PluginAssertion.assertThat(suggestions)
-                .contains(CLOSURE,
+                .contains(FUNCTION,
                         "collect { it }",
                         "collect",
-                        TypeListClosure.class.getName(),
-                        EMPTY);
+                        ListMapFirstType.class.getName(),
+                        "List<MapFirstType>");
     }
 
     @Test

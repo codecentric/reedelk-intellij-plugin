@@ -2,9 +2,9 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 public class TrieList extends TrieDefault {
 
@@ -29,19 +29,38 @@ public class TrieList extends TrieDefault {
     public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
         Collection<Suggestion> autocomplete = super.autocomplete(word, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
-            // If it is a closure, we must return the type of the closure arguments, such as it, entry ...
-            if (TypeListClosure.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
-                // TODO: Fixme
-              //  TypeProxy typeProxy = TypeProxy.createList(listItemType);
-                //return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, typeProxy);
+            if (suggestion.getType() == Suggestion.Type.CLOSURE) {
+                // If the method accepts a closure in input
+                TypeProxy listTypeProxy = new TypeProxyClosureList();
+                ClosureAware.TypeClosureAware newType = new ClosureAware.TypeClosureAware(fullyQualifiedName, listTypeProxy);
+                return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
+            } else {
+                return suggestion;
             }
-            return suggestion;
-        }).collect(Collectors.toList());
+        }).collect(toList());
     }
 
-    private class TrieListClosure extends TrieDefault {
+    private class TypeProxyClosureList implements TypeProxy {
 
-        public TrieListClosure(TypeAndTries typeAndTries) {
+        @Override
+        public Trie resolve(TypeAndTries typeAndTries) {
+            return new TrieListClosureArguments(typeAndTries);
+        }
+
+        @Override
+        public String toSimpleName(TypeAndTries typeAndTries) {
+            return FullyQualifiedName.formatList(listItemType, typeAndTries);
+        }
+
+        @Override
+        public String getTypeFullyQualifiedName() {
+            return TypeProxyClosureList.class.getName();
+        }
+    }
+
+    private class TrieListClosureArguments extends TrieDefault {
+
+        public TrieListClosureArguments(TypeAndTries typeAndTries) {
             TypeProxy listItemTypeProxy = TypeProxy.create(listItemType);
             insert(Suggestion.create(Suggestion.Type.PROPERTY)
                     .returnTypeDisplayValue(listItemTypeProxy.toSimpleName(typeAndTries))
