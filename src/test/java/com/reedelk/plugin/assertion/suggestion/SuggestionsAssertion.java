@@ -18,7 +18,7 @@ public class SuggestionsAssertion {
 
     public SuggestionsAssertion contains(Suggestion.Type expectedType,
                                          String expectedInsertValue,
-                                         String expectedLookupDisplayValue,
+                                         String expectedLookupToken,
                                          String expectedReturnTypeFullyQualifiedName,
                                          String expectedReturnTypeDisplayValue) {
         boolean found = suggestions.stream().anyMatch(suggestion -> {
@@ -29,7 +29,7 @@ public class SuggestionsAssertion {
             String actualReturnTypeDisplayValue = suggestion.getReturnTypeDisplayValue();
             return Objects.equals(actualType, expectedType) &&
                     Objects.equals(actualInsertValue, expectedInsertValue) &&
-                    Objects.equals(actualLookupToken, expectedLookupDisplayValue) &&
+                    Objects.equals(actualLookupToken, expectedLookupToken) &&
                     Objects.equals(actualTypeProxy, TypeProxy.create(expectedReturnTypeFullyQualifiedName)) &&
                     Objects.equals(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
                 });

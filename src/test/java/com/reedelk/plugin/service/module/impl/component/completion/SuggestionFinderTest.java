@@ -123,7 +123,8 @@ class SuggestionFinderTest {
                 .contains(FUNCTION,
                         "payload",
                         "payload",
-                        TypeTestUtils.ListMyItemType.class.getName(), "List<TypesTestUtils$MyUnknownType>");
+                        TypeTestUtils.ListMyUnknownType.class.getName(),
+                        "List<TypeTestUtils$MyUnknownType>");
     }
 
     /**

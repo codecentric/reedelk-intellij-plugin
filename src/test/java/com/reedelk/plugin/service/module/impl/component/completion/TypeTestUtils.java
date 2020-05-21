@@ -35,7 +35,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(Map<String, Trie> trieMap) {
-            TypeDefault.Types.register(trieMap);
+            TypeDefault.BUILT_IN_TYPE.forEach(builtInType -> builtInType.register(trieMap));
          }
     }
 
