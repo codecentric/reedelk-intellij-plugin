@@ -26,16 +26,6 @@ public class ClosureAware {
             Trie originalTypeTrie = typeAndTries.getOrDefault(getTypeFullyQualifiedName());
             return new ClosureAware.TrieClosureAware(originalTypeTrie, typeProxy);
         }
-
-        @Override
-        public boolean equals(Object o) {
-            return super.equals(o);
-        }
-
-        @Override
-        public int hashCode() {
-            return super.hashCode();
-        }
     }
 
     private static class TrieClosureAware extends TrieDefault {

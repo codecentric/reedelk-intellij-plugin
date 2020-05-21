@@ -26,11 +26,12 @@ public class SuggestionsAssertion {
             String actualInsertValue = suggestion.getInsertValue();
             String actualLookupToken = suggestion.getLookupToken();
             TypeProxy actualTypeProxy = suggestion.getReturnType();
+            TypeProxy expectedTypeProxy = TypeProxy.create(expectedReturnTypeFullyQualifiedName);
             String actualReturnTypeDisplayValue = suggestion.getReturnTypeDisplayValue();
             return Objects.equals(actualType, expectedType) &&
                     Objects.equals(actualInsertValue, expectedInsertValue) &&
                     Objects.equals(actualLookupToken, expectedLookupToken) &&
-                    Objects.equals(actualTypeProxy, TypeProxy.create(expectedReturnTypeFullyQualifiedName)) &&
+                    Objects.equals(actualTypeProxy, expectedTypeProxy) &&
                     Objects.equals(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
                 });
         assertThat(found)
