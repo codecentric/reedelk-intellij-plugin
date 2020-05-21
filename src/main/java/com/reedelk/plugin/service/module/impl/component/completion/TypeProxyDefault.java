@@ -10,7 +10,7 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class TypeProxyDefault implements TypeProxy {
 
-    private String typeFullyQualifiedName;
+    protected String typeFullyQualifiedName;
 
     public TypeProxyDefault(String typeFullyQualifiedName) {
         checkState(isNotBlank(typeFullyQualifiedName), "null type fully qualified name");

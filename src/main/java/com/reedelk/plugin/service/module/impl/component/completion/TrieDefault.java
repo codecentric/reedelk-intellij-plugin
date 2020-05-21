@@ -22,6 +22,12 @@ public class TrieDefault implements Trie {
         this.fullyQualifiedName = null;
     }
 
+    public TrieDefault(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
+        this.extendsType = Object.class.getName();
+        this.displayName = null;
+    }
+
     public TrieDefault(String fullyQualifiedName, String extendsType, String displayName) {
         this.root = new TrieNode();
         this.fullyQualifiedName = fullyQualifiedName;

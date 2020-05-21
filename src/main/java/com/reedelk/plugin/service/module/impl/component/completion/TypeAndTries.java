@@ -28,6 +28,6 @@ public class TypeAndTries {
             Trie typeInfo = typeAndTrie.get(fullyQualifiedTypeName);
             if (typeInfo != null) return typeInfo;
         }
-        return TypeDefault.EMPTY;
+        return new TrieDefault(fullyQualifiedTypeName);
     }
 }

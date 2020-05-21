@@ -22,7 +22,9 @@ public class SuggestionFinder {
     }
 
     public Collection<Suggestion> suggest(Trie root, String[] tokens, PreviousComponentOutput previousOutput) {
+
         Trie currentTrie = root;
+
         Collection<Suggestion> suggestionResults = new ArrayList<>();
 
         for (int i = 0; i < tokens.length; i++) {
@@ -39,7 +41,9 @@ public class SuggestionFinder {
 
             } else {
                 Collection<Suggestion> suggestions = autocomplete(currentTrie, currentToken, previousOutput, false);
+
                 List<Trie> exactMatchTries = new ArrayList<>();
+
                 for (Suggestion suggestion : suggestions) {
                     // We only need to find exact matches. If there are no exact matches,
                     // we can not move forward with the autocomplete.
@@ -55,6 +59,7 @@ public class SuggestionFinder {
                 // If there is at least one exact match, we can move forward to the
                 // next token with the autocomplete.
                 currentTrie = new TrieMultipleWrapper(exactMatchTries);
+
             }
         }
 

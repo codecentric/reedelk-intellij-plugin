@@ -28,21 +28,33 @@ public class ClosureAware {
             // Resolve to a dynamic trie returning the beginning of a closure or the original type
             // suggestions if the token is different from '{'. This is needed to continuously
             // be able to resolve types when a closure is closed, e.g map.each { entry.name }.myMethod
-            return new TrieDefault() {
-                @Override
-                public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
-                    if (word.equals(BEGIN_CLOSURE_SYMBOL)) {
-                        // beginning of a closure
-                        Suggestion build = Suggestion.create(FUNCTION)
-                                .returnType(typeProxy)
-                                .insertValue(BEGIN_CLOSURE_SYMBOL)
-                                .build();
-                        return singletonList(SuggestionFactory.copyWithType(typeAndTrieMap, build, typeProxy));
-                    } else {
-                        return originalTypeTrie.autocomplete(word, typeAndTrieMap);
-                    }
-                }
-            };
+            return new TrieClosureAware(typeFullyQualifiedName, originalTypeTrie, typeProxy);
+        }
+    }
+
+    private static class TrieClosureAware extends TrieDefault {
+
+        private final Trie originalTypeTrie;
+        private final TypeProxy typeProxy;
+
+        public TrieClosureAware(String fullyQualifiedName, Trie originalTypeTrie, TypeProxy typeProxy) {
+            super(fullyQualifiedName);
+            this.originalTypeTrie = originalTypeTrie;
+            this.typeProxy = typeProxy;
+        }
+
+        @Override
+        public Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap) {
+            if (word.equals(BEGIN_CLOSURE_SYMBOL)) {
+                // beginning of a closure
+                Suggestion build = Suggestion.create(FUNCTION)
+                        .returnType(typeProxy)
+                        .insertValue(BEGIN_CLOSURE_SYMBOL)
+                        .build();
+                return singletonList(SuggestionFactory.copyWithType(typeAndTrieMap, build, typeProxy));
+            } else {
+                return originalTypeTrie.autocomplete(word, typeAndTrieMap);
+            }
         }
     }
 }

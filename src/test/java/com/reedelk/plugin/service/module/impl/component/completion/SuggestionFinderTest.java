@@ -56,7 +56,11 @@ class SuggestionFinderTest {
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(1)
-                .contains(FUNCTION, "payload", "payload", MapFirstType.class.getName(), MapFirstType.class.getSimpleName());
+                .contains(FUNCTION,
+                        "payload",
+                        "payload",
+                        MapFirstType.class.getName(),
+                        "Map<String,Serializable>");
     }
 
     @Test
@@ -176,7 +180,7 @@ class SuggestionFinderTest {
                         "payload",
                         "payload",
                         FlattenedReturnType.class.getName(),
-                        "MapFirstType,Integer,String");
+                        "Map<String,Serializable>,Integer,String");
     }
 
     // Multiple output suggestions not flattened.
