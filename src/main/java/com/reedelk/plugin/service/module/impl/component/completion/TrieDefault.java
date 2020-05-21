@@ -43,7 +43,8 @@ public class TrieDefault implements Trie {
         Set<Suggestion> autocomplete = autocomplete(word);
 
         if (!Object.class.getName().equals(fullyQualifiedName)) {
-            List<Suggestion> extendsSuggestions = addExtendsTypeSuggestions(this, typeAndTrieMap, word);
+            Collection<Suggestion> extendsSuggestions =
+                    addExtendsTypeSuggestions(typeAndTrieMap, word);
             autocomplete.addAll(extendsSuggestions);
         }
         return autocomplete;
@@ -105,16 +106,13 @@ public class TrieDefault implements Trie {
     }
 
     // All the extends type must contain the original
-    private List<Suggestion> addExtendsTypeSuggestions(Trie currentTrie, TypeAndTries typeAndTrieMap, String token) {
-        List<Suggestion> suggestions = new ArrayList<>();
-        if (isNotBlank(currentTrie.extendsType())) {
-            String extendsType = currentTrie.extendsType();
+    private Collection<Suggestion> addExtendsTypeSuggestions(TypeAndTries typeAndTrieMap, String token) {
+        String extendsType = extendsType();
+        if (isNotBlank(extendsType)) {
             Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType);
-            Collection<Suggestion> autocomplete = currentTypeTrie.autocomplete(token, typeAndTrieMap);
-            suggestions.addAll(autocomplete);
-            List<Suggestion> suggestions1 = addExtendsTypeSuggestions(currentTypeTrie, typeAndTrieMap, token);
-            suggestions.addAll(suggestions1);
+            return currentTypeTrie.autocomplete(token, typeAndTrieMap);
+        } else {
+            return Collections.emptyList();
         }
-        return suggestions;
     }
 }

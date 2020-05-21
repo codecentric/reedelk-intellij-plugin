@@ -69,4 +69,11 @@ class TypeProxyDefault implements TypeProxy {
     public int hashCode() {
         return Objects.hash(typeFullyQualifiedName);
     }
+
+    @Override
+    public String toString() {
+        return "TypeProxyDefault{" +
+                "typeFullyQualifiedName='" + typeFullyQualifiedName + '\'' +
+                '}';
+    }
 }
