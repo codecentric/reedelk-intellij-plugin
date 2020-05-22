@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.CLOSURE;
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.stream.Collectors.toList;
@@ -64,28 +63,7 @@ public class TrieList extends TrieDefault {
         @Override
         public Trie resolve(TypeAndTries typeAndTries) {
             TypeProxy listItemTypeProxy = TypeProxy.create(listItemType);
-            return new TrieListClosureArguments(typeAndTries, listItemTypeProxy);
-        }
-    }
-
-    private static class TrieListClosureArguments extends TrieRoot {
-
-        private static final String ARG_IT = "it";
-        private static final String ARG_I = "i";
-
-        public TrieListClosureArguments(TypeAndTries typeAndTries, TypeProxy listItemTypeProxy) {
-            insert(Suggestion.create(PROPERTY)
-                    .returnTypeDisplayValue(listItemTypeProxy.resolve(typeAndTries).toSimpleName(typeAndTries))
-                    .returnType(listItemTypeProxy)
-                    .insertValue(ARG_IT)
-                    .build());
-
-            TypeProxy indexType = TypeProxy.INT; // the index is int
-            insert(Suggestion.create(PROPERTY)
-                    .returnTypeDisplayValue(indexType.resolve(typeAndTries).toSimpleName(typeAndTries))
-                    .returnType(indexType)
-                    .insertValue(ARG_I)
-                    .build());
+            return new TypeDefault.TypeList.TrieListClosureArguments(typeAndTries, listItemTypeProxy);
         }
     }
 }

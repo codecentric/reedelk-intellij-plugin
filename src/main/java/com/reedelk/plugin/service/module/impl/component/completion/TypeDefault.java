@@ -40,7 +40,7 @@ public class TypeDefault {
         void register(Map<String, Trie> typeTrieMap);
     }
 
-    private static class TypeMap implements BuiltInType {
+    public static class TypeMap implements BuiltInType {
 
         @Override
         public void register(Map<String, Trie> typeTrieMap) {
@@ -68,9 +68,29 @@ public class TypeDefault {
             Trie hashMap = new TrieMap(HashMap.class.getName(), Object.class.getName(), Object.class.getName());
             typeTrieMap.put(HashMap.class.getName(), hashMap);
         }
+
+        public static class TrieMapClosureArguments extends TrieRoot {
+
+            private static final String ARG_ENTRY = "entry";
+            private static final String ARG_I = "i";
+
+            public TrieMapClosureArguments(TypeProxy mapKeyType, TypeProxy mapValueType, TypeAndTries typeAndTries) {
+                insert(Suggestion.create(PROPERTY)
+                        .returnTypeDisplayValue(mapValueType.resolve(typeAndTries).toSimpleName(typeAndTries))
+                        .returnType(mapValueType)
+                        .insertValue(ARG_ENTRY)
+                        .build());
+
+                insert(Suggestion.create(PROPERTY)
+                        .returnTypeDisplayValue(mapKeyType.resolve(typeAndTries).toSimpleName(typeAndTries))
+                        .returnType(mapKeyType)
+                        .insertValue(ARG_I)
+                        .build());
+            }
+        }
     }
 
-    private static class TypeList implements BuiltInType {
+    public static class TypeList implements BuiltInType {
 
         @Override
         public void register(Map<String, Trie> typeTrieMap) {
@@ -106,6 +126,27 @@ public class TypeDefault {
 
             Trie arrayList = new TrieList(ArrayList.class.getName(), Object.class.getName());
             typeTrieMap.put(ArrayList.class.getName(), arrayList);
+        }
+
+        public static class TrieListClosureArguments extends TrieRoot {
+
+            private static final String ARG_IT = "it";
+            private static final String ARG_I = "i";
+
+            public TrieListClosureArguments(TypeAndTries typeAndTries, TypeProxy listItemTypeProxy) {
+                insert(Suggestion.create(PROPERTY)
+                        .returnTypeDisplayValue(listItemTypeProxy.resolve(typeAndTries).toSimpleName(typeAndTries))
+                        .returnType(listItemTypeProxy)
+                        .insertValue(ARG_IT)
+                        .build());
+
+                TypeProxy indexType = TypeProxy.INT; // the index is int
+                insert(Suggestion.create(PROPERTY)
+                        .returnTypeDisplayValue(indexType.resolve(typeAndTries).toSimpleName(typeAndTries))
+                        .returnType(indexType)
+                        .insertValue(ARG_I)
+                        .build());
+            }
         }
     }
 

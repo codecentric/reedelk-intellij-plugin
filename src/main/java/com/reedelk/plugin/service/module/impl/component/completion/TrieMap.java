@@ -3,7 +3,6 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.stream.Collectors.toList;
 
@@ -71,27 +70,7 @@ public class TrieMap extends TrieDefault {
         public Trie resolve(TypeAndTries typeAndTries) {
             TypeProxy mapValueTypeProxy = TypeProxy.create(mapValueType);
             TypeProxy mapKeyTypeProxy = TypeProxy.create(mapKeyType);
-            return new TrieMapClosureArguments(mapKeyTypeProxy, mapValueTypeProxy, typeAndTries);
-        }
-    }
-
-    static class TrieMapClosureArguments extends TrieRoot {
-
-        private static final String ARG_ENTRY = "entry";
-        private static final String ARG_I = "i";
-
-        public TrieMapClosureArguments(TypeProxy mapKeyType, TypeProxy mapValueType, TypeAndTries typeAndTries) {
-            insert(Suggestion.create(PROPERTY)
-                    .returnTypeDisplayValue(mapValueType.resolve(typeAndTries).toSimpleName(typeAndTries))
-                    .returnType(mapValueType)
-                    .insertValue(ARG_ENTRY)
-                    .build());
-
-            insert(Suggestion.create(PROPERTY)
-                    .returnTypeDisplayValue(mapKeyType.resolve(typeAndTries).toSimpleName(typeAndTries))
-                    .returnType(mapKeyType)
-                    .insertValue(ARG_I)
-                    .build());
+            return new TypeDefault.TypeMap.TrieMapClosureArguments(mapKeyTypeProxy, mapValueTypeProxy, typeAndTries);
         }
     }
 }

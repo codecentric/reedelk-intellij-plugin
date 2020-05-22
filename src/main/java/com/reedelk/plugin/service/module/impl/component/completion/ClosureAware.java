@@ -35,12 +35,12 @@ public class ClosureAware {
     private static class TrieClosureAware extends TrieDefault {
 
         private final Trie originalTypeTrie;
-        private final TypeProxy typeProxy;
+        private final TypeProxy closureReturnType;
 
-        public TrieClosureAware(String fullyQualifiedName, Trie originalTypeTrie, TypeProxy typeProxy) {
+        public TrieClosureAware(String fullyQualifiedName, Trie originalTypeTrie, TypeProxy closureReturnType) {
             super(fullyQualifiedName);
             this.originalTypeTrie = originalTypeTrie;
-            this.typeProxy = typeProxy;
+            this.closureReturnType = closureReturnType;
         }
 
         @Override
@@ -49,7 +49,7 @@ public class ClosureAware {
                 // beginning of a closure
                 Suggestion closureSymbolSuggestion = Suggestion.create(FUNCTION)
                         .insertValue(BEGIN_CLOSURE_SYMBOL)
-                        .returnType(typeProxy)
+                        .returnType(closureReturnType)
                         .build();
                 return singletonList(closureSymbolSuggestion);
             } else {
