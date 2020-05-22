@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -49,13 +50,28 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
-        return attributes(suggestionFinder, typeAndTries);
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
+        return attributes(suggester, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
-        return payload(suggestionFinder, typeAndTries);
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
+        return payload(suggester, typeAndTries);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PreviousComponentOutputDefault that = (PreviousComponentOutputDefault) o;
+        return Objects.equals(attributes, that.attributes) &&
+                Objects.equals(payload, that.payload) &&
+                Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attributes, payload, description);
     }
 
     // Resolves the dynamic type from the output descriptor
@@ -70,18 +86,18 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
         }
     }
 
-    protected MetadataTypeDTO attributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    protected MetadataTypeDTO attributes(SuggestionFinder suggester, TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> metadataTypes = attributes.stream()
                 .distinct() // we want to avoid creating data for the same type.
-                .map(attributeType -> createMetadataType(suggestionFinder, typeAndTries, TypeProxy.create(attributeType)))
+                .map(attributeType -> createMetadataType(suggester, typeAndTries, TypeProxy.create(attributeType)))
                 .collect(toList());
         return mergeMetadataTypes(metadataTypes, typeAndTries);
     }
 
-    protected List<MetadataTypeDTO> payload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    protected List<MetadataTypeDTO> payload(SuggestionFinder suggester, TypeAndTries typeAndTries) {
         return payload.stream()
                 .distinct()
-                .map(payloadType -> createMetadataType(suggestionFinder, typeAndTries, TypeProxy.create(payloadType)))
+                .map(payloadType -> createMetadataType(suggester, typeAndTries, TypeProxy.create(payloadType)))
                 .collect(toList());
     }
 }

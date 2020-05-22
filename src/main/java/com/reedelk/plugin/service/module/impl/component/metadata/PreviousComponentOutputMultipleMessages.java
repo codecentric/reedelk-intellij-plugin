@@ -12,7 +12,7 @@ import java.util.List;
 public class PreviousComponentOutputMultipleMessages implements PreviousComponentOutput {
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggester,
                                                           @NotNull Suggestion suggestion,
                                                           @NotNull TypeAndTries typeAndTrieMap) {
         return Collections.emptyList();
@@ -24,12 +24,12 @@ public class PreviousComponentOutputMultipleMessages implements PreviousComponen
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
         throw new UnsupportedOperationException();
     }
 }

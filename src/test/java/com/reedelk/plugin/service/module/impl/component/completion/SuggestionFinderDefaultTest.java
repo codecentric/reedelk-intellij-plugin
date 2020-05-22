@@ -19,14 +19,14 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-class SuggestionFinderTest extends AbstractCompletionTest {
+class SuggestionFinderDefaultTest extends AbstractCompletionTest {
 
     private Trie messageAndContextTrie = TypeDefault.MESSAGE_AND_CONTEXT;
-    private SuggestionFinder finder;
+    private SuggestionFinderDefault finder;
 
     @BeforeEach
     public void setUp() {
-        finder = new SuggestionFinder(typeAndTries);
+        finder = new SuggestionFinderDefault(typeAndTries);
     }
 
     // Verify dynamic return type computed correctly.

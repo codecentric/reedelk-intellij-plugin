@@ -43,7 +43,7 @@ class PlatformCompletionService implements PlatformModuleService {
     private final PlatformComponentMetadataService componentMetadataService;
 
     public PlatformCompletionService(Module module, PlatformModuleService moduleService) {
-        this.suggestionFinder = new SuggestionFinder(allTypes);
+        this.suggestionFinder = new SuggestionFinderDefault(allTypes);
         this.componentMetadataService = new PlatformComponentMetadataService(module, moduleService, suggestionFinder, allTypes);
     }
 

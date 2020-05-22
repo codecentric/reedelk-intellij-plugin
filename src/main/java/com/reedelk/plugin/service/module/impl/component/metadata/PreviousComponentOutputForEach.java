@@ -20,10 +20,11 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggester,
                                                           @NotNull Suggestion suggestion,
                                                           @NotNull TypeAndTries typeAndTrieMap) {
-        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap);
+        Collection<Suggestion> suggestions =
+                previousComponentOutput.buildDynamicSuggestions(suggester, suggestion, typeAndTrieMap);
         // We need to provide alternatives, and flatten only at the end
         if (suggestions.size() == 1) {
             // You need to extract  the list of all predecessors

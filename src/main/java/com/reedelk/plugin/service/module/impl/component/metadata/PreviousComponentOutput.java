@@ -11,15 +11,20 @@ import java.util.List;
 
 public interface PreviousComponentOutput {
 
-    @Nullable String description();
+    // Used by metadata service
+    @Nullable
+    String description();
 
-    MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder,
+    // Used by metadata service
+    MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggester,
                                   @NotNull TypeAndTries typeAndTries);
 
-    List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder,
+    // Used by metadata service
+    List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester,
                                      @NotNull TypeAndTries typeAndTries);
 
-    Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+    // Used by completion service.
+    Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggester,
                                                    @NotNull Suggestion suggestion,
                                                    @NotNull TypeAndTries typeAndTrieMap);
 }

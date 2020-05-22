@@ -25,13 +25,13 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggester,
                                                           @NotNull Suggestion suggestion,
                                                           @NotNull TypeAndTries typeAndTrieMap) {
         List<Suggestion> suggestions = new ArrayList<>();
         for (PreviousComponentOutput output : outputs) {
             Collection<Suggestion> currentSuggestions =
-                    output.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap);
+                    output.buildDynamicSuggestions(suggester, suggestion, typeAndTrieMap);
             suggestions.addAll(currentSuggestions);
         }
         return suggestions;
@@ -43,18 +43,18 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> attributesToMerge = outputs.stream()
-                .map(previousComponentOutput -> previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries))
+                .map(previousComponentOutput -> previousComponentOutput.mapAttributes(suggester, typeAndTries))
                 .collect(toList());
         return PreviousComponentOutputDefault.mergeMetadataTypes(attributesToMerge, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> payloads = new ArrayList<>();
         for (PreviousComponentOutput componentOutput : outputs) {
-            List<MetadataTypeDTO> metadata = componentOutput.mapPayload(suggestionFinder, typeAndTries);
+            List<MetadataTypeDTO> metadata = componentOutput.mapPayload(suggester, typeAndTries);
             payloads.addAll(metadata);
         }
 

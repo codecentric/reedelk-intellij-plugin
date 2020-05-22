@@ -22,14 +22,14 @@ public class PreviousComponentOutputCompound implements PreviousComponentOutput 
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggester,
                                                           @NotNull Suggestion suggestion,
                                                           @NotNull TypeAndTries typeAndTrieMap) {
         TypeProxy suggestionType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return attributes.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap);
+            return attributes.buildDynamicSuggestions(suggester, suggestion, typeAndTrieMap);
         } else if (MessagePayload.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return payload.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap);
+            return payload.buildDynamicSuggestions(suggester, suggestion, typeAndTrieMap);
         }  else {
             throw new IllegalStateException("Resolve must be called only if the suggestion type is dynamic");
         }
@@ -41,12 +41,12 @@ public class PreviousComponentOutputCompound implements PreviousComponentOutput 
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
-        return attributes.mapAttributes(suggestionFinder, typeAndTries);
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
+        return attributes.mapAttributes(suggester, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
-        return payload.mapPayload(suggestionFinder, typeAndTries);
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
+        return payload.mapPayload(suggester, typeAndTries);
     }
 }

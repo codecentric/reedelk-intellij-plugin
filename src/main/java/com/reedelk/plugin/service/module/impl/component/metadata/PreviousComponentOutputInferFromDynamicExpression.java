@@ -25,10 +25,10 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggester,
                                                           @NotNull Suggestion suggestion,
                                                           @NotNull TypeAndTries typeAndTrieMap) {
-        return suggestionsFromDynamicExpression(suggestionFinder)
+        return suggestionsFromDynamicExpression(suggester)
                 .stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())
@@ -47,24 +47,24 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
-        return previousOutput.mapAttributes(suggestionFinder, typeAndTries);
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
+        return previousOutput.mapAttributes(suggester, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
-        Collection<Suggestion> suggestions = suggestionsFromDynamicExpression(suggestionFinder);
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
+        Collection<Suggestion> suggestions = suggestionsFromDynamicExpression(suggester);
         return suggestions
                 .stream()
                 .map(Suggestion::getReturnType)
-                .map(typeProxy -> createMetadataType(suggestionFinder, typeAndTries, typeProxy))
+                .map(typeProxy -> createMetadataType(suggester, typeAndTries, typeProxy))
                 .collect(toList());
     }
 
     @NotNull
-    private Collection<Suggestion> suggestionsFromDynamicExpression(SuggestionFinder suggestionFinder) {
+    private Collection<Suggestion> suggestionsFromDynamicExpression(SuggestionFinder suggester) {
         String unwrap = ScriptUtils.unwrap(dynamicExpression);
         String[] tokens = Tokenizer.tokenize(unwrap, unwrap.length());
-        return suggestionFinder.suggest(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
+        return suggester.suggest(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
     }
 }

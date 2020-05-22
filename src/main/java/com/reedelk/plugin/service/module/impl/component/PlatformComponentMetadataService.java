@@ -23,19 +23,19 @@ class PlatformComponentMetadataService implements PlatformModuleService {
 
     private final Module module;
     private final TypeAndTries typeAndTries;
+    private final SuggestionFinder suggestionFinder;
+    private final PlatformModuleService moduleService;
     private final OnComponentMetadataEvent onComponentMetadataEvent;
     private final MetadataExpectedInputDTOBuilder metadataExpectedInputDTOBuilder;
-    private final PlatformModuleService moduleService;
-    private final SuggestionFinder suggestionFinder;
 
     public PlatformComponentMetadataService(@NotNull Module module,
                                             @NotNull PlatformModuleService moduleService,
                                             @NotNull SuggestionFinder suggestionFinder,
                                             @NotNull TypeAndTries typeAndTries) {
         this.module = module;
+        this.typeAndTries = typeAndTries;
         this.moduleService = moduleService;
         this.suggestionFinder = suggestionFinder;
-        this.typeAndTries = typeAndTries;
         this.metadataExpectedInputDTOBuilder = new MetadataExpectedInputDTOBuilder(moduleService, this.typeAndTries);
         this.onComponentMetadataEvent = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }

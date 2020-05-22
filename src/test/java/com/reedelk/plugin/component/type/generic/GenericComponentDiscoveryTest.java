@@ -1,18 +1,34 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.AbstractGraphTest;
+import com.reedelk.plugin.fixture.ComponentNode2;
 import com.reedelk.plugin.graph.FlowGraph;
+import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils;
+import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
+import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutputCompound;
+import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutputDefault;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class GenericComponentDiscoveryTest extends AbstractGraphTest {
-// TODO: Fixme
+
     @Mock
     private Module module;
     @Mock
@@ -20,7 +36,7 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
 
     private TypeAndTries typeAndTries;
 
-    private GenericComponentDiscovery discovery;
+    private TestableGenericComponentDiscovery discovery;
     private FlowGraph graph;
 
     @BeforeEach
@@ -33,13 +49,16 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
         graph.add(componentNode2, componentNode3);
 
         typeAndTries = new TypeAndTries();
-        discovery = new GenericComponentDiscovery(module, moduleService, typeAndTries);
+        discovery = spy(new TestableGenericComponentDiscovery(module, moduleService, typeAndTries));
+        lenient()
+                .doReturn(Optional.empty())
+                .when(discovery);
+               // .discover(any(ComponentContext.class), any(GraphNode.class));
     }
 
-    /**
     @Test
-    void shouldReturnDefaultOutputWhenComponentOutputDescriptorIsNull() {
-        // Given (component 1 is the predecessor of the current component we want to know the previous otuput from)
+    void shouldReturnDefaultOutputWhenComponentDescriptorOutputIsNull() {
+        // Given
         ComponentDescriptor descriptor = new ComponentDescriptor();
         doReturn(descriptor)
                 .when(moduleService)
@@ -47,18 +66,44 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
         ComponentContext componentContext = new ComponentContext(graph, componentNode3);
 
         // When
-        Optional<? extends ComponentOutputDescriptor> maybeActualOutput =
+        Optional<PreviousComponentOutput> maybeActualOutput =
                 discovery.compute(componentContext, componentNode2);
 
         // Then
         assertThat(maybeActualOutput).isPresent();
 
-        ComponentOutputDescriptor outputDescriptor = maybeActualOutput.get();
-        assertThat(outputDescriptor.getDescription()).isNull();
-        assertThat(outputDescriptor.getPayload()).isEqualTo(singletonList(Object.class.getName()));
-        assertThat(outputDescriptor.getAttributes()).isEqualTo(singletonList(MessageAttributes.class.getName()));
+        PreviousComponentOutput previousOutput = maybeActualOutput.get();
+        assertThat(previousOutput).isInstanceOf(PreviousComponentOutputDefault.class);
     }
 
+    @Test
+    void shouldReturnCompound() {
+        // Given
+        ComponentOutputDescriptor outputDescriptor = new ComponentOutputDescriptor();
+        outputDescriptor.setPayload(singletonList(TypeTestUtils.MyItemType.class.getName()));
+
+        ComponentDescriptor descriptor = new ComponentDescriptor();
+        descriptor.setOutput(outputDescriptor);
+
+        doReturn(descriptor)
+                .when(moduleService)
+                .componentDescriptorOf(ComponentNode2.class.getName());
+        ComponentContext componentContext = new ComponentContext(graph, componentNode3);
+
+        // When
+        Optional<PreviousComponentOutput> maybeActualOutput =
+                discovery.compute(componentContext, componentNode2);
+
+        // Then
+        assertThat(maybeActualOutput).isPresent();
+
+        PreviousComponentOutput previousOutput = maybeActualOutput.get();
+        assertThat(previousOutput).isInstanceOf(PreviousComponentOutputCompound.class);
+
+        // TODO: Continue
+    }
+
+    /**
     @Test
     void shouldReturnOutputWhenComponentOutputDescriptorIsDefined() {
         // Given
@@ -177,4 +222,17 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
         descriptor.setOutput(outputDescriptor);
         return descriptor;
     }*/
+
+    // We want to spy the discover, that's we we are extending it.
+    static class TestableGenericComponentDiscovery extends GenericComponentDiscovery {
+
+        public TestableGenericComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
+            super(module, moduleService, typeAndAndTries);
+        }
+
+        @Override
+        public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
+            return super.compute(context, currentNode);
+        }
+    }
 }

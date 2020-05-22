@@ -35,51 +35,51 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
                 new MetadataTypeItemDTO(dto1.name, dto1.value + ", " + dto2.value);
     }
 
-    protected MetadataTypeDTO createMetadataType(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {
+    protected MetadataTypeDTO createMetadataType(SuggestionFinder suggester, TypeAndTries typeAndTries, TypeProxy typeProxy) {
         if (typeProxy.resolve(typeAndTries).isList()) {
-            return unrollListType(suggestionFinder, typeAndTries, typeProxy);
+            return unrollListType(suggester, typeAndTries, typeProxy);
         } else {
-            List<Suggestion> typeSuggestions = suggestionsFromType(suggestionFinder, typeAndTries, typeProxy);
+            List<Suggestion> typeSuggestions = suggestionsFromType(suggester, typeAndTries, typeProxy);
             String propertyDisplayType = typeProxy.toSimpleName(typeAndTries);
             Collection<MetadataTypeItemDTO> typeProperties = new ArrayList<>();
             for (Suggestion suggestion : typeSuggestions) {
                 TypeProxy returnTypeProxy = suggestion.getReturnType();
                 MetadataTypeItemDTO typeProperty =
-                        createTypeProperties(suggestionFinder, typeAndTries, suggestion.getLookupToken(), returnTypeProxy);
+                        createTypeProperties(suggester, typeAndTries, suggestion.getLookupToken(), returnTypeProxy);
                 typeProperties.add(typeProperty);
             }
             return new MetadataTypeDTO(propertyDisplayType, typeProxy, typeProperties);
         }
     }
 
-    protected MetadataTypeItemDTO createTypeProperties(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, String lookupToken, TypeProxy typeProxy) {
-        List<Suggestion> typeSuggestions = suggestionsFromType(suggestionFinder, typeAndTries, typeProxy);
+    protected MetadataTypeItemDTO createTypeProperties(SuggestionFinder suggester, TypeAndTries typeAndTries, String lookupToken, TypeProxy typeProxy) {
+        List<Suggestion> typeSuggestions = suggestionsFromType(suggester, typeAndTries, typeProxy);
         if (typeSuggestions.isEmpty()) {
             if (typeProxy.resolve(typeAndTries).isList()) {
-                MetadataTypeDTO listComplexType = unrollListType(suggestionFinder, typeAndTries, typeProxy);
+                MetadataTypeDTO listComplexType = unrollListType(suggester, typeAndTries, typeProxy);
                 return new MetadataTypeItemDTO(lookupToken, listComplexType);
             } else {
                 String propertyDisplayType = typeProxy.toSimpleName(typeAndTries);
                 return new MetadataTypeItemDTO(lookupToken, propertyDisplayType);
             }
         } else {
-            MetadataTypeDTO metadataType = createMetadataType(suggestionFinder, typeAndTries, typeProxy);
+            MetadataTypeDTO metadataType = createMetadataType(suggester, typeAndTries, typeProxy);
             return new MetadataTypeItemDTO(lookupToken, metadataType);
         }
     }
 
     @NotNull
-    protected MetadataTypeDTO unrollListType(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, TypeProxy listTypeProxy) {
+    protected MetadataTypeDTO unrollListType(SuggestionFinder suggester, TypeAndTries typeAndTries, TypeProxy listTypeProxy) {
         // Unroll list item type
         TypeProxy listItemType = listTypeProxy.resolve(typeAndTries).listItemType(typeAndTries);
 
-        List<Suggestion> listTypeSuggestions = suggestionsFromType(suggestionFinder, typeAndTries, listItemType);
+        List<Suggestion> listTypeSuggestions = suggestionsFromType(suggester, typeAndTries, listItemType);
         Collection<MetadataTypeItemDTO> listTypeProperties = new ArrayList<>();
 
         for (Suggestion suggestion : listTypeSuggestions) {
             TypeProxy returnType = suggestion.getReturnType();
             MetadataTypeItemDTO typeProperty =
-                    createTypeProperties(suggestionFinder, typeAndTries, suggestion.getLookupToken(), returnType);
+                    createTypeProperties(suggester, typeAndTries, suggestion.getLookupToken(), returnType);
             listTypeProperties.add(typeProperty);
         }
 
@@ -90,9 +90,9 @@ abstract class AbstractPreviousComponentOutput implements PreviousComponentOutpu
         return new MetadataTypeDTO(listDisplayType, listTypeProxy, listTypeProperties);
     }
 
-    protected List<Suggestion> suggestionsFromType(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries, TypeProxy typeProxy) {
+    protected List<Suggestion> suggestionsFromType(SuggestionFinder suggester, TypeAndTries typeAndTries, TypeProxy typeProxy) {
         Trie typeTrie = typeProxy.resolve(typeAndTries);
-        return suggestionFinder.suggest(typeTrie, this)
+        return suggester.suggest(typeTrie, this)
                 .stream()
                 .filter(suggestion -> PROPERTY.equals(suggestion.getType()))
                 .collect(toList());

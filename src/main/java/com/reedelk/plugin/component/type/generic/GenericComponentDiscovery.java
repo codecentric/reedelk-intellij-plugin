@@ -30,11 +30,14 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         ComponentDescriptor componentDescriptor = moduleService.componentDescriptorOf(componentFullyQualifiedName);
 
         ComponentOutputDescriptor componentOutput = componentDescriptor.getOutput();
-        // If the component output has not been defined for this component we return empty.
-        if (componentOutput == null) return Optional.of(
-                new PreviousComponentOutputDefault(
-                        singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
-                        singletonList(TypeDefault.DEFAULT_PAYLOAD), DEFAULT_DESCRIPTION));
+
+        // If the component output has not been defined for this component we default output.
+        if (componentOutput == null) {
+            PreviousComponentOutputDefault defaultOutput = new PreviousComponentOutputDefault(
+                    singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
+                    singletonList(TypeDefault.DEFAULT_PAYLOAD), DEFAULT_DESCRIPTION);
+            return Optional.of(defaultOutput);
+        }
 
         // Here you might have components having 'PreviousComponent' only on attributes (e.g payload set),
         // this means that the payload type would be from the current component output but the attributes
@@ -44,10 +47,8 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         // previous(es) components, for example: Logger component.
         PreviousComponentOutput payload = payload(currentNode, context, componentOutput);
         PreviousComponentOutput attributes = attributes(currentNode, context, componentOutput);
-
         return Optional.of(new PreviousComponentOutputCompound(attributes, payload));
     }
-
 
     private PreviousComponentOutput payload(GraphNode currentNode,
                                             ComponentContext context,
@@ -66,8 +67,8 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
 
             // We need to recursively go back in the graph if the user specified that the payload
             // type must be taken from the previous component.
-            return discover(context, currentNode)
-                    .orElse(new PreviousComponentOutputDefault(
+            return discover(context, currentNode).orElse(
+                    new PreviousComponentOutputDefault(
                             singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
                             singletonList(TypeDefault.DEFAULT_PAYLOAD),
                             DEFAULT_DESCRIPTION));
@@ -116,6 +117,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
 
     private static final ComponentOutputDescriptor DEFAULT;
     private static final String DEFAULT_DESCRIPTION = StringUtils.EMPTY;
+
     static {
         DEFAULT = new ComponentOutputDescriptor();
         DEFAULT.setPayload(singletonList(TypeDefault.DEFAULT_PAYLOAD));
