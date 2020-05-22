@@ -18,7 +18,6 @@ import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class SuggestionFinderTest extends AbstractCompletionTest {
 
@@ -175,16 +174,12 @@ class SuggestionFinderTest extends AbstractCompletionTest {
                         "eachWithIndex { it, i ->  }",
                         "eachWithIndex",
                         ListMapFirstType.class.getName(),
-                        "List<MapFirstType>");
-
-        PluginAssertion.assertThat(suggestions)
+                        "List<MapFirstType>")
                 .contains(FUNCTION,
                         "each { it }",
                         "each",
                         ListMapFirstType.class.getName(),
-                        "List<MapFirstType>");
-
-        PluginAssertion.assertThat(suggestions)
+                        "List<MapFirstType>")
                 .contains(FUNCTION,
                         "collect { it }",
                         "collect",
@@ -221,42 +216,43 @@ class SuggestionFinderTest extends AbstractCompletionTest {
         Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
-        assertThat(suggestions).hasSize(7); // TODO: Need to flatten the foreach for the two map types!
-
-        PluginAssertion.assertThat(suggestions)
+        PluginAssertion.assertThat(suggestions).hasSize(7)
                 .contains(PROPERTY,
                         "firstProperty1",
                         "firstProperty1",
                         String.class.getName(),
-                        String.class.getSimpleName());
-
-        PluginAssertion.assertThat(suggestions)
+                        String.class.getSimpleName())
                 .contains(PROPERTY,
                         "firstProperty2",
                         "firstProperty2",
                         String.class.getName(),
-                        String.class.getSimpleName());
-
-        PluginAssertion.assertThat(suggestions)
+                        String.class.getSimpleName())
                 .contains(PROPERTY,
                         "secondProperty1",
                         "secondProperty1",
                         String.class.getName(),
-                        String.class.getSimpleName());
-
-        PluginAssertion.assertThat(suggestions)
+                        String.class.getSimpleName())
                 .contains(PROPERTY,
                         "secondProperty2",
                         "secondProperty2",
                         long.class.getName(),
-                        long.class.getSimpleName());
-
-        PluginAssertion.assertThat(suggestions)
+                        long.class.getSimpleName())
                 .contains(FUNCTION,
                         "toString()",
                         "toString",
                         String.class.getName(),
-                        String.class.getSimpleName());
+                        String.class.getSimpleName())
+                // Make sure that the two lambda aware functions are flattened
+                .contains(FUNCTION,
+                        "eachWithIndex { entry, i ->  }",
+                        "eachWithIndex",
+                        FlattenedReturnType.class.getName(),
+                        "MapFirstType,Map<String,Serializable>")
+                .contains(FUNCTION,
+                        "each { entry }",
+                        "each",
+                        FlattenedReturnType.class.getName(),
+                        "MapFirstType,Map<String,Serializable>");
     }
 
     @Test

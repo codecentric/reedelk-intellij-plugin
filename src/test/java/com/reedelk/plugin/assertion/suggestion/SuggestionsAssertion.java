@@ -3,7 +3,9 @@ package com.reedelk.plugin.assertion.suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,16 +30,26 @@ public class SuggestionsAssertion {
             TypeProxy actualTypeProxy = suggestion.getReturnType();
             TypeProxy expectedTypeProxy = TypeProxy.create(expectedReturnTypeFullyQualifiedName);
             String actualReturnTypeDisplayValue = suggestion.getReturnTypeDisplayValue();
+            boolean sameReturnType = sameReturnDisplayType(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
             return Objects.equals(actualType, expectedType) &&
                     Objects.equals(actualInsertValue, expectedInsertValue) &&
                     Objects.equals(actualLookupToken, expectedLookupToken) &&
                     Objects.equals(actualTypeProxy, expectedTypeProxy) &&
-                    Objects.equals(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
+                    sameReturnType;
                 });
         assertThat(found)
                 .withFailMessage("Could not find suggestion from collection: " + suggestions.toString())
                 .isTrue();
         return this;
+    }
+
+    // There might be multiple return types e.g Type1,Type2 and so on. We want to compare them
+    // without explicitly consider the order, e.g Type1,Type2 == Type2,Type1
+    private boolean sameReturnDisplayType(String actualReturnTypeDisplayValue, String expectedReturnTypeDisplayValue) {
+        String[] actualReturnDisplayTypeSegments = actualReturnTypeDisplayValue.split(",");
+        String[] expectedReturnDisplayTypeSegments = expectedReturnTypeDisplayValue.split(",");
+        return new HashSet<>(Arrays.asList(actualReturnDisplayTypeSegments))
+                .equals(new HashSet<>(Arrays.asList(expectedReturnDisplayTypeSegments)));
     }
 
     public SuggestionsAssertion contains(Suggestion expectedSuggestion) {
