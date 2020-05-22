@@ -1,7 +1,10 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.completion.Tokenizer;
-import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +27,8 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
                                                           @NotNull Suggestion suggestion,
-                                                          @NotNull TypeAndTries typeAndTrieMap,
-                                                          @NotNull FlattenStrategy flattenStrategy) {
-        Collection<Suggestion> dynamicSuggestions = suggestionsFromDynamicExpression(suggestionFinder)
+                                                          @NotNull TypeAndTries typeAndTrieMap) {
+        return suggestionsFromDynamicExpression(suggestionFinder)
                 .stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())
@@ -37,8 +39,6 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
                         .returnType(dynamicType.getReturnType())
                         .build())
                 .collect(toList());
-
-        return flattenStrategy.flatten(dynamicSuggestions, typeAndTrieMap);
     }
 
     @Override

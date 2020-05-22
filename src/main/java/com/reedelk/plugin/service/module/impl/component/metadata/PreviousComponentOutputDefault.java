@@ -28,9 +28,8 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
                                                           @NotNull Suggestion suggestion,
-                                                          @NotNull TypeAndTries typeAndTrieMap,
-                                                          @NotNull FlattenStrategy flattenStrategy) {
-        List<Suggestion> dynamicSuggestions = resolveDynamicTypes(suggestion)
+                                                          @NotNull TypeAndTries typeAndTrieMap) {
+        return resolveDynamicTypes(suggestion)
                 .stream()
                 .map(TypeProxy::create) // TODO: This is wrong, the type proxy might be join and so on....
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
@@ -42,8 +41,6 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
                         .returnType(dynamicType)
                         .build())
                 .collect(toList());
-
-        return flattenStrategy.flatten(dynamicSuggestions, typeAndTrieMap);
     }
 
     @Override

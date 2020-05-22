@@ -1,6 +1,9 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 import org.jetbrains.annotations.NotNull;
@@ -21,13 +24,12 @@ public class PreviousComponentOutputCompound implements PreviousComponentOutput 
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
                                                           @NotNull Suggestion suggestion,
-                                                          @NotNull TypeAndTries typeAndTrieMap,
-                                                          @NotNull FlattenStrategy flattenStrategy) {
+                                                          @NotNull TypeAndTries typeAndTrieMap) {
         TypeProxy suggestionType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return attributes.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flattenStrategy);
+            return attributes.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap);
         } else if (MessagePayload.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return payload.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flattenStrategy);
+            return payload.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap);
         }  else {
             throw new IllegalStateException("Resolve must be called only if the suggestion type is dynamic");
         }

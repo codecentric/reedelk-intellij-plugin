@@ -1,6 +1,9 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,9 +22,8 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
                                                           @NotNull Suggestion suggestion,
-                                                          @NotNull TypeAndTries typeAndTrieMap,
-                                                          @NotNull FlattenStrategy flattenStrategy) {
-        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flattenStrategy);
+                                                          @NotNull TypeAndTries typeAndTrieMap) {
+        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap);
         // We need to provide alternatives, and flatten only at the end
         if (suggestions.size() == 1) {
             // You need to extract  the list of all predecessors

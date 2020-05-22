@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.service.module.impl.component.completion.FlattenStrategy;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
@@ -15,8 +14,7 @@ public class PreviousComponentOutputMultipleMessages implements PreviousComponen
     @Override
     public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
                                                           @NotNull Suggestion suggestion,
-                                                          @NotNull TypeAndTries typeAndTrieMap,
-                                                          @NotNull FlattenStrategy flattenStrategy) {
+                                                          @NotNull TypeAndTries typeAndTrieMap) {
         return Collections.emptyList();
     }
 
