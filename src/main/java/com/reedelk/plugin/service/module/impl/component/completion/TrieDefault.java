@@ -61,6 +61,9 @@ public class TrieDefault extends TrieAbstract {
         } else if (StringUtils.isBlank(fullyQualifiedName)) {
             return StringUtils.EMPTY;
 
+        } else if (Void.class.getName().equals(fullyQualifiedName)) {
+            return Void.class.getSimpleName().toLowerCase();
+
         } else {
             String[] splits = fullyQualifiedName.split(","); // might be multiple types
             List<String> tmp = new ArrayList<>();
