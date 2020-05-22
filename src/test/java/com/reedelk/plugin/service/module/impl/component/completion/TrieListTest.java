@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TrieListTest extends AbstractCompletionTest {
@@ -87,10 +88,24 @@ class TrieListTest extends AbstractCompletionTest {
 
         // When
         Collection<Suggestion> suggestions = trie.autocomplete("ea", typeAndTries);
+        Trie closureTrie = suggestions.iterator().next().getReturnType().resolve(typeAndTries);
+        Collection<Suggestion> closureSuggestions = closureTrie.autocomplete("{", typeAndTries);
+        Trie closureArgumentsTrie = closureSuggestions.iterator().next().getReturnType().resolve(typeAndTries);
+        Collection<Suggestion> closureArguments = closureArgumentsTrie.autocomplete("", typeAndTries);
 
         // Then
         // each and eachWithIndex
-        PluginAssertion.assertThat(suggestions).hasSize(2);
+        PluginAssertion.assertThat(closureArguments).hasSize(2)
+                .contains(PROPERTY,
+                        "it",
+                        "it",
+                        TypeTestUtils.MyItemType.class.getName(),
+                        "TypeTestUtils$MyItemType")
+                .contains(PROPERTY,
+                        "i",
+                        "i",
+                        int.class.getName(),
+                        int.class.getSimpleName());
     }
 
     static class MyCustomListType extends ArrayList<TypeTestUtils.MyItemType> {
