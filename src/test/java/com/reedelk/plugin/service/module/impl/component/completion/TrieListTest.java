@@ -36,10 +36,13 @@ class TrieListTest extends AbstractCompletionTest {
     @Test
     void shouldReturnCorrectListItemType() {
         // Given
+        Trie trie = new TrieList(MyCustomListType.class.getName(), List.class.getName(), "MyList", TypeTestUtils.MyItemType.class.getName());
 
         // When
+        TypeProxy listItemType = trie.listItemType(typeAndTries);
 
         // Then
+        assertThat(listItemType.getTypeFullyQualifiedName()).isEqualTo(TypeTestUtils.MyItemType.class.getName());
     }
 
     static class MyCustomListType extends ArrayList<TypeTestUtils.MyItemType> {

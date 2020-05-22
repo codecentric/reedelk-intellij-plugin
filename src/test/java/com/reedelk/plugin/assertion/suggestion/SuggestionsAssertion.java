@@ -1,7 +1,6 @@
 package com.reedelk.plugin.assertion.suggestion;
 
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,15 +26,13 @@ public class SuggestionsAssertion {
             Suggestion.Type actualType = suggestion.getType();
             String actualInsertValue = suggestion.getInsertValue();
             String actualLookupToken = suggestion.getLookupToken();
-            TypeProxy actualTypeProxy = suggestion.getReturnType();
-            TypeProxy expectedTypeProxy = TypeProxy.create(expectedReturnTypeFullyQualifiedName);
+            String actualTypeProxy = suggestion.getReturnType().getTypeFullyQualifiedName();
             String actualReturnTypeDisplayValue = suggestion.getReturnTypeDisplayValue();
-            boolean sameReturnType = sameReturnDisplayType(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
             return Objects.equals(actualType, expectedType) &&
                     Objects.equals(actualInsertValue, expectedInsertValue) &&
                     Objects.equals(actualLookupToken, expectedLookupToken) &&
-                    Objects.equals(actualTypeProxy, expectedTypeProxy) &&
-                    sameReturnType;
+                    Objects.equals(actualTypeProxy, expectedReturnTypeFullyQualifiedName) &&
+                    sameReturnDisplayType(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
                 });
         assertThat(found)
                 .withFailMessage("Could not find suggestion from collection: " + suggestions.toString())

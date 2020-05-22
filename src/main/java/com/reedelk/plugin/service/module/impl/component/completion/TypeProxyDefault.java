@@ -1,7 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import java.util.Objects;
-
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
@@ -27,19 +25,6 @@ public class TypeProxyDefault implements TypeProxy {
     @Override
     public String toSimpleName(TypeAndTries typeAndTries) {
         return resolve(typeAndTries).toSimpleName(typeAndTries);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || !o.getClass().isAssignableFrom(this.getClass())) return false;
-        TypeProxyDefault that = (TypeProxyDefault) o;
-        return Objects.equals(typeFullyQualifiedName, that.typeFullyQualifiedName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(typeFullyQualifiedName);
     }
 
     @Override
