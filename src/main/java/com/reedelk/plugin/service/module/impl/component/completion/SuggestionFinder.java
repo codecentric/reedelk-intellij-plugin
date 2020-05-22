@@ -37,10 +37,11 @@ public class SuggestionFinder {
 
             } else if (i == tokens.length - 1) {
 
-                suggestionResults = autocomplete(currentTrie, currentToken, previousOutput, true);
+                suggestionResults = autocomplete(currentTrie, currentToken, previousOutput, FlattenStrategy.ALL);
 
             } else {
-                Collection<Suggestion> suggestions = autocomplete(currentTrie, currentToken, previousOutput, false);
+
+                Collection<Suggestion> suggestions = autocomplete(currentTrie, currentToken, previousOutput, FlattenStrategy.NEVER);
 
                 List<Trie> exactMatchTries = new ArrayList<>();
 
@@ -66,16 +67,15 @@ public class SuggestionFinder {
         return suggestionResults;
     }
 
-    private Collection<Suggestion> autocomplete(Trie current, String token, PreviousComponentOutput previousOutput, boolean flatten) {
+    private Collection<Suggestion> autocomplete(Trie current, String token, PreviousComponentOutput previousOutput, FlattenStrategy flattenStrategy) {
         Collection<Suggestion> suggestions = current.autocomplete(token, typeAndTrieMap);
         List<Suggestion> withDynamicSuggestions = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
             // If there is no previous component output, we cannot infer anything, therefore
-            // there is no op to be done here, otherwise we call the output to build dynamic
-            // suggestions.
+            // there is no op to be done here, otherwise we call the output to build dynamic suggestions.
             if (suggestion.getReturnType().isDynamic() && previousOutput != null) {
                 Collection<Suggestion> dynamicSuggestions =
-                        previousOutput.buildDynamicSuggestions(this, suggestion, typeAndTrieMap, flatten);
+                        previousOutput.buildDynamicSuggestions(this, suggestion, typeAndTrieMap, flattenStrategy);
                 withDynamicSuggestions.addAll(dynamicSuggestions);
             } else {
                 withDynamicSuggestions.add(suggestion);

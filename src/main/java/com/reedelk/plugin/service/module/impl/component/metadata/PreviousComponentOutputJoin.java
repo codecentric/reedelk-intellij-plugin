@@ -2,6 +2,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,13 +22,16 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+                                                          @NotNull Suggestion suggestion,
+                                                          @NotNull TypeAndTries typeAndTrieMap,
+                                                          @NotNull FlattenStrategy flattenStrategy) {
         // TODO: Create artificial type proxy because it is a list of the suggestions ....
 
         // Output is List<Of all the types>
         List<Suggestion> suggestions = new ArrayList<>();
         outputs.forEach(previousComponentOutput ->
-                suggestions.addAll(previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flatten)));
+                suggestions.addAll(previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flattenStrategy)));
         return suggestions;
     }
 
@@ -37,7 +41,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> attributesToMerge = outputs.stream()
                 .map(previousComponentOutput -> previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries))
                 .collect(toList());
@@ -45,7 +49,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         // The output is a List of types, if the types are all the same
         List<MetadataTypeDTO> allTypes = new ArrayList<>();
 

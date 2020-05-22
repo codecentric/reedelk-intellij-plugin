@@ -1,10 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.completion.Tokenizer;
-import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
-import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
+import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class PreviousComponentOutputInferFromDynamicExpression extends AbstractPreviousComponentOutput {
@@ -26,7 +22,10 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+                                                          @NotNull Suggestion suggestion,
+                                                          @NotNull TypeAndTries typeAndTrieMap,
+                                                          @NotNull FlattenStrategy flattenStrategy) {
         Collection<Suggestion> dynamicSuggestions = suggestionsFromDynamicExpression(suggestionFinder)
                 .stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
@@ -39,9 +38,7 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
                         .build())
                 .collect(toList());
 
-        return flatten ?
-                singletonList(flatten(dynamicSuggestions, typeAndTrieMap)) :
-                dynamicSuggestions;
+        return flattenStrategy.flatten(dynamicSuggestions, typeAndTrieMap);
     }
 
     @Override
@@ -50,12 +47,12 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         return previousOutput.mapAttributes(suggestionFinder, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         Collection<Suggestion> suggestions = suggestionsFromDynamicExpression(suggestionFinder);
         return suggestions
                 .stream()

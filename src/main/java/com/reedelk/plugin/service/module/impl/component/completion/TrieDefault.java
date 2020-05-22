@@ -13,19 +13,19 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class TrieDefault extends TrieAbstract {
 
+    protected final String fullyQualifiedName;
     protected final String extendsType;
     protected final String displayName;
-    protected final String fullyQualifiedName;
 
     public TrieDefault(String fullyQualifiedName) {
-        this(fullyQualifiedName, Object.class.getName(), null);
+        this(fullyQualifiedName, null, null);
     }
 
     public TrieDefault(String fullyQualifiedName, String extendsType, String displayName) {
         checkNotNull(fullyQualifiedName, "fullyQualifiedName");
-        this.displayName = displayName;
-        this.fullyQualifiedName = fullyQualifiedName;
         this.extendsType = isBlank(extendsType) ? Object.class.getName() : extendsType; // every type inherits from object.
+        this.fullyQualifiedName = fullyQualifiedName;
+        this.displayName = displayName;
     }
 
     @Override

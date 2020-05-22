@@ -3,6 +3,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +26,10 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+                                                          @NotNull Suggestion suggestion,
+                                                          @NotNull TypeAndTries typeAndTrieMap,
+                                                          @NotNull FlattenStrategy flattenStrategy) {
         List<Suggestion> dynamicSuggestions = resolveDynamicTypes(suggestion)
                 .stream()
                 .map(TypeProxy::create) // TODO: This is wrong, the type proxy might be join and so on....
@@ -39,12 +43,7 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
                         .build())
                 .collect(toList());
 
-        if (flatten) {
-            Suggestion flattenedSuggestions = flatten(dynamicSuggestions, typeAndTrieMap);
-            return singletonList(flattenedSuggestions);
-        } else {
-            return dynamicSuggestions;
-        }
+        return flattenStrategy.flatten(dynamicSuggestions, typeAndTrieMap);
     }
 
     @Override
@@ -53,12 +52,12 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         return attributes(suggestionFinder, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         return payload(suggestionFinder, typeAndTries);
     }
 

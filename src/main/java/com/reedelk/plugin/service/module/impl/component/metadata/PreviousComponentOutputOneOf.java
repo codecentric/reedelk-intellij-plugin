@@ -1,10 +1,8 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
-import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
+import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,11 +22,14 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+                                                          @NotNull Suggestion suggestion,
+                                                          @NotNull TypeAndTries typeAndTrieMap,
+                                                          @NotNull FlattenStrategy flattenStrategy) {
         List<Suggestion> suggestions = new ArrayList<>();
         for (PreviousComponentOutput output : outputs) {
             Collection<Suggestion> currentSuggestions =
-                    output.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flatten);
+                    output.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flattenStrategy);
             suggestions.addAll(currentSuggestions);
         }
         return suggestions;
@@ -40,7 +41,7 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> attributesToMerge = outputs.stream()
                 .map(previousComponentOutput -> previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries))
                 .collect(toList());
@@ -48,7 +49,7 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> payloads = new ArrayList<>();
         for (PreviousComponentOutput componentOutput : outputs) {
             List<MetadataTypeDTO> metadata = componentOutput.mapPayload(suggestionFinder, typeAndTries);

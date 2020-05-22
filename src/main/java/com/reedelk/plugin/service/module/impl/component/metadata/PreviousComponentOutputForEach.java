@@ -1,10 +1,8 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
-import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
+import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,8 +17,11 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
     }
 
     @Override
-    public Collection<Suggestion> buildDynamicSuggestions(SuggestionFinder suggestionFinder, Suggestion suggestion, TypeAndTries typeAndTrieMap, boolean flatten) {
-        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, false);
+    public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggestionFinder,
+                                                          @NotNull Suggestion suggestion,
+                                                          @NotNull TypeAndTries typeAndTrieMap,
+                                                          @NotNull FlattenStrategy flattenStrategy) {
+        Collection<Suggestion> suggestions = previousComponentOutput.buildDynamicSuggestions(suggestionFinder, suggestion, typeAndTrieMap, flattenStrategy);
         // We need to provide alternatives, and flatten only at the end
         if (suggestions.size() == 1) {
             // You need to extract  the list of all predecessors
@@ -50,12 +51,12 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
     }
 
     @Override
-    public MetadataTypeDTO mapAttributes(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         return previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries);
     }
 
     @Override
-    public List<MetadataTypeDTO> mapPayload(SuggestionFinder suggestionFinder, TypeAndTries typeAndTries) {
+    public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> metadataTypeDTOS = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
         if (metadataTypeDTOS.size() == 1) {
             MetadataTypeDTO metadataTypeDTO = metadataTypeDTOS.stream().findFirst().get();
