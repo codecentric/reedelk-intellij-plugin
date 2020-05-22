@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import java.util.Collection;
-import java.util.List;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.CLOSURE;
 import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
@@ -14,14 +13,10 @@ public class TrieList extends TrieDefault {
 
     private final String listItemType;
 
-    public TrieList(String typeFullyQualifiedName, String displayName, String listItemType) {
-        super(typeFullyQualifiedName, List.class.getName(), displayName);
+    public TrieList(String typeFullyQualifiedName, String extendsType, String displayName, String listItemType) {
+        super(typeFullyQualifiedName, extendsType, displayName);
         checkNotNull(listItemType, "listItemType");
         this.listItemType = listItemType;
-    }
-
-    public TrieList(String typeFullyQualifiedName, String listItemType) {
-        this(typeFullyQualifiedName, null, listItemType);
     }
 
     @Override
@@ -34,7 +29,8 @@ public class TrieList extends TrieDefault {
         Collection<Suggestion> autocomplete = super.autocomplete(token, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
             if (suggestion.getType() == CLOSURE) {
-                // If the method accepts a closure in input
+                // If the method accepts a closure in input we need to replace the suggestion
+                // with the closure aware completion type trie.
                 TypeProxy listTypeProxy = new TypeProxyClosureList();
                 ClosureAware.TypeClosureAware newType = new ClosureAware.TypeClosureAware(fullyQualifiedName, listTypeProxy);
                 return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);

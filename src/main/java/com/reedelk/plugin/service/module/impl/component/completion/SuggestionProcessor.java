@@ -7,12 +7,12 @@ import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.ScriptSignatureDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
-import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class SuggestionProcessor {
 
@@ -39,16 +39,16 @@ public class SuggestionProcessor {
             // We first must register all the tries and then the functions. Because one function
             // might depend on a trie of another type previously defined in the same module.
             String typeFullyQualifiedName = typeDescriptor.getType();
-            String extendsType = typeDescriptor.getExtendsType();
             String listItemType = typeDescriptor.getListItemType();
-            String displayName = typeDescriptor.getDisplayName();
-            String mapKeyType = typeDescriptor.getMapKeyType();
             String mapValueType = typeDescriptor.getMapValueType();
+            String mapKeyType = typeDescriptor.getMapKeyType();
+            String extendsType = typeDescriptor.getExtendsType();
+            String displayName = typeDescriptor.getDisplayName();
             Trie typeTrie;
-            if (StringUtils.isNotBlank(listItemType)) {
-                typeTrie = new TrieList(typeFullyQualifiedName, displayName, listItemType);
-            } else if (StringUtils.isNotBlank(mapValueType)) {
-                typeTrie = new TrieMap(typeFullyQualifiedName, displayName, mapKeyType, mapValueType);
+            if (isNotBlank(listItemType)) {
+                typeTrie = new TrieList(typeFullyQualifiedName, extendsType, displayName, listItemType);
+            } else if (isNotBlank(mapValueType)) {
+                typeTrie = new TrieMap(typeFullyQualifiedName, extendsType, displayName, mapKeyType, mapValueType);
             } else {
                 typeTrie = new TrieDefault(typeFullyQualifiedName, extendsType, displayName);
             }

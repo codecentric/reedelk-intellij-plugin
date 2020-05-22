@@ -48,7 +48,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieList(ListMapFirstType.class.getName(), MapFirstType.class.getName());
+            Trie trie = new TrieList(ListMapFirstType.class.getName(), List.class.getName(), null, MapFirstType.class.getName());
             trieMap.put(ListMapFirstType.class.getName(), trie);
         }
     }
@@ -60,7 +60,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieList(ListMyItemType.class.getName(), MyItemType.class.getName());
+            Trie trie = new TrieList(ListMyItemType.class.getName(), List.class.getName(), null, MyItemType.class.getName());
             trieMap.put(ListMyItemType.class.getName(), trie);
         }
     }
@@ -72,7 +72,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieList(ListMyUnknownType.class.getName(), MyUnknownType.class.getName());
+            Trie trie = new TrieList(ListMyUnknownType.class.getName(), List.class.getName(), null, MyUnknownType.class.getName());
             trieMap.put(ListMyUnknownType.class.getName(), trie);
         }
     }
@@ -85,7 +85,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieMap(MapFirstType.class.getName(), MapFirstType.class.getSimpleName(), String.class.getName(), Serializable.class.getName());
+            Trie trie = new TrieMap(MapFirstType.class.getName(), Map.class.getName(), MapFirstType.class.getSimpleName(), String.class.getName(), Serializable.class.getName());
             trie.insert(createPropertySuggestion("firstProperty1", String.class.getName(), typeAndTries));
             trie.insert(createPropertySuggestion("firstProperty2", String.class.getName(), typeAndTries));
             trieMap.put(MapFirstType.class.getName(), trie);
@@ -99,7 +99,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieMap(MapSecondType.class.getName(), String.class.getName(), Serializable.class.getName());
+            Trie trie = new TrieMap(MapSecondType.class.getName(), Map.class.getName(), null, String.class.getName(), Serializable.class.getName());
             trie.insert(createPropertySuggestion("secondProperty1", String.class.getName(), typeAndTries));
             trie.insert(createPropertySuggestion("secondProperty2", long.class.getName(), typeAndTries));
             trieMap.put(MapSecondType.class.getName(), trie);

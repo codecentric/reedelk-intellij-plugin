@@ -103,7 +103,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         @Override
         public Trie resolve(TypeAndTries typeAndTries) {
-            return new TrieList(OnTheFlyTypeProxy.class.getName(), listItem);
+            return new TrieList(OnTheFlyTypeProxy.class.getName(), List.class.getName(), List.class.getSimpleName(), listItem);
         }
 
     }

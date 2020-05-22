@@ -65,7 +65,12 @@ public class TypeDefault {
                     .cursorOffset(2)
                     .build());
 
-            Trie hashMap = new TrieMap(HashMap.class.getName(), Object.class.getName(), Object.class.getName());
+            Trie hashMap = new TrieMap(
+                    HashMap.class.getName(),
+                    Map.class.getName(),
+                    Map.class.getSimpleName(),
+                    Object.class.getName(),
+                    Object.class.getName());
             typeTrieMap.put(HashMap.class.getName(), hashMap);
         }
 
@@ -124,7 +129,7 @@ public class TypeDefault {
                     .cursorOffset(2)
                     .build());
 
-            Trie arrayList = new TrieList(ArrayList.class.getName(), Object.class.getName());
+            Trie arrayList = new TrieList(ArrayList.class.getName(), List.class.getName(), List.class.getSimpleName(), Object.class.getName());
             typeTrieMap.put(ArrayList.class.getName(), arrayList);
         }
 

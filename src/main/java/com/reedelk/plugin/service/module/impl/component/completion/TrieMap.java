@@ -1,7 +1,8 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import com.reedelk.runtime.api.message.MessageAttributes;
+
 import java.util.Collection;
-import java.util.Map;
 
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.stream.Collectors.toList;
@@ -13,14 +14,10 @@ public class TrieMap extends TrieDefault {
     private final String mapKeyType;
     private final String mapValueType;
 
-    public TrieMap(String typeFullyQualifiedName, String displayName, String mapKeyType, String mapValueType) {
-        super(typeFullyQualifiedName, Map.class.getName(), displayName);
+    public TrieMap(String typeFullyQualifiedName, String extendsType, String displayName, String mapKeyType, String mapValueType) {
+        super(typeFullyQualifiedName, extendsType, displayName);
         this.mapKeyType = mapKeyType;
         this.mapValueType = mapValueType;
-    }
-
-    public TrieMap(String typeFullyQualifiedName, String mapKeyType, String mapValueType) {
-        this(typeFullyQualifiedName, null, mapKeyType, mapValueType);
     }
 
     // We always return the type, unless it starts with { in that case we return tye closure
@@ -51,8 +48,13 @@ public class TrieMap extends TrieDefault {
 
     @Override
     public String toSimpleName(TypeAndTries typeAndTries) {
-        if (isNotBlank(displayName)) {
+        if (MessageAttributes.class.getName().equals(extendsType)) {
+            // We keep the message attributes type simple name to avoid confusion and always display 'MessageAttributes' type.
+            return MessageAttributes.class.getSimpleName();
+
+        } else if (isNotBlank(displayName)) {
             return displayName;
+
         } else {
             String keyTypeSimpleName = mapKeyType(typeAndTries).toSimpleName(typeAndTries);
             String valueTypeSimpleName = mapValueType(typeAndTries).toSimpleName(typeAndTries);

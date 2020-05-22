@@ -31,7 +31,7 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
                                                           @NotNull TypeAndTries typeAndTrieMap) {
         return resolveDynamicTypes(suggestion)
                 .stream()
-                .map(TypeProxy::create) // TODO: This is wrong, the type proxy might be join and so on....
+                .map(TypeProxy::create)
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())
                         .insertValue(suggestion.getInsertValue())
