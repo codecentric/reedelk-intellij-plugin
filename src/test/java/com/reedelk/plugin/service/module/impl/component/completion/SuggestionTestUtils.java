@@ -7,18 +7,23 @@ import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
 
 import java.util.List;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+
 public class SuggestionTestUtils {
 
-    public static Suggestion createFunctionSuggestion(String insertValue, String returnType) {
-        return Suggestion.create(Suggestion.Type.FUNCTION)
-                .returnType(TypeProxy.create(returnType))
+    public static Suggestion createFunctionSuggestion(String insertValue, String returnType, TypeAndTries typeAndTries) {
+        TypeProxy typeProxy = TypeProxy.create(returnType);
+        return Suggestion.create(FUNCTION)
+                .returnTypeDisplayValue(typeProxy.toSimpleName(typeAndTries))
+                .returnType(typeProxy)
                 .insertValue(insertValue)
                 .build();
     }
 
     public static Suggestion createPropertySuggestion(String insertValue, String returnType, TypeAndTries typeAndTries) {
         TypeProxy typeProxy = TypeProxy.create(returnType);
-        return Suggestion.create(Suggestion.Type.PROPERTY)
+        return Suggestion.create(PROPERTY)
                 .returnTypeDisplayValue(typeProxy.toSimpleName(typeAndTries))
                 .insertValue(insertValue)
                 .returnType(typeProxy)

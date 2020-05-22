@@ -1,5 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.ArrayList;
@@ -17,15 +18,14 @@ public class TrieDefault extends TrieAbstract {
     protected final String fullyQualifiedName;
 
     public TrieDefault(String fullyQualifiedName) {
-        this(fullyQualifiedName, null, null);
+        this(fullyQualifiedName, Object.class.getName(), null);
     }
 
     public TrieDefault(String fullyQualifiedName, String extendsType, String displayName) {
-        super();
         checkNotNull(fullyQualifiedName, "fullyQualifiedName");
         this.displayName = displayName;
         this.fullyQualifiedName = fullyQualifiedName;
-        this.extendsType = isBlank(extendsType) ? Object.class.getName() : extendsType;
+        this.extendsType = isBlank(extendsType) ? Object.class.getName() : extendsType; // every type inherits from object.
     }
 
     @Override
@@ -57,6 +57,10 @@ public class TrieDefault extends TrieAbstract {
     protected String toSimpleName() {
         if (isNotBlank(displayName)) {
             return displayName;
+
+        } else if (StringUtils.isBlank(fullyQualifiedName)) {
+            return StringUtils.EMPTY;
+
         } else {
             String[] splits = fullyQualifiedName.split(","); // might be multiple types
             List<String> tmp = new ArrayList<>();

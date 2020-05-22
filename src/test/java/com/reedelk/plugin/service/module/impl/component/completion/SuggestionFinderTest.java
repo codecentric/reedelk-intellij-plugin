@@ -3,11 +3,13 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutputDefault;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
@@ -18,17 +20,14 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SuggestionFinderTest {
+class SuggestionFinderTest extends AbstractCompletionTest {
 
-    private static Trie MESSAGE_AND_CONTEXT_TRIE = TypeDefault.MESSAGE_AND_CONTEXT;
-    private static SuggestionFinder FINDER;
+    private Trie messageAndContextTrie = TypeDefault.MESSAGE_AND_CONTEXT;
+    private SuggestionFinder finder;
 
-    @BeforeAll
-    static void setUp() {
-        Map<String, Trie> defaultTypesAndTries = new HashMap<>();
-        TypeAndTries typeAndTries = new TypeAndTries(defaultTypesAndTries);
-        ALL_TYPES.forEach(trieProvider -> trieProvider.register(typeAndTries, defaultTypesAndTries));
-        FINDER = new SuggestionFinder(typeAndTries);
+    @BeforeEach
+    public void setUp() {
+        finder = new SuggestionFinder(typeAndTries);
     }
 
     // Verify dynamic return type computed correctly.
@@ -39,7 +38,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(1)
@@ -53,7 +52,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(1)
@@ -71,7 +70,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(1)
@@ -89,7 +88,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "payload", "each", "{", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then the closure has two properties: 'i' and 'each' to iterate the map content. 'i' and 'each' must
         // have the type of the 'MapFirstType' (<String, Serializable>).
@@ -114,7 +113,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(1)
@@ -132,7 +131,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, descriptor);
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(1)
@@ -150,7 +149,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, descriptor);
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -168,7 +167,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, descriptor);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, descriptor);
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -200,7 +199,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(1)
@@ -219,7 +218,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         assertThat(suggestions).hasSize(7); // TODO: Need to flatten the foreach for the two map types!
@@ -266,7 +265,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, null);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, null);
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -284,7 +283,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -303,7 +302,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -326,7 +325,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "attributes", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions).hasSize(4)
@@ -360,7 +359,7 @@ class SuggestionFinderTest {
         String[] tokens = new String[]{"message", "attributes", ""};
 
         // When
-        Collection<Suggestion> suggestions = FINDER.suggest(MESSAGE_AND_CONTEXT_TRIE, tokens, output);
+        Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
         PluginAssertion.assertThat(suggestions)

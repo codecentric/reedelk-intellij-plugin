@@ -25,7 +25,9 @@ public class TypeTestUtils {
             new MessageType());
 
     public interface TrieProvider {
+
         void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap);
+
     }
 
     public static class GenericMapTypeFunctions implements TrieProvider {
@@ -125,7 +127,7 @@ public class TypeTestUtils {
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Suggestion method1 = createFunctionSuggestion("method1", String.class.getName());
+            Suggestion method1 = createFunctionSuggestion("method1", String.class.getName(), typeAndTries);
             Trie trie = new TrieDefault(MyItemType.class.getName());
             trie.insert(method1);
             trieMap.put(MyItemType.class.getName(), trie);
@@ -156,8 +158,8 @@ public class TypeTestUtils {
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
             Trie trie = new TrieDefault(Message.class.getName());
-            trie.insert(createFunctionSuggestion("payload", MessagePayload.class.getName()));
-            trie.insert(createFunctionSuggestion("attributes", MessageAttributes.class.getName()));
+            trie.insert(createFunctionSuggestion("payload", MessagePayload.class.getName(), typeAndTries));
+            trie.insert(createFunctionSuggestion("attributes", MessageAttributes.class.getName(), typeAndTries));
             trieMap.put(Message.class.getName(), trie);
         }
     }
