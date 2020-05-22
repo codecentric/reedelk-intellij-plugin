@@ -1,10 +1,13 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import com.reedelk.plugin.assertion.PluginAssertion;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TrieListTest extends AbstractCompletionTest {
@@ -43,6 +46,38 @@ class TrieListTest extends AbstractCompletionTest {
 
         // Then
         assertThat(listItemType.getTypeFullyQualifiedName()).isEqualTo(TypeTestUtils.MyItemType.class.getName());
+    }
+
+    @Test
+    void shouldReturnCorrectSuggestions() {
+        // Given
+        Trie trie = typeAndTries.getOrDefault(TypeTestUtils.ListMyItemType.class.getName());
+
+        // When
+        Collection<Suggestion> suggestions = trie.autocomplete("", typeAndTries);
+
+        // Then
+        PluginAssertion.assertThat(suggestions).hasSize(4)
+                .contains(FUNCTION,
+                        "toString()",
+                        "toString",
+                        String.class.getName(),
+                        String.class.getSimpleName())
+                .contains(FUNCTION,
+                        "eachWithIndex { it, i ->  }",
+                        "eachWithIndex",
+                        TypeTestUtils.ListMyItemType.class.getName(),
+                        "List<TypeTestUtils$MyItemType>")
+                .contains(FUNCTION,
+                        "collect { it }",
+                        "collect",
+                        TypeTestUtils.ListMyItemType.class.getName(),
+                        "List<TypeTestUtils$MyItemType>")
+                .contains(FUNCTION,
+                        "each { it }",
+                        "each",
+                        TypeTestUtils.ListMyItemType.class.getName(),
+                        "List<TypeTestUtils$MyItemType>");
     }
 
     static class MyCustomListType extends ArrayList<TypeTestUtils.MyItemType> {
