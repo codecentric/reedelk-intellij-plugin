@@ -80,6 +80,19 @@ class TrieListTest extends AbstractCompletionTest {
                         "List<TypeTestUtils$MyItemType>");
     }
 
+    @Test
+    void shouldReturnCorrectSuggestionsForClosureArgument() {
+        // Given
+        Trie trie = typeAndTries.getOrDefault(TypeTestUtils.ListMyItemType.class.getName());
+
+        // When
+        Collection<Suggestion> suggestions = trie.autocomplete("ea", typeAndTries);
+
+        // Then
+        // each and eachWithIndex
+        PluginAssertion.assertThat(suggestions).hasSize(2);
+    }
+
     static class MyCustomListType extends ArrayList<TypeTestUtils.MyItemType> {
     }
 }
