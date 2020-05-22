@@ -12,14 +12,17 @@ public class ClosureAware {
     private ClosureAware() {
     }
 
+    public interface KeepReturnType {
+    }
+
     public static class TypeClosureAware extends TypeProxyDefault {
 
         // List or Map type proxy
-        private final TypeProxy typeProxy;
+        private final TypeProxy closureReturnType;
 
-        TypeClosureAware(String typeFullyQualifiedName, TypeProxy typeProxy) {
+        TypeClosureAware(String typeFullyQualifiedName, TypeProxy closureReturnType) {
             super(typeFullyQualifiedName);
-            this.typeProxy = typeProxy;
+            this.closureReturnType = closureReturnType;
         }
 
         @Override
@@ -28,7 +31,7 @@ public class ClosureAware {
             // Resolve to a dynamic trie returning the beginning of a closure or the original type
             // suggestions if the token is different from '{'. This is needed to continuously
             // be able to resolve types when a closure is closed, e.g map.each { entry.name }.myMethod
-            return new TrieClosureAware(typeFullyQualifiedName, originalTypeTrie, typeProxy);
+            return new TrieClosureAware(typeFullyQualifiedName, originalTypeTrie, closureReturnType);
         }
     }
 

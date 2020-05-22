@@ -13,6 +13,8 @@ import static java.util.Arrays.asList;
 public class TypeDefault {
 
     // TODO: Type string should not extend from object ...
+    // TODO: Collect returns a generic list ...and not the original one...
+    // TODO: add java.util.TreeMap and all the primitives like boolean, string , integer and so on.
 
     public static final String DEFAULT_PAYLOAD = Object.class.getName();
     public static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
@@ -58,7 +60,7 @@ public class TypeDefault {
                     .insertValue("each { entry }")
                     .lookupToken("each")
                     .tailText("{ entry }")
-                    .returnType(TypeProxy.VOID)
+                    .returnType(TypeProxy.create(ClosureAware.KeepReturnType.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -67,7 +69,7 @@ public class TypeDefault {
                     .insertValue("eachWithIndex { entry, i ->  }")
                     .tailText("{ entry, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.VOID)
+                    .returnType(TypeProxy.create(ClosureAware.KeepReturnType.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -117,7 +119,7 @@ public class TypeDefault {
                     .insertValue("each { it }")
                     .lookupToken("each")
                     .tailText("{ it }")
-                    .returnType(TypeProxy.VOID)
+                    .returnType(TypeProxy.create(ClosureAware.KeepReturnType.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -126,7 +128,7 @@ public class TypeDefault {
                     .insertValue("eachWithIndex { it, i ->  }")
                     .tailText("{ it, i ->  }")
                     .lookupToken("eachWithIndex")
-                    .returnType(TypeProxy.VOID)
+                    .returnType(TypeProxy.create(ClosureAware.KeepReturnType.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());
@@ -135,7 +137,7 @@ public class TypeDefault {
                     .insertValue("collect { it }")
                     .tailText("{ it }")
                     .lookupToken("collect")
-                    .returnType(TypeProxy.VOID)
+                    .returnType(TypeProxy.create(List.class))
                     .returnTypeDisplayValue(StringUtils.EMPTY)
                     .cursorOffset(2)
                     .build());

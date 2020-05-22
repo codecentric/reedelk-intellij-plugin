@@ -25,10 +25,19 @@ public class TrieMap extends TrieDefault {
     public Collection<Suggestion> autocomplete(String token, TypeAndTries typeAndTrieMap) {
         Collection<Suggestion> autocomplete = super.autocomplete(token, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
+
             if (suggestion.getType() == Suggestion.Type.CLOSURE) {
-                // If the method accepts a closure in input
+                // If the method accepts a closure in input we need to replace the suggestion
+                // with the closure aware completion type trie. The return type could be the original
+                // type (e.g the list) or the user specified type from the suggestion.
+                String endClosureReturnType = fullyQualifiedName;
+                if (!ClosureAware.KeepReturnType.class.getName()
+                        .equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
+                    endClosureReturnType = suggestion.getReturnType().getTypeFullyQualifiedName();
+                }
+
                 TypeProxy mapTypeProxy = new TypeProxyClosureMap();
-                ClosureAware.TypeClosureAware newType = new ClosureAware.TypeClosureAware(fullyQualifiedName, mapTypeProxy);
+                ClosureAware.TypeClosureAware newType = new ClosureAware.TypeClosureAware(endClosureReturnType, mapTypeProxy);
                 return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
             } else {
                 return suggestion;

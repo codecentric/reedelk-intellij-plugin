@@ -183,8 +183,8 @@ class SuggestionFinderTest extends AbstractCompletionTest {
                 .contains(FUNCTION,
                         "collect { it }",
                         "collect",
-                        ListMapFirstType.class.getName(),
-                        "List<MapFirstType>");
+                        List.class.getName(),
+                        "List<Object>");
     }
 
     @Test

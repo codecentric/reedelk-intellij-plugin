@@ -72,8 +72,8 @@ class TrieListTest extends AbstractCompletionTest {
                 .contains(FUNCTION,
                         "collect { it }",
                         "collect",
-                        TypeTestUtils.ListMyItemType.class.getName(),
-                        "List<TypeTestUtils$MyItemType>")
+                        List.class.getName(),
+                        "List<Object>")
                 .contains(FUNCTION,
                         "each { it }",
                         "each",
