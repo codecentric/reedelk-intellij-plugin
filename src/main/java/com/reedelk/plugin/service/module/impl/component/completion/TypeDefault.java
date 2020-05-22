@@ -12,6 +12,8 @@ import static java.util.Arrays.asList;
 
 public class TypeDefault {
 
+    // TODO: Type string should not extend from object ...
+
     public static final String DEFAULT_PAYLOAD = Object.class.getName();
     public static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
 
@@ -44,7 +46,12 @@ public class TypeDefault {
 
         @Override
         public void register(Map<String, Trie> typeTrieMap) {
-            Trie mapTrie = new TrieDefault(Map.class.getName(), Object.class.getName(), Map.class.getSimpleName());
+            Trie mapTrie = new TrieMap(
+                    Map.class.getName(),
+                    Object.class.getName(),
+                    null,
+                    Object.class.getName(),
+                    Object.class.getName());
             typeTrieMap.put(Map.class.getName(), mapTrie);
 
             mapTrie.insert(Suggestion.create(CLOSURE)
@@ -68,7 +75,7 @@ public class TypeDefault {
             Trie hashMap = new TrieMap(
                     HashMap.class.getName(),
                     Map.class.getName(),
-                    Map.class.getSimpleName(),
+                    null,
                     Object.class.getName(),
                     Object.class.getName());
             typeTrieMap.put(HashMap.class.getName(), hashMap);
@@ -99,7 +106,11 @@ public class TypeDefault {
 
         @Override
         public void register(Map<String, Trie> typeTrieMap) {
-            Trie trie = new TrieDefault(List.class.getName(), Object.class.getName(), List.class.getSimpleName());
+            Trie trie = new TrieList(
+                    List.class.getName(),
+                    Object.class.getName(),
+                    null,
+                    Object.class.getName());
             typeTrieMap.put(List.class.getName(), trie);
 
             trie.insert(Suggestion.create(CLOSURE)
@@ -129,7 +140,11 @@ public class TypeDefault {
                     .cursorOffset(2)
                     .build());
 
-            Trie arrayList = new TrieList(ArrayList.class.getName(), List.class.getName(), List.class.getSimpleName(), Object.class.getName());
+            Trie arrayList = new TrieList(
+                    ArrayList.class.getName(),
+                    List.class.getName(),
+                    null,
+                    Object.class.getName());
             typeTrieMap.put(ArrayList.class.getName(), arrayList);
         }
 

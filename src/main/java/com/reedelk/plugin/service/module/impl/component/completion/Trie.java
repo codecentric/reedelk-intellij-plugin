@@ -12,6 +12,10 @@ public interface Trie {
 
     Collection<Suggestion> autocomplete(String word, TypeAndTries typeAndTrieMap);
 
+    default Collection<Suggestion> autocompleteForExtend(String word, TypeAndTries typeAndTrieMap) {
+        return autocomplete(word, typeAndTrieMap);
+    }
+
     default boolean isList() {
         return false;
     }

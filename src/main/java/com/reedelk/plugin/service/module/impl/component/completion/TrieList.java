@@ -36,6 +36,13 @@ public class TrieList extends TrieDefault {
     }
 
     @Override
+    public Collection<Suggestion> autocompleteForExtend(String token, TypeAndTries typeAndTrieMap) {
+        // We don't replace closure because it has to be replaced
+        // with the type of the last child.
+        return super.autocomplete(token, typeAndTrieMap);
+    }
+
+    @Override
     public boolean isList() {
         return true;
     }

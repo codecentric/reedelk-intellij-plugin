@@ -47,7 +47,7 @@ public class TrieDefault extends TrieAbstract {
         // from the supertype.
         if (!Object.class.getName().equals(fullyQualifiedName) && isNotBlank(extendsType)) {
             Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType);
-            Collection<Suggestion> extendsSuggestions = currentTypeTrie.autocomplete(token, typeAndTrieMap);
+            Collection<Suggestion> extendsSuggestions = currentTypeTrie.autocompleteForExtend(token, typeAndTrieMap);
             autocomplete.addAll(extendsSuggestions);
         }
 
