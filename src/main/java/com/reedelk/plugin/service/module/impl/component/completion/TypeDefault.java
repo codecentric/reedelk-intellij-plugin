@@ -12,15 +12,11 @@ import static java.util.Arrays.asList;
 
 public class TypeDefault {
 
-    // TODO: Type string should not extend from object ...
-    // TODO: Collect returns a generic list ...and not the original one...
-    // TODO: add java.util.TreeMap and all the primitives like boolean, string , integer and so on.
-
     public static final String DEFAULT_PAYLOAD = Object.class.getName();
     public static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
 
     public static final Collection<BuiltInType> BUILT_IN_TYPE =
-            asList(new TypeObject(), new TypeList(), new TypeMap());
+            asList(new TypePrimitive(), new TypeObject(), new TypeList(), new TypeMap());
 
     // Default script signature is message and context.
     public static final Trie MESSAGE_AND_CONTEXT = new TrieRoot();
@@ -81,6 +77,14 @@ public class TypeDefault {
                     Object.class.getName(),
                     Object.class.getName());
             typeTrieMap.put(HashMap.class.getName(), hashMap);
+
+            Trie treeMap = new TrieMap(
+                    TreeMap.class.getName(),
+                    Map.class.getName(),
+                    null,
+                    Object.class.getName(),
+                    Object.class.getName());
+            typeTrieMap.put(TreeMap.class.getName(), treeMap);
         }
 
         public static class TrieMapClosureArguments extends TrieRoot {
@@ -169,6 +173,34 @@ public class TypeDefault {
                         .insertValue(ARG_I)
                         .build());
             }
+        }
+    }
+
+    private static class TypePrimitive implements BuiltInType {
+
+        @Override
+        public void register(Map<String, Trie> typeTrieMap) {
+            registerPrimitive(String.class, typeTrieMap);;
+            registerPrimitive(int.class, typeTrieMap);
+            registerPrimitive(Integer.class, typeTrieMap);
+            registerPrimitive(long.class, typeTrieMap);
+            registerPrimitive(Long.class, typeTrieMap);
+            registerPrimitive(float.class, typeTrieMap);
+            registerPrimitive(Float.class, typeTrieMap);
+            registerPrimitive(double.class, typeTrieMap);
+            registerPrimitive(Double.class, typeTrieMap);
+            registerPrimitive(Void.class, typeTrieMap, "void");
+            registerPrimitive(byte[].class, typeTrieMap, "byte[]");
+            registerPrimitive(Byte[].class, typeTrieMap, "byte[]");
+        }
+
+        private void registerPrimitive(Class<?> clazz, Map<String, Trie> typeTrieMap) {
+            registerPrimitive(clazz, typeTrieMap, clazz.getSimpleName());
+        }
+
+        private void registerPrimitive(Class<?> clazz, Map<String, Trie> typeTrieMap, String displayName) {
+            Trie trie = new TrieDefault(clazz.getName(), Object.class.getName(), displayName);
+            typeTrieMap.put(clazz.getName(), trie);
         }
     }
 

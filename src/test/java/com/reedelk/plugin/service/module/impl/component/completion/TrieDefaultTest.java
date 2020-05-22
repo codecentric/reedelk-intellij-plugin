@@ -85,7 +85,7 @@ class TrieDefaultTest extends AbstractCompletionTest {
                         "myProperty",
                         "myProperty",
                         byte[].class.getName(),
-                        byte[].class.getName());
+                        "byte[]");
     }
 
     @Test
@@ -121,6 +121,6 @@ class TrieDefaultTest extends AbstractCompletionTest {
                         "myProperty",
                         "myProperty",
                         byte[].class.getName(),
-                        byte[].class.getName());
+                        "byte[]");
     }
 }

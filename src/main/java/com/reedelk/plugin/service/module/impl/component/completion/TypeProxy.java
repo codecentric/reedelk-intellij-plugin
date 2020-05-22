@@ -8,7 +8,6 @@ import com.reedelk.runtime.api.message.MessagePayload;
 public interface TypeProxy {
 
     TypeProxy INT = TypeProxy.create(int.class);
-    TypeProxy VOID = TypeProxy.create(Void.class);
     TypeProxy MESSAGE = TypeProxy.create(Message.class);
     TypeProxy FLOW_CONTEXT = TypeProxy.create(FlowContext.class);
     TypeProxy FLATTENED = TypeProxy.create(FlattenedReturnType.class);
