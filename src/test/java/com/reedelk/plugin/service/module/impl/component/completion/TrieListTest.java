@@ -82,6 +82,15 @@ class TrieListTest extends AbstractCompletionTest {
     }
 
     @Test
+    void shouldReturnIsListTrue() {
+        // Given
+        Trie trie = new TrieList(MyCustomListType.class.getName(), List.class.getName(), null, TypeTestUtils.MyItemType.class.getName());
+
+        // Expect
+        assertThat(trie.isList()).isTrue();
+    }
+
+    @Test
     void shouldReturnCorrectSuggestionsForClosureArgument() {
         // Given
         Trie trie = typeAndTries.getOrDefault(TypeTestUtils.ListMyItemType.class.getName());

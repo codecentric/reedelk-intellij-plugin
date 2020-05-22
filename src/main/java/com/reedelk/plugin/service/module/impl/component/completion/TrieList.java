@@ -20,11 +20,6 @@ public class TrieList extends TrieDefault {
     }
 
     @Override
-    public TypeProxy listItemType(TypeAndTries typeAndTries) {
-        return TypeProxy.create(listItemType);
-    }
-
-    @Override
     public Collection<Suggestion> autocomplete(String token, TypeAndTries typeAndTrieMap) {
         Collection<Suggestion> autocomplete = super.autocomplete(token, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
@@ -38,6 +33,16 @@ public class TrieList extends TrieDefault {
                 return suggestion;
             }
         }).collect(toList());
+    }
+
+    @Override
+    public boolean isList() {
+        return true;
+    }
+
+    @Override
+    public TypeProxy listItemType(TypeAndTries typeAndTries) {
+        return TypeProxy.create(listItemType);
     }
 
     @Override

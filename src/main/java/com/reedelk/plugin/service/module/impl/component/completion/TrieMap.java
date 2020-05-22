@@ -37,6 +37,11 @@ public class TrieMap extends TrieDefault {
     }
 
     @Override
+    public boolean isMap() {
+        return true;
+    }
+
+    @Override
     public TypeProxy mapKeyType(TypeAndTries typeAndTries) {
         return TypeProxy.create(mapKeyType);
     }
