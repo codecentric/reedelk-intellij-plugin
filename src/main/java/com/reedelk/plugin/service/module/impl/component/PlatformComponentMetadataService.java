@@ -53,7 +53,9 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 Optional<PreviousComponentOutput> componentOutput =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndTries, context, context.node());
 
-                // TODO: Get might fail, consider to return default output!
+                // TODO: Get might fail, consider to return default output! This might
+                //  happen for instance when we want to find the previous component of flow
+                //  reference but we have not selected any subflow in the flow reference.
                 PreviousComponentOutput previousComponentOutput = componentOutput.get();
                 List<MetadataTypeDTO> payload = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
                 MetadataTypeDTO attributes = previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries);
