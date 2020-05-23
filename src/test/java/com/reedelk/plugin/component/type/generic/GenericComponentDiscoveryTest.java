@@ -1,24 +1,14 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
-import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.component.ComponentData;
-import com.reedelk.plugin.fixture.ComponentNode2;
-import com.reedelk.plugin.graph.FlowGraph;
-import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import com.reedelk.runtime.api.annotation.ComponentOutput;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,27 +20,13 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class GenericComponentDiscoveryTest extends AbstractGraphTest {
-
-    @Mock
-    private Module module;
-    @Mock
-    private PlatformModuleService moduleService;
+class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
     private GenericComponentDiscovery discovery;
-    private FlowGraph graph;
 
     @BeforeEach
     public void setUp() {
         super.setUp();
-        graph = provider.createGraph();
-        graph.root(root);
-        graph.add(root, componentNode1);
-        graph.add(componentNode1, componentNode2);
-        graph.add(componentNode2, componentNode3);
-
-        TypeAndTries typeAndTries = new TypeAndTries();
         discovery = spy(new GenericComponentDiscovery(module, moduleService, typeAndTries));
     }
 
@@ -268,17 +244,5 @@ class GenericComponentDiscoveryTest extends AbstractGraphTest {
         PreviousComponentOutputCompound expectedPreviousOutput  =
                 new PreviousComponentOutputCompound(expectedAttributeOutput, expectedPayloadOutput);
         assertThat(maybeActualOutput).contains(expectedPreviousOutput);
-    }
-
-    private ComponentContext mockComponentContext(ComponentOutputDescriptor outputDescriptor) {
-        ComponentDescriptor descriptor = new ComponentDescriptor();
-        descriptor.setOutput(outputDescriptor);
-        doReturn(descriptor)
-                .when(moduleService)
-                .componentDescriptorOf(ComponentNode2.class.getName());
-        return new ComponentContext(graph, componentNode3);
-    }
-
-    static class MyTestType {
     }
 }

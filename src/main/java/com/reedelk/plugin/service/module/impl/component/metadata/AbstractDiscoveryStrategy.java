@@ -9,6 +9,7 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 
 import java.util.Optional;
 
+// TODO: To be removed
 public abstract class AbstractDiscoveryStrategy implements DiscoveryStrategy {
 
     protected final PlatformModuleService moduleService;
