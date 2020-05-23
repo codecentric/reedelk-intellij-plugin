@@ -7,20 +7,18 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
-// Used by router or try/catch.
+// Used by router or try/catch: in both cases the only output one of the types
+// from the nodes ending the scope.
 public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutput {
 
-    private final List<PreviousComponentOutput> outputs;
+    private final Set<PreviousComponentOutput> outputs;
 
-    public PreviousComponentOutputOneOf(List<PreviousComponentOutput> outputs) {
+    public PreviousComponentOutputOneOf(Set<PreviousComponentOutput> outputs) {
         this.outputs = outputs;
     }
 
@@ -67,5 +65,25 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
         List<MetadataTypeDTO> onlyOnes = new ArrayList<>();
         collect.forEach((key, value) -> onlyOnes.add(value.iterator().next()));
         return onlyOnes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PreviousComponentOutputOneOf that = (PreviousComponentOutputOneOf) o;
+        return Objects.equals(outputs, that.outputs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(outputs);
+    }
+
+    @Override
+    public String toString() {
+        return "PreviousComponentOutputOneOf{" +
+                "outputs=" + outputs +
+                '}';
     }
 }
