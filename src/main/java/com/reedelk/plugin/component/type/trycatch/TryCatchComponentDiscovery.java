@@ -2,6 +2,7 @@ package com.reedelk.plugin.component.type.trycatch;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
@@ -9,7 +10,6 @@ import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrate
 import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyOneOfAware;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutputDefault;
-import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +31,7 @@ public class TryCatchComponentDiscovery extends DiscoveryStrategyOneOfAware {
         List<GraphNode> successors = context.successors(nodeWeWantOutputFrom);
         // context.node() is wrong, because the context node might be two positions
         // ahead (preceded by payload set)
-        // TODO: What if successor is null?
+        // TODO: What if successor is null?, e.g is the placeholder?
         if (successors.get(0).equals(successor)) {
             // Try branch (we take the one before the try-catch).
             return discover(context, nodeWeWantOutputFrom);
@@ -40,7 +40,7 @@ public class TryCatchComponentDiscovery extends DiscoveryStrategyOneOfAware {
             PreviousComponentOutput descriptor = new PreviousComponentOutputDefault(
                     singletonList(MessageAttributes.class.getName()),
                     singletonList(Exception.class.getName()),
-                    StringUtils.EMPTY);
+                    ReedelkBundle.message("metadata.trycatch.payload.description"));
             return Optional.of(descriptor);
         }
     }
