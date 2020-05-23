@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -31,12 +32,12 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
         return suggestionsFromDynamicExpression(suggester)
                 .stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
+                        .returnTypeDisplayValue(dynamicType.getReturnType().toSimpleName(typeAndTrieMap))
                         .cursorOffset(suggestion.getCursorOffset())
                         .insertValue(suggestion.getInsertValue())
                         .lookupToken(suggestion.getLookupToken())
-                        .tailText(suggestion.getTailText())
-                        .returnTypeDisplayValue(dynamicType.getReturnType().toSimpleName(typeAndTrieMap))
                         .returnType(dynamicType.getReturnType())
+                        .tailText(suggestion.getTailText())
                         .build())
                 .collect(toList());
     }
@@ -66,5 +67,27 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
         String unwrap = ScriptUtils.unwrap(dynamicExpression);
         String[] tokens = Tokenizer.tokenize(unwrap, unwrap.length());
         return suggester.suggest(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PreviousComponentOutputInferFromDynamicExpression that = (PreviousComponentOutputInferFromDynamicExpression) o;
+        return Objects.equals(previousOutput, that.previousOutput) &&
+                Objects.equals(dynamicExpression, that.dynamicExpression);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(previousOutput, dynamicExpression);
+    }
+
+    @Override
+    public String toString() {
+        return "PreviousComponentOutputInferFromDynamicExpression{" +
+                "previousOutput=" + previousOutput +
+                ", dynamicExpression='" + dynamicExpression + '\'' +
+                '}';
     }
 }

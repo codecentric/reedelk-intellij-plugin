@@ -66,10 +66,8 @@ public class GenericComponentDiscovery implements DiscoveryStrategy {
         List<String> payload = currentOutput.getPayload();
         if (payload.contains(ComponentOutput.PreviousComponent.class.getName())) {
             return handlePreviousComponentOutput(currentNode, context);
-
         } else if (payload.contains(ComponentOutput.InferFromDynamicProperty.class.getName())) {
             return handleInferFromDynamicProperty(currentNode, context, currentOutput);
-
         } else {
             return new PreviousComponentOutputDefault(currentOutput.getAttributes(), payload, currentOutput.getDescription());
         }
@@ -97,8 +95,7 @@ public class GenericComponentDiscovery implements DiscoveryStrategy {
             dynamicExpression = componentData.get(dynamicPropertyName);
         }
 
-        // Infer from dynamic expression. The input of the dynamic expression is the
-        // previous component.
+        // Infer from dynamic expression. The input of the dynamic expression is the previous component.
         PreviousComponentOutput componentOutput = discover(context, currentNode).orElse(DEFAULT);
         return new PreviousComponentOutputInferFromDynamicExpression(componentOutput, dynamicExpression);
     }
