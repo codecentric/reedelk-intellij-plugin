@@ -12,9 +12,9 @@ import static java.util.stream.Collectors.*;
 
 public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput {
 
-    private final List<PreviousComponentOutput> outputs;
+    private final Set<PreviousComponentOutput> outputs;
 
-    public PreviousComponentOutputJoin(List<PreviousComponentOutput> outputs) {
+    public PreviousComponentOutputJoin(Set<PreviousComponentOutput> outputs) {
         this.outputs = outputs;
     }
 

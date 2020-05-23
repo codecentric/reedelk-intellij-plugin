@@ -10,9 +10,10 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class ForEachComponentDiscovery implements DiscoveryStrategy {
 
@@ -48,7 +49,7 @@ public class ForEachComponentDiscovery implements DiscoveryStrategy {
             }
         }
 
-        List<PreviousComponentOutput> outputs = new ArrayList<>();
+        Set<PreviousComponentOutput> outputs = new HashSet<>();
         List<GraphNode> lastNodesOfScope = context.listLastNodesOfScope(scopedGraphNode);
 
         for (GraphNode lastNodeOfScope : lastNodesOfScope) {
