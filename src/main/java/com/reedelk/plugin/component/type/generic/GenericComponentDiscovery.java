@@ -22,14 +22,12 @@ public class GenericComponentDiscovery implements DiscoveryStrategy {
     protected final TypeAndTries typeAndAndTries;
     protected final Module module;
 
-    public GenericComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
+    public GenericComponentDiscovery(@NotNull Module module,
+                                     @NotNull PlatformModuleService moduleService,
+                                     @NotNull TypeAndTries typeAndAndTries) {
         this.typeAndAndTries = typeAndAndTries;
         this.moduleService = moduleService;
         this.module = module;
-    }
-
-    protected Optional<PreviousComponentOutput> discover(ComponentContext context, GraphNode target) {
-        return DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, context, target);
     }
 
     @Override
@@ -112,5 +110,9 @@ public class GenericComponentDiscovery implements DiscoveryStrategy {
         // We need to recursively go back in the graph if the user specified that the payload
         // type must be taken from the previous component.
         return discover(context, currentNode).orElse(DEFAULT);
+    }
+
+    Optional<PreviousComponentOutput> discover(ComponentContext context, GraphNode target) {
+        return DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, context, target);
     }
 }

@@ -19,20 +19,30 @@ import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.SubflowService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
+import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategy;
+import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 import com.reedelk.runtime.commons.JsonParser;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.CountDownLatch;
 
-public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
+public class FlowReferenceComponentDiscovery implements DiscoveryStrategy {
 
-    public FlowReferenceComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
-        super(module, moduleService, typeAndAndTries);
+    protected final PlatformModuleService moduleService;
+    protected final TypeAndTries typeAndAndTries;
+    protected final Module module;
+
+    public FlowReferenceComponentDiscovery(@NotNull Module module,
+                                           @NotNull PlatformModuleService moduleService,
+                                           @NotNull TypeAndTries typeAndAndTries) {
+        this.typeAndAndTries = typeAndAndTries;
+        this.moduleService = moduleService;
+        this.module = module;
     }
 
     // TODO: Fixme
@@ -84,6 +94,15 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
         } catch (InterruptedException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
+        throw new UnsupportedOperationException();
+    }
+
+    Optional<PreviousComponentOutput> discover(ComponentContext context, GraphNode target) {
+        return DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, context, target);
     }
 
     static class SubflowGraphAwareContext extends ComponentContext {

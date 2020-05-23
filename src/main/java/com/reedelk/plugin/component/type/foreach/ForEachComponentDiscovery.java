@@ -8,15 +8,24 @@ import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
+public class ForEachComponentDiscovery implements DiscoveryStrategy {
 
-    public ForEachComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
-        super(module, moduleService, typeAndAndTries);
+    protected final PlatformModuleService moduleService;
+    protected final TypeAndTries typeAndAndTries;
+    protected final Module module;
+
+    public ForEachComponentDiscovery(@NotNull Module module,
+                                     @NotNull PlatformModuleService moduleService,
+                                     @NotNull TypeAndTries typeAndAndTries) {
+        this.typeAndAndTries = typeAndAndTries;
+        this.moduleService = moduleService;
+        this.module = module;
     }
 
     @Override
@@ -62,5 +71,9 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
         }
 
         return Optional.of(new PreviousComponentOutputJoin(outputs));
+    }
+
+    Optional<PreviousComponentOutput> discover(ComponentContext context, GraphNode target) {
+        return DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, context, target);
     }
 }

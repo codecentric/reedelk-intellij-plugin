@@ -9,6 +9,7 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +17,18 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 
-public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
+public class TryCatchComponentDiscovery implements DiscoveryStrategy {
 
-    public TryCatchComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
-        super(module, moduleService, typeAndAndTries);
+    protected final PlatformModuleService moduleService;
+    protected final TypeAndTries typeAndAndTries;
+    protected final Module module;
+
+    public TryCatchComponentDiscovery(@NotNull Module module,
+                                      @NotNull PlatformModuleService moduleService,
+                                      @NotNull TypeAndTries typeAndAndTries) {
+        this.typeAndAndTries = typeAndAndTries;
+        this.moduleService = moduleService;
+        this.module = module;
     }
 
     @Override
@@ -65,5 +74,9 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
         }
 
         return Optional.of(new PreviousComponentOutputOneOf(outputs));
+    }
+
+    Optional<PreviousComponentOutput> discover(ComponentContext context, GraphNode target) {
+        return DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, context, target);
     }
 }
