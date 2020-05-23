@@ -10,7 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+// Unwraps the list item type if the previous output is a list of any type.
 public class PreviousComponentOutputForEach extends AbstractPreviousComponentOutput {
 
     private final PreviousComponentOutput previousComponentOutput;
@@ -78,5 +80,25 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
         }
 
         return metadataTypeDTOS;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PreviousComponentOutputForEach that = (PreviousComponentOutputForEach) o;
+        return Objects.equals(previousComponentOutput, that.previousComponentOutput);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(previousComponentOutput);
+    }
+
+    @Override
+    public String toString() {
+        return "PreviousComponentOutputForEach{" +
+                "previousComponentOutput=" + previousComponentOutput +
+                '}';
     }
 }

@@ -63,7 +63,6 @@ class ForkComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
         discovery = spy(new ForkComponentDiscovery(module, moduleService, typeAndTries));
     }
 
-
     @Test
     void shouldReturnForkPreviousComponentOutput() {
         // Given
