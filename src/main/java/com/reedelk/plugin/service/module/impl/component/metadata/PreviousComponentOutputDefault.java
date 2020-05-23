@@ -18,6 +18,10 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     private List<String> payload;
     private String description;
 
+    public PreviousComponentOutputDefault(List<String> attributes, List<String> payload) {
+        this(attributes, payload, null);
+    }
+
     public PreviousComponentOutputDefault(List<String> attributes, List<String> payload, String description) {
         this.description = description;
         this.attributes = attributes == null || attributes.isEmpty() ?
@@ -72,6 +76,15 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     @Override
     public int hashCode() {
         return Objects.hash(attributes, payload, description);
+    }
+
+    @Override
+    public String toString() {
+        return "PreviousComponentOutputDefault{" +
+                "attributes=" + attributes +
+                ", payload=" + payload +
+                ", description='" + description + '\'' +
+                '}';
     }
 
     // Resolves the dynamic type from the output descriptor

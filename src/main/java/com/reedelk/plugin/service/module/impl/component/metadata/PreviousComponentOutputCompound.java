@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class PreviousComponentOutputCompound implements PreviousComponentOutput {
 
@@ -48,5 +49,27 @@ public class PreviousComponentOutputCompound implements PreviousComponentOutput 
     @Override
     public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
         return payload.mapPayload(suggester, typeAndTries);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PreviousComponentOutputCompound that = (PreviousComponentOutputCompound) o;
+        return Objects.equals(attributes, that.attributes) &&
+                Objects.equals(payload, that.payload);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attributes, payload);
+    }
+
+    @Override
+    public String toString() {
+        return "PreviousComponentOutputCompound{" +
+                "attributes=" + attributes +
+                ", payload=" + payload +
+                '}';
     }
 }

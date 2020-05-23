@@ -21,12 +21,14 @@ public abstract class AbstractDiscoveryStrategy implements DiscoveryStrategy {
         this.module = module;
     }
 
-    protected Optional<PreviousComponentOutput> discover(ComponentContext context, GraphNode target) {
-        return DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, context, target);
-    }
-
     @Override
     public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
         throw new UnsupportedOperationException();
     }
+
+    protected Optional<PreviousComponentOutput> discover(ComponentContext context, GraphNode target) {
+        return DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, context, target);
+    }
+
+
 }

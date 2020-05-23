@@ -5,38 +5,42 @@ import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import com.reedelk.runtime.api.annotation.ComponentOutput;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
+public class GenericComponentDiscovery implements DiscoveryStrategy {
 
-public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
+    protected final PlatformModuleService moduleService;
+    protected final TypeAndTries typeAndAndTries;
+    protected final Module module;
 
     public GenericComponentDiscovery(Module module, PlatformModuleService moduleService, TypeAndTries typeAndAndTries) {
-        super(module, moduleService, typeAndAndTries);
+        this.typeAndAndTries = typeAndAndTries;
+        this.moduleService = moduleService;
+        this.module = module;
+    }
+
+    protected Optional<PreviousComponentOutput> discover(ComponentContext context, GraphNode target) {
+        return DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, context, target);
     }
 
     @Override
     public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
         String componentFullyQualifiedName = currentNode.componentData().getFullyQualifiedName();
-        ComponentDescriptor componentDescriptor = moduleService.componentDescriptorOf(componentFullyQualifiedName);
 
+        ComponentDescriptor componentDescriptor = moduleService.componentDescriptorOf(componentFullyQualifiedName);
         ComponentOutputDescriptor componentOutput = componentDescriptor.getOutput();
 
         // If the component output has not been defined for this component we default output.
         if (componentOutput == null) {
-            PreviousComponentOutputDefault defaultOutput = new PreviousComponentOutputDefault(
-                    singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
-                    singletonList(TypeDefault.DEFAULT_PAYLOAD), DEFAULT_DESCRIPTION);
-            return Optional.of(defaultOutput);
+            return Optional.of(DEFAULT);
         }
 
         // Here you might have components having 'PreviousComponent' only on attributes (e.g payload set),
@@ -50,6 +54,11 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         return Optional.of(new PreviousComponentOutputCompound(attributes, payload));
     }
 
+    @Override
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode) {
+        throw new UnsupportedOperationException();
+    }
+
     private PreviousComponentOutput payload(GraphNode currentNode,
                                             ComponentContext context,
                                             ComponentOutputDescriptor currentOutput) {
@@ -59,19 +68,12 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
                 // If this is root we stop and do not look for the previous component,
                 // this is because otherwise we might continuously loop to the previous component
                 // when all the components specified the 'PreviousComponent' constraint in the payload type.
-                return new PreviousComponentOutputDefault(
-                        singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
-                        singletonList(TypeDefault.DEFAULT_PAYLOAD),
-                        DEFAULT_DESCRIPTION);
+                return DEFAULT;
             }
 
             // We need to recursively go back in the graph if the user specified that the payload
             // type must be taken from the previous component.
-            return discover(context, currentNode).orElse(
-                    new PreviousComponentOutputDefault(
-                            singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
-                            singletonList(TypeDefault.DEFAULT_PAYLOAD),
-                            DEFAULT_DESCRIPTION));
+            return discover(context, currentNode).orElse(DEFAULT);
 
         } else if (payload.contains(ComponentOutput.InferFromDynamicProperty.class.getName())) {
 
@@ -85,12 +87,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
 
             // Infer from dynamic expression. The input of the dynamic expression is the
             // previous component.
-            PreviousComponentOutput componentOutput = discover(context, currentNode)
-                    .orElse(new PreviousComponentOutputDefault(
-                            singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
-                            singletonList(TypeDefault.DEFAULT_PAYLOAD),
-                            DEFAULT_DESCRIPTION));
-
+            PreviousComponentOutput componentOutput = discover(context, currentNode).orElse(DEFAULT);
             return new PreviousComponentOutputInferFromDynamicExpression(componentOutput, dynamicExpression);
 
         } else {
@@ -102,25 +99,12 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         if (currentOutput.getAttributes().contains(ComponentOutput.PreviousComponent.class.getName())) {
             // We need to recursively go back in the graph if the user specified that the attributes
             // type must be taken from the previous component.
-            return discover(context, currentNode)
-                    .orElse(new PreviousComponentOutputDefault(
-                            singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
-                            singletonList(TypeDefault.DEFAULT_PAYLOAD),
-                            DEFAULT_DESCRIPTION));
+            return discover(context, currentNode).orElse(DEFAULT);
         } else {
             return new PreviousComponentOutputDefault(
                     currentOutput.getAttributes(),
                     currentOutput.getPayload(),
                     currentOutput.getDescription());
         }
-    }
-
-    private static final ComponentOutputDescriptor DEFAULT;
-    private static final String DEFAULT_DESCRIPTION = StringUtils.EMPTY;
-
-    static {
-        DEFAULT = new ComponentOutputDescriptor();
-        DEFAULT.setPayload(singletonList(TypeDefault.DEFAULT_PAYLOAD));
-        DEFAULT.setAttributes(singletonList(TypeDefault.DEFAULT_ATTRIBUTES));
     }
 }
