@@ -26,17 +26,11 @@ public abstract class AbstractComponentDiscoveryTest extends AbstractGraphTest {
 
     protected TypeAndTries typeAndTries;
 
-    private FlowGraph graph;
+    protected FlowGraph graph;
 
     @BeforeEach
     public void setUp() {
         super.setUp();
-        graph = provider.createGraph();
-        graph.root(root);
-        graph.add(root, componentNode1);
-        graph.add(componentNode1, componentNode2);
-        graph.add(componentNode2, componentNode3);
-
         typeAndTries = new TypeAndTries();
     }
 

@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.fork;
 
+import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractComponentDiscoveryTest;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
@@ -23,6 +24,18 @@ class ForkComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
+        graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, componentNode1);
+        graph.add(componentNode1, forkNode1);
+        graph.add(forkNode1, componentNode2);
+        graph.add(forkNode1, componentNode3);
+        graph.add(componentNode2, componentNode4);
+        graph.add(componentNode3, componentNode4);
+
+        forkNode1.addToScope(componentNode2);
+        forkNode1.addToScope(componentNode3);
+
         discovery = spy(new ForkComponentDiscovery(module, moduleService, typeAndTries));
     }
 
@@ -38,15 +51,18 @@ class ForkComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         doReturn(Optional.of(previousPreviousComponentOutput))
                 .when(discovery)
-                .discover(componentContext, componentNode2);
+                .discover(componentContext, forkNode1);
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, componentNode2);
+                discovery.compute(componentContext, (GraphNode) forkNode1);
 
         // Then
         assertThat(maybeActualOutput).contains(previousPreviousComponentOutput);
     }
 
+    @Test
+    void shouldReturnForkPrevious() {
 
+    }
 }

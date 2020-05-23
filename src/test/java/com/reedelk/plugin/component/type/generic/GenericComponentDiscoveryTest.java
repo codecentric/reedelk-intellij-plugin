@@ -27,6 +27,12 @@ class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
+        graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, componentNode1);
+        graph.add(componentNode1, componentNode2);
+        graph.add(componentNode2, componentNode3);
+
         discovery = spy(new GenericComponentDiscovery(module, moduleService, typeAndTries));
     }
 
