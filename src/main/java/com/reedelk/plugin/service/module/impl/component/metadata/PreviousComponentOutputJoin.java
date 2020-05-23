@@ -4,10 +4,7 @@ import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -91,6 +88,25 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PreviousComponentOutputJoin that = (PreviousComponentOutputJoin) o;
+        return Objects.equals(outputs, that.outputs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(outputs);
+    }
+
+    @Override
+    public String toString() {
+        return "PreviousComponentOutputJoin{" +
+                "outputs=" + outputs +
+                '}';
+    }
 
     static class OnTheFlyTypeProxy extends TypeProxyDefault {
 

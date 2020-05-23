@@ -12,6 +12,7 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.lenient;
@@ -40,7 +41,7 @@ public abstract class AbstractComponentDiscoveryTest extends AbstractGraphTest {
         lenient().doReturn(descriptor)
                 .when(moduleService)
                 .componentDescriptorOf(ComponentNode2.class.getName());
-        return new ComponentContext(graph, componentNode3);
+        return Mockito.spy(new ComponentContext(graph, componentNode3));
     }
 
     protected static class MyTestType {
