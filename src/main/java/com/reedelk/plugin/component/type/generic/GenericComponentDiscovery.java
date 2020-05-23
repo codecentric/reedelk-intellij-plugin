@@ -11,6 +11,7 @@ import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import com.reedelk.runtime.api.annotation.ComponentOutput;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,47 +65,55 @@ public class GenericComponentDiscovery implements DiscoveryStrategy {
                                             ComponentOutputDescriptor currentOutput) {
         List<String> payload = currentOutput.getPayload();
         if (payload.contains(ComponentOutput.PreviousComponent.class.getName())) {
-            if (context.predecessors(currentNode).isEmpty()) {
-                // If this is root we stop and do not look for the previous component,
-                // this is because otherwise we might continuously loop to the previous component
-                // when all the components specified the 'PreviousComponent' constraint in the payload type.
-                return DEFAULT;
-            }
-
-            // We need to recursively go back in the graph if the user specified that the payload
-            // type must be taken from the previous component.
-            return discover(context, currentNode).orElse(DEFAULT);
+            return handlePreviousComponentOutput(currentNode, context);
 
         } else if (payload.contains(ComponentOutput.InferFromDynamicProperty.class.getName())) {
-
-            ComponentData componentData = currentNode.componentData();
-            String dynamicPropertyName = currentOutput.getDynamicPropertyName();
-
-            String dynamicExpression = null;
-            if (componentData.has(dynamicPropertyName)) {
-                dynamicExpression = componentData.get(dynamicPropertyName);
-            }
-
-            // Infer from dynamic expression. The input of the dynamic expression is the
-            // previous component.
-            PreviousComponentOutput componentOutput = discover(context, currentNode).orElse(DEFAULT);
-            return new PreviousComponentOutputInferFromDynamicExpression(componentOutput, dynamicExpression);
+            return handleInferFromDynamicProperty(currentNode, context, currentOutput);
 
         } else {
             return new PreviousComponentOutputDefault(currentOutput.getAttributes(), payload, currentOutput.getDescription());
         }
     }
 
+    @NotNull
     private PreviousComponentOutput attributes(GraphNode currentNode, ComponentContext context, ComponentOutputDescriptor currentOutput) {
         if (currentOutput.getAttributes().contains(ComponentOutput.PreviousComponent.class.getName())) {
-            // We need to recursively go back in the graph if the user specified that the attributes
-            // type must be taken from the previous component.
-            return discover(context, currentNode).orElse(DEFAULT);
+            return handlePreviousComponentOutput(currentNode, context);
         } else {
             return new PreviousComponentOutputDefault(
                     currentOutput.getAttributes(),
                     currentOutput.getPayload(),
                     currentOutput.getDescription());
         }
+    }
+
+    @NotNull
+    private PreviousComponentOutput handleInferFromDynamicProperty(GraphNode currentNode, ComponentContext context, ComponentOutputDescriptor currentOutput) {
+        ComponentData componentData = currentNode.componentData();
+        String dynamicPropertyName = currentOutput.getDynamicPropertyName();
+
+        String dynamicExpression = null;
+        if (componentData.has(dynamicPropertyName)) {
+            dynamicExpression = componentData.get(dynamicPropertyName);
+        }
+
+        // Infer from dynamic expression. The input of the dynamic expression is the
+        // previous component.
+        PreviousComponentOutput componentOutput = discover(context, currentNode).orElse(DEFAULT);
+        return new PreviousComponentOutputInferFromDynamicExpression(componentOutput, dynamicExpression);
+    }
+
+    @NotNull
+    private PreviousComponentOutput handlePreviousComponentOutput(GraphNode currentNode, ComponentContext context) {
+        if (context.predecessors(currentNode).isEmpty()) {
+            // If there are no predecessors it means that the user annotated an inbound component
+            // with @ComponentOutput and as payload is asking to take the previous component.
+            // This configuration for an inbound component is not possible, and we return the
+            // default component output.
+            return DEFAULT;
+        }
+        // We need to recursively go back in the graph if the user specified that the payload
+        // type must be taken from the previous component.
+        return discover(context, currentNode).orElse(DEFAULT);
     }
 }
