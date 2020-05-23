@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractComponentDiscoveryTest extends AbstractGraphTest {
@@ -43,7 +43,7 @@ public abstract class AbstractComponentDiscoveryTest extends AbstractGraphTest {
     protected ComponentContext mockComponentContext(ComponentOutputDescriptor outputDescriptor) {
         ComponentDescriptor descriptor = new ComponentDescriptor();
         descriptor.setOutput(outputDescriptor);
-        doReturn(descriptor)
+        lenient().doReturn(descriptor)
                 .when(moduleService)
                 .componentDescriptorOf(ComponentNode2.class.getName());
         return new ComponentContext(graph, componentNode3);

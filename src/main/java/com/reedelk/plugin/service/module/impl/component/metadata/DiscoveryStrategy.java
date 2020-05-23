@@ -13,6 +13,7 @@ public interface DiscoveryStrategy {
 
     Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom);
 
+    // Method to be used to compute the output of nodes right outside the scoped graph node.
     Optional<PreviousComponentOutput> compute(ComponentContext context, ScopedGraphNode scopedGraphNode);
 
     PreviousComponentOutputDefault DEFAULT =

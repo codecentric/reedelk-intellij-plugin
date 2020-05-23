@@ -2,7 +2,6 @@ package com.reedelk.plugin.component.type.fork;
 
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractComponentDiscoveryTest;
-import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategy;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutputDefault;
 import com.reedelk.runtime.api.message.MessageAttributes;
@@ -28,7 +27,7 @@ class ForkComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
     }
 
     @Test
-    void shouldReturnPreviousPreviousComponentOutput() {
+    void shouldReturnForkPreviousComponentOutput() {
         // Given
         PreviousComponentOutput previousPreviousComponentOutput = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
@@ -41,12 +40,13 @@ class ForkComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
                 .when(discovery)
                 .discover(componentContext, componentNode2);
 
-
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
                 discovery.compute(componentContext, componentNode2);
 
         // Then
-        assertThat(maybeActualOutput).contains(DiscoveryStrategy.DEFAULT);
+        assertThat(maybeActualOutput).contains(previousPreviousComponentOutput);
     }
+
+
 }
