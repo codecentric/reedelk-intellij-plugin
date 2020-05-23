@@ -42,13 +42,7 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
         this(module, componentData, context);
 
         int count = 0;
-        if (propertiesByGroup.isEmpty()) {
-            // The component does not have any property defined (e.g Try-Catch, Fork ...)
-            String tabName = message("properties.panel.tab.title.general");
-            addPropertiesTab(tabName, PanelWithText.NoPropertiesPanel::new);
-            setTabComponentAt(count, new TabLabelVertical(tabName));
-            count++;
-        } else {
+        if (!propertiesByGroup.isEmpty()) {
             // We add for each tab group all the properties belonging to that group.
             for (Map.Entry<String, List<PropertyDescriptor>> entry : propertiesByGroup.entrySet()) {
                 addPropertiesTab(entry.getKey(), entry.getValue());
@@ -56,7 +50,6 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
                 count++;
             }
         }
-
         add(new HelpTab(componentData));
         setTabComponentAt(count, new TabLabelVertical(message("properties.panel.tab.title.help")));
     }
