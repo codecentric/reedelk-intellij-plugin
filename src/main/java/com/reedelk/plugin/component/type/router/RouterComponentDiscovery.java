@@ -21,7 +21,7 @@ public class RouterComponentDiscovery extends DiscoveryStrategyOneOfAware {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode, GraphNode successor) {
         // The previous output of the router component is the output of its previous component.
         // This is because the router forwards the input message to the outbound component matching
         // the given condition.

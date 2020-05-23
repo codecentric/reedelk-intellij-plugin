@@ -43,7 +43,7 @@ class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, componentNode2);
+                discovery.compute(componentContext, componentNode2, componentNode3);
 
         // Then
         assertThat(maybeActualOutput).contains(DiscoveryStrategy.DEFAULT);
@@ -65,7 +65,7 @@ class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, componentNode2);
+                discovery.compute(componentContext, componentNode2, componentNode3);
 
         // Then
         PreviousComponentOutputDefault expectedPayloadOutput =
@@ -96,7 +96,7 @@ class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, componentNode2);
+                discovery.compute(componentContext, componentNode2, componentNode3);
 
         // Then
         // Should use the default payload because the previous of the previous was empty
@@ -140,7 +140,7 @@ class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, componentNode2);
+                discovery.compute(componentContext, componentNode2, componentNode3);
 
         // Then
         // Should use the default payload because the previous of the previous was empty
@@ -181,7 +181,7 @@ class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, componentNode2);
+                discovery.compute(componentContext, componentNode2, componentNode3);
 
         // Then
         // Should use the default payload because the previous of the previous was empty
@@ -236,7 +236,7 @@ class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, componentNode2);
+                discovery.compute(componentContext, componentNode2, componentNode3);
 
         // Then
         // Should use the default payload because the previous of the previous was empty

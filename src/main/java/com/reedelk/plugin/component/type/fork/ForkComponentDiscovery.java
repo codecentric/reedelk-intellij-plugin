@@ -21,7 +21,7 @@ public class ForkComponentDiscovery extends DiscoveryStrategyJoinAware {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode, GraphNode successor) {
         // The output of the fork is the output of the previous component because the fork just
         // clones the input message to the outbound components.
         return discover(context, currentNode);

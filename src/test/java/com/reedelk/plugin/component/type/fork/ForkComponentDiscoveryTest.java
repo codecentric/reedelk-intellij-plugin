@@ -79,7 +79,7 @@ class ForkComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, (GraphNode) forkNode1);
+                discovery.compute(componentContext, forkNode1, componentNode2);
 
         // Then
         assertThat(maybeActualOutput).contains(previousPreviousComponentOutput);

@@ -27,10 +27,13 @@ public class TryCatchComponentDiscovery extends DiscoveryStrategyOneOfAware {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom, GraphNode successor) {
         List<GraphNode> successors = context.successors(nodeWeWantOutputFrom);
-        if (successors.get(0).equals(context.node())) {
-            // Try branch (we take the one before the try-catch.
+        // context.node() is wrong, because the context node might be two positions
+        // ahead (preceded by payload set)
+        // TODO: What if successor is null?
+        if (successors.get(0).equals(successor)) {
+            // Try branch (we take the one before the try-catch).
             return discover(context, nodeWeWantOutputFrom);
         } else {
             // We are in the catch

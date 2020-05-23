@@ -43,7 +43,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     PreviousComponentOutput componentOutputOf(ComponentContext context) {
         return DiscoveryStrategyFactory
                 .get(module, moduleService, typeAndTries, context, context.node())
-                .orElse(null);
+                .orElse(null); // TODO: Should it be default?
     }
 
     @Override

@@ -44,10 +44,11 @@ public abstract class DiscoveryStrategyOneOfAware implements DiscoveryStrategy {
                 strategy.compute(context, theScopeOfLastNode.get()).ifPresent(outputs::add);
 
             } else {
+                Optional<GraphNode> node = context.findFirstNodeOutsideCurrentScope(scopedGraphNode);
                 String nodeFullyQualifiedName = lastNodeOfScope.componentData().getFullyQualifiedName();
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, nodeFullyQualifiedName);
-                strategy.compute(context, lastNodeOfScope).ifPresent(outputs::add);
+                strategy.compute(context, lastNodeOfScope, node.orElse(null)).ifPresent(outputs::add);
             }
         }
 

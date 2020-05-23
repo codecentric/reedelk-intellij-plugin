@@ -63,7 +63,7 @@ public class DiscoveryStrategyFactory {
                     GraphNode predecessor = lastNodesOfFlow.get(0);
                     String predecessorFullyQualifiedName = lastNodesOfFlow.get(0).componentData().getFullyQualifiedName();
                     DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, predecessorFullyQualifiedName);
-                    return strategy.compute(context, predecessor);
+                    return strategy.compute(context, predecessor, nodeToFindInputMessage);
                 } else {
                     // We need to find the outermost scope
                     Optional<ScopedGraphNode> outermostScope = context.outermostScopeOf(lastNodesOfFlow);
@@ -99,7 +99,7 @@ public class DiscoveryStrategyFactory {
             GraphNode predecessor = predecessors.get(0);
             String predecessorFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
             DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, predecessorFullyQualifiedName);
-            return strategy.compute(context, predecessor);
+            return strategy.compute(context, predecessor, nodeToFindInputMessage);
         }
     }
 

@@ -31,7 +31,7 @@ public class GenericComponentDiscovery implements DiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode, GraphNode successor) {
         String componentFullyQualifiedName = currentNode.componentData().getFullyQualifiedName();
 
         ComponentDescriptor componentDescriptor = moduleService.componentDescriptorOf(componentFullyQualifiedName);

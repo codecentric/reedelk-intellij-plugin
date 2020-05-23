@@ -22,7 +22,7 @@ public class ForEachComponentDiscovery extends DiscoveryStrategyJoinAware {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom, GraphNode successor) {
         Optional<PreviousComponentOutput> previous = discover(context, nodeWeWantOutputFrom);
         return previous.map(PreviousComponentOutputForEach::new);
     }

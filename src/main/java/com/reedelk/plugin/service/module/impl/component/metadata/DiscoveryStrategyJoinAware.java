@@ -62,7 +62,7 @@ public abstract class DiscoveryStrategyJoinAware implements DiscoveryStrategy {
                 String nodeFullyQualifiedName = lastNodeOfScope.componentData().getFullyQualifiedName();
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, nodeFullyQualifiedName);
-                strategy.compute(context, lastNodeOfScope).ifPresent(outputs::add);
+                strategy.compute(context, lastNodeOfScope, node.orElse(null)).ifPresent(outputs::add);
             }
         }
 

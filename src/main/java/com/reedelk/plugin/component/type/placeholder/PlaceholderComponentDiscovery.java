@@ -20,7 +20,7 @@ public class PlaceholderComponentDiscovery implements DiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode currentNode, GraphNode successor) {
         return Optional.empty();
     }
 

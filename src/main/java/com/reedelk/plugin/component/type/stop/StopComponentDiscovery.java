@@ -21,7 +21,7 @@ public class StopComponentDiscovery implements DiscoveryStrategy {
     }
 
     @Override
-    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<PreviousComponentOutput> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom, GraphNode successor) {
         throw new UnsupportedOperationException();
     }
 

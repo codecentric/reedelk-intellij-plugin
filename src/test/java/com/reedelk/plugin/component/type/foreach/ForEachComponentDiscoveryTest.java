@@ -1,6 +1,5 @@
 package com.reedelk.plugin.component.type.foreach;
 
-import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractComponentDiscoveryTest;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
@@ -52,7 +51,7 @@ class ForEachComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
 
         // When
         Optional<PreviousComponentOutput> maybeActualOutput =
-                discovery.compute(componentContext, (GraphNode) forEachNode1);
+                discovery.compute(componentContext, forEachNode1, componentNode2);
 
         // Then
         PreviousComponentOutputForEach expected =
