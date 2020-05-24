@@ -1,5 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.Topics;
@@ -11,8 +13,10 @@ import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.lang.String.format;
@@ -28,6 +32,8 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     private final OnComponentMetadataEvent onComponentMetadataEvent;
     private final MetadataExpectedInputDTOBuilder metadataExpectedInputDTOBuilder;
 
+    private final Cache<String, Optional<PreviousComponentOutput>> cache;
+
     public PlatformComponentMetadataService(@NotNull Module module,
                                             @NotNull PlatformModuleService moduleService,
                                             @NotNull SuggestionFinder suggestionFinder,
@@ -38,20 +44,26 @@ class PlatformComponentMetadataService implements PlatformModuleService {
         this.suggestionFinder = suggestionFinder;
         this.metadataExpectedInputDTOBuilder = new MetadataExpectedInputDTOBuilder(moduleService, this.typeAndTries);
         this.onComponentMetadataEvent = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
+
+        // Initialize cache used to avoid computing every time the same
+        // discovery strategy for the same component context. The key of
+        // the cache is the component context's uuid.
+        cache = CacheBuilder
+                .newBuilder()
+                .maximumSize(1)
+                .expireAfterAccess(Duration.ofMinutes(5))
+                .build();
     }
 
     PreviousComponentOutput componentOutputOf(ComponentContext context) {
-        return DiscoveryStrategyFactory
-                .get(module, moduleService, typeAndTries, context, context.node())
-                .orElse(null); // TODO: Should it be default?
+        return outputFrom(context).orElse(null);
     }
 
     @Override
     public void componentMetadataOf(@NotNull ComponentContext context) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
             try {
-                Optional<PreviousComponentOutput> componentOutput =
-                        DiscoveryStrategyFactory.get(module, moduleService, typeAndTries, context, context.node());
+                Optional<PreviousComponentOutput> componentOutput = outputFrom(context);
 
                 // TODO: Get might fail, consider to return default output! This might
                 //  happen for instance when we want to find the previous component of flow
@@ -76,5 +88,15 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 onComponentMetadataEvent.onComponentMetadataError(wrapped);
             }
         });
+    }
+
+    private Optional<PreviousComponentOutput> outputFrom(ComponentContext context) {
+        try {
+            return cache.get(
+                    context.getUuid(),
+                    () -> DiscoveryStrategyFactory.get(module, moduleService, typeAndTries, context, context.node()));
+        } catch (ExecutionException e) {
+            return Optional.empty();
+        }
     }
 }

@@ -9,15 +9,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class ComponentContext {
 
+    private final String uuid;
     private final GraphNode node;
     protected final FlowGraph graph;
 
     public ComponentContext(@NotNull FlowGraph graph, @Nullable GraphNode node) {
+        this.uuid = UUID.randomUUID().toString();
         this.node = node;
         this.graph = graph;
+    }
+
+    public String getUuid() {
+        return uuid;
     }
 
     public GraphNode node() {

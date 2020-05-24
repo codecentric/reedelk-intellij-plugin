@@ -50,7 +50,7 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
         this.editor.putUserData(MODULE_NAME, module.getName());
         this.editor.putUserData(COMPONENT_CONTEXT, componentContext);
         this.editor.putUserData(COMPONENT_PROPERTY_PATH, scriptPropertyPath);
-        configure(editor);
+        this.configure(editor);
 
         document.addDocumentListener(this);
         setLayout(new BorderLayout());
