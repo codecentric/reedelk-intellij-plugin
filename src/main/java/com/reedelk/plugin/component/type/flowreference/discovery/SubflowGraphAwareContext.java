@@ -37,10 +37,11 @@ public class SubflowGraphAwareContext extends ComponentContext {
 
     @Override
     public List<GraphNode> predecessors(GraphNode target) {
-        if (target == node()) { // TODO: ?? understand this case..
-            return graph.endNodes();
-        } else {
-            return graph.predecessors(target);
-        }
+        // If we ask for the predecessors of the flow reference,
+        // we need to return the last nodes of the referenced subflow.
+        // In any other case we return the predecessors of the target node.
+        return target == node() ?
+                graph.endNodes() :
+                graph.predecessors(target);
     }
 }
