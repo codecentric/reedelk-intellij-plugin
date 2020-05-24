@@ -20,6 +20,7 @@ public class SubflowGraphAwareContext extends ComponentContext {
     // The subflow ends with a scoped graph node? Then, the joining
     // scope of the target, must be computed by considering the
     // end nodes of the current subflow.
+    // TODO: Revise this
     @Override
     public Optional<ScopedGraphNode> joiningScopeOf(GraphNode target) {
         List<GraphNode> graphNodes = graph.endNodes();

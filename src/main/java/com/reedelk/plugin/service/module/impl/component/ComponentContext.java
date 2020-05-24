@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Stack;
 
 public class ComponentContext {
 
@@ -46,15 +45,7 @@ public class ComponentContext {
     }
 
     public Optional<ScopedGraphNode> outermostScopeOf(List<GraphNode> targets) {
-        // TODO: There is a function already written for this, oterwise create one.
-        if (targets.isEmpty()) return Optional.empty();
-        GraphNode target = targets.get(0);
-        Stack<ScopedGraphNode> stack = FindScopes.of(graph, target);
-        ScopedGraphNode current = null;
-        while (!stack.isEmpty()) {
-            current = stack.pop();
-        }
-        return Optional.ofNullable(current);
+        return FindOutermostScope.of(graph, targets);
     }
 
     public List<GraphNode> listLastNodesOfScope(ScopedGraphNode scopedGraphNode) {
