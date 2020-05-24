@@ -41,11 +41,11 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
                 .stream()
                 .map(TypeProxy::create)
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
+                        .returnTypeDisplayValue(dynamicType.toSimpleName(typeAndTrieMap))
                         .cursorOffset(suggestion.getCursorOffset())
                         .insertValue(suggestion.getInsertValue())
                         .lookupToken(suggestion.getLookupToken())
                         .tailText(suggestion.getTailText())
-                        .returnTypeDisplayValue(dynamicType.toSimpleName(typeAndTrieMap))
                         .returnType(dynamicType)
                         .build())
                 .collect(toList());
