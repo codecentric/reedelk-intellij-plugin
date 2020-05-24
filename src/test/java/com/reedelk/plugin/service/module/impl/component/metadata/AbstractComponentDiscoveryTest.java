@@ -9,6 +9,7 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
+import com.reedelk.plugin.service.module.impl.component.completion.Trie;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.runtime.api.component.Component;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.ALL_TYPES;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.spy;
 
@@ -34,7 +39,9 @@ public abstract class AbstractComponentDiscoveryTest extends AbstractGraphTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        typeAndTries = new TypeAndTries();
+        Map<String, Trie> defaultTypesAndTries = new HashMap<>();
+        typeAndTries = new TypeAndTries(defaultTypesAndTries);
+        ALL_TYPES.forEach(trieProvider -> trieProvider.register(typeAndTries, defaultTypesAndTries));
     }
 
     protected ComponentContext mockComponentContext(ComponentOutputDescriptor outputDescriptor, Class<? extends Component> componentClazz, GraphNode componentNode) {

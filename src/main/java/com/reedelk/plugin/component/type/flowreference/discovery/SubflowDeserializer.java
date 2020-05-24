@@ -51,7 +51,8 @@ public class SubflowDeserializer {
                         }).ifPresent(document -> {
                             try {
                                 FlowGraphProvider provider = FlowGraphProvider.get();
-                                deserialize[0] = SubFlowDeserializer.deserialize(module, document.getText(), provider);
+                                String documentText = document.getText();
+                                deserialize[0] = SubFlowDeserializer.deserialize(module, documentText, provider);
                             } catch (DeserializationError error) {
                                 LOG.warn(error);
                             }

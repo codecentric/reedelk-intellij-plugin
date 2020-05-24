@@ -1,6 +1,9 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +12,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeDefault.DEFAULT_ATTRIBUTES;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeDefault.DEFAULT_PAYLOAD;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
@@ -24,10 +29,8 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
 
     public PreviousComponentOutputDefault(List<String> attributes, List<String> payload, String description) {
         this.description = description;
-        this.attributes = attributes == null || attributes.isEmpty() ?
-                singletonList(TypeDefault.DEFAULT_ATTRIBUTES) : attributes;
-        this.payload = payload == null || payload.isEmpty() ?
-                singletonList(TypeDefault.DEFAULT_PAYLOAD) : payload;
+        this.attributes = attributes == null || attributes.isEmpty() ? singletonList(DEFAULT_ATTRIBUTES) : attributes;
+        this.payload = payload == null || payload.isEmpty() ? singletonList(DEFAULT_PAYLOAD) : payload;
     }
 
     @Override
@@ -55,12 +58,13 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
 
     @Override
     public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
-        return attributes(suggester, typeAndTries);
+        List<MetadataTypeDTO> attributesMetadataTypes = createMetadataTypesFrom(attributes, suggester, typeAndTries);
+        return MetadataUtils.merge(attributesMetadataTypes, typeAndTries);
     }
 
     @Override
     public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
-        return payload(suggester, typeAndTries);
+        return createMetadataTypesFrom(payload, suggester, typeAndTries);
     }
 
     @Override
@@ -88,27 +92,19 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     }
 
     // Resolves the dynamic type from the output descriptor
-    protected List<String> resolveDynamicTypes(Suggestion suggestion) {
+    private List<String> resolveDynamicTypes(Suggestion suggestion) {
         TypeProxy suggestionType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return attributes.isEmpty() ? singletonList(TypeDefault.DEFAULT_ATTRIBUTES) : attributes;
+            return attributes.isEmpty() ? singletonList(DEFAULT_ATTRIBUTES) : attributes;
         } else if (MessagePayload.class.getName().equals(suggestionType.getTypeFullyQualifiedName())) {
-            return payload.isEmpty() ? singletonList(TypeDefault.DEFAULT_PAYLOAD) : payload;
+            return payload.isEmpty() ? singletonList(DEFAULT_PAYLOAD) : payload;
         } else {
             throw new IllegalStateException("Resolve must be called only if the suggestion type is dynamic");
         }
     }
 
-    protected MetadataTypeDTO attributes(SuggestionFinder suggester, TypeAndTries typeAndTries) {
-        List<MetadataTypeDTO> metadataTypes = attributes.stream()
-                .distinct() // we want to avoid creating data for the same type.
-                .map(attributeType -> createMetadataType(suggester, typeAndTries, TypeProxy.create(attributeType)))
-                .collect(toList());
-        return mergeMetadataTypes(metadataTypes, typeAndTries);
-    }
-
-    protected List<MetadataTypeDTO> payload(SuggestionFinder suggester, TypeAndTries typeAndTries) {
-        return payload.stream()
+    private List<MetadataTypeDTO> createMetadataTypesFrom(List<String> types, SuggestionFinder suggester, TypeAndTries typeAndTries) {
+        return types.stream()
                 .distinct()
                 .map(payloadType -> createMetadataType(suggester, typeAndTries, TypeProxy.create(payloadType)))
                 .collect(toList());

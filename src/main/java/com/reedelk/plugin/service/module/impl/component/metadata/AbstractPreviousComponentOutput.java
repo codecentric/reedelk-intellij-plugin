@@ -3,37 +3,14 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static java.util.stream.Collectors.toList;
 
 abstract class AbstractPreviousComponentOutput implements PreviousComponentOutput {
-
-    public static MetadataTypeDTO mergeMetadataTypes(List<MetadataTypeDTO> metadataTypes, TypeAndTries typeAndTries) {
-        Map<String, MetadataTypeItemDTO> nameAndMetadataMappings = new HashMap<>();
-        metadataTypes.forEach(metadataTypeDTO -> {
-            metadataTypeDTO.getProperties().forEach(metadataTypeItemDTO -> {
-                MetadataTypeItemDTO item = nameAndMetadataMappings.get(metadataTypeItemDTO.name);
-                if (item != null) {
-                    MetadataTypeItemDTO merged = merge(metadataTypeItemDTO, item);
-                    nameAndMetadataMappings.put(metadataTypeItemDTO.name, merged);
-                } else {
-                    nameAndMetadataMappings.put(metadataTypeItemDTO.name, metadataTypeItemDTO);
-                }
-            });
-        });
-
-        TypeProxy typeProxy = TypeProxy.create(TypeDefault.DEFAULT_ATTRIBUTES);
-        String displayName = typeProxy.toSimpleName(typeAndTries);
-        return new MetadataTypeDTO(displayName, typeProxy, nameAndMetadataMappings.values());
-    }
-
-    public static MetadataTypeItemDTO merge(MetadataTypeItemDTO dto1, MetadataTypeItemDTO dto2) {
-        return Objects.equals(dto1.value, dto2.value) ?
-                dto1 :
-                new MetadataTypeItemDTO(dto1.name, dto1.value + ", " + dto2.value);
-    }
 
     protected MetadataTypeDTO createMetadataType(SuggestionFinder suggester, TypeAndTries typeAndTries, TypeProxy typeProxy) {
         if (typeProxy.resolve(typeAndTries).isList()) {
