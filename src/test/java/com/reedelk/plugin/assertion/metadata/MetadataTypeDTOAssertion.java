@@ -21,6 +21,12 @@ public class MetadataTypeDTOAssertion {
         return this;
     }
 
+    public MetadataTypeDTOAssertion hasPropertyCount(int expectedPropertiesCount) {
+        Collection<MetadataTypeItemDTO> properties = metadataType.getProperties();
+        assertThat(properties).hasSize(expectedPropertiesCount);
+        return this;
+    }
+
     public MetadataTypeDTOAssertion hasType(String expectedTypeFullyQualifiedName) {
         assertThat(metadataType.getTypeProxy().getTypeFullyQualifiedName())
                 .isEqualTo(expectedTypeFullyQualifiedName);

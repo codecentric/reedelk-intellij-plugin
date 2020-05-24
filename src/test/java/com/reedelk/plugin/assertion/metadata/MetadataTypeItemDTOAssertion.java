@@ -2,6 +2,10 @@ package com.reedelk.plugin.assertion.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.metadata.MetadataTypeItemDTO;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MetadataTypeItemDTOAssertion {
@@ -18,8 +22,12 @@ public class MetadataTypeItemDTOAssertion {
         return parent;
     }
 
+    // We might have multiple display type separated by a comma, therefore we need
+    // to compare the expected with the actual without considering the order they appear.
     public MetadataTypeItemDTOAssertion withDisplayType(String expectedDisplayType) {
-        assertThat(property.displayType).isEqualTo(expectedDisplayType);
+        Set<String> expectedDisplayTypes = new HashSet<>(Arrays.asList(expectedDisplayType.split(",")));
+        Set<String> actualDisplayTypes = new HashSet<>(Arrays.asList(property.displayType.split(",")));
+        assertThat(actualDisplayTypes).isEqualTo(expectedDisplayTypes);
         return this;
     }
 }

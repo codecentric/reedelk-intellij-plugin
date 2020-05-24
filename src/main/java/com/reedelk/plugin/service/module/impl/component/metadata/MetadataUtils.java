@@ -11,13 +11,13 @@ import java.util.Objects;
 
 public class MetadataUtils {
 
-    public static MetadataTypeDTO merge(List<MetadataTypeDTO> metadataTypes, TypeAndTries typeAndTries) {
+    public static MetadataTypeDTO mergeAttributes(List<MetadataTypeDTO> metadataTypes, TypeAndTries typeAndTries) {
         Map<String, MetadataTypeItemDTO> nameMetadataType = new HashMap<>();
         metadataTypes.forEach(metadataTypeDTO ->
                 metadataTypeDTO.getProperties().forEach(metadataTypeItemDTO -> {
                     MetadataTypeItemDTO item = nameMetadataType.get(metadataTypeItemDTO.name);
                     if (item != null) {
-                        MetadataTypeItemDTO merged = merge(metadataTypeItemDTO, item);
+                        MetadataTypeItemDTO merged = mergeAttributes(metadataTypeItemDTO, item);
                         nameMetadataType.put(metadataTypeItemDTO.name, merged);
                     } else {
                         nameMetadataType.put(metadataTypeItemDTO.name, metadataTypeItemDTO);
@@ -28,8 +28,8 @@ public class MetadataUtils {
         return new MetadataTypeDTO(displayName, typeProxy, nameMetadataType.values());
     }
 
-    private static MetadataTypeItemDTO merge(MetadataTypeItemDTO dto1, MetadataTypeItemDTO dto2) {
+    private static MetadataTypeItemDTO mergeAttributes(MetadataTypeItemDTO dto1, MetadataTypeItemDTO dto2) {
         return Objects.equals(dto1.displayType, dto2.displayType) ?
-                dto1 : new MetadataTypeItemDTO(dto1.name, dto1.displayType + ", " + dto2.displayType);
+                dto1 : new MetadataTypeItemDTO(dto1.name, dto1.displayType + "," + dto2.displayType);
     }
 }

@@ -17,7 +17,8 @@ import static java.util.Arrays.asList;
 public class TypeTestUtils {
 
     public static List<TrieProvider> ALL_TYPES =
-            asList(new CustomMessageAttributeType(),
+            asList(new CustomMessageAttributeType2(),
+                    new CustomMessageAttributeType1(),
                     new GenericMapTypeFunctions(),
                     new MessageAttributeType(),
                     new ListMyUnknownType(),
@@ -153,17 +154,32 @@ public class TypeTestUtils {
         }
     }
 
-    public static class CustomMessageAttributeType implements TrieProvider {
+    public static class CustomMessageAttributeType1 implements TrieProvider {
 
-        private CustomMessageAttributeType() {
+        private CustomMessageAttributeType1() {
         }
 
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
-            Trie trie = new TrieDefault(CustomMessageAttributeType.class.getName(), MessageAttributes.class.getName(), null);
+            Trie trie = new TrieDefault(CustomMessageAttributeType1.class.getName(), MessageAttributes.class.getName(), null);
             trie.insert(createPropertySuggestion("attributeProperty1", String.class.getName(), typeAndTries));
             trie.insert(createPropertySuggestion("attributeProperty2", long.class.getName(), typeAndTries));
-            trieMap.put(CustomMessageAttributeType.class.getName(), trie);
+            trieMap.put(CustomMessageAttributeType1.class.getName(), trie);
+        }
+    }
+
+    public static class CustomMessageAttributeType2 implements TrieProvider {
+
+        private CustomMessageAttributeType2() {
+        }
+
+        @Override
+        public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
+            Trie trie = new TrieDefault(CustomMessageAttributeType2.class.getName(), MessageAttributes.class.getName(), null);
+            trie.insert(createPropertySuggestion("attributeProperty1", int.class.getName(), typeAndTries));
+            trie.insert(createPropertySuggestion("attributeProperty2", long.class.getName(), typeAndTries));
+            trie.insert(createPropertySuggestion("anotherAttributeProperty3", long.class.getName(), typeAndTries));
+            trieMap.put(CustomMessageAttributeType2.class.getName(), trie);
         }
     }
 
