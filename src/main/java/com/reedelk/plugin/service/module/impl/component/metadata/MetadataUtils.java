@@ -29,7 +29,7 @@ public class MetadataUtils {
     }
 
     private static MetadataTypeItemDTO merge(MetadataTypeItemDTO dto1, MetadataTypeItemDTO dto2) {
-        return Objects.equals(dto1.value, dto2.value) ?
-                dto1 : new MetadataTypeItemDTO(dto1.name, dto1.value + ", " + dto2.value);
+        return Objects.equals(dto1.displayType, dto2.displayType) ?
+                dto1 : new MetadataTypeItemDTO(dto1.name, dto1.displayType + ", " + dto2.displayType);
     }
 }

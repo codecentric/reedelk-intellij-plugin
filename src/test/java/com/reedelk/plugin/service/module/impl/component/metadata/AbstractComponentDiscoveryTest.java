@@ -34,12 +34,13 @@ public abstract class AbstractComponentDiscoveryTest extends AbstractGraphTest {
 
     protected TypeAndTries typeAndTries;
 
+    protected Map<String, Trie> defaultTypesAndTries = new HashMap<>();
+
     protected FlowGraph graph;
 
     @BeforeEach
     public void setUp() {
         super.setUp();
-        Map<String, Trie> defaultTypesAndTries = new HashMap<>();
         typeAndTries = new TypeAndTries(defaultTypesAndTries);
         ALL_TYPES.forEach(trieProvider -> trieProvider.register(typeAndTries, defaultTypesAndTries));
     }

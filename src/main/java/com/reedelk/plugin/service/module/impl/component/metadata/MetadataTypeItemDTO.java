@@ -3,18 +3,18 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 public class MetadataTypeItemDTO {
 
     public final String name;
-    public final String value; // TODO: this is basically the simple type
+    public final String displayType;
     public final MetadataTypeDTO complex;
 
-    public MetadataTypeItemDTO(String name, String value) {
+    public MetadataTypeItemDTO(String name, String displayType) {
         this.name = name;
-        this.value = value;
+        this.displayType = displayType;
         this.complex = null;
     }
 
     public MetadataTypeItemDTO(String name, MetadataTypeDTO complex) {
         this.name = name;
-        this.value = null;
+        this.displayType = null;
         this.complex = complex;
     }
 }

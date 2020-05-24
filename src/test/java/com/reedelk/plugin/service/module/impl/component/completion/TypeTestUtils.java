@@ -5,29 +5,32 @@ import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createFunctionSuggestion;
 import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createPropertySuggestion;
+import static java.util.Arrays.asList;
 
 public class TypeTestUtils {
 
-    public static List<TrieProvider> ALL_TYPES = Arrays.asList(
-      new GenericMapTypeFunctions(),
-            new ListMapFirstType(),
-            new ListMyItemType(),
-            new ListMyUnknownType(),
-            new MapFirstType(),
-            new MapSecondType(),
-            new MessageAttributeType(),
-            new MyAttributeType(),
-            new MyItemType(),
-            new MessageType());
+    public static List<TrieProvider> ALL_TYPES =
+            asList(new CustomMessageAttributeType(),
+                    new GenericMapTypeFunctions(),
+                    new MessageAttributeType(),
+                    new ListMyUnknownType(),
+                    new ListMapFirstType(),
+                    new MyAttributeType(),
+                    new ListMyItemType(),
+                    new MapSecondType(),
+                    new MapFirstType(),
+                    new MessageType(),
+                    new MyItemType());
 
     public interface TrieProvider {
-
         void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap);
-
     }
 
     public static class GenericMapTypeFunctions implements TrieProvider {
@@ -38,7 +41,7 @@ public class TypeTestUtils {
         @Override
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
             TypeDefault.BUILT_IN_TYPE.forEach(builtInType -> builtInType.register(trieMap));
-         }
+        }
     }
 
     public static class ListMapFirstType extends ArrayList<MapFirstType> implements TrieProvider {
@@ -147,6 +150,20 @@ public class TypeTestUtils {
             Trie trie = new TrieDefault(MessageAttributes.class.getName());
             trie.insert(createPropertySuggestion("component", String.class.getName(), typeAndTries));
             trieMap.put(MessageAttributes.class.getName(), trie);
+        }
+    }
+
+    public static class CustomMessageAttributeType implements TrieProvider {
+
+        private CustomMessageAttributeType() {
+        }
+
+        @Override
+        public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
+            Trie trie = new TrieDefault(CustomMessageAttributeType.class.getName(), MessageAttributes.class.getName(), null);
+            trie.insert(createPropertySuggestion("attributeProperty1", String.class.getName(), typeAndTries));
+            trie.insert(createPropertySuggestion("attributeProperty2", long.class.getName(), typeAndTries));
+            trieMap.put(CustomMessageAttributeType.class.getName(), trie);
         }
     }
 

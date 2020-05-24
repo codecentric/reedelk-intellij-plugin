@@ -6,24 +6,24 @@ import java.util.Collection;
 
 public class MetadataTypeDTO {
 
-    private final String type;
+    private final String displayType;
     private final TypeProxy typeProxy;
     private final Collection<MetadataTypeItemDTO> properties;
 
     public MetadataTypeDTO(Class<?> clazz, Collection<MetadataTypeItemDTO> properties) {
-        this.type = clazz.getSimpleName();
+        this.displayType = clazz.getSimpleName();
         this.typeProxy = TypeProxy.create(clazz);
         this.properties = properties;
     }
 
     public MetadataTypeDTO(String displayType, TypeProxy typeProxy, Collection<MetadataTypeItemDTO> properties) {
-        this.type = displayType;
+        this.displayType = displayType;
         this.typeProxy = typeProxy;
         this.properties = properties;
     }
 
-    public String getType() {
-        return type;
+    public String getDisplayType() {
+        return displayType;
     }
 
     public TypeProxy getTypeProxy() {

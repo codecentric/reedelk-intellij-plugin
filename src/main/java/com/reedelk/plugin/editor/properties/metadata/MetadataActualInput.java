@@ -55,7 +55,7 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
                 // Inline
                 MetadataTypeDTO payloadIO = payloads.get(0);
                 boolean collapsed = payloadIO.getProperties().isEmpty(); // Collapsed if there are no properties
-                DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", payloadIO.getType()), payloadIO, LEFT_OFFSET, collapsed, true);
+                DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", payloadIO.getDisplayType()), payloadIO, LEFT_OFFSET, collapsed, true);
                 payload.setBorder(JBUI.Borders.emptyTop(topOffset));
                 FormBuilder.get().addFullWidthAndHeight(payload, parent);
             } else {
@@ -77,7 +77,7 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
             payloads.forEach(new Consumer<MetadataTypeDTO>() {
                 @Override
                 public void accept(MetadataTypeDTO descriptor) {
-                    String lab = htmlLabel(descriptor.getType(), "");
+                    String lab = htmlLabel(descriptor.getDisplayType(), "");
                     JBLabel paylodType = new JBLabel(lab, JLabel.LEFT);
                     paylodType.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
                     paylodType.setBorder(JBUI.Borders.emptyLeft(parentPadding));
@@ -86,8 +86,8 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
 
                     descriptor.getProperties().stream().sorted(Comparator.comparing(ioTypeDTO -> ioTypeDTO.name))
                             .forEach(iotypeDTO -> {
-                                if (StringUtils.isNotBlank(iotypeDTO.value)) {
-                                    String label = htmlLabel(iotypeDTO.name, iotypeDTO.value);
+                                if (StringUtils.isNotBlank(iotypeDTO.displayType)) {
+                                    String label = htmlLabel(iotypeDTO.name, iotypeDTO.displayType);
                                     JBLabel attributes = new JBLabel(label, JLabel.LEFT);
                                     attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
                                     attributes.setBorder(JBUI.Borders.emptyLeft(parentPadding));
@@ -95,7 +95,7 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
                                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                                 } else {
                                     MetadataTypeDTO complex = iotypeDTO.complex;
-                                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, complex.getType()), complex, parentPadding, true, horizontalBar);
+                                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, complex.getDisplayType()), complex, parentPadding, true, horizontalBar);
                                     payload.setBorder(JBUI.Borders.empty());
                                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
                                     FormBuilder.get().addFullWidthAndHeight(payload, content);
@@ -112,8 +112,8 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
             descriptor.getProperties().stream().sorted(Comparator.comparing(ioTypeDTO -> ioTypeDTO.name)).forEach(iotypeDTO -> {
-                if (StringUtils.isNotBlank(iotypeDTO.value)) {
-                    String label = htmlLabel(iotypeDTO.name, iotypeDTO.value);
+                if (StringUtils.isNotBlank(iotypeDTO.displayType)) {
+                    String label = htmlLabel(iotypeDTO.name, iotypeDTO.displayType);
                     JBLabel attributes = new JBLabel(label, JLabel.LEFT);
                     attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
                     attributes.setBorder(JBUI.Borders.emptyLeft(parentPadding));
@@ -121,7 +121,7 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                 } else {
                     MetadataTypeDTO complex = iotypeDTO.complex;
-                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, HTMLUtils.escape(complex.getType())), complex, parentPadding, true, false);
+                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, HTMLUtils.escape(complex.getDisplayType())), complex, parentPadding, true, false);
                     payload.setBorder(JBUI.Borders.empty());
                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
                     FormBuilder.get().addFullWidthAndHeight(payload, content);
