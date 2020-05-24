@@ -50,4 +50,7 @@ public class Colors {
 
     public static final Color TOOL_WINDOW_PROPERTIES_TEXT = JBColor.DARK_GRAY;
 
+    public static final JBColor METADATA_PANEL_BTN_ON_HOVER_BG = new JBColor(Gray._225, Gray._225);
+    public static final JBColor METADATA_PANEL_BTN_BOTTOM_BORDER = new JBColor(new Color(59, 121, 197, 200), new Color(59, 121, 197, 200));
+
 }

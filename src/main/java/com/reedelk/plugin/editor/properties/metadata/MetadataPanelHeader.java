@@ -12,9 +12,11 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 import static com.intellij.util.ui.JBUI.Borders.customLine;
-import static com.reedelk.plugin.commons.Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG;
+import static com.reedelk.plugin.commons.Colors.*;
 
 public class MetadataPanelHeader extends DisposablePanel {
+
+    private JComponent active;
 
     public MetadataPanelHeader(String header1Text, ClickableLabel.OnClickAction header1Action,
                                String header2Text, ClickableLabel.OnClickAction header2Action) {
@@ -35,6 +37,10 @@ public class MetadataPanelHeader extends DisposablePanel {
             header2Action.onClick();
         });
 
+        header1Label.setBackground(METADATA_PANEL_BTN_ON_HOVER_BG);
+        header2Label.setBackground(METADATA_PANEL_BTN_ON_HOVER_BG);
+        setOnHoverAndExit(header1Label);
+        setOnHoverAndExit(header2Label);
         setActive(header1Label);
         setNotActive(header2Label);
 
@@ -52,12 +58,14 @@ public class MetadataPanelHeader extends DisposablePanel {
     }
 
     private void setActive(JComponent component) {
-        component.setForeground(JBColor.DARK_GRAY);
-        // Add right border
+        active = component;
+        // Add Bottom and right border
         Border line = customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);
-        Border bottomLine = customLine(new Color(59, 121, 197, 200), 0,0, 3, 0);
+        Border bottomLine = customLine(METADATA_PANEL_BTN_BOTTOM_BORDER, 0,0, 3, 0);
         Border padding = JBUI.Borders.empty(0, 10);
         component.setBorder(new CompoundBorder(new CompoundBorder(bottomLine, line), padding));
+        component.setForeground(JBColor.DARK_GRAY);
+        component.setOpaque(false);
     }
 
     private void setNotActive(JComponent component) {
@@ -67,5 +75,21 @@ public class MetadataPanelHeader extends DisposablePanel {
         Border padding = JBUI.Borders.empty(0, 10, 2, 10);
         Border bottomLine = customLine(JBColor.LIGHT_GRAY, 0, 0, 1, 0);
         component.setBorder(new CompoundBorder(new CompoundBorder(bottomLine, line), padding));
+    }
+
+    private void setOnHoverAndExit(ClickableLabel label) {
+        label.setOnHover(() -> {
+            if (active != label) {
+                label.setOpaque(true);
+                label.revalidate();
+                label.repaint();
+            }
+        });
+
+        label.setOnExit(() -> {
+            label.setOpaque(false);
+            label.revalidate();
+            label.repaint();
+        });
     }
 }

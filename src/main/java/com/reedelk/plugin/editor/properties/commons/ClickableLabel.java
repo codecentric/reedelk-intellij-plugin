@@ -13,6 +13,8 @@ public class ClickableLabel extends JBLabel implements MouseListener {
     private static final Cursor ON_HOVER_CURSOR = new Cursor(Cursor.HAND_CURSOR);
 
     private transient OnClickAction action;
+    private transient OnHoverAction onHover;
+    private transient OnExitAction onExit;
 
     public ClickableLabel(String text) {
         this(text, null, null, IconAlignment.LEFT, null);
@@ -72,11 +74,17 @@ public class ClickableLabel extends JBLabel implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent event) {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (onHover != null) {
+            onHover.onHover();
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent event) {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        if (onExit != null) {
+            onExit.onExit();
+        }
     }
 
     @Override
@@ -93,8 +101,24 @@ public class ClickableLabel extends JBLabel implements MouseListener {
         this.action = action;
     }
 
+    public void setOnHover(OnHoverAction onHover) {
+        this.onHover = onHover;
+    }
+
+    public void setOnExit(OnExitAction onExit) {
+        this.onExit = onExit;
+    }
+
     public interface OnClickAction {
         void onClick();
+    }
+
+    public interface OnHoverAction {
+        void onHover();
+    }
+
+    public interface OnExitAction {
+        void onExit();
     }
 
     public enum IconAlignment {
