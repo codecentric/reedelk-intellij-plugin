@@ -3,7 +3,7 @@ package com.reedelk.plugin.component.type.flowreference;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.discovery.SubflowDeserializer;
-import com.reedelk.plugin.component.type.flowreference.discovery.SubflowGraphAwareContext;
+import com.reedelk.plugin.component.type.flowreference.discovery.SubflowReferenceGraphAwareContext;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -46,7 +46,7 @@ public class FlowReferenceComponentDiscovery implements DiscoveryStrategy {
 
         return deSerializedSubflow.flatMap(subflowGraph -> {
 
-            SubflowGraphAwareContext newContext = new SubflowGraphAwareContext(subflowGraph, nodeWeWantOutputFrom);
+            SubflowReferenceGraphAwareContext newContext = new SubflowReferenceGraphAwareContext(subflowGraph, nodeWeWantOutputFrom);
 
             return discover(newContext, nodeWeWantOutputFrom);
         });

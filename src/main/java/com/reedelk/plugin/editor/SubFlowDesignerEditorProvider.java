@@ -37,7 +37,7 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
         checkState(module != null, "module");
 
         FlowSnapshot snapshot = new FlowSnapshot();
-        FlowGraphProvider graphProvider = new FlowGraphProvider();
+        FlowGraphProvider graphProvider = FlowGraphProvider.get();
         GraphManager graphManager = new SubFlowGraphManager(module, file, snapshot, graphProvider);
 
         DesignerPanelSubFlowActionHandler handler = new DesignerPanelSubFlowActionHandler(module, snapshot);

@@ -189,9 +189,15 @@ public abstract class AbstractGraphTest {
         }
     }
 
-    public static class TestAwareGraphProvider extends FlowGraphProvider {
+    public static class TestAwareGraphProvider implements FlowGraphProvider {
+
         public FlowGraph createGraph() {
             String id = UUID.randomUUID().toString();
+            return createGraph(id);
+        }
+
+        @Override
+        public FlowGraph createGraph(String id) {
             return new FlowGraphImpl(id);
         }
     }

@@ -37,7 +37,7 @@ public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware
         checkState(module != null, "module");
 
         FlowSnapshot snapshot = new FlowSnapshot();
-        FlowGraphProvider graphProvider = new FlowGraphProvider();
+        FlowGraphProvider graphProvider = FlowGraphProvider.get();
         FlowGraphManager graphManager = new FlowGraphManager(module, file, snapshot, graphProvider);
 
         DesignerPanelActionHandler handler = new DesignerPanelFlowActionHandler(module, snapshot);
