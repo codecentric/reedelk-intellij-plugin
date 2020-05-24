@@ -41,7 +41,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         List<MetadataTypeDTO> attributesToMerge = outputs.stream()
                 .map(previousComponentOutput -> previousComponentOutput.mapAttributes(suggester, typeAndTries))
                 .collect(toList());
-        return MetadataUtils.mergeAttributes(attributesToMerge, typeAndTries);
+        return MetadataUtils.mergeAttributesMetadata(attributesToMerge, typeAndTries);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     @Override
     public MetadataTypeDTO mapAttributes(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> attributesMetadataTypes = createMetadataTypesFrom(attributes, suggester, typeAndTries);
-        return MetadataUtils.mergeAttributes(attributesMetadataTypes, typeAndTries);
+        return MetadataUtils.mergeAttributesMetadata(attributesMetadataTypes, typeAndTries);
     }
 
     @Override
