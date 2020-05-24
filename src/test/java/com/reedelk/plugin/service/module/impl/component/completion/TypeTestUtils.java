@@ -25,6 +25,7 @@ public class TypeTestUtils {
                     new ListMyUnknownType(),
                     new ListMapFirstType(),
                     new MyAttributeType(),
+                    new ListSimpleType(),
                     new ListMyItemType(),
                     new MapSecondType(),
                     new MapFirstType(),
@@ -55,6 +56,18 @@ public class TypeTestUtils {
         public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
             Trie trie = new TrieList(ListMapFirstType.class.getName(), List.class.getName(), null, MapFirstType.class.getName());
             trieMap.put(ListMapFirstType.class.getName(), trie);
+        }
+    }
+
+    public static class ListSimpleType extends ArrayList<String> implements TrieProvider {
+
+        private ListSimpleType() {
+        }
+
+        @Override
+        public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
+            Trie trie = new TrieList(ListSimpleType.class.getName(), List.class.getName(), null, String.class.getName());
+            trieMap.put(ListSimpleType.class.getName(), trie);
         }
     }
 

@@ -3,7 +3,6 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinderDefault;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.CustomMessageAttributeType1;
-import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.CustomMessageAttributeType2;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
@@ -92,7 +90,7 @@ class PreviousComponentOutputDefaultTest extends AbstractComponentDiscoveryTest 
         // Given
         PreviousComponentOutputDefault outputDefault = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(MyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         // When
@@ -102,11 +100,31 @@ class PreviousComponentOutputDefaultTest extends AbstractComponentDiscoveryTest 
         MetadataTypeDTO dto = actual.iterator().next();
 
         PluginAssertion.assertThat(dto)
-                .hasDisplayType(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getSimpleName())
-                .hasType(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName())
+                .hasDisplayType(MyTypeWithMethodsAndProperties.class.getSimpleName())
+                .hasType(MyTypeWithMethodsAndProperties.class.getName())
                 .hasPropertyCount(3)
                 .hasProperty("property1").withDisplayType("String").and()
                 .hasProperty("property2").withDisplayType("long").and()
                 .hasProperty("property3").withDisplayType("Double");
+    }
+
+    @Test
+    void shouldCorrectlyMapPayloadMetadataSimpleList() {
+        // Given
+        PreviousComponentOutputDefault outputDefault = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(ListSimpleType.class.getName()),
+                TEST_DESCRIPTION);
+
+        // When
+        List<MetadataTypeDTO> actual = outputDefault.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO dto = actual.iterator().next();
+
+        PluginAssertion.assertThat(dto)
+                .hasDisplayType("List<String>")
+                .hasType(ListSimpleType.class.getName())
+                .hasPropertyCount(0);
     }
 }
