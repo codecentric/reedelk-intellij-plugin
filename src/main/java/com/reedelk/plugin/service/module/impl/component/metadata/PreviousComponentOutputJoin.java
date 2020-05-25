@@ -2,6 +2,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
+import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -32,6 +33,15 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             suggestions.addAll(suggestionsForOutput);
         }
 
+        if (MessageAttributes.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
+            // If the dynamic suggestions we are asking for are the message attributes, then the JOIN joins
+            // the properties, it does not creates a list, therefore we can just return the suggestions attributes
+            // for each previous component output.
+            return suggestions;
+        }
+
+
+        // Otherwise we group for each output type and create a List<Type1,Type2,...>
         Map<TypeProxy, List<Suggestion>> suggestionsByType = suggestions
                 .stream()
                 .collect(groupingBy(Suggestion::getReturnType));

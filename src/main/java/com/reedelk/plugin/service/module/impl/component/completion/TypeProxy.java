@@ -10,7 +10,6 @@ public interface TypeProxy {
     TypeProxy INT = TypeProxy.create(int.class);
     TypeProxy MESSAGE = TypeProxy.create(Message.class);
     TypeProxy FLOW_CONTEXT = TypeProxy.create(FlowContext.class);
-    TypeProxy FLATTENED = TypeProxy.create(FlattenedReturnType.class);
 
     static TypeProxy create(Class<?> typeClazz) {
         return new TypeProxyDefault(typeClazz.getName());

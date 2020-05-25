@@ -42,6 +42,13 @@ public enum FlattenStrategy {
                 String joinedDisplayValues = suggestionsForLookupToken
                         .stream()
                         .map(Suggestion::getReturnTypeDisplayValue)
+                        .distinct()
+                        .collect(Collectors.joining(","));
+
+                String joinedFullyQualifiedNames = suggestionsForLookupToken
+                        .stream()
+                        .map(suggestion -> suggestion.getReturnType().getTypeFullyQualifiedName())
+                        .distinct()
                         .collect(Collectors.joining(","));
 
                 // There must be at least one suggestion for this group.
@@ -55,8 +62,8 @@ public enum FlattenStrategy {
                         .tailText(suggestion.getTailText())
                         .lookupToken(suggestion.getLookupToken())
                         // The return type for 'flattened' suggestions is never used because this suggestion is only created for a terminal token.
-                        .returnType(TypeProxy.FLATTENED)
-                        .returnTypeDisplayValue(String.join(",", joinedDisplayValues))
+                        .returnType(new FlattenedTypeProxy(joinedFullyQualifiedNames, joinedDisplayValues))
+                        .returnTypeDisplayValue(joinedDisplayValues)
                         .build();
 
                 flattenedSuggestions.add(groupedSuggestion);
@@ -67,4 +74,19 @@ public enum FlattenStrategy {
     };
 
     public abstract Collection<Suggestion> flatten(Collection<Suggestion> suggestions, TypeAndTries typeAndTrieMap);
+
+    static class FlattenedTypeProxy extends TypeProxyDefault {
+
+        private final String displayName;
+
+        public FlattenedTypeProxy(String typeFullyQualifiedName, String displayName) {
+            super(typeFullyQualifiedName);
+            this.displayName = displayName;
+        }
+
+        @Override
+        public String toSimpleName(TypeAndTries typeAndTries) {
+            return displayName;
+        }
+    }
 }
