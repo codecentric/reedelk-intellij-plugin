@@ -61,7 +61,7 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
     }
 
     @Override
-    public void onComponentMetadataUpdated(MetadataDTO metadataDTO) {
+    public void onComponentMetadata(MetadataDTO metadataDTO) {
         ApplicationManager.getApplication().invokeLater(() -> {
             remove(loadingPanel);
             add(metadataActualInput, BorderLayout.CENTER);
@@ -69,8 +69,8 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
             repaint();
         });
 
-        metadataActualInput.onComponentMetadataUpdated(metadataDTO);
-        metadataExpectedInput.onComponentMetadataUpdated(metadataDTO);
+        metadataActualInput.onComponentMetadata(metadataDTO);
+        metadataExpectedInput.onComponentMetadata(metadataDTO);
     }
 
     @Override

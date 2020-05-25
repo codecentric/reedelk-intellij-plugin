@@ -27,7 +27,7 @@ abstract class AbstractMetadataInputPanel extends DisposableScrollPane implement
     }
 
     @Override
-    public void onComponentMetadataUpdated(MetadataDTO metadataDTO) {
+    public void onComponentMetadata(MetadataDTO metadataDTO) {
         DisposablePanel theContent = new DisposablePanel(new GridBagLayout());
         theContent.setBackground(JBColor.WHITE);
         DisposablePanel panel = ContainerFactory.pushTop(theContent);

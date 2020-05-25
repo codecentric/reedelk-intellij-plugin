@@ -9,6 +9,7 @@ public class MetadataActualInputDTO {
     // where multiple messages are
     // being returned to be joined.
     private final boolean isMultipleMessages;
+    private final boolean isNotFound;
     private final String payloadDescription;
     private final MetadataTypeDTO attributes;
     private final List<MetadataTypeDTO> payload;
@@ -16,10 +17,23 @@ public class MetadataActualInputDTO {
     public MetadataActualInputDTO(MetadataTypeDTO attributes,
                                   List<MetadataTypeDTO> payload,
                                   String payloadDescription) {
-        this.isMultipleMessages = false;
-        this.payloadDescription = payloadDescription;
-        this.attributes = attributes;
+        this(attributes, payload, payloadDescription, false, false);
+    }
+
+    public MetadataActualInputDTO(boolean isNotFound) {
+        this(null, null, null, false, isNotFound);
+    }
+
+    public MetadataActualInputDTO(MetadataTypeDTO attributes,
+                                  List<MetadataTypeDTO> payload,
+                                  String payloadDescription,
+                                  boolean isMultipleMessages,
+                                  boolean isNotFound) {
+        this.isNotFound = isNotFound;
+        this.isMultipleMessages = isMultipleMessages;
         this.payload = payload;
+        this.attributes = attributes;
+        this.payloadDescription = payloadDescription;
     }
 
     public MetadataTypeDTO getAttributes() {
@@ -36,5 +50,9 @@ public class MetadataActualInputDTO {
 
     public boolean isMultipleMessages() {
         return isMultipleMessages;
+    }
+
+    public boolean isNotFound() {
+        return isNotFound;
     }
 }

@@ -37,6 +37,9 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
         if (input.isMultipleMessages()) {
             JBLabel label = new JBLabel(htmlLabel("Multiple messages: List<Message>", "", false));
             FormBuilder.get().addFullWidthAndHeight(label, parent);
+        } else if (input.isNotFound()) {
+            JBLabel label = new JBLabel(htmlLabel("The component input could not be determined", "", false));
+            FormBuilder.get().addFullWidthAndHeight(label, parent);
         } else {
             int topOffset = 0;
             if (StringUtils.isNotBlank(input.getPayloadDescription())) {

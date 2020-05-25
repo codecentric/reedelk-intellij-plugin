@@ -38,7 +38,7 @@ public interface PlatformModuleService {
     }
 
     interface OnComponentMetadataEvent {
-        void onComponentMetadataUpdated(MetadataDTO metadataDTO);
+        void onComponentMetadata(MetadataDTO metadataDTO);
         void onComponentMetadataError(Exception exception);
     }
 

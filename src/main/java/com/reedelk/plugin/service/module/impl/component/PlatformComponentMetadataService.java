@@ -65,18 +65,27 @@ class PlatformComponentMetadataService implements PlatformModuleService {
             try {
                 Optional<PreviousComponentOutput> componentOutput = outputFrom(context);
 
-                // TODO: Get might fail, consider to return default output! This might
-                //  happen for instance when we want to find the previous component of flow
-                //  reference but we have not selected any subflow in the flow reference.
-                PreviousComponentOutput previousComponentOutput = componentOutput.get();
-                List<MetadataTypeDTO> payload = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
-                MetadataTypeDTO attributes = previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries);
-                String description = previousComponentOutput.description();
+                MetadataActualInputDTO actualInput;
+                if (componentOutput.isPresent()) {
 
-                MetadataActualInputDTO actualInput = new MetadataActualInputDTO(attributes, payload, description);
-                        MetadataExpectedInputDTO expectedInput = metadataExpectedInputDTOBuilder.build(context);
+                    PreviousComponentOutput previousComponentOutput = componentOutput.get();
+                    if (previousComponentOutput instanceof PreviousComponentOutputMultipleMessages) {
+                        actualInput = new MetadataActualInputDTO(null, null, null, true, false);
+
+                    } else {
+                        List<MetadataTypeDTO> payload = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
+                        MetadataTypeDTO attributes = previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries);
+                        String description = previousComponentOutput.description();
+                        actualInput = new MetadataActualInputDTO(attributes, payload, description);
+                    }
+
+                } else {
+                    actualInput = new MetadataActualInputDTO(true);
+                }
+
+                MetadataExpectedInputDTO expectedInput = metadataExpectedInputDTOBuilder.build(context);
                 MetadataDTO componentMetadata = new MetadataDTO(actualInput, expectedInput);
-                onComponentMetadataEvent.onComponentMetadataUpdated(componentMetadata);
+                onComponentMetadataEvent.onComponentMetadata(componentMetadata);
 
             } catch (Exception exception) {
                 LOG.warn(exception);
