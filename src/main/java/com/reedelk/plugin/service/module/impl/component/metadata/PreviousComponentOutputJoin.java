@@ -114,11 +114,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         public OnTheFlyTypeProxy(String listItem) {
             super(List.class.getSimpleName());
-            trieList = new TrieList(
-                    OnTheFlyTypeProxy.class.getName(),
-                    List.class.getName(),
-                    null,
-                    listItem);
+            trieList = new TrieList(OnTheFlyTypeProxy.class.getName(), List.class.getName(), null, listItem);
         }
 
         @Override
