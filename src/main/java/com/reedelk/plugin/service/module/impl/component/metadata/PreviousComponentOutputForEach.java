@@ -27,15 +27,11 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
                                                           @NotNull TypeAndTries typeAndTrieMap) {
         Collection<Suggestion> suggestions =
                 previousComponentOutput.buildDynamicSuggestions(suggester, suggestion, typeAndTrieMap);
-        // We need to provide alternatives, and flatten only at the end
         if (suggestions.size() == 1) {
-            // You need to extract  the list of all predecessors
-            // TODO: You might have output suggestions with multiple list of different types, you
-            //  should merge them all... this might happen when the for each joins a fork with List<Type1>, List<Type2>
-            // TODO: What if it is a list of lists!?
+            // We extract the type of the list items.
             Suggestion next = suggestions.iterator().next();
             if (next.getReturnType().resolve(typeAndTrieMap).isList()) {
-                // Create a suggestion with only return type.
+                // Create a suggestion with only the list item type as return type.
                 TypeProxy listItemTypeProxy = next.getReturnType().resolve(typeAndTrieMap).listItemType(typeAndTrieMap);
                 return Collections.singletonList(Suggestion.create(suggestion.getType())
                         .cursorOffset(suggestion.getCursorOffset())
@@ -60,15 +56,14 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
         return previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries);
     }
 
+    // TODO: This is maybe applicable for maps as well!?
     @Override
     public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> metadataTypeDTOS = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
         if (metadataTypeDTOS.size() == 1) {
             MetadataTypeDTO metadataTypeDTO = metadataTypeDTOS.stream().findFirst().get();
             TypeProxy typeProxy = metadataTypeDTO.getTypeProxy();
-
             // we extract the items one by one from the for each list.
-            // TODO: This is maybe applicable for maps as well!?
             if (typeProxy.resolve(typeAndTries).isList()) {
                 TypeProxy listItemTypeProxy = typeProxy.resolve(typeAndTries).listItemType(typeAndTries);
                 MetadataTypeDTO unrolledList = new MetadataTypeDTO(
@@ -78,7 +73,6 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
                 return Collections.singletonList(unrolledList);
             }
         }
-
         return metadataTypeDTOS;
     }
 

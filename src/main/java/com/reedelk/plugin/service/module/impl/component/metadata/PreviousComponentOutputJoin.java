@@ -106,8 +106,8 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
                 return singletonList(metadataTypeDTO);
 
             } else {
-                OnTheFlyTypeProxy onTheFlyTypeProxy = new OnTheFlyTypeProxy(typeProxy.getTypeFullyQualifiedName());
-                MetadataTypeDTO sameTypeElementsList = unrollListType(suggester, typeAndTries, onTheFlyTypeProxy);
+                OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(typeProxy.getTypeFullyQualifiedName());
+                MetadataTypeDTO sameTypeElementsList = unrollListType(suggester, typeAndTries, proxy);
                 return singletonList(sameTypeElementsList);
             }
         } else {
