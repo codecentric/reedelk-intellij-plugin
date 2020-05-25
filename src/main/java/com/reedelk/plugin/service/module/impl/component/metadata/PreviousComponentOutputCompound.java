@@ -12,12 +12,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
+
 public class PreviousComponentOutputCompound implements PreviousComponentOutput {
 
     private final PreviousComponentOutput attributes;
     private final PreviousComponentOutput payload;
 
     public PreviousComponentOutputCompound(PreviousComponentOutput attributes, PreviousComponentOutput payload) {
+        checkNotNull(attributes, "attributes");
+        checkNotNull(payload, "payload");
         this.attributes = attributes;
         this.payload = payload;
     }
