@@ -25,10 +25,13 @@ public enum FlattenStrategy {
 
             Map<String, List<Suggestion>> suggestionsGroupedByLookupToken = suggestions
                     .stream()
-                    .collect(Collectors.groupingBy(Suggestion::getLookupToken));
+                    // We must group by lookup token and by the tail text because there might be
+                    // methods with the same lookup token but with different tail text because
+                    // of different parameters arguments.
+                    .collect(Collectors.groupingBy(suggestion -> suggestion.getLookupToken() + suggestion.getTailText()));
 
             Collection<Suggestion> flattenedSuggestions = new ArrayList<>();
-            suggestionsGroupedByLookupToken.forEach((lookupToken, suggestionsForLookupToken) -> {
+            suggestionsGroupedByLookupToken.forEach((lookupTokenAndTailText, suggestionsForLookupToken) -> {
 
                 // If there is only one suggestion, we don't apply the flatten on the types.
                 if (suggestionsForLookupToken.size() == 1) {
