@@ -110,17 +110,25 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
     static class OnTheFlyTypeProxy extends TypeProxyDefault {
 
-        private final String listItem;
+        private final TrieList trieList;
 
         public OnTheFlyTypeProxy(String listItem) {
             super(List.class.getSimpleName());
-            this.listItem = listItem;
+            trieList = new TrieList(
+                    OnTheFlyTypeProxy.class.getName(),
+                    List.class.getName(),
+                    null,
+                    listItem);
         }
 
         @Override
         public Trie resolve(TypeAndTries typeAndTries) {
-            return new TrieList(OnTheFlyTypeProxy.class.getName(), List.class.getName(), List.class.getSimpleName(), listItem);
+            return trieList;
         }
 
+        @Override
+        public String toSimpleName(TypeAndTries typeAndTries) {
+            return trieList.toSimpleName(typeAndTries);
+        }
     }
 }

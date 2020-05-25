@@ -49,5 +49,4 @@ class PreviousComponentOutputForEachTest extends AbstractComponentDiscoveryTest 
                 .hasProperty("property2").withDisplayType("long").and()
                 .hasProperty("property3").withDisplayType("Double");
     }
-
 }
