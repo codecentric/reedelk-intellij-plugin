@@ -4,7 +4,6 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
 import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinderDefault;
 import com.reedelk.runtime.api.message.MessageAttributes;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +14,7 @@ import java.util.List;
 import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class PreviousComponentOutputDefaultTest extends AbstractComponentDiscoveryTest {
@@ -41,7 +41,7 @@ class PreviousComponentOutputDefaultTest extends AbstractComponentDiscoveryTest 
         String actual = outputDefault.description();
 
         // Then
-        Assertions.assertThat(actual).isEqualTo(TEST_DESCRIPTION);
+        assertThat(actual).isEqualTo(TEST_DESCRIPTION);
     }
 
     @Test
