@@ -17,7 +17,8 @@ import static java.util.Arrays.asList;
 public class TypeTestUtils {
 
     public static List<TrieProvider> ALL_TYPES =
-            asList(new MyTypeWithMethodsAndProperties(),
+            asList(new ListMyTypeWithMethodsAndProperties(),
+                    new MyTypeWithMethodsAndProperties(),
                     new CustomMessageAttributeType2(),
                     new CustomMessageAttributeType1(),
                     new GenericMapTypeFunctions(),
@@ -165,6 +166,18 @@ public class TypeTestUtils {
             trie.insert(createPropertySuggestion("property2", long.class.getName(), typeAndTries));
             trie.insert(createPropertySuggestion("property3", Double.class.getName(), typeAndTries));
             trieMap.put(MyTypeWithMethodsAndProperties.class.getName(), trie);
+        }
+    }
+
+    public static class ListMyTypeWithMethodsAndProperties implements TrieProvider {
+
+        private ListMyTypeWithMethodsAndProperties() {
+        }
+
+        @Override
+        public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
+            Trie trie = new TrieList(ListMyTypeWithMethodsAndProperties.class.getName(), Object.class.getName(), null, MyTypeWithMethodsAndProperties.class.getName());
+            trieMap.put(ListMyTypeWithMethodsAndProperties.class.getName(), trie);
         }
     }
 

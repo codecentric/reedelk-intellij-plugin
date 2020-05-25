@@ -124,7 +124,29 @@ class PreviousComponentOutputDefaultTest extends AbstractComponentDiscoveryTest 
 
         PluginAssertion.assertThat(dto)
                 .hasDisplayType("List<String>")
-                .hasType(ListSimpleType.class.getName())
-                .hasPropertyCount(0);
+                .hasType(ListSimpleType.class.getName());
+    }
+
+    @Test
+    void shouldCorrectlyMapPayloadMetadataComplexListAndUnrollComplexObjectProperties() {
+        // Given
+        PreviousComponentOutputDefault outputDefault = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(ListMyTypeWithMethodsAndProperties.class.getName()),
+                TEST_DESCRIPTION);
+
+        // When
+        List<MetadataTypeDTO> actual = outputDefault.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO dto = actual.iterator().next();
+
+        PluginAssertion.assertThat(dto)
+                .hasDisplayType("List<MyTypeWithMethodsAndProperties> : MyTypeWithMethodsAndProperties")
+                .hasType(ListMyTypeWithMethodsAndProperties.class.getName())
+                .hasPropertyCount(3)
+                .hasProperty("property1").withDisplayType("String").and()
+                .hasProperty("property2").withDisplayType("long").and()
+                .hasProperty("property3").withDisplayType("Double");
     }
 }
