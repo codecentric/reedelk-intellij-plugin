@@ -48,13 +48,14 @@ public class SubflowDeserializer {
                         String documentText = document.getText();
                         try {
                             return Optional.ofNullable(SubFlowDeserializer.deserialize(module, documentText, provider));
-                        } catch (DeserializationError deserializationError) {
-                            LOG.warn(deserializationError);
+                        } catch (DeserializationError exception) {
+                            LOG.warn(exception);
                             return Optional.empty();
                         }
                     }));
-        } catch (Throwable throwable) {
-            LOG.warn(throwable);
+
+        } catch (Throwable exception) {
+            LOG.warn(exception);
             return Optional.empty();
         }
     }
