@@ -34,12 +34,15 @@ public class SubflowDeserializer {
                     .listSubflows()
                     .stream()
                     .filter(subflowMetadata -> subflowMetadata.getId().equals(flowReferenceId)).findFirst()
+
                     .map(SubflowMetadata::getFileURL).flatMap(fileURL -> {
                         VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileURL);
                         return Optional.ofNullable(virtualFile);
+
                     }).flatMap(virtualFile -> {
                         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
                         return Optional.ofNullable(document);
+
                     }).flatMap(document -> {
                         FlowGraphProvider provider = FlowGraphProvider.get();
                         String documentText = document.getText();
