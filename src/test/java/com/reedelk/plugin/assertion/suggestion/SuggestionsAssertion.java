@@ -40,22 +40,6 @@ public class SuggestionsAssertion {
         return this;
     }
 
-    // There might be multiple return types e.g Type1,Type2 and so on. We want to compare them
-    // without explicitly consider the order, e.g Type1,Type2 == Type2,Type1
-    private boolean sameReturnDisplayType(String actualReturnTypeDisplayValue, String expectedReturnTypeDisplayValue) {
-        String[] actualReturnDisplayTypeSegments = actualReturnTypeDisplayValue.split(",");
-        String[] expectedReturnDisplayTypeSegments = expectedReturnTypeDisplayValue.split(",");
-        return new HashSet<>(Arrays.asList(actualReturnDisplayTypeSegments))
-                .equals(new HashSet<>(Arrays.asList(expectedReturnDisplayTypeSegments)));
-    }
-
-    private boolean sameReturnType(String actualReturnType, String expectedReturnType) {
-        String[] actualReturnTypeSegments = actualReturnType.split(",");
-        String[] expectedReturnTypeSegments = expectedReturnType.split(",");
-        return new HashSet<>(Arrays.asList(actualReturnTypeSegments))
-                .equals(new HashSet<>(Arrays.asList(expectedReturnTypeSegments)));
-    }
-
     public SuggestionsAssertion contains(Suggestion expectedSuggestion) {
         boolean found = suggestions.stream()
                 .anyMatch(suggestion -> suggestion == expectedSuggestion);
@@ -79,5 +63,21 @@ public class SuggestionsAssertion {
     public SuggestionsAssertion isEmpty() {
         assertThat(suggestions).isEmpty();
         return this;
+    }
+
+    // There might be multiple return types e.g Type1,Type2 and so on. We want to compare them
+    // without explicitly consider the order, e.g Type1,Type2 == Type2,Type1
+    private boolean sameReturnDisplayType(String actualReturnTypeDisplayValue, String expectedReturnTypeDisplayValue) {
+        String[] actualReturnDisplayTypeSegments = actualReturnTypeDisplayValue.split(",");
+        String[] expectedReturnDisplayTypeSegments = expectedReturnTypeDisplayValue.split(",");
+        return new HashSet<>(Arrays.asList(actualReturnDisplayTypeSegments))
+                .equals(new HashSet<>(Arrays.asList(expectedReturnDisplayTypeSegments)));
+    }
+
+    private boolean sameReturnType(String actualReturnType, String expectedReturnType) {
+        String[] actualReturnTypeSegments = actualReturnType.split(",");
+        String[] expectedReturnTypeSegments = expectedReturnType.split(",");
+        return new HashSet<>(Arrays.asList(actualReturnTypeSegments))
+                .equals(new HashSet<>(Arrays.asList(expectedReturnTypeSegments)));
     }
 }
