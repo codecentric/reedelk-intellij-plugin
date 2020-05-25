@@ -49,10 +49,8 @@ class PlatformCompletionService implements PlatformModuleService {
 
     @Override
     public Collection<Suggestion> suggestionsOf(@NotNull ComponentContext context, @NotNull String componentPropertyPath, String[] tokens) {
-        // TODO: You don't need the previous component OUTPUT EVERY TIME, only if it is a dynamic type!!
-        //  this logic slows down suggestion for nothing here, you should fetch the previous component output
-        //  if and only if the suggestion refers to message.payload() or message.attributes().
         PreviousComponentOutput previousComponentOutput = componentMetadataService.componentOutputOf(context);
+
         // A suggestion for a property is computed as follows:
         // Get signature for component property path from either flow control, maven modules or current module.
         // if does not exists use the default.

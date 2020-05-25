@@ -12,6 +12,7 @@ import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFin
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.List;
@@ -55,6 +56,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 .build();
     }
 
+    @Nullable
     PreviousComponentOutput componentOutputOf(ComponentContext context) {
         return outputFrom(context).orElse(null);
     }

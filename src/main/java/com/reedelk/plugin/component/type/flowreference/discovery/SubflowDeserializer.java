@@ -7,7 +7,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphProvider;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
@@ -16,8 +15,6 @@ import com.reedelk.plugin.service.module.SubflowService;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class SubflowDeserializer {
 
@@ -32,46 +29,30 @@ public class SubflowDeserializer {
     }
 
     public Optional<FlowGraph> deserialize() {
-        FlowGraph[] deserialize = new FlowGraph[1];
-        CountDownLatch latch = new CountDownLatch(1);
-
-        ReadAction.nonBlocking(() -> {
-
-            try {
-                SubflowService.getInstance(module)
-                        .listSubflows()
-                        .stream()
-                        .filter(subflowMetadata -> subflowMetadata.getId().equals(flowReferenceId)).findFirst()
-                        .map(SubflowMetadata::getFileURL).flatMap(fileURL -> {
-                            VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileURL);
-                            return Optional.ofNullable(virtualFile);
-                        }).flatMap(virtualFile -> {
-                            Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
-                            return Optional.ofNullable(document);
-                        }).ifPresent(document -> {
-                            try {
-                                FlowGraphProvider provider = FlowGraphProvider.get();
-                                String documentText = document.getText();
-                                deserialize[0] = SubFlowDeserializer.deserialize(module, documentText, provider);
-                            } catch (DeserializationError error) {
-                                LOG.warn(error);
-                            }
-                        });
-            } finally {
-                latch.countDown();
-            }
-
-        }).inSmartMode(module.getProject()).submit(AppExecutorUtil.getAppExecutorService());
-
         try {
-            // If we can't deserialize in 3 seconds, the stop.
-            latch.await(3, TimeUnit.SECONDS);
-        } catch (InterruptedException ignored) {
-            // nothing to do.
+            return ReadAction.compute(() -> SubflowService.getInstance(module)
+                    .listSubflows()
+                    .stream()
+                    .filter(subflowMetadata -> subflowMetadata.getId().equals(flowReferenceId)).findFirst()
+                    .map(SubflowMetadata::getFileURL).flatMap(fileURL -> {
+                        VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileURL);
+                        return Optional.ofNullable(virtualFile);
+                    }).flatMap(virtualFile -> {
+                        Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
+                        return Optional.ofNullable(document);
+                    }).flatMap(document -> {
+                        FlowGraphProvider provider = FlowGraphProvider.get();
+                        String documentText = document.getText();
+                        try {
+                            return Optional.ofNullable(SubFlowDeserializer.deserialize(module, documentText, provider));
+                        } catch (DeserializationError deserializationError) {
+                            LOG.warn(deserializationError);
+                            return Optional.empty();
+                        }
+                    }));
+        } catch (Throwable throwable) {
+            LOG.warn(throwable);
+            return Optional.empty();
         }
-
-        return deserialize[0] != null ?
-                Optional.of(deserialize[0]) :
-                Optional.empty();
     }
 }
