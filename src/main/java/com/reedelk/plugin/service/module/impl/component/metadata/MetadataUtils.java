@@ -12,6 +12,10 @@ import java.util.Objects;
 public class MetadataUtils {
 
     public static MetadataTypeDTO mergeAttributesMetadata(List<MetadataTypeDTO> metadataTypes, TypeAndTries typeAndTries) {
+        if (metadataTypes.size() == 1) {
+            // No need to merge.
+            return metadataTypes.iterator().next();
+        }
         Map<String, MetadataTypeItemDTO> nameMetadataType = new HashMap<>();
         metadataTypes.forEach(metadataTypeDTO ->
                 metadataTypeDTO.getProperties().forEach(metadataTypeItemDTO -> {

@@ -1,15 +1,13 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.completion.Tokenizer;
-import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
-import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
+import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,7 +64,16 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     private Collection<Suggestion> suggestionsFromDynamicExpression(SuggestionFinder suggester) {
         String unwrap = ScriptUtils.unwrap(dynamicExpression);
         String[] tokens = Tokenizer.tokenize(unwrap, unwrap.length());
-        return suggester.suggest(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
+        Collection<Suggestion> suggestions = suggester.suggest(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
+        if (!suggestions.isEmpty()) return suggestions;
+
+        // If there are no suggestions, it means that we could not evaluate the expression,
+        // for example because it is just a literal or a sum operation or null, therefore we return
+        // a generic object suggestion.
+        return Collections.singletonList(Suggestion.create(Suggestion.Type.PROPERTY)
+                .insertValue(StringUtils.EMPTY)
+                .returnType(TypeProxy.create(Object.class))
+                .build());
     }
 
     @Override
