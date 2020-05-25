@@ -63,6 +63,12 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     @NotNull
     private Collection<Suggestion> suggestionsFromDynamicExpression(SuggestionFinder suggester) {
         String unwrap = ScriptUtils.unwrap(dynamicExpression);
+        if (StringUtils.isBlank(unwrap) || unwrap.endsWith(".")) {
+            // If the dynamic value is blank or ends with "." (e.g message.) we cannot infer correctly
+            // the output and we return the default suggestion.
+            return defaultSuggestion();
+        }
+
         String[] tokens = Tokenizer.tokenize(unwrap, unwrap.length());
         Collection<Suggestion> suggestions = suggester.suggest(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
         if (!suggestions.isEmpty()) return suggestions;
@@ -70,10 +76,7 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
         // If there are no suggestions, it means that we could not evaluate the expression,
         // for example because it is just a literal or a sum operation or null, therefore we return
         // a generic object suggestion.
-        return Collections.singletonList(Suggestion.create(Suggestion.Type.PROPERTY)
-                .insertValue(StringUtils.EMPTY)
-                .returnType(TypeProxy.create(Object.class))
-                .build());
+        return defaultSuggestion();
     }
 
     @Override
@@ -96,5 +99,14 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
                 "previousOutput=" + previousOutput +
                 ", dynamicExpression='" + dynamicExpression + '\'' +
                 '}';
+    }
+
+    // The default suggestion when the output could not be determined from the dynamic expression.
+    @NotNull
+    private Collection<Suggestion> defaultSuggestion() {
+        return Collections.singletonList(Suggestion.create(Suggestion.Type.PROPERTY)
+                .insertValue(StringUtils.EMPTY)
+                .returnType(TypeProxy.create(Object.class))
+                .build());
     }
 }

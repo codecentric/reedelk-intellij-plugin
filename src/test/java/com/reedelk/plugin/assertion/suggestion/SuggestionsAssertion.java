@@ -26,12 +26,12 @@ public class SuggestionsAssertion {
             Suggestion.Type actualType = suggestion.getType();
             String actualInsertValue = suggestion.getInsertValue();
             String actualLookupToken = suggestion.getLookupToken();
-            String actualTypeProxy = suggestion.getReturnType().getTypeFullyQualifiedName();
+            String actualTypeFullyQualifiedName = suggestion.getReturnType().getTypeFullyQualifiedName();
             String actualReturnTypeDisplayValue = suggestion.getReturnTypeDisplayValue();
             return Objects.equals(actualType, expectedType) &&
                     Objects.equals(actualInsertValue, expectedInsertValue) &&
                     Objects.equals(actualLookupToken, expectedLookupToken) &&
-                    Objects.equals(actualTypeProxy, expectedReturnTypeFullyQualifiedName) &&
+                    sameReturnType(actualTypeFullyQualifiedName, expectedReturnTypeFullyQualifiedName) &&
                     sameReturnDisplayType(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
                 });
         assertThat(found)
@@ -47,6 +47,13 @@ public class SuggestionsAssertion {
         String[] expectedReturnDisplayTypeSegments = expectedReturnTypeDisplayValue.split(",");
         return new HashSet<>(Arrays.asList(actualReturnDisplayTypeSegments))
                 .equals(new HashSet<>(Arrays.asList(expectedReturnDisplayTypeSegments)));
+    }
+
+    private boolean sameReturnType(String actualReturnType, String expectedReturnType) {
+        String[] actualReturnTypeSegments = actualReturnType.split(",");
+        String[] expectedReturnTypeSegments = expectedReturnType.split(",");
+        return new HashSet<>(Arrays.asList(actualReturnTypeSegments))
+                .equals(new HashSet<>(Arrays.asList(expectedReturnTypeSegments)));
     }
 
     public SuggestionsAssertion contains(Suggestion expectedSuggestion) {

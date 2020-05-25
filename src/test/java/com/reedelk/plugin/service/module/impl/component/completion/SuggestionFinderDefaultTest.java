@@ -201,7 +201,7 @@ class SuggestionFinderDefaultTest extends AbstractCompletionTest {
                 .contains(FUNCTION,
                         "payload",
                         "payload",
-                        FlattenedReturnType.class.getName(),
+                        String.join(",", MapFirstType.class.getName(), Integer.class.getName(), String.class.getName()),
                         "MapFirstType,Integer,String");
     }
 
@@ -246,12 +246,12 @@ class SuggestionFinderDefaultTest extends AbstractCompletionTest {
                 .contains(FUNCTION,
                         "eachWithIndex { entry, i ->  }",
                         "eachWithIndex",
-                        FlattenedReturnType.class.getName(),
+                        MapFirstType.class.getName() + "," + MapSecondType.class.getName(),
                         "MapFirstType,Map<String,Serializable>")
                 .contains(FUNCTION,
                         "each { entry }",
                         "each",
-                        FlattenedReturnType.class.getName(),
+                        MapFirstType.class.getName() + "," + MapSecondType.class.getName(),
                         "MapFirstType,Map<String,Serializable>");
     }
 
