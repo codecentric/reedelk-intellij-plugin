@@ -22,13 +22,36 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     public Collection<Suggestion> buildDynamicSuggestions(@NotNull SuggestionFinder suggester,
                                                           @NotNull Suggestion suggestion,
                                                           @NotNull TypeAndTries typeAndTrieMap) {
-        // TODO: Create artificial type proxy because it is a list of the suggestions ....
 
-        // Output is List<Of all the types>
         List<Suggestion> suggestions = new ArrayList<>();
-        outputs.forEach(previousComponentOutput ->
-                suggestions.addAll(previousComponentOutput.buildDynamicSuggestions(suggester, suggestion, typeAndTrieMap)));
-        return suggestions;
+        // We need to compute the output for all the branches joining the node.
+        // They all going to be in a list of objects.
+        for (PreviousComponentOutput output : outputs) {
+            Collection<Suggestion> suggestionsForOutput =
+                    output.buildDynamicSuggestions(suggester, suggestion, typeAndTrieMap);
+            suggestions.addAll(suggestionsForOutput);
+        }
+
+        Map<TypeProxy, List<Suggestion>> suggestionsByType = suggestions
+                .stream()
+                .collect(groupingBy(Suggestion::getReturnType));
+
+        if (suggestionsByType.size() == 1) {
+            Map.Entry<TypeProxy, List<Suggestion>> next = suggestionsByType.entrySet().iterator().next();
+            TypeProxy listItemType = next.getKey();
+            OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(listItemType.getTypeFullyQualifiedName());
+            Suggestion suggestionAsList = SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, proxy);
+            return Collections.singletonList(suggestionAsList);
+
+        } else {
+            String listArgs = suggestionsByType.keySet()
+                    .stream()
+                    .map(theType -> theType.toSimpleName(typeAndTrieMap))
+                    .collect(joining(","));
+            OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(Object.class.getName(), listArgs);
+            Suggestion suggestionAsList = SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, proxy);
+            return Collections.singletonList(suggestionAsList);
+        }
     }
 
     @Override
@@ -53,14 +76,16 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
                 .map(previousComponentOutput -> previousComponentOutput.mapPayload(suggester, typeAndTries))
                 .forEach(allTypes::addAll);
 
-        // Logic should be if all types have the same type
-        Map<TypeProxy, List<MetadataTypeDTO>> collect = allTypes
+        // We group all the metadata DTOs by their type:
+        // If they all have the same type, then we display a single list of type: List<MyType> and we unroll the list item type.
+        // Otherwise the output will be List<Type1,Type2,Type3> (single type properties are not unrolled)
+        Map<TypeProxy, List<MetadataTypeDTO>> metadataByType = allTypes
                 .stream()
                 .collect(groupingBy(MetadataTypeDTO::getTypeProxy));
 
-        if (collect.size() == 1) {
+        if (metadataByType.size() == 1) {
             // All the outputs have the same type (we must unroll the list type properties (List<Type> : Type)
-            Map.Entry<TypeProxy, List<MetadataTypeDTO>> next = collect.entrySet().iterator().next();
+            Map.Entry<TypeProxy, List<MetadataTypeDTO>> next = metadataByType.entrySet().iterator().next();
             TypeProxy typeProxy = next.getKey();
             // Otherwise it would be a list of lists
             if (typeProxy.resolve(typeAndTries).isList()) {
@@ -77,7 +102,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             }
         } else {
             // Output List<Type1,Type2,Type3> ... do not unroll the properties
-            String listArgs = collect.keySet()
+            String listArgs = metadataByType.keySet()
                     .stream()
                     .map(theType -> theType.toSimpleName(typeAndTries))
                     .collect(joining(","));
@@ -111,10 +136,18 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     static class OnTheFlyTypeProxy extends TypeProxyDefault {
 
         private final TrieList trieList;
+        private final String displayName;
 
         public OnTheFlyTypeProxy(String listItem) {
             super(List.class.getSimpleName());
+            this.displayName = null;
             trieList = new TrieList(OnTheFlyTypeProxy.class.getName(), List.class.getName(), null, listItem);
+        }
+
+        public OnTheFlyTypeProxy(String itemType, String displayName) {
+            super(List.class.getSimpleName());
+            this.displayName = displayName;
+            trieList = new TrieList(OnTheFlyTypeProxy.class.getName(), List.class.getName(), null, itemType);
         }
 
         @Override
@@ -124,7 +157,11 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
-            return trieList.toSimpleName(typeAndTries);
+            if (StringUtils.isNotBlank(displayName)) {
+                return "List<" + displayName + ">";
+            } else {
+                return trieList.toSimpleName(typeAndTries);
+            }
         }
     }
 }

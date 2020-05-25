@@ -15,6 +15,19 @@ public class SuggestionFactory {
     private SuggestionFactory() {
     }
 
+    public static Suggestion copyWithType(@NotNull TypeAndTries allTypesMap,
+                                          @NotNull Suggestion suggestion,
+                                          @NotNull TypeProxy typeProxy) {
+        return Suggestion.create(FUNCTION)
+                .returnTypeDisplayValue(typeProxy.toSimpleName(allTypesMap))
+                .cursorOffset(suggestion.getCursorOffset())
+                .lookupToken(suggestion.getLookupToken())
+                .insertValue(suggestion.getInsertValue())
+                .tailText(suggestion.getTailText())
+                .returnType(typeProxy)
+                .build();
+    }
+
     static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull TypeDescriptor typeDescriptor) {
         checkState(typeDescriptor.isGlobal(), "expected global type but it was not (%s).", typeDescriptor.getType());
         String fullyQualifiedTypeName = typeDescriptor.getType();
@@ -63,19 +76,6 @@ public class SuggestionFactory {
                 .returnTypeDisplayValue(argumentPresentableType)
                 .insertValue(descriptor.getArgumentName())
                 .returnType(argumentType)
-                .build();
-    }
-
-    static Suggestion copyWithType(@NotNull TypeAndTries allTypesMap,
-                                   @NotNull Suggestion suggestion,
-                                   @NotNull TypeProxy typeProxy) {
-        return Suggestion.create(FUNCTION)
-                .returnTypeDisplayValue(typeProxy.toSimpleName(allTypesMap))
-                .cursorOffset(suggestion.getCursorOffset())
-                .lookupToken(suggestion.getLookupToken())
-                .insertValue(suggestion.getInsertValue())
-                .tailText(suggestion.getTailText())
-                .returnType(typeProxy)
                 .build();
     }
 }
