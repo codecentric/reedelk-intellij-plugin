@@ -56,14 +56,13 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
         return previousComponentOutput.mapAttributes(suggestionFinder, typeAndTries);
     }
 
-    // TODO: This is maybe applicable for maps as well!?
     @Override
     public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
-        List<MetadataTypeDTO> metadataTypeDTOS = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
-        if (metadataTypeDTOS.size() == 1) {
-            MetadataTypeDTO metadataTypeDTO = metadataTypeDTOS.stream().findFirst().get();
+        List<MetadataTypeDTO> typeDTOList = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
+        if (typeDTOList.size() == 1) {
+            MetadataTypeDTO metadataTypeDTO = typeDTOList.stream().findFirst().get();
             TypeProxy typeProxy = metadataTypeDTO.getTypeProxy();
-            // we extract the items one by one from the for each list.
+            // we extract the item type from the list, provided the type is a list.
             if (typeProxy.resolve(typeAndTries).isList()) {
                 TypeProxy listItemTypeProxy = typeProxy.resolve(typeAndTries).listItemType(typeAndTries);
                 MetadataTypeDTO unrolledList = new MetadataTypeDTO(
@@ -73,7 +72,8 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
                 return Collections.singletonList(unrolledList);
             }
         }
-        return metadataTypeDTOS;
+        // Otherwise we just return the list of types.
+        return typeDTOList;
     }
 
     @Override

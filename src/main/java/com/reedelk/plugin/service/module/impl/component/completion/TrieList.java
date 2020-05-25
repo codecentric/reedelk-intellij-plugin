@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toList;
 
 public class TrieList extends TrieDefault {
 
-    private static final String FORMAT_LIST = "List<%s>";
+    public static final String FORMAT_LIST = "List<%s>";
 
     private final String listItemType;
 
@@ -26,27 +26,27 @@ public class TrieList extends TrieDefault {
         Collection<Suggestion> autocomplete = super.autocomplete(token, typeAndTrieMap);
         return autocomplete.stream().map(suggestion -> {
 
-            if (suggestion.getType() == CLOSURE) {
-                // If the method accepts a closure in input we need to replace the suggestion
-                // with the closure aware completion type trie. The return type could be the original
-                // type (e.g the list) or the user specified type from the suggestion.
-                if (KeepReturnType.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
-                    TypeProxy closureReturnType = new TypeProxyClosureList();
-                    TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName, closureReturnType);
-                    return isNotBlank(displayName) ?
-                            SuggestionFactory.copyWithTypeAndDisplayName(suggestion, newType, displayName) :
-                            SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
-
-                } else {
-                    String endClosureReturnType = suggestion.getReturnType().getTypeFullyQualifiedName();
-                    TypeProxy closureReturnType = new TypeProxyClosureList();
-                    TypeClosureAware newType = new TypeClosureAware(endClosureReturnType, closureReturnType);
-                    return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
-                }
-
-            } else {
+            if (suggestion.getType() != CLOSURE) {
                 return suggestion;
             }
+
+            // If the method accepts a closure in input we need to replace the suggestion
+            // with the closure aware completion type trie. The return type could be the original
+            // type (e.g the list) or the user specified type from the suggestion.
+            if (KeepReturnType.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
+                TypeProxy closureReturnType = new TypeProxyClosureList();
+                TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName, closureReturnType);
+                return isNotBlank(displayName) ?
+                        SuggestionFactory.copyWithTypeAndDisplayName(suggestion, newType, displayName) :
+                        SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
+
+            } else {
+                String endClosureReturnType = suggestion.getReturnType().getTypeFullyQualifiedName();
+                TypeProxy closureReturnType = new TypeProxyClosureList();
+                TypeClosureAware newType = new TypeClosureAware(endClosureReturnType, closureReturnType);
+                return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
+            }
+
         }).collect(toList());
     }
 

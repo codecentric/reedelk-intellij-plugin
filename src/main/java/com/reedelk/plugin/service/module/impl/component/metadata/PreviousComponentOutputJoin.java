@@ -156,7 +156,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         public OnTheFlyTypeProxy(String itemType, String displayName) {
             super(List.class.getSimpleName());
-            this.displayName = "List<" + displayName + ">";
+            this.displayName = String.format(TrieList.FORMAT_LIST, displayName);
             this.trieList = new TrieList(List.class.getName(), List.class.getName(), this.displayName, itemType);
         }
 
