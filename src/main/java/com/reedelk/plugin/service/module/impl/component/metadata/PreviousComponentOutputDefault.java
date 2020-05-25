@@ -106,7 +106,7 @@ public class PreviousComponentOutputDefault extends AbstractPreviousComponentOut
     private List<MetadataTypeDTO> createMetadataTypesFrom(List<String> types, SuggestionFinder suggester, TypeAndTries typeAndTries) {
         return types.stream()
                 .distinct()
-                .map(payloadType -> createMetadataType(suggester, typeAndTries, TypeProxy.create(payloadType)))
+                .map(theType -> createMetadataType(suggester, typeAndTries, TypeProxy.create(theType)))
                 .collect(toList());
     }
 }
