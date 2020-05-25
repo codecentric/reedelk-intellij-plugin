@@ -28,6 +28,20 @@ public class SuggestionFactory {
                 .build();
     }
 
+
+    public static Suggestion copyWithTypeAndDisplayName(@NotNull Suggestion suggestion,
+                                                    @NotNull ClosureAware.TypeClosureAware typeProxy,
+                                                    @NotNull String displayName) {
+        return Suggestion.create(FUNCTION)
+                .returnTypeDisplayValue(displayName)
+                .cursorOffset(suggestion.getCursorOffset())
+                .lookupToken(suggestion.getLookupToken())
+                .insertValue(suggestion.getInsertValue())
+                .tailText(suggestion.getTailText())
+                .returnType(typeProxy)
+                .build();
+    }
+
     static Suggestion create(@NotNull TypeAndTries allTypesMap, @NotNull TypeDescriptor typeDescriptor) {
         checkState(typeDescriptor.isGlobal(), "expected global type but it was not (%s).", typeDescriptor.getType());
         String fullyQualifiedTypeName = typeDescriptor.getType();

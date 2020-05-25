@@ -49,8 +49,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
         // Initialize cache used to avoid computing every time the same
         // discovery strategy for the same component context. The key of
         // the cache is the component context's uuid.
-        cache = CacheBuilder
-                .newBuilder()
+        cache = CacheBuilder.newBuilder()
                 .maximumSize(1)
                 .expireAfterAccess(Duration.ofMinutes(5))
                 .build();

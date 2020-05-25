@@ -2,6 +2,8 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 
 import java.util.Collection;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.ClosureAware.KeepReturnType;
+import static com.reedelk.plugin.service.module.impl.component.completion.ClosureAware.TypeClosureAware;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.CLOSURE;
 import static com.reedelk.runtime.api.commons.Preconditions.checkNotNull;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
@@ -28,15 +30,19 @@ public class TrieList extends TrieDefault {
                 // If the method accepts a closure in input we need to replace the suggestion
                 // with the closure aware completion type trie. The return type could be the original
                 // type (e.g the list) or the user specified type from the suggestion.
-                String endClosureReturnType = fullyQualifiedName;
-                if (!ClosureAware.KeepReturnType.class.getName()
-                        .equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
-                    endClosureReturnType = suggestion.getReturnType().getTypeFullyQualifiedName();
-                }
+                if (KeepReturnType.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
+                    TypeProxy closureReturnType = new TypeProxyClosureList();
+                    TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName, closureReturnType);
+                    return isNotBlank(displayName) ?
+                            SuggestionFactory.copyWithTypeAndDisplayName(suggestion, newType, displayName) :
+                            SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
 
-                TypeProxy closureReturnType = new TypeProxyClosureList();
-                ClosureAware.TypeClosureAware newType = new ClosureAware.TypeClosureAware(endClosureReturnType, closureReturnType);
-                return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
+                } else {
+                    String endClosureReturnType = suggestion.getReturnType().getTypeFullyQualifiedName();
+                    TypeProxy closureReturnType = new TypeProxyClosureList();
+                    TypeClosureAware newType = new TypeClosureAware(endClosureReturnType, closureReturnType);
+                    return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
+                }
 
             } else {
                 return suggestion;

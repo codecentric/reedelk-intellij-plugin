@@ -141,13 +141,13 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         public OnTheFlyTypeProxy(String listItem) {
             super(List.class.getSimpleName());
             this.displayName = null;
-            trieList = new TrieList(OnTheFlyTypeProxy.class.getName(), List.class.getName(), null, listItem);
+            this.trieList = new TrieList(List.class.getName(), List.class.getName(), null, listItem);
         }
 
         public OnTheFlyTypeProxy(String itemType, String displayName) {
             super(List.class.getSimpleName());
-            this.displayName = displayName;
-            trieList = new TrieList(OnTheFlyTypeProxy.class.getName(), List.class.getName(), null, itemType);
+            this.displayName = "List<" + displayName + ">";
+            this.trieList = new TrieList(List.class.getName(), List.class.getName(), this.displayName, itemType);
         }
 
         @Override
@@ -158,7 +158,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
             if (StringUtils.isNotBlank(displayName)) {
-                return "List<" + displayName + ">";
+                return displayName;
             } else {
                 return trieList.toSimpleName(typeAndTries);
             }
