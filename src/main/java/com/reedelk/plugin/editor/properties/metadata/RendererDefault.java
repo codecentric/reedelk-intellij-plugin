@@ -39,12 +39,10 @@ public class RendererDefault implements Renderer {
         }
 
         List<MetadataTypeDTO> payloads = input.getPayload();
-        if (payloads.size() == 1) {
-            renderInlinePayload(parent, payloads.get(0));
-
-        } else if (payloads.isEmpty()) {
+        if (payloads.isEmpty()) {
             renderEmptyPayload(parent);
-
+        } else if (payloads.size() == 1) {
+            renderInlinePayload(parent, payloads.get(0));
         } else {
             renderMultiplePayloads(parent, payloads);
         }
@@ -91,7 +89,7 @@ public class RendererDefault implements Renderer {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
             metadataTypeList.forEach(metadataType -> {
-                DisposableCollapsiblePane typePanel =
+                JComponent typePanel =
                         createCollapsiblePanel(metadataType, true, false);
                 FormBuilder.get().addFullWidthAndHeight(typePanel, content);
             });
@@ -99,11 +97,15 @@ public class RendererDefault implements Renderer {
         }, defaultCollapsed, horizontalBar);
     }
 
-    private static DisposableCollapsiblePane createCollapsiblePanel(MetadataTypeDTO metadataType,
+    private static JComponent createCollapsiblePanel(MetadataTypeDTO metadataType,
                                                                     boolean defaultCollapsed,
                                                                     boolean horizontalBar) {
         String title = htmlText(metadataType.getDisplayType());
-        return createCollapsiblePanel(title, metadataType, defaultCollapsed, horizontalBar);
+        if (metadataType.getProperties().isEmpty()) {
+            return new JBLabel(title);
+        } else {
+            return createCollapsiblePanel(title, metadataType, defaultCollapsed, horizontalBar);
+        }
     }
 
     private static DisposableCollapsiblePane createCollapsiblePanel(String title,
@@ -130,7 +132,7 @@ public class RendererDefault implements Renderer {
             FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
         } else {
             MetadataTypeDTO complex = typeItemDTO.complex;
-            DisposableCollapsiblePane payload = createCollapsiblePanel(complex, true, false);
+            JComponent payload = createCollapsiblePanel(complex, true, false);
             payload.setBorder(empty());
             FormBuilder.get().addFullWidthAndHeight(payload, content);
         }
