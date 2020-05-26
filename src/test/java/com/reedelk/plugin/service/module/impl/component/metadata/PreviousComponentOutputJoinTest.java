@@ -486,4 +486,49 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
                         "MessageAttributes")
                 .hasSize(2);
     }
+
+    // We expect merged attributes
+    @Test
+    void shouldCorrectlyMapAttributes() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MyAttributeType.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MySecondAttributeType.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        // When
+        MetadataTypeDTO metadataTypeDTO = output.mapAttributes(suggestionFinder, typeAndTries);
+
+        // Then
+        PluginAssertion.assertThat(metadataTypeDTO)
+                .hasPropertyCount(5)
+                .hasProperty("component").withDisplayType("String").and()
+                .hasProperty("secondAttributeProperty1").withDisplayType("String").and()
+                .hasProperty("secondAttributeProperty2").withDisplayType("long").and()
+                .hasProperty("attributeProperty1").withDisplayType("String").and()
+                .hasProperty("attributeProperty2").withDisplayType("long");
+    }
+
+    @Test
+    void shouldCorrectlyMapAttributesWhenEmptyOutputs() {
+        // Given
+        PreviousComponentOutputJoin output = new PreviousComponentOutputJoin(new HashSet<>());
+
+        // When
+        MetadataTypeDTO metadataTypeDTO = output.mapAttributes(suggestionFinder, typeAndTries);
+
+        // Then
+        PluginAssertion.assertThat(metadataTypeDTO)
+                .hasDisplayType("MessageAttributes")
+                .hasType(MessageAttributes.class.getName())
+                .hasNoProperties();
+    }
 }
