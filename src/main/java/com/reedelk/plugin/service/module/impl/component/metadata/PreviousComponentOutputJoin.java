@@ -55,6 +55,11 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             Suggestion suggestionAsList = SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, proxy);
             return Collections.singletonList(suggestionAsList);
 
+        } else if (suggestionByReturnType.size() == 0) {
+            OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(Object.class.getName(), Object.class.getSimpleName());
+            Suggestion suggestionAsList = SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, proxy);
+            return Collections.singletonList(suggestionAsList);
+
         } else {
             // Otherwise we must join the return types all together and display List<Type1,Type2 ...>.
             // In this case the list item type is generic object since it is a mix of different object types.
@@ -105,7 +110,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             if (typeProxy.resolve(typeAndTries).isList()) {
                 // Output List<List<Type1>> ... do not unroll the properties
                 String listSimpleName = typeProxy.toSimpleName(typeAndTries);
-                String listOfList = String.format(TrieList.FORMAT_LIST, listSimpleName);
+                String listOfList = TrieList.formatList(listSimpleName);
                 MetadataTypeDTO metadataTypeDTO =
                         new MetadataTypeDTO(listOfList, TypeProxy.create(List.class), emptyList());
                 return singletonList(metadataTypeDTO);
@@ -115,6 +120,13 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
                 MetadataTypeDTO sameTypeElementsList = unrollListType(suggester, typeAndTries, proxy);
                 return singletonList(sameTypeElementsList);
             }
+
+        } else if (metadataByType.size() == 0) {
+            MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO("List<" + Object.class.getSimpleName() + ">",
+                    TypeProxy.create(List.class),
+                    emptyList());
+            return singletonList(metadataTypeDTO);
+
         } else {
             // Output List<Type1,Type2,Type3> ... do not unroll the properties
             String listArgs = metadataByType.keySet()
@@ -161,7 +173,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         public OnTheFlyTypeProxy(String listItemType, String displayName) {
             super(List.class.getSimpleName());
-            this.displayName = String.format(TrieList.FORMAT_LIST, displayName);
+            this.displayName = TrieList.formatList(displayName);
             this.trieList = new TrieList(List.class.getName(), List.class.getName(), this.displayName, listItemType);
         }
 

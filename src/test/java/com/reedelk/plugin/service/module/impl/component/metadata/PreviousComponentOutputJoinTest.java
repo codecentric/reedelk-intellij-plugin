@@ -219,4 +219,21 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
                 .hasType(List.class.getName())
                 .hasNoProperties();
     }
+
+    @Test
+    void shouldReturnListOfObjectWhenNoOutputs() {
+        // Given
+        PreviousComponentOutputJoin output = new PreviousComponentOutputJoin(new HashSet<>());
+
+        // When
+        List<MetadataTypeDTO> actualMetadata = output.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO actual = actualMetadata.iterator().next();
+
+        PluginAssertion.assertThat(actual)
+                .hasDisplayTypeContainingOneOf("List<Object>")
+                .hasType(List.class.getName())
+                .hasNoProperties();
+    }
 }

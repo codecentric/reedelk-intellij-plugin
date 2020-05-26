@@ -11,7 +11,11 @@ import static java.util.stream.Collectors.toList;
 
 public class TrieList extends TrieDefault {
 
-    public static final String FORMAT_LIST = "List<%s>";
+    private static final String FORMAT_LIST = "List<%s>";
+
+    public static String formatList(String listItemType) {
+        return String.format(FORMAT_LIST, listItemType);
+    }
 
     private final String listItemType;
 
