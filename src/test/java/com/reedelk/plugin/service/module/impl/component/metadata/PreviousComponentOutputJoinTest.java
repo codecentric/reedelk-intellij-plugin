@@ -306,7 +306,7 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
     }
 
     @Test
-    void shouldBuildDynamicSuggestionsCorrectlyForBranchesReturningSameListType() {
+    void shouldBuildDynamicSuggestionsCorrectlyForBranchesReturningSameComplexType() {
         // Given
         PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
@@ -341,6 +341,49 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         Suggestion next = suggestions.iterator().next();
         TypeProxy listItemType = next.getReturnType().resolve(typeAndTries).listItemType(typeAndTries);
         assertThat(listItemType.getTypeFullyQualifiedName()).isEqualTo(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName());
+    }
+
+    @Test
+    void shouldBuildDynamicSuggestionsCorrectlyForBranchesReturningSameListType() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        Suggestion payload = Suggestion.create(FUNCTION)
+                .insertValue("payload()")
+                .returnType(TypeProxy.create(MessagePayload.class))
+                .build();
+        // When
+        Collection<Suggestion> suggestions = output.buildDynamicSuggestions(suggestionFinder, payload, typeAndTries);
+
+        // Then
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "payload()",
+                        "payload()",
+                        List.class.getName(),
+                        "List<List<MyTypeWithMethodsAndProperties>>")
+                .hasSize(1);
+
+        // Make sure that the list item type is correct.
+        Suggestion next = suggestions.iterator().next();
+        TypeProxy listItemType = next.getReturnType().resolve(typeAndTries).listItemType(typeAndTries);
+        assertThat(listItemType.getTypeFullyQualifiedName()).isEqualTo(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName());
+
+        Trie listMyTypeWithMethodsAndProperties = listItemType.resolve(typeAndTries);
+        TypeProxy myMethodsAndPropertiesType = listMyTypeWithMethodsAndProperties.listItemType(typeAndTries);
+        assertThat(myMethodsAndPropertiesType.getTypeFullyQualifiedName())
+                .isEqualTo(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName());
     }
 
     // Returns List<Object>
