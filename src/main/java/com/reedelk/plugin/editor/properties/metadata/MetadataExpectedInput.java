@@ -10,7 +10,6 @@ import com.reedelk.plugin.service.module.impl.component.metadata.MetadataExpecte
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
-import java.util.Optional;
 
 public class MetadataExpectedInput extends AbstractMetadataInputPanel {
 
@@ -22,24 +21,24 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
 
     @Override
     void render(MetadataDTO metadataDTO, DisposablePanel parent) {
-        Optional<MetadataExpectedInputDTO> expectedInput = metadataDTO.getExpectedInput();
-        if (expectedInput.isPresent()) {
-            render(expectedInput.get(), parent);
+        MetadataExpectedInputDTO expectedInput = metadataDTO.getExpectedInput();
+        if (expectedInput != null) {
+            render(expectedInput, parent);
         } else {
-            FormBuilder.get().addFullWidthAndHeight(new DataNotAvailable(), parent);
+            FormBuilder.get().addFullWidthAndHeight(new RendererDataNotAvailable.DataNotAvailable(), parent);
         }
     }
 
     private void render(MetadataExpectedInputDTO input, DisposablePanel parent) {
         String inputDescription = input.getDescription();
         if (StringUtils.isNotBlank(inputDescription)) {
-            JBLabel description = new JBLabel(htmlLabel(inputDescription, "", false));
+            JBLabel description = new JBLabel(RendererUtils.htmlText(inputDescription));
             FormBuilder.get().addFullWidthAndHeight(description, parent);
             description.setBorder(JBUI.Borders.empty(5));
         }
 
         String expectedPayloadTypes = input.getPayload();
-        JBLabel expectedType = new JBLabel(htmlLabel("<b style=\"color: #666666\">Expected type: </b>" + expectedPayloadTypes, "", false));
+        JBLabel expectedType = new JBLabel(RendererUtils.htmlTitle("Expected type", expectedPayloadTypes));
         expectedType.setBorder(JBUI.Borders.empty(5));
         FormBuilder.get().addFullWidthAndHeight(expectedType, parent);
     }

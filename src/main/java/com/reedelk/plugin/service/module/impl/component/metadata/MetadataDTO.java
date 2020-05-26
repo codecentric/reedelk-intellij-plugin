@@ -1,7 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import java.util.Optional;
-
 public class MetadataDTO {
 
     private final MetadataExpectedInputDTO expectedInput;
@@ -12,11 +10,11 @@ public class MetadataDTO {
         this.actualInput = actualInput;
     }
 
-    public Optional<MetadataExpectedInputDTO> getExpectedInput() {
-        return Optional.ofNullable(expectedInput);
+    public MetadataExpectedInputDTO getExpectedInput() {
+        return expectedInput;
     }
 
-    public Optional<MetadataActualInputDTO> getActualInput() {
-        return Optional.ofNullable(actualInput);
+    public MetadataActualInputDTO getActualInput() {
+        return actualInput;
     }
 }
