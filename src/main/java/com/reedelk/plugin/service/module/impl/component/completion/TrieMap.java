@@ -38,15 +38,15 @@ public class TrieMap extends TrieDefault {
             // type (e.g the list) or the user specified type from the suggestion.
             if (KeepReturnType.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
                 TypeProxy mapTypeProxy = new TypeProxyClosureMap();
-                TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName, mapTypeProxy);
+                TypeClosureAware newType = new TypeClosureAware(fullyQualifiedName, this, mapTypeProxy);
                 return isNotBlank(displayName) ?
                         SuggestionFactory.copyWithTypeAndDisplayName(suggestion, newType, displayName) :
                         SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
 
             } else {
-                String endClosureReturnType = suggestion.getReturnType().getTypeFullyQualifiedName();
+                Trie endClosureReturnType = suggestion.getReturnType().resolve(typeAndTrieMap);
                 TypeProxy mapTypeProxy = new TypeProxyClosureMap();
-                TypeClosureAware newType = new TypeClosureAware(endClosureReturnType, mapTypeProxy);
+                TypeClosureAware newType = new TypeClosureAware(suggestion.getReturnType().getTypeFullyQualifiedName(), endClosureReturnType, mapTypeProxy);
                 return SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, newType);
             }
 

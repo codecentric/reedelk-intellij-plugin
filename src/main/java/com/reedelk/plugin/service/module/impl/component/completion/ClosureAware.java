@@ -15,23 +15,35 @@ public class ClosureAware {
     public interface KeepReturnType {
     }
 
-    public static class TypeClosureAware extends TypeProxyDefault {
+    public static class TypeClosureAware implements TypeProxy {
 
         // List or Map type proxy
         private final TypeProxy closureReturnType;
+        private final Trie originalTrie;
+        private final String fullyQualifiedName;
 
-        TypeClosureAware(String typeFullyQualifiedName, TypeProxy closureReturnType) {
-            super(typeFullyQualifiedName);
+        TypeClosureAware(String fullyQualifiedName, Trie originalTrie, TypeProxy closureReturnType) {
+            this.fullyQualifiedName = fullyQualifiedName;
+            this.originalTrie = originalTrie;
             this.closureReturnType = closureReturnType;
         }
 
         @Override
+        public String getTypeFullyQualifiedName() {
+            return fullyQualifiedName;
+        }
+
+        @Override
+        public String toSimpleName(TypeAndTries typeAndTries) {
+            return originalTrie.toSimpleName(typeAndTries);
+        }
+
+        @Override
         public Trie resolve(TypeAndTries typeAndTries) {
-            Trie originalTypeTrie = typeAndTries.getOrDefault(getTypeFullyQualifiedName());
             // Resolve to a dynamic trie returning the beginning of a closure or the original type
             // suggestions if the token is different from '{'. This is needed to continuously
             // be able to resolve types when a closure is closed, e.g map.each { entry.name }.myMethod
-            return new TrieClosureAware(typeFullyQualifiedName, originalTypeTrie, closureReturnType);
+            return new TrieClosureAware(fullyQualifiedName, originalTrie, closureReturnType);
         }
     }
 
@@ -64,6 +76,31 @@ public class ClosureAware {
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
             return originalTypeTrie.toSimpleName(typeAndTries);
+        }
+
+        @Override
+        public TypeProxy listItemType(TypeAndTries typeAndTries) {
+            return originalTypeTrie.listItemType(typeAndTries);
+        }
+
+        @Override
+        public TypeProxy mapKeyType(TypeAndTries typeAndTries) {
+            return originalTypeTrie.mapKeyType(typeAndTries);
+        }
+
+        @Override
+        public TypeProxy mapValueType(TypeAndTries typeAndTries) {
+            return originalTypeTrie.mapValueType(typeAndTries);
+        }
+
+        @Override
+        public boolean isList() {
+            return originalTypeTrie.isList();
+        }
+
+        @Override
+        public boolean isMap() {
+            return originalTypeTrie.isMap();
         }
     }
 }

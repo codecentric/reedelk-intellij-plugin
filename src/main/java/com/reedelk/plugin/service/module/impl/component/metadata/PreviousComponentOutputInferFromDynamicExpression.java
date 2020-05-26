@@ -6,11 +6,10 @@ import com.reedelk.runtime.api.commons.ScriptUtils;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 public class PreviousComponentOutputInferFromDynamicExpression extends AbstractPreviousComponentOutput {
@@ -53,11 +52,17 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
     @Override
     public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
         Collection<Suggestion> suggestions = suggestionsFromDynamicExpression(suggester);
-        return suggestions
-                .stream()
-                .map(Suggestion::getReturnType)
-                .map(typeProxy -> createMetadataType(suggester, typeAndTries, typeProxy))
-                .collect(toList());
+        // Because the suggestions might be each and eachWithIndex both returning list.
+        // therefore they have the same return type and we must merge them.
+        Map<String, List<Suggestion>> suggestionsByFullyQualifiedName =
+                suggestions.stream().collect(groupingBy(suggestion -> suggestion.getReturnType().getTypeFullyQualifiedName()));
+        return suggestionsByFullyQualifiedName.values().stream().map(new Function<List<Suggestion>, MetadataTypeDTO>() {
+            @Override
+            public MetadataTypeDTO apply(List<Suggestion> suggestions) {
+                Suggestion next = suggestions.iterator().next();
+                return createMetadataType(suggester, typeAndTries, next.getReturnType());
+            }
+        }).collect(toList());
     }
 
     @NotNull

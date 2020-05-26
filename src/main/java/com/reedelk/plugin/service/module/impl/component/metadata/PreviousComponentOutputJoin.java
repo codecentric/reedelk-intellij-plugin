@@ -45,11 +45,12 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         Map<TypeProxy, List<Suggestion>> suggestionsByType = suggestions
                 .stream()
                 .collect(groupingBy(Suggestion::getReturnType));
-
+        // There is just one suggestion type.
         if (suggestionsByType.size() == 1) {
             Map.Entry<TypeProxy, List<Suggestion>> next = suggestionsByType.entrySet().iterator().next();
-            TypeProxy listItemType = next.getKey();
-            OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(listItemType.getTypeFullyQualifiedName());
+            TypeProxy theType = next.getKey();
+            OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(
+                    theType.getTypeFullyQualifiedName());
             Suggestion suggestionAsList = SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, proxy);
             return Collections.singletonList(suggestionAsList);
 
@@ -101,8 +102,9 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             if (typeProxy.resolve(typeAndTries).isList()) {
                 // Output List<List<Type1>> ... do not unroll the properties
                 String listSimpleName = typeProxy.toSimpleName(typeAndTries);
+                String listOfList = String.format(TrieList.FORMAT_LIST, listSimpleName);
                 MetadataTypeDTO metadataTypeDTO =
-                        new MetadataTypeDTO(listSimpleName, TypeProxy.create(List.class), emptyList());
+                        new MetadataTypeDTO(listOfList, TypeProxy.create(List.class), emptyList());
                 return singletonList(metadataTypeDTO);
 
             } else {
@@ -148,10 +150,10 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
         private final TrieList trieList;
         private final String displayName;
 
-        public OnTheFlyTypeProxy(String listItem) {
-            super(List.class.getSimpleName());
+        public OnTheFlyTypeProxy(String listItemType) {
+            super(List.class.getName());
             this.displayName = null;
-            this.trieList = new TrieList(List.class.getName(), List.class.getName(), null, listItem);
+            this.trieList = new TrieList(List.class.getName(), List.class.getName(), null, listItemType);
         }
 
         public OnTheFlyTypeProxy(String itemType, String displayName) {
