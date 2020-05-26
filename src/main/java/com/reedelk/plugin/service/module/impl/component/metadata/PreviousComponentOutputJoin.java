@@ -89,53 +89,53 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
     @Override
     public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
         // The output is a List of types, if the types are all the same
-        List<MetadataTypeDTO> allTypes = new ArrayList<>();
-
+        List<MetadataTypeDTO> metadataTypeList = new ArrayList<>();
         outputs.stream()
                 .map(previousComponentOutput -> previousComponentOutput.mapPayload(suggester, typeAndTries))
-                .forEach(allTypes::addAll);
+                .forEach(metadataTypeList::addAll);
 
         // We group all the metadata DTOs by their type:
         // If they all have the same type, then we display a single list of type: List<MyType> and we unroll the list item type.
         // Otherwise the output will be List<Type1,Type2,Type3> (single type properties are not unrolled)
-        Map<TypeProxy, List<MetadataTypeDTO>> metadataByType = allTypes
+        Map<TypeProxy, List<MetadataTypeDTO>> metadataGroupedByType = metadataTypeList
                 .stream()
                 .collect(groupingBy(MetadataTypeDTO::getTypeProxy));
 
-        if (metadataByType.size() == 1) {
-            // All the outputs have the same type (we must unroll the list type properties (List<Type> : Type)
-            Map.Entry<TypeProxy, List<MetadataTypeDTO>> next = metadataByType.entrySet().iterator().next();
-            TypeProxy typeProxy = next.getKey();
-            // Otherwise it would be a list of lists
+        // All the outputs have the same type. If it is a list, we unroll the list item type properties
+        // to give the user better info about the type of the list: List<Type> : Type.
+        if (metadataGroupedByType.size() == 1) {
+            Map.Entry<TypeProxy, List<MetadataTypeDTO>> metadataTypeAndDTOList = metadataGroupedByType.entrySet().iterator().next();
+            TypeProxy typeProxy = metadataTypeAndDTOList.getKey();
+
+            // If the type is a list, the final type is List<List<Type>>,
+            // therefore we do not unroll the list item properties.
             if (typeProxy.resolve(typeAndTries).isList()) {
-                // Output List<List<Type1>> ... do not unroll the properties
-                String listSimpleName = typeProxy.toSimpleName(typeAndTries);
-                String listOfList = TrieList.formatList(listSimpleName);
-                MetadataTypeDTO metadataTypeDTO =
-                        new MetadataTypeDTO(listOfList, TypeProxy.create(List.class), emptyList());
+                String listSimpleName = typeProxy.toSimpleName(typeAndTries); // List<Type>
+                String listOfList = TrieList.formatList(listSimpleName);    // List<List<Type>>
+                MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO(listOfList, TypeProxy.create(List.class), emptyList());
                 return singletonList(metadataTypeDTO);
 
             } else {
+                // If the type is not a list, we unroll the properties of the type.
                 OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(typeProxy.getTypeFullyQualifiedName());
                 MetadataTypeDTO sameTypeElementsList = unrollListType(suggester, typeAndTries, proxy);
                 return singletonList(sameTypeElementsList);
             }
 
-        } else if (metadataByType.size() == 0) {
-            MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO("List<" + Object.class.getSimpleName() + ">",
-                    TypeProxy.create(List.class),
-                    emptyList());
+        } else if (metadataGroupedByType.size() == 0) {
+            // If there are no outputs, we just display generic List<Object> type.
+            String listOfObject = TrieList.formatList(Object.class.getSimpleName());
+            MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO(listOfObject, TypeProxy.create(List.class), emptyList());
             return singletonList(metadataTypeDTO);
 
         } else {
             // Output List<Type1,Type2,Type3> ... do not unroll the properties
-            String listArgs = metadataByType.keySet()
+            String listArgs = metadataGroupedByType.keySet()
                     .stream()
                     .map(theType -> theType.toSimpleName(typeAndTries))
                     .collect(joining(","));
-            MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO("List<" + listArgs + ">",
-                    TypeProxy.create(List.class),
-                    emptyList());
+            String listDisplayType = TrieList.formatList(listArgs);
+            MetadataTypeDTO metadataTypeDTO = new MetadataTypeDTO(listDisplayType, TypeProxy.create(List.class), emptyList());
             return singletonList(metadataTypeDTO);
         }
     }
