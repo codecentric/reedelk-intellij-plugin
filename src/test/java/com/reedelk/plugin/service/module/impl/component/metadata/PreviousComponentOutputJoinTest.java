@@ -1,18 +1,19 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinder;
-import com.reedelk.plugin.service.module.impl.component.completion.SuggestionFinderDefault;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils;
+import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.runtime.api.message.MessagePayload;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
@@ -235,5 +236,95 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
                 .hasDisplayTypeContainingOneOf("List<Object>")
                 .hasType(List.class.getName())
                 .hasNoProperties();
+    }
+
+    @Test
+    void shouldBuildDynamicSuggestionsCorrectlyForBranchesReturningDifferentPrimitiveType() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(Long.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        Suggestion payload = Suggestion.create(FUNCTION)
+                .insertValue("payload()")
+                .returnType(TypeProxy.create(MessagePayload.class))
+                .build();
+        // When
+        Collection<Suggestion> suggestions = output.buildDynamicSuggestions(suggestionFinder, payload, typeAndTries);
+
+        // Then
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "payload()",
+                        "payload()",
+                        List.class.getName(),
+                        "List<String,Long>","List<Long,String>")
+                .hasSize(1);
+    }
+
+    @Test
+    void shouldBuildDynamicSuggestionsCorrectlyForBranchesReturningSamePrimitiveType() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(Long.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(Long.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        Suggestion payload = Suggestion.create(FUNCTION)
+                .insertValue("payload()")
+                .returnType(TypeProxy.create(MessagePayload.class))
+                .build();
+        // When
+        Collection<Suggestion> suggestions = output.buildDynamicSuggestions(suggestionFinder, payload, typeAndTries);
+
+        // Then
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "payload()",
+                        "payload()",
+                        List.class.getName(),
+                        "List<Long>")
+                .hasSize(1);
+    }
+
+    // Returns List<Object>
+    @Test
+    void shouldBuildDynamicSuggestionsCorrectlyWhenNoBranches() {
+        // Given
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>());
+
+        Suggestion payload = Suggestion.create(FUNCTION)
+                .insertValue("payload()")
+                .returnType(TypeProxy.create(MessagePayload.class))
+                .build();
+        // When
+        Collection<Suggestion> suggestions = output.buildDynamicSuggestions(suggestionFinder, payload, typeAndTries);
+
+        // Then
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                        "payload()",
+                        "payload()",
+                        List.class.getName(),
+                        "List<Object>")
+                .hasSize(1);
     }
 }

@@ -21,7 +21,7 @@ public class SuggestionsAssertion {
                                          String expectedInsertValue,
                                          String expectedLookupToken,
                                          String expectedReturnTypeFullyQualifiedName,
-                                         String expectedReturnTypeDisplayValue) {
+                                         String ...expectedReturnTypeDisplayValue) {
         boolean found = suggestions.stream().anyMatch(suggestion -> {
             Suggestion.Type actualType = suggestion.getType();
             String actualInsertValue = suggestion.getInsertValue();
@@ -67,11 +67,16 @@ public class SuggestionsAssertion {
 
     // There might be multiple return types e.g Type1,Type2 and so on. We want to compare them
     // without explicitly consider the order, e.g Type1,Type2 == Type2,Type1
-    private boolean sameReturnDisplayType(String actualReturnTypeDisplayValue, String expectedReturnTypeDisplayValue) {
-        String[] actualReturnDisplayTypeSegments = actualReturnTypeDisplayValue.split(",");
-        String[] expectedReturnDisplayTypeSegments = expectedReturnTypeDisplayValue.split(",");
-        return new HashSet<>(Arrays.asList(actualReturnDisplayTypeSegments))
-                .equals(new HashSet<>(Arrays.asList(expectedReturnDisplayTypeSegments)));
+    private boolean sameReturnDisplayType(String actualReturnTypeDisplayValue, String ...expectedReturnTypeDisplayValues) {
+        for (String expectedReturnTypeDisplayValue : expectedReturnTypeDisplayValues) {
+            String[] actualReturnDisplayTypeSegments = actualReturnTypeDisplayValue.split(",");
+            String[] expectedReturnDisplayTypeSegments = expectedReturnTypeDisplayValue.split(",");
+            if (new HashSet<>(Arrays.asList(actualReturnDisplayTypeSegments))
+                    .equals(new HashSet<>(Arrays.asList(expectedReturnDisplayTypeSegments)))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean sameReturnType(String actualReturnType, String expectedReturnType) {
