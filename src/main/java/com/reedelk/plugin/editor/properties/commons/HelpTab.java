@@ -12,8 +12,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Optional;
 
@@ -22,6 +22,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class HelpTab extends DisposableScrollPane {
 
+    private static final String CONTENT_TYPE = "text/html";
     private static final String IMAGE_CACHE_PROPERTY = "imageCache";
 
     private boolean loaded = false;
@@ -53,7 +54,9 @@ public class HelpTab extends DisposableScrollPane {
                     editorPane.addHyperlinkListener(HyperlinkListenerUtils.BROWSER_OPEN);
                     editorPane.setContentType(CONTENT_TYPE);
                     editorPane.getDocument().putProperty(IMAGE_CACHE_PROPERTY, imageCache);
-                    editorPane.setText(String.format(HTML_TEMPLATE, componentTitle, componentImageURI, componentDescription));
+
+                    String htmlContent = message("properties.panel.tab.help.html", componentTitle, componentImageURI, componentDescription);
+                    editorPane.setText(htmlContent);
 
                     setViewportView(editorPane);
 
@@ -63,22 +66,24 @@ public class HelpTab extends DisposableScrollPane {
         });
     }
 
-    private static URI componentImageURI;
-    static {
-        try {
-            componentImageURI = new URI("file:component-icon.png");
-        } catch (URISyntaxException e) {
-            // This exception will never be thrown.
+    private static byte[] toByteArray(BufferedImage originalImage) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ImageIO.write(originalImage, "png", outputStream);
+            outputStream.flush();
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            return new byte[0];
         }
     }
 
-    private static final String CONTENT_TYPE = "text/html";
-    private static final String HTML_TEMPLATE =
-            "<div style=\"color: #333333; padding-left:15px; padding-bottom:15px; padding-right:15px; font-family:verdana\">" +
-                    "<h2>%s</h2>" +
-                    "<img src=\"%s\"\">" +
-                    "<p style=\"text-align: justify\">%s</p>" +
-                    "</div>";
+    private static URL componentImageURI;
+    static {
+        try {
+            componentImageURI = new URL("file:component-icon.png");
+        } catch (MalformedURLException e) {
+            // This exception will never be thrown.
+        }
+    }
 
     static class ImageCache extends Hashtable {
 
@@ -95,16 +100,6 @@ public class HelpTab extends DisposableScrollPane {
             } else {
                 return super.get(key);
             }
-        }
-    }
-
-    public static byte[] toByteArray(BufferedImage originalImage) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            ImageIO.write(originalImage, "png", outputStream);
-            outputStream.flush();
-            return outputStream.toByteArray();
-        } catch (IOException e) {
-            return new byte[0];
         }
     }
 }
