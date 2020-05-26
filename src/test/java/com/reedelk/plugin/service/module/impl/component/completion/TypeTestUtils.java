@@ -26,6 +26,7 @@ public class TypeTestUtils {
                     new ListMyUnknownType(),
                     new ListMapFirstType(),
                     new MyAttributeType(),
+                    new MySecondAttributeType(),
                     new ListSimpleType(),
                     new ListMyItemType(),
                     new MapSecondType(),
@@ -136,6 +137,20 @@ public class TypeTestUtils {
             trie.insert(createPropertySuggestion("attributeProperty1", String.class.getName(), typeAndTries));
             trie.insert(createPropertySuggestion("attributeProperty2", long.class.getName(), typeAndTries));
             trieMap.put(MyAttributeType.class.getName(), trie);
+        }
+    }
+
+    public static class MySecondAttributeType extends MessageAttributes implements TrieProvider {
+
+        private MySecondAttributeType() {
+        }
+
+        @Override
+        public void register(TypeAndTries typeAndTries, Map<String, Trie> trieMap) {
+            Trie trie = new TrieDefault(MySecondAttributeType.class.getName(), MessageAttributes.class.getName(), MyAttributeType.class.getSimpleName());
+            trie.insert(createPropertySuggestion("secondAttributeProperty1", String.class.getName(), typeAndTries));
+            trie.insert(createPropertySuggestion("secondAttributeProperty2", long.class.getName(), typeAndTries));
+            trieMap.put(MySecondAttributeType.class.getName(), trie);
         }
     }
 

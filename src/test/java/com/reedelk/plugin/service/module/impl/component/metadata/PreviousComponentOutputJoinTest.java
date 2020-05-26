@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeTestUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +37,7 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Given
         PreviousComponentOutputDefault previousOutput = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(MyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputJoin output = new PreviousComponentOutputJoin(new HashSet<>(singletonList(previousOutput)));
@@ -60,12 +61,12 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Given
         PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(MyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.MyItemType.class.getName()),
+                singletonList(MyItemType.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputJoin output =
@@ -90,7 +91,7 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Given
         PreviousComponentOutputDefault previousOutput = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                singletonList(ListMyItemType.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputJoin output =
@@ -113,12 +114,12 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Given
         PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                singletonList(ListMyItemType.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                singletonList(ListMyItemType.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputJoin output =
@@ -141,12 +142,12 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Given
         PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                singletonList(ListMyItemType.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(ListMyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputJoin output =
@@ -310,12 +311,12 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Given
         PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(MyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(MyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputJoin output =
@@ -340,7 +341,7 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Make sure that the list item type is correct.
         Suggestion next = suggestions.iterator().next();
         TypeProxy listItemType = next.getReturnType().resolve(typeAndTries).listItemType(typeAndTries);
-        assertThat(listItemType.getTypeFullyQualifiedName()).isEqualTo(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName());
+        assertThat(listItemType.getTypeFullyQualifiedName()).isEqualTo(MyTypeWithMethodsAndProperties.class.getName());
     }
 
     @Test
@@ -348,12 +349,12 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Given
         PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(ListMyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(ListMyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputJoin output =
@@ -378,12 +379,12 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Make sure that the list item type is correct.
         Suggestion next = suggestions.iterator().next();
         TypeProxy listItemType = next.getReturnType().resolve(typeAndTries).listItemType(typeAndTries);
-        assertThat(listItemType.getTypeFullyQualifiedName()).isEqualTo(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName());
+        assertThat(listItemType.getTypeFullyQualifiedName()).isEqualTo(ListMyTypeWithMethodsAndProperties.class.getName());
 
         Trie listMyTypeWithMethodsAndProperties = listItemType.resolve(typeAndTries);
         TypeProxy myMethodsAndPropertiesType = listMyTypeWithMethodsAndProperties.listItemType(typeAndTries);
         assertThat(myMethodsAndPropertiesType.getTypeFullyQualifiedName())
-                .isEqualTo(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName());
+                .isEqualTo(MyTypeWithMethodsAndProperties.class.getName());
     }
 
     @Test
@@ -391,12 +392,12 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
         // Given
         PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                singletonList(ListMyItemType.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName()),
+                singletonList(ListMyTypeWithMethodsAndProperties.class.getName()),
                 TEST_DESCRIPTION);
 
         PreviousComponentOutputJoin output =
@@ -446,5 +447,43 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
                         List.class.getName(),
                         "List<Object>")
                 .hasSize(1);
+    }
+
+    @Test
+    void shouldNotJoinMessageAttributesWhenBranchesWithDifferentAttributeTypes() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MyAttributeType.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MySecondAttributeType.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        Suggestion payload = Suggestion.create(FUNCTION)
+                .insertValue("attributes()")
+                .returnType(TypeProxy.create(MessageAttributes.class))
+                .build();
+        // When
+        Collection<Suggestion> suggestions = output.buildDynamicSuggestions(suggestionFinder, payload, typeAndTries);
+
+        // Then
+        PluginAssertion.assertThat(suggestions)
+                .contains(FUNCTION,
+                "attributes()",
+                        "attributes()",
+                        MyAttributeType.class.getName(),
+                        "MessageAttributes")
+                .contains(FUNCTION,
+                        "attributes()",
+                        "attributes()",
+                        MySecondAttributeType.class.getName(),
+                        "MessageAttributes")
+                .hasSize(2);
     }
 }
