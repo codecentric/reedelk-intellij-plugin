@@ -49,4 +49,26 @@ class PreviousComponentOutputForEachTest extends AbstractComponentDiscoveryTest 
                 .hasProperty("property2").withDisplayType("long").and()
                 .hasProperty("property3").withDisplayType("Double");
     }
+
+    @Test
+    void shouldReturnPrimitiveTypeWhenPreviousOutputIsPrimitive() {
+        // Given
+        PreviousComponentOutputDefault previousOutput = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputForEach output = new PreviousComponentOutputForEach(previousOutput);
+
+        // When
+        List<MetadataTypeDTO> actualMetadata = output.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO actual = actualMetadata.iterator().next();
+
+        PluginAssertion.assertThat(actual)
+                .hasType(String.class.getName())
+                .hasDisplayType(String.class.getSimpleName())
+                .hasNoProperties();
+    }
 }
