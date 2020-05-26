@@ -25,8 +25,8 @@ public class RendererDataNotAvailable implements Renderer {
     protected static class DataNotAvailable extends DisposablePanel {
         DataNotAvailable() {
             super(new BorderLayout());
-            add(new JBLabel(RendererUtils.htmlTitle("Data is not available, make sure that the previous " +
-                    "component define @ComponentOutput annotation.", ""), JLabel.CENTER), BorderLayout.CENTER);
+            add(new JBLabel(RendererUtils.htmlText("Data is not available, make sure that the previous " +
+                    "component define @ComponentOutput annotation."), JLabel.CENTER), BorderLayout.CENTER);
             setBorder(JBUI.Borders.empty(5));
         }
     }

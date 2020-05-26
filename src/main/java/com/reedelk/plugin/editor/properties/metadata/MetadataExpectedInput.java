@@ -38,7 +38,7 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
         }
 
         String expectedPayloadTypes = input.getPayload();
-        JBLabel expectedType = new JBLabel(RendererUtils.htmlTitle("Expected type", expectedPayloadTypes));
+        JBLabel expectedType = new JBLabel(RendererUtils.htmlTitle("Expected type(s)", expectedPayloadTypes));
         expectedType.setBorder(JBUI.Borders.empty(5));
         FormBuilder.get().addFullWidthAndHeight(expectedType, parent);
     }
