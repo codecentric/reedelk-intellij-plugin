@@ -77,7 +77,7 @@ public class TrieList extends TrieDefault {
             return displayName;
         } else {
             String listItemTypeSimpleName = listItemType(typeAndTries).toSimpleName(typeAndTries);
-            return String.format(FORMAT_LIST, listItemTypeSimpleName);
+            return formatList(listItemTypeSimpleName);
         }
     }
 
