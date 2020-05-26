@@ -59,13 +59,9 @@ public class DialogEditScript extends DialogWrapper {
     @Override
     protected void doOKAction() {
         super.doOKAction();
-        WriteCommandAction.runWriteCommandAction(module.getProject(), new Runnable() {
-            @Override
-            public void run() {
+        WriteCommandAction.runWriteCommandAction(module.getProject(),() ->
                 // Whenever we are done, we must write back the updated script in the file system file.
-                originalDocument.setText(tmpDocument.getText());
-            }
-        });
+                originalDocument.setText(tmpDocument.getText()));
     }
 
     @NotNull

@@ -8,6 +8,9 @@ import static java.util.stream.Collectors.toList;
 
 public class ModuleDTOConverter {
 
+    private ModuleDTOConverter() {
+    }
+
     public static ModuleDTO from(ModuleDescriptor moduleDescriptor) {
         List<ModuleComponentDTO> moduleComponentDTOs = moduleDescriptor.getComponents()
                 .stream()

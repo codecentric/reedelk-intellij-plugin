@@ -141,10 +141,9 @@ public class FindClosestPrecedingNode {
             while (!scopes.empty()) {
                 ScopedGraphNode lastScopeBeforeDropPoint = scopes.pop();
                 ScopeBoundaries boundaries = lastScopeBeforeDropPoint.getScopeBoundaries(graph, graphics);
-                if (dropX >= boundaries.getX() + boundaries.getWidth()) {
-                    if (dropY > boundaries.getY() && dropY < boundaries.getY() + boundaries.getHeight()) {
-                        return Optional.of(precedingNode);
-                    }
+                if (dropX >= boundaries.getX() + boundaries.getWidth() &&
+                        dropY > boundaries.getY() && dropY < boundaries.getY() + boundaries.getHeight()) {
+                    return Optional.of(precedingNode);
                 }
             }
         }

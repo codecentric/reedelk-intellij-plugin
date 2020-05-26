@@ -44,10 +44,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             List<ConfigMetadata> configs = new ArrayList<>();
             ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
                 // We must check that the file is still valid before getting the configuration.
-                if (fileOrDir.isValid()) {
-                    if (FileExtension.CONFIG.value().equals(fileOrDir.getExtension())) {
-                        getConfigurationFrom(fileOrDir, typeObjectDescriptor).ifPresent(configs::add);
-                    }
+                if (fileOrDir.isValid() &&
+                        FileExtension.CONFIG.value().equals(fileOrDir.getExtension())) {
+                    getConfigurationFrom(fileOrDir, typeObjectDescriptor).ifPresent(configs::add);
                 }
                 return true;
             });

@@ -12,6 +12,10 @@ import static java.util.Arrays.asList;
 
 public class TypeDefault {
 
+    public static final TypeProxy INT = TypeProxy.create(int.class);
+    public static final TypeProxy MESSAGE = TypeProxy.create(Message.class);
+    public static final TypeProxy FLOW_CONTEXT = TypeProxy.create(FlowContext.class);
+
     public static final String DEFAULT_PAYLOAD = Object.class.getName();
     public static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
 
@@ -23,14 +27,14 @@ public class TypeDefault {
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .returnTypeDisplayValue(Message.class.getSimpleName())
-                .returnType(TypeProxy.MESSAGE)
+                .returnType(MESSAGE)
                 .insertValue("message")
                 .build();
         MESSAGE_AND_CONTEXT.insert(message);
 
         Suggestion context = Suggestion.create(PROPERTY)
                 .returnTypeDisplayValue(FlowContext.class.getSimpleName())
-                .returnType(TypeProxy.FLOW_CONTEXT)
+                .returnType(FLOW_CONTEXT)
                 .insertValue("context")
                 .build();
         MESSAGE_AND_CONTEXT.insert(context);
@@ -166,7 +170,7 @@ public class TypeDefault {
                         .insertValue(ARG_IT)
                         .build());
 
-                TypeProxy indexType = TypeProxy.INT; // the index is int
+                TypeProxy indexType = INT; // the index is int
                 insert(Suggestion.create(PROPERTY)
                         .returnTypeDisplayValue(indexType.resolve(typeAndTries).toSimpleName(typeAndTries))
                         .returnType(indexType)

@@ -44,6 +44,9 @@ public class DiscoveryStrategyFactory {
         DISCOVERY = Collections.unmodifiableMap(tmp);
     }
 
+    private DiscoveryStrategyFactory() {
+    }
+
     public static Optional<PreviousComponentOutput> get(@NotNull Module module,
                                                                     @NotNull PlatformModuleService moduleService,
                                                                     @NotNull TypeAndTries typeAndAndTries,
@@ -51,7 +54,7 @@ public class DiscoveryStrategyFactory {
                                                                     @NotNull GraphNode nodeToFindInputMessage) {
 
         List<GraphNode> predecessors = context.predecessors(nodeToFindInputMessage);
-        if (predecessors.size() == 0) {
+        if (predecessors.isEmpty()) {
             // There are no predecessors, therefore it must be the first
             // node of a flow or subflow.
             ComponentType componentClass = nodeToFindInputMessage.getComponentType();
