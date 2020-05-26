@@ -8,7 +8,7 @@ public class TypeProxyDefault implements TypeProxy {
     protected String typeFullyQualifiedName;
 
     public TypeProxyDefault(String typeFullyQualifiedName) {
-        checkState(isNotBlank(typeFullyQualifiedName), "null type fully qualified name");
+        checkState(isNotBlank(typeFullyQualifiedName), "blank type fully qualified name");
         this.typeFullyQualifiedName = typeFullyQualifiedName;
     }
 

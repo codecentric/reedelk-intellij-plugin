@@ -6,6 +6,7 @@ import com.reedelk.plugin.assertion.component.ComponentDataHolderAssertion;
 import com.reedelk.plugin.assertion.graph.FlowGraphAssertion;
 import com.reedelk.plugin.assertion.graph.FlowGraphChangeAwareAssertion;
 import com.reedelk.plugin.assertion.metadata.MetadataTypeDTOAssertion;
+import com.reedelk.plugin.assertion.metadata.MetadataTypeDTOListAssertion;
 import com.reedelk.plugin.assertion.suggestion.SuggestionAssertion;
 import com.reedelk.plugin.assertion.suggestion.SuggestionsAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -14,6 +15,7 @@ import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.metadata.MetadataTypeDTO;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class PluginAssertion {
@@ -44,5 +46,9 @@ public class PluginAssertion {
 
     public static MetadataTypeDTOAssertion assertThat(MetadataTypeDTO metadataType) {
         return new MetadataTypeDTOAssertion(metadataType);
+    }
+
+    public static MetadataTypeDTOListAssertion assertThat(List<MetadataTypeDTO> metadataTypeDTOList) {
+        return new MetadataTypeDTOListAssertion(metadataTypeDTOList);
     }
 }

@@ -50,21 +50,21 @@ public class PreviousComponentOutputOneOf extends AbstractPreviousComponentOutpu
 
     @Override
     public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggester, @NotNull TypeAndTries typeAndTries) {
-        List<MetadataTypeDTO> payloads = new ArrayList<>();
+        List<MetadataTypeDTO> metadataTypeList = new ArrayList<>();
         for (PreviousComponentOutput componentOutput : outputs) {
             List<MetadataTypeDTO> metadata = componentOutput.mapPayload(suggester, typeAndTries);
-            payloads.addAll(metadata);
+            metadataTypeList.addAll(metadata);
         }
 
-        // Logic should be if all types have the same type
-        Map<TypeProxy, List<MetadataTypeDTO>> collect = payloads
+        // We group the possible outputs by their type.
+        Map<TypeProxy, List<MetadataTypeDTO>> metadataGroupedByType = metadataTypeList
                 .stream()
                 .collect(groupingBy(MetadataTypeDTO::getTypeProxy));
 
         // We need to only return *distinct* payload types (i.e: we don't want to return String,String)
-        List<MetadataTypeDTO> onlyOnes = new ArrayList<>();
-        collect.forEach((key, value) -> onlyOnes.add(value.iterator().next()));
-        return onlyOnes;
+        List<MetadataTypeDTO> distinctMetadataTypes = new ArrayList<>();
+        metadataGroupedByType.forEach((key, value) -> distinctMetadataTypes.add(value.iterator().next()));
+        return distinctMetadataTypes;
     }
 
     @Override

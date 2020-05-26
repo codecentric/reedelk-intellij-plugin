@@ -89,18 +89,19 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
 
                     descriptor.getProperties().stream().sorted(Comparator.comparing(ioTypeDTO -> ioTypeDTO.name))
                             .forEach(iotypeDTO -> {
+
                                 if (StringUtils.isNotBlank(iotypeDTO.displayType)) {
                                     String label = htmlLabel(iotypeDTO.name, iotypeDTO.displayType);
                                     JBLabel attributes = new JBLabel(label, JLabel.LEFT);
                                     attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
-                                    attributes.setBorder(JBUI.Borders.emptyLeft(parentPadding));
+                                    attributes.setBorder(JBUI.Borders.emptyLeft(parentPadding + 10));
                                     FormBuilder.get().addLabel(attributes, content);
                                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                                 } else {
                                     MetadataTypeDTO complex = iotypeDTO.complex;
                                     DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, complex.getDisplayType()), complex, parentPadding, true, horizontalBar);
                                     payload.setBorder(JBUI.Borders.empty());
-                                    payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
+                                    payload.setBorder(JBUI.Borders.emptyLeft(parentPadding + 10));
                                     FormBuilder.get().addFullWidthAndHeight(payload, content);
                                 }
                             });

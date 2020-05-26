@@ -13,9 +13,20 @@ import static org.assertj.core.api.Assertions.fail;
 public class MetadataTypeDTOAssertion {
 
     private final MetadataTypeDTO metadataType;
+    private final MetadataTypeDTOListAssertion parent;
 
     public MetadataTypeDTOAssertion(MetadataTypeDTO metadataType) {
+        this.parent = null;
         this.metadataType = metadataType;
+    }
+
+    public MetadataTypeDTOAssertion(MetadataTypeDTO metadataType, MetadataTypeDTOListAssertion parent) {
+        this.parent = parent;
+        this.metadataType = metadataType;
+    }
+
+    public MetadataTypeDTOListAssertion and() {
+        return parent;
     }
 
     public MetadataTypeDTOAssertion hasDisplayType(String expectedDisplayType) {
