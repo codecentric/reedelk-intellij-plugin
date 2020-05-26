@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.HashSet;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,5 +51,172 @@ class PreviousComponentOutputJoinTest extends AbstractComponentDiscoveryTest {
                 .hasProperty("property1").withDisplayType("String").and()
                 .hasProperty("property2").withDisplayType("long").and()
                 .hasProperty("property3").withDisplayType("Double");
+    }
+
+    @Test
+    void shouldReturnListOfObjectWhenJoiningBranchesHaveDifferentTypes() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.MyTypeWithMethodsAndProperties.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.MyItemType.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        // When
+        List<MetadataTypeDTO> actualMetadata = output.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO actual = actualMetadata.iterator().next();
+
+        PluginAssertion.assertThat(actual)
+                .hasDisplayTypeContainingOneOf(
+                        "List<TypeTestUtils$MyItemType,MyTypeWithMethodsAndProperties>",
+                        "List<MyTypeWithMethodsAndProperties,TypeTestUtils$MyItemType>")
+                .hasType(List.class.getName())
+                .hasNoProperties();
+    }
+
+    @Test
+    void shouldReturnListOfListWhenJoiningBranchOutputIsList() {
+        // Given
+        PreviousComponentOutputDefault previousOutput = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(singletonList(previousOutput)));
+
+        // When
+        List<MetadataTypeDTO> actualMetadata = output.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO actual = actualMetadata.iterator().next();
+
+        PluginAssertion.assertThat(actual)
+                .hasDisplayType("List<List<TypeTestUtils$MyItemType>>")
+                .hasType(List.class.getName())
+                .hasNoProperties();
+    }
+
+    @Test
+    void shouldReturnListOfListWhenJoiningBranchesOutputAreListsOfSameType() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        // When
+        List<MetadataTypeDTO> actualMetadata = output.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO actual = actualMetadata.iterator().next();
+
+        PluginAssertion.assertThat(actual)
+                .hasDisplayType("List<List<TypeTestUtils$MyItemType>>")
+                .hasType(List.class.getName())
+                .hasNoProperties();
+    }
+
+    @Test
+    void shouldReturnListOfListWhenJoiningBranchesOutputAreListsOfDifferentType() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.ListMyItemType.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(TypeTestUtils.ListMyTypeWithMethodsAndProperties.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        // When
+        List<MetadataTypeDTO> actualMetadata = output.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO actual = actualMetadata.iterator().next();
+
+        PluginAssertion.assertThat(actual)
+                .hasDisplayTypeContainingOneOf(
+                        "List<List<MyTypeWithMethodsAndProperties>,List<TypeTestUtils$MyItemType>>",
+                        "List<List<TypeTestUtils$MyItemType>,List<MyTypeWithMethodsAndProperties>>")
+                .hasType(List.class.getName())
+                .hasNoProperties();
+    }
+
+    @Test
+    void shouldReturnListOfSimpleTypeWhenBranchesReturnSameType() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        // When
+        List<MetadataTypeDTO> actualMetadata = output.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO actual = actualMetadata.iterator().next();
+
+        PluginAssertion.assertThat(actual)
+                .hasDisplayType("List<String>")
+                .hasType(List.class.getName())
+                .hasNoProperties();
+    }
+
+    @Test
+    void shouldReturnListOfDifferentSimpleTypesWhenBranchesReturnDifferentTypes() {
+        // Given
+        PreviousComponentOutputDefault previousOutput1 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(String.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputDefault previousOutput2 = new PreviousComponentOutputDefault(
+                singletonList(MessageAttributes.class.getName()),
+                singletonList(Long.class.getName()),
+                TEST_DESCRIPTION);
+
+        PreviousComponentOutputJoin output =
+                new PreviousComponentOutputJoin(new HashSet<>(asList(previousOutput1, previousOutput2)));
+
+        // When
+        List<MetadataTypeDTO> actualMetadata = output.mapPayload(suggestionFinder, typeAndTries);
+
+        // Then
+        MetadataTypeDTO actual = actualMetadata.iterator().next();
+
+        PluginAssertion.assertThat(actual)
+                .hasDisplayTypeContainingOneOf("List<String,Long>","List<Long,String>")
+                .hasType(List.class.getName())
+                .hasNoProperties();
     }
 }

@@ -1,12 +1,13 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.completion.*;
-import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.*;
@@ -35,27 +36,29 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         if (MessageAttributes.class.getName().equals(suggestion.getReturnType().getTypeFullyQualifiedName())) {
             // If the dynamic suggestions we are asking for are the message attributes, then the JOIN joins
-            // the properties, it does not creates a list, therefore we can just return the suggestions attributes
-            // for each previous component output.
+            // the properties, it does not creates a list for each type, therefore we can just return the
+            // suggestions attributes for each previous component output.
             return suggestions;
         }
 
 
-        // Otherwise we group for each output type and create a List<Type1,Type2,...>
-        Map<TypeProxy, List<Suggestion>> suggestionsByType = suggestions
+        // Otherwise we group for each output return type and create a List<Type1,Type2,...>
+        Map<TypeProxy, List<Suggestion>> suggestionByReturnType = suggestions
                 .stream()
                 .collect(groupingBy(Suggestion::getReturnType));
-        // There is just one suggestion type.
-        if (suggestionsByType.size() == 1) {
-            Map.Entry<TypeProxy, List<Suggestion>> next = suggestionsByType.entrySet().iterator().next();
+
+        // All the suggestions have the same return type.
+        if (suggestionByReturnType.size() == 1) {
+            Map.Entry<TypeProxy, List<Suggestion>> next = suggestionByReturnType.entrySet().iterator().next();
             TypeProxy theType = next.getKey();
-            OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(
-                    theType.getTypeFullyQualifiedName());
+            OnTheFlyTypeProxy proxy = new OnTheFlyTypeProxy(theType.getTypeFullyQualifiedName());
             Suggestion suggestionAsList = SuggestionFactory.copyWithType(typeAndTrieMap, suggestion, proxy);
             return Collections.singletonList(suggestionAsList);
 
         } else {
-            String listArgs = suggestionsByType.keySet()
+            // Otherwise we must join the return types all together and display List<Type1,Type2 ...>.
+            // In this case the list item type is generic object since it is a mix of different object types.
+            String listArgs = suggestionByReturnType.keySet()
                     .stream()
                     .map(theType -> theType.toSimpleName(typeAndTrieMap))
                     .collect(joining(","));
@@ -67,7 +70,7 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
     @Override
     public String description() {
-        return StringUtils.EMPTY;
+        return EMPTY;
     }
 
     @Override
@@ -156,10 +159,10 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
             this.trieList = new TrieList(List.class.getName(), List.class.getName(), null, listItemType);
         }
 
-        public OnTheFlyTypeProxy(String itemType, String displayName) {
+        public OnTheFlyTypeProxy(String listItemType, String displayName) {
             super(List.class.getSimpleName());
             this.displayName = String.format(TrieList.FORMAT_LIST, displayName);
-            this.trieList = new TrieList(List.class.getName(), List.class.getName(), this.displayName, itemType);
+            this.trieList = new TrieList(List.class.getName(), List.class.getName(), this.displayName, listItemType);
         }
 
         @Override
@@ -169,11 +172,9 @@ public class PreviousComponentOutputJoin extends AbstractPreviousComponentOutput
 
         @Override
         public String toSimpleName(TypeAndTries typeAndTries) {
-            if (StringUtils.isNotBlank(displayName)) {
-                return displayName;
-            } else {
-                return trieList.toSimpleName(typeAndTries);
-            }
+            return isNotBlank(displayName) ?
+                    displayName :
+                    trieList.toSimpleName(typeAndTries);
         }
     }
 }

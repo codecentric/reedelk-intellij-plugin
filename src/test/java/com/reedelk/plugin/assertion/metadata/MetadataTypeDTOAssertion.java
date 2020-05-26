@@ -3,10 +3,12 @@ package com.reedelk.plugin.assertion.metadata;
 import com.reedelk.plugin.service.module.impl.component.metadata.MetadataTypeDTO;
 import com.reedelk.plugin.service.module.impl.component.metadata.MetadataTypeItemDTO;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class MetadataTypeDTOAssertion {
 
@@ -18,6 +20,14 @@ public class MetadataTypeDTOAssertion {
 
     public MetadataTypeDTOAssertion hasDisplayType(String expectedDisplayType) {
         assertThat(metadataType.getDisplayType()).isEqualTo(expectedDisplayType);
+        return this;
+    }
+
+    public MetadataTypeDTOAssertion hasDisplayTypeContainingOneOf(String ...expectedTypes) {
+        for (String expectedType : expectedTypes) {
+            if (expectedType.equals(metadataType.getDisplayType())) return this;
+        }
+        fail("Could not find display type containing any of=[" + Arrays.toString(expectedTypes) + "]");
         return this;
     }
 
