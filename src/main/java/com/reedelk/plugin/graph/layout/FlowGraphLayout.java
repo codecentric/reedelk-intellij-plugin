@@ -136,14 +136,14 @@ public class FlowGraphLayout {
     private void computeXAndY(int top, FlowGraph graph, Graphics2D graphics, List<List<GraphNode>> layers, GraphNode node, GraphNode stop) {
         // Compute new X coordinate
         int containingLayerIndex = FindContainingLayer.of(layers, node);
-        int XCoordinate = Half.of(node.width(graphics)) +
+        int xCoordinate = Half.of(node.width(graphics)) +
                 ComputeLayerWidthSumPreceding.of(graphics, layers, containingLayerIndex, scopesCountByLayer);
 
         // Compute new Y coordinate
         int topHalfHeight = FindMaxTopHalfHeight.of(graph, graphics, node, stop);
-        int YCoordinate = top + topHalfHeight;
+        int yCoordinate = top + topHalfHeight;
 
-        node.setPosition(XCoordinate, YCoordinate);
+        node.setPosition(xCoordinate, yCoordinate);
     }
 
     private boolean isLayerFollowingScopedNode(FlowGraph graph, List<GraphNode> nodes) {

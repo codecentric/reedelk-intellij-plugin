@@ -19,10 +19,10 @@ public class Tokenizer {
     }
 
     public static String[] tokenize(String text, int offset) {
-        return new Tokenizer()._tokenize(text, offset);
+        return new Tokenizer().tokenizeInternal(text, offset);
     }
 
-    String[] _tokenize(String text, int offset) {
+    String[] tokenizeInternal(String text, int offset) {
         try {
 
             lexer.start(text, 0, offset);

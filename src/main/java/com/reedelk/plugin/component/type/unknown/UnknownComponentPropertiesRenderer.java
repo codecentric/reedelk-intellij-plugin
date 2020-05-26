@@ -34,7 +34,7 @@ public class UnknownComponentPropertiesRenderer extends AbstractComponentPropert
 
     private static class UnknownPropertiesContainer extends DisposableTabbedPane {
 
-        private final ComponentData componentData;
+        private final transient ComponentData componentData;
 
         public UnknownPropertiesContainer(ComponentData componentData) {
             super(JTabbedPane.LEFT);

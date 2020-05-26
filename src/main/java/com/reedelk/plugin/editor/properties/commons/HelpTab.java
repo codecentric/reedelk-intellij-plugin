@@ -12,8 +12,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Hashtable;
 import java.util.Optional;
 
@@ -42,7 +42,7 @@ public class HelpTab extends DisposableScrollPane {
                 // of the component's properties.
                 ApplicationManager.getApplication().invokeLater(() -> {
 
-                    ImageCache image_cache = new ImageCache((BufferedImage) componentData.getComponentImage());
+                    ImageCache imageCache = new ImageCache((BufferedImage) componentData.getComponentImage());
                     String componentDescription = Optional.ofNullable(componentData.getDescription())
                             .orElse(message("component.description.not.provided"));
                     String componentTitle = componentData.getDisplayName();
@@ -52,8 +52,8 @@ public class HelpTab extends DisposableScrollPane {
                     editorPane.setEditable(false);
                     editorPane.addHyperlinkListener(HyperlinkListenerUtils.BROWSER_OPEN);
                     editorPane.setContentType(CONTENT_TYPE);
-                    editorPane.getDocument().putProperty(IMAGE_CACHE_PROPERTY, image_cache);
-                    editorPane.setText(String.format(HTML_TEMPLATE, componentTitle, COMPONENT_IMAGE_URL, componentDescription));
+                    editorPane.getDocument().putProperty(IMAGE_CACHE_PROPERTY, imageCache);
+                    editorPane.setText(String.format(HTML_TEMPLATE, componentTitle, componentImageURI, componentDescription));
 
                     setViewportView(editorPane);
 
@@ -63,11 +63,11 @@ public class HelpTab extends DisposableScrollPane {
         });
     }
 
-    private static URL COMPONENT_IMAGE_URL;
+    private static URI componentImageURI;
     static {
         try {
-            COMPONENT_IMAGE_URL = new URL("file:component-icon.png");
-        } catch (MalformedURLException e) {
+            componentImageURI = new URI("file:component-icon.png");
+        } catch (URISyntaxException e) {
             // This exception will never be thrown.
         }
     }
@@ -82,7 +82,7 @@ public class HelpTab extends DisposableScrollPane {
 
     static class ImageCache extends Hashtable {
 
-        private transient final BufferedImage image;
+        private final transient BufferedImage image;
 
         ImageCache(BufferedImage image) {
             this.image = image;
@@ -90,7 +90,7 @@ public class HelpTab extends DisposableScrollPane {
 
         @Override
         public Object get(Object key) {
-            if (COMPONENT_IMAGE_URL.equals(key)) {
+            if (componentImageURI.equals(key)) {
                 return Toolkit.getDefaultToolkit().createImage(toByteArray(image));
             } else {
                 return super.get(key);

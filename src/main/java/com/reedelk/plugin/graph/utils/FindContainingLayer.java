@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 import java.util.List;
@@ -15,6 +16,6 @@ public class FindContainingLayer {
                 return i;
             }
         }
-        throw new RuntimeException("Could not find containing layer for node " + current);
+        throw new PluginException("Could not find containing layer for node " + current);
     }
 }
