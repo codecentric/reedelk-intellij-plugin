@@ -37,7 +37,6 @@ public class RendererDefault implements Renderer {
         if (isNotBlank(payloadDescription)) {
             renderDescription(parent, input.getPayloadDescription());
         }
-
         List<MetadataTypeDTO> payloads = input.getPayload();
         if (payloads.isEmpty()) {
             renderEmptyPayload(parent);
@@ -46,7 +45,10 @@ public class RendererDefault implements Renderer {
         } else {
             renderMultiplePayloads(parent, payloads);
         }
+        renderAttributes(parent, input);
+    }
 
+    private void renderAttributes(JComponent parent, MetadataActualInputDTO input) {
         String title = attributeLabel();
         DisposableCollapsiblePane attributes =
                 createCollapsiblePanel(title, input.getAttributes(), false, true);
@@ -55,7 +57,7 @@ public class RendererDefault implements Renderer {
 
     private void renderMultiplePayloads(JComponent parent, List<MetadataTypeDTO> payloads) {
         String displayName = payloadLabel("(one of the following types)");
-        DisposableCollapsiblePane payload = createPanel(displayName, payloads, false, true);
+        DisposableCollapsiblePane payload = createPanel(displayName, payloads);
         FormBuilder.get().addFullWidthAndHeight(payload, parent);
     }
 
@@ -81,30 +83,29 @@ public class RendererDefault implements Renderer {
         FormBuilder.get().addFullWidthAndHeight(payload, parent);
     }
 
-    private static DisposableCollapsiblePane createPanel(String title,
-                                                         List<MetadataTypeDTO> metadataTypeList,
-                                                         boolean defaultCollapsed,
-                                                         boolean horizontalBar) {
+    private static DisposableCollapsiblePane createPanel(String title, List<MetadataTypeDTO> metadataTypeList) {
         return new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
             metadataTypeList.forEach(metadataType -> {
                 JComponent typePanel =
-                        createCollapsiblePanel(metadataType, true, false);
+                        createCollapsiblePanel(metadataType);
                 FormBuilder.get().addFullWidthAndHeight(typePanel, content);
             });
             return content;
-        }, defaultCollapsed, horizontalBar);
+        }, false, true);
     }
 
-    private static JComponent createCollapsiblePanel(MetadataTypeDTO metadataType,
-                                                                    boolean defaultCollapsed,
-                                                                    boolean horizontalBar) {
+    private static JComponent createCollapsiblePanel(MetadataTypeDTO metadataType) {
         String title = htmlText(metadataType.getDisplayType());
         if (metadataType.getProperties().isEmpty()) {
-            return new JBLabel(title);
+            JBLabel label = new JBLabel(title);
+            label.setBorder(emptyLeft(25));
+            return label;
         } else {
-            return createCollapsiblePanel(title, metadataType, defaultCollapsed, horizontalBar);
+            JComponent panel = createCollapsiblePanel(title, metadataType, true, false);
+            panel.setBorder(emptyLeft(5));
+            return panel;
         }
     }
 
@@ -112,7 +113,7 @@ public class RendererDefault implements Renderer {
                                                                     MetadataTypeDTO metadataType,
                                                                     boolean defaultCollapsed,
                                                                     boolean horizontalBar) {
-        return new DisposableCollapsiblePane(title, () -> {
+        DisposableCollapsiblePane panel = new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
             metadataType.getProperties()
@@ -121,6 +122,8 @@ public class RendererDefault implements Renderer {
                     .forEach(typeItemDTO -> renderTypeItem(content, typeItemDTO));
             return content;
         }, defaultCollapsed, horizontalBar);
+        panel.setBorder(empty());
+        return panel;
     }
 
     private static void renderTypeItem(DisposablePanel content, MetadataTypeItemDTO typeItemDTO) {
@@ -128,12 +131,14 @@ public class RendererDefault implements Renderer {
             String label = propertyEntry(typeItemDTO.name, typeItemDTO.displayType);
             JBLabel attributes = new JBLabel(label, JLabel.LEFT);
             attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
+            attributes.setBorder(emptyLeft(25));
             FormBuilder.get().addLabel(attributes, content);
             FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
         } else {
             MetadataTypeDTO complex = typeItemDTO.complex;
-            JComponent payload = createCollapsiblePanel(complex, true, false);
-            payload.setBorder(empty());
+            String text = typeItemDTO.name + " : " + complex.getDisplayType();
+            JComponent payload = createCollapsiblePanel(text, complex, true, false);
+            payload.setBorder(emptyLeft(5));
             FormBuilder.get().addFullWidthAndHeight(payload, content);
         }
     }
