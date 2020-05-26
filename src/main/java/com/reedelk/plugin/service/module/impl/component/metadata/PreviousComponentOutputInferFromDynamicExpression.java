@@ -7,7 +7,6 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Function;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -56,13 +55,13 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
         // therefore they have the same return type and we must merge them.
         Map<String, List<Suggestion>> suggestionsByFullyQualifiedName =
                 suggestions.stream().collect(groupingBy(suggestion -> suggestion.getReturnType().getTypeFullyQualifiedName()));
-        return suggestionsByFullyQualifiedName.values().stream().map(new Function<List<Suggestion>, MetadataTypeDTO>() {
-            @Override
-            public MetadataTypeDTO apply(List<Suggestion> suggestions) {
-                Suggestion next = suggestions.iterator().next();
-                return createMetadataType(suggester, typeAndTries, next.getReturnType());
-            }
-        }).collect(toList());
+        return suggestionsByFullyQualifiedName
+                .values()
+                .stream()
+                .map(suggestionList -> {
+                    Suggestion next = suggestionList.iterator().next();
+                    return createMetadataType(suggester, typeAndTries, next.getReturnType());
+                }).collect(toList());
     }
 
     @NotNull
