@@ -33,7 +33,7 @@ public class Tokenizer {
 
             return processedTokens.toArray(new String[0]);
 
-        } catch (Exception e) {
+        } catch (Exception exception) {
             return EMPTY;
         }
     }
