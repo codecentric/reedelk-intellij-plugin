@@ -60,7 +60,7 @@ public class PreviousComponentOutputForEach extends AbstractPreviousComponentOut
     public List<MetadataTypeDTO> mapPayload(@NotNull SuggestionFinder suggestionFinder, @NotNull TypeAndTries typeAndTries) {
         List<MetadataTypeDTO> typeDTOList = previousComponentOutput.mapPayload(suggestionFinder, typeAndTries);
         if (typeDTOList.size() == 1) {
-            MetadataTypeDTO metadataTypeDTO = typeDTOList.stream().findFirst().get();
+            MetadataTypeDTO metadataTypeDTO = typeDTOList.iterator().next();
             TypeProxy typeProxy = metadataTypeDTO.getTypeProxy();
             // we extract the item type from the list, provided the type is a list.
             if (typeProxy.resolve(typeAndTries).isList()) {

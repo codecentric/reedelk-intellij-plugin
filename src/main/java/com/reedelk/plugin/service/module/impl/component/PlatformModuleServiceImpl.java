@@ -52,8 +52,8 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
         // 1. flow-control module (e.g flow-ref, router, fork): these components are immutable.
         // 2. maven-dependencies module (e.g module-ftp, module-csv): these components might change depending on the pom.xml
         // 3. project-custom components module (e.g from the current project): these components change when the code in the current project is modified.
-        asyncLoadFlowControlModuleDescriptor((nextAction1) ->
-                asyncLoadMavenDependenciesComponents((nextAction2) ->
+        asyncLoadFlowControlModuleDescriptor(nextAction1 ->
+                asyncLoadMavenDependenciesComponents(nextAction2 ->
                         asyncLoadModuleCustomComponents()));
     }
 
