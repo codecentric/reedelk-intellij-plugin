@@ -1,0 +1,46 @@
+#if (${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+
+import com.reedelk.runtime.api.annotation.*;
+import com.reedelk.runtime.api.component.ProcessorSync;
+import com.reedelk.runtime.api.flow.FlowContext;
+import com.reedelk.runtime.api.message.Message;
+import com.reedelk.runtime.api.message.MessageAttributes;import com.reedelk.runtime.api.message.MessageBuilder;
+import com.reedelk.runtime.api.message.content.MimeType;
+import org.osgi.service.component.annotations.Component;
+
+import static com.reedelk.runtime.api.commons.ComponentPrecondition.*;
+import static org.osgi.service.component.annotations.ServiceScope.PROTOTYPE;
+
+@ModuleComponent("${NAME}")
+@ComponentOutput(attributes = MessageAttributes.class, payload = Object.class)
+@ComponentInput(payload = Object.class, description = "${NAME} Input description")
+@Description("${NAME} description")
+@Component(service = ${NAME}.class, scope = PROTOTYPE)
+public class ${NAME} implements ProcessorSync {
+
+    @Property("My property")
+    @Hint("My property value hint")
+    @DefaultValue("My property value")
+    @InitValue("World!")
+    @Description("My property value description")
+    private String myProperty;
+
+    @Override
+    public void initialize() {
+        Configuration.requireNotBlank(${NAME}.class, "myProperty", "My property must not be empty");
+    }
+
+    @Override
+    public Message apply(FlowContext flowContext, Message message) {
+
+        String processed = "Hello " + myProperty;
+
+        return MessageBuilder.get(${NAME}.class)
+                .withString(processed, MimeType.TEXT_PLAIN)
+                .build();
+    }
+
+    public void setMyProperty(String myProperty) {
+        this.myProperty = myProperty;
+    }
+}

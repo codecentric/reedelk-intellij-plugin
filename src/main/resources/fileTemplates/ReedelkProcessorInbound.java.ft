@@ -1,0 +1,59 @@
+#if (${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+
+import com.reedelk.runtime.api.annotation.*;
+import com.reedelk.runtime.api.component.AbstractInbound;
+import com.reedelk.runtime.api.message.Message;
+import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.runtime.api.message.MessageBuilder;
+import com.reedelk.runtime.api.message.content.MimeType;
+import org.osgi.service.component.annotations.Component;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static org.osgi.service.component.annotations.ServiceScope.PROTOTYPE;
+
+@ModuleComponent("${NAME}")
+@ComponentOutput(attributes = MessageAttributes.class, payload = String.class)
+@Description("${NAME} description")
+@Component(service = ${NAME}.class, scope = PROTOTYPE)
+public class ${NAME} extends AbstractInbound {
+
+    private Timer timer;
+
+    @Property("Timer Period")
+    @Hint("60000")
+    @InitValue("5000")
+    @DefaultValue("5000")
+    @Description("Time in milliseconds between successive task executions.")
+    private int period = 5000;
+
+    @Override
+    public void onStart() {
+        timer = new Timer();
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                String eventText = String.format("Hello world %d", System.currentTimeMillis());
+
+                Message eventMessage = MessageBuilder.get(${NAME}.class)
+                        .withString(eventText, MimeType.TEXT_PLAIN)
+                        .build();
+
+                onEvent(eventMessage);
+            }
+        }, 0, period);
+    }
+
+    @Override
+    public void onShutdown() {
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
+
+    public void setPeriod(int period) {
+        this.period = period;
+    }
+}
