@@ -80,7 +80,10 @@ public class RendererDefault implements Renderer {
     }
 
     private void renderEmptyPayload(JComponent parent) {
-        // TODO: Empty
+        String displayName = payloadLabel("(no info available)");
+        JBLabel label = new JBLabel();
+        JComponent description = new RootItemPanel(displayName, label);
+        FormBuilder.get().addFullWidthAndHeight(description, parent);
     }
 
     private void renderDescription(JComponent parent, String descriptionText) {
@@ -111,16 +114,14 @@ public class RendererDefault implements Renderer {
             label.setBorder(emptyLeft(LEFT_OFFSET));
             return label;
         } else {
-            JComponent panel = createCollapsiblePanel(title, metadataType, true, false);
+            JComponent panel = createCollapsiblePanel(title, metadataType);
             panel.setBorder(emptyLeft(LEFT_OFFSET));
             return panel;
         }
     }
 
     private static DisposableCollapsiblePane createCollapsiblePanel(String title,
-                                                                    MetadataTypeDTO metadataType,
-                                                                    boolean defaultCollapsed,
-                                                                    boolean horizontalBar) {
+                                                                    MetadataTypeDTO metadataType) {
         DisposableCollapsiblePane panel = new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
@@ -129,9 +130,26 @@ public class RendererDefault implements Renderer {
                     .sorted(comparing(typeDTO -> typeDTO.name))
                     .forEach(typeItemDTO -> renderTypeItem(content, typeItemDTO));
             return content;
-        }, defaultCollapsed, horizontalBar, ClickableLabel.IconAlignment.RIGHT);
+        }, true, false, ClickableLabel.IconAlignment.RIGHT);
         panel.setBorder(empty());
         return panel;
+    }
+
+    private static void renderTypeItem(DisposablePanel content, MetadataTypeItemDTO typeItemDTO) {
+        if (isNotBlank(typeItemDTO.displayType)) {
+            String label = propertyEntry(typeItemDTO.name, typeItemDTO.displayType);
+            JBLabel attributes = new JBLabel(label, JLabel.LEFT);
+            attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
+            attributes.setBorder(emptyLeft(LEFT_OFFSET));
+            FormBuilder.get().addLabel(attributes, content);
+            FormBuilder.get().addLastField(createHorizontalGlue(), content);
+        } else {
+            MetadataTypeDTO complex = typeItemDTO.complex;
+            String text = typeItemDTO.name + " : " + complex.getDisplayType();
+            JComponent payload = createCollapsiblePanel(text, complex);
+            payload.setBorder(emptyLeft(LEFT_OFFSET));
+            FormBuilder.get().addFullWidthAndHeight(payload, content);
+        }
     }
 
     static class RootItemPanel extends DisposablePanel {
@@ -146,23 +164,6 @@ public class RendererDefault implements Renderer {
             add(new JBLabel(title), BorderLayout.WEST);
             add(horizontalSeparator, CENTER);
             add(content, SOUTH);
-        }
-    }
-
-    private static void renderTypeItem(DisposablePanel content, MetadataTypeItemDTO typeItemDTO) {
-        if (isNotBlank(typeItemDTO.displayType)) {
-            String label = propertyEntry(typeItemDTO.name, typeItemDTO.displayType);
-            JBLabel attributes = new JBLabel(label, JLabel.LEFT);
-            attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
-            attributes.setBorder(emptyLeft(LEFT_OFFSET));
-            FormBuilder.get().addLabel(attributes, content);
-            FormBuilder.get().addLastField(createHorizontalGlue(), content);
-        } else {
-            MetadataTypeDTO complex = typeItemDTO.complex;
-            String text = typeItemDTO.name + " : " + complex.getDisplayType();
-            JComponent payload = createCollapsiblePanel(text, complex, true, false);
-            payload.setBorder(emptyLeft(LEFT_OFFSET));
-            FormBuilder.get().addFullWidthAndHeight(payload, content);
         }
     }
 }

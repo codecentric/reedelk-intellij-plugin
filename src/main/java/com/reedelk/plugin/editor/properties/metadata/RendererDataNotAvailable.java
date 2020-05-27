@@ -18,7 +18,9 @@ public class RendererDataNotAvailable implements Renderer {
 
     @Override
     public void render(JComponent parent, MetadataActualInputDTO actualInputDTO) {
-        FormBuilder.get().addFullWidthAndHeight(new DataNotAvailable(), parent);
+        DataNotAvailable dataNotAvailable = new DataNotAvailable();
+        dataNotAvailable.setBorder(JBUI.Borders.empty(2, 5));
+        FormBuilder.get().addFullWidthAndHeight(dataNotAvailable, parent);
     }
 
     // TODO: Add the text in the reedelk bundle.
