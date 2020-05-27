@@ -89,7 +89,7 @@ public class RendererDefault implements Renderer {
     }
 
     public static JComponent createCollapsiblePanel(MetadataTypeDTO metadataType) {
-        String title = htmlText(metadataType.getDisplayType());
+        String title = htmlTypeText(metadataType.getDisplayType());
         if (metadataType.getProperties().isEmpty()) {
             JBLabel label = new JBLabel(title);
             label.setBorder(emptyLeft(LEFT_OFFSET));
