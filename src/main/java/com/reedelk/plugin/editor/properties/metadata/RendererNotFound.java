@@ -8,6 +8,7 @@ import com.reedelk.plugin.service.module.impl.component.metadata.MetadataActualI
 import javax.swing.*;
 
 import static com.reedelk.plugin.editor.properties.metadata.RendererUtils.htmlText;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RendererNotFound implements Renderer {
 
@@ -18,7 +19,7 @@ public class RendererNotFound implements Renderer {
 
     @Override
     public void render(JComponent parent, MetadataActualInputDTO actualInputDTO) {
-        JBLabel label = new JBLabel(htmlText("The component input could not be determined"));
+        JBLabel label = new JBLabel(htmlText(message("metadata.input.not.found")));
         label.setBorder(JBUI.Borders.empty(2, 5));
         FormBuilder.get().addFullWidthAndHeight(label, parent);
     }

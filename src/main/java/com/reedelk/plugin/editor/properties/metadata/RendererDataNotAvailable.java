@@ -9,6 +9,9 @@ import com.reedelk.plugin.service.module.impl.component.metadata.MetadataActualI
 import javax.swing.*;
 import java.awt.*;
 
+import static com.reedelk.plugin.editor.properties.metadata.RendererUtils.htmlText;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class RendererDataNotAvailable implements Renderer {
 
     @Override
@@ -23,12 +26,11 @@ public class RendererDataNotAvailable implements Renderer {
         FormBuilder.get().addFullWidthAndHeight(dataNotAvailable, parent);
     }
 
-    // TODO: Add the text in the reedelk bundle.
     protected static class DataNotAvailable extends DisposablePanel {
         DataNotAvailable() {
             super(new BorderLayout());
-            add(new JBLabel(RendererUtils.htmlText("Data is not available, make sure that the previous " +
-                    "component define @ComponentOutput annotation."), JLabel.CENTER), BorderLayout.CENTER);
+            JBLabel label = new JBLabel(htmlText(message("metadata.input.not.available")));
+            add(label, BorderLayout.CENTER);
             setBorder(JBUI.Borders.empty(5));
         }
     }
