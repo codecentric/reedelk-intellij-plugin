@@ -35,14 +35,6 @@ public abstract class DiscoveryStrategyJoinAware implements DiscoveryStrategy {
 
         // The current scope
         Optional<GraphNode> node = context.findFirstNodeOutsideCurrentScope(scopedGraphNode);
-        if (node.isPresent()) {
-            // If the node is JOIN, multiple messages.
-            ComponentType componentType = node.get().getComponentType();
-            if (ComponentType.JOIN.equals(componentType)) {
-                PreviousComponentOutputMultipleMessages descriptor = new PreviousComponentOutputMultipleMessages();
-                return Optional.of(descriptor);
-            }
-        }
 
         Set<PreviousComponentOutput> outputs = new HashSet<>();
         List<GraphNode> lastNodesOfScope = context.listLastNodesOfScope(scopedGraphNode);
@@ -63,6 +55,16 @@ public abstract class DiscoveryStrategyJoinAware implements DiscoveryStrategy {
                 DiscoveryStrategy strategy =
                         DiscoveryStrategyFactory.get(module, moduleService, typeAndAndTries, nodeFullyQualifiedName);
                 strategy.compute(context, lastNodeOfScope, node.orElse(null)).ifPresent(outputs::add);
+            }
+        }
+
+        if (node.isPresent()) {
+            // If the node is JOIN, multiple messages.
+            ComponentType componentType = node.get().getComponentType();
+            if (ComponentType.JOIN.equals(componentType)) {
+                // The JOIN always joins the attributes from the incoming messages.
+                PreviousComponentOutputMultipleMessages descriptor = new PreviousComponentOutputMultipleMessages(outputs);
+                return Optional.of(descriptor);
             }
         }
 
