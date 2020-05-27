@@ -57,7 +57,7 @@ public class ClickableLabel extends JBLabel implements MouseListener {
         if (disabledIcon != null) {
             setDisabledIcon(disabledIcon);
         }
-        if (iconAlignment.equals(IconAlignment.LEFT)) {
+        if (IconAlignment.LEFT.equals(iconAlignment)) {
             setHorizontalTextPosition(SwingConstants.RIGHT); // Icon pushed to the left
         } else {
             setHorizontalTextPosition(SwingConstants.LEFT); // Icon pushed to the right

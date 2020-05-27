@@ -22,6 +22,7 @@ public class DisposableCollapsiblePane extends DisposablePanel {
     private final DisposablePanel collapsedContent;
     private final transient TooltipContent tooltipContent;
     private final transient ContentRenderer renderingFunction;
+    private ClickableLabel.IconAlignment iconAlignment;
 
     private DisposablePanel unCollapsedContent;
 
@@ -30,33 +31,43 @@ public class DisposableCollapsiblePane extends DisposablePanel {
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer) {
-        this(displayName, unCollapsedContentRenderer, null, false, true);
+        this(displayName, unCollapsedContentRenderer, null, false, true, ClickableLabel.IconAlignment.LEFT);
     }
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      boolean defaultCollapsed) {
-        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed, true);
+        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed, true, ClickableLabel.IconAlignment.LEFT);
+    }
+
+    public DisposableCollapsiblePane(@NotNull String displayName,
+                                     @NotNull ContentRenderer unCollapsedContentRenderer,
+                                     boolean defaultCollapsed,
+                                     boolean horizontalBar,
+                                     ClickableLabel.IconAlignment iconAlignment) {
+        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed, horizontalBar, iconAlignment);
     }
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      boolean defaultCollapsed,
                                      boolean horizontalBar) {
-        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed, horizontalBar);
+        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed, horizontalBar, ClickableLabel.IconAlignment.LEFT);
     }
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      @Nullable TooltipContent tooltipContent) {
-        this(displayName, unCollapsedContentRenderer, tooltipContent, true, true);
+        this(displayName, unCollapsedContentRenderer, tooltipContent, true, true, ClickableLabel.IconAlignment.LEFT);
     }
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      @Nullable TooltipContent tooltipContent,
                                      boolean defaultCollapsed,
-                                     boolean horizontalBar) {
+                                     boolean horizontalBar,
+                                     ClickableLabel.IconAlignment iconAlignment) {
+        this.iconAlignment = iconAlignment;
         this.displayName = displayName;
         this.collapsed = defaultCollapsed;
         this.horizontalBar = horizontalBar;
@@ -127,7 +138,7 @@ public class DisposableCollapsiblePane extends DisposablePanel {
         UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content, boolean horizontalBar) {
             // header
             TypeObjectContainerHeader topHeader =
-                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction, horizontalBar);
+                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction, horizontalBar, iconAlignment);
             setLayout(new BorderLayout());
             setOpaque(false);
             add(topHeader, NORTH);
@@ -137,7 +148,7 @@ public class DisposableCollapsiblePane extends DisposablePanel {
 
     class CollapsedContent extends TypeObjectContainerHeader {
         CollapsedContent(String displayName, TooltipContent tooltipContent, boolean horizontalBar) {
-            super(displayName, tooltipContent, ArrowRight, clickAction, horizontalBar);
+            super(displayName, tooltipContent, ArrowRight, clickAction, horizontalBar, iconAlignment);
         }
     }
 

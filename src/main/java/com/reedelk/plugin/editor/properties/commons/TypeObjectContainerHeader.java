@@ -31,6 +31,10 @@ public class TypeObjectContainerHeader extends DisposablePanel {
         this(new JBLabel(displayName), tooltipContent, true);
     }
 
+    public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent, Icon icon, OnClickAction clickAction, boolean horizontalBar, ClickableLabel.IconAlignment iconAlignment) {
+        this(new ClickableLabel(displayName, icon, iconAlignment, clickAction), tooltipContent, horizontalBar);
+    }
+
     public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent, Icon icon, OnClickAction clickAction, boolean horizontalBar) {
         this(new ClickableLabel(displayName, icon, LEFT, clickAction), tooltipContent, horizontalBar);
     }
@@ -59,7 +63,7 @@ public class TypeObjectContainerHeader extends DisposablePanel {
         }
     }
 
-    private static class HorizontalSeparator extends DisposablePanel {
+    public static class HorizontalSeparator extends DisposablePanel {
         public HorizontalSeparator() {
             setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
