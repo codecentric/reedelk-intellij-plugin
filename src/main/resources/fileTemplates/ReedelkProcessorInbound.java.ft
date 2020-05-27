@@ -14,7 +14,7 @@ import java.util.TimerTask;
 import static org.osgi.service.component.annotations.ServiceScope.PROTOTYPE;
 
 @ModuleComponent("${NAME}")
-@ComponentOutput(attributes = MessageAttributes.class, payload = String.class)
+@ComponentOutput(attributes = MessageAttributes.class, payload = String.class, description = "${NAME} Output description")
 @Description("${NAME} description")
 @Component(service = ${NAME}.class, scope = PROTOTYPE)
 public class ${NAME} extends AbstractInbound {

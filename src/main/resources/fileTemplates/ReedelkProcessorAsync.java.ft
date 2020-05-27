@@ -14,7 +14,7 @@ import static com.reedelk.runtime.api.commons.ComponentPrecondition.Configuratio
 import static org.osgi.service.component.annotations.ServiceScope.PROTOTYPE;
 
 @ModuleComponent("${NAME}")
-@ComponentOutput(attributes = MessageAttributes.class, payload = Object.class)
+@ComponentOutput(attributes = MessageAttributes.class, payload = Object.class, description = "${NAME} Output description")
 @ComponentInput(payload = Object.class, description = "${NAME} Input description")
 @Description("${NAME} description")
 @Component(service = ${NAME}.class, scope = PROTOTYPE)
