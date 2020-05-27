@@ -1,14 +1,16 @@
 #if (${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
 
 import com.reedelk.runtime.api.annotation.*;
-import com.reedelk.runtime.api.component.ProcessorSync;
+import com.reedelk.runtime.api.component.OnResult;
+import com.reedelk.runtime.api.component.ProcessorAsync;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
-import com.reedelk.runtime.api.message.MessageAttributes;import com.reedelk.runtime.api.message.MessageBuilder;
+import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.runtime.api.message.MessageBuilder;
 import com.reedelk.runtime.api.message.content.MimeType;
 import org.osgi.service.component.annotations.Component;
 
-import static com.reedelk.runtime.api.commons.ComponentPrecondition.*;
+import static com.reedelk.runtime.api.commons.ComponentPrecondition.Configuration;
 import static org.osgi.service.component.annotations.ServiceScope.PROTOTYPE;
 
 @ModuleComponent("${NAME}")
@@ -16,7 +18,7 @@ import static org.osgi.service.component.annotations.ServiceScope.PROTOTYPE;
 @ComponentInput(payload = Object.class, description = "${NAME} Input description")
 @Description("${NAME} description")
 @Component(service = ${NAME}.class, scope = PROTOTYPE)
-public class ${NAME} implements ProcessorSync {
+public class ${NAME} implements ProcessorAsync {
 
     @Property("My property")
     @Hint("My property value hint")
@@ -31,13 +33,21 @@ public class ${NAME} implements ProcessorSync {
     }
 
     @Override
-    public Message apply(FlowContext flowContext, Message message) {
+    public void apply(FlowContext flowContext, Message input, OnResult callback) {
 
-        String processed = "Hello " + myProperty;
+        try {
+            String processed = "Hello " + myProperty;
+            Message output = MessageBuilder.get(${NAME}.class)
+                    .withString(processed, MimeType.TEXT_PLAIN)
+                    .build();
 
-        return MessageBuilder.get(${NAME}.class)
-                .withString(processed, MimeType.TEXT_PLAIN)
-                .build();
+            // On success callback
+            callback.onResult(flowContext, output);
+
+        } catch (Exception exception) {
+            // On error callback
+            callback.onError(flowContext, exception);
+        }
     }
 
     @Override
