@@ -10,7 +10,7 @@ public interface Renderer {
 
     List<Renderer> RENDERERS = Arrays.asList(
             new RendererMultipleMessages(),
-            new RendererDataNotAvailable(),
+            new RendererActualInputNotAvailable(),
             new RendererNotFound(),
             new RendererDefault());
 

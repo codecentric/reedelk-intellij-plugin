@@ -11,6 +11,8 @@ import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class MetadataExpectedInput extends AbstractMetadataInputPanel {
 
     public MetadataExpectedInput() {
@@ -25,7 +27,8 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
         if (expectedInput != null) {
             render(expectedInput, parent);
         } else {
-            FormBuilder.get().addFullWidthAndHeight(new RendererDataNotAvailable.DataNotAvailable(), parent);
+            String text = message("metadata.expected.input.not.available");
+            FormBuilder.get().addFullWidthAndHeight(new InputNotAvailablePanel(text), parent);
         }
     }
 
@@ -38,7 +41,9 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
         }
 
         String expectedPayloadTypes = input.getPayload();
-        JBLabel expectedType = new JBLabel(RendererUtils.htmlTitle("Expected type(s)", expectedPayloadTypes));
+        String title = message("metadata.expected.types");
+        String text = RendererUtils.htmlTitle(title, expectedPayloadTypes);
+        JBLabel expectedType = new JBLabel(text);
         expectedType.setBorder(JBUI.Borders.empty(5));
         FormBuilder.get().addFullWidthAndHeight(expectedType, parent);
     }
