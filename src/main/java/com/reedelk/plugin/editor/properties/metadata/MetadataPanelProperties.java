@@ -31,18 +31,26 @@ public class MetadataPanelProperties extends DisposablePanel {
     private void renderTypeItem(DisposablePanel content, MetadataTypeItemDTO typeItemDTO) {
         if (isNotBlank(typeItemDTO.displayType)) {
             String label = propertyEntry(typeItemDTO.name, typeItemDTO.displayType);
-            JBLabel attributes = new JBLabel(label, JLabel.LEFT);
-            attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
-            attributes.setBorder(emptyLeft(LEFT_OFFSET));
-            FormBuilder.get().addLabel(attributes, content);
-            FormBuilder.get().addLastField(createHorizontalGlue(), content);
+            createLabelAndAdd(content, label);
 
         } else {
             MetadataTypeDTO complex = typeItemDTO.complex;
             String text = typeItemDTO.name + " : " + complex.getDisplayType();
-            JComponent payload = RendererDefault.createCollapsiblePanel(text, complex);
-            payload.setBorder(emptyLeft(LEFT_OFFSET));
-            FormBuilder.get().addFullWidthAndHeight(payload, content);
+            if (complex.getProperties().isEmpty()) {
+                createLabelAndAdd(content, text);
+            } else {
+                JComponent payload = RendererDefault.createCollapsiblePanel(text, complex);
+                payload.setBorder(emptyLeft(LEFT_OFFSET));
+                FormBuilder.get().addFullWidthAndHeight(payload, content);
+            }
         }
+    }
+
+    private void createLabelAndAdd(DisposablePanel content, String label) {
+        JBLabel attributes = new JBLabel(label, JLabel.LEFT);
+        attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
+        attributes.setBorder(emptyLeft(LEFT_OFFSET));
+        FormBuilder.get().addLabel(attributes, content);
+        FormBuilder.get().addLastField(createHorizontalGlue(), content);
     }
 }
