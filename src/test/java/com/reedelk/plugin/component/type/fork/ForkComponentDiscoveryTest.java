@@ -4,9 +4,7 @@ import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;
-import com.reedelk.plugin.fixture.ComponentNode2;
-import com.reedelk.plugin.fixture.ComponentNode3;
-import com.reedelk.plugin.fixture.ComponentNode4;
+import com.reedelk.plugin.fixture.*;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
@@ -88,6 +86,18 @@ class ForkComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
     @Test
     void shouldReturnForkPreviousComponentOutputMultipleMessagesWhenNodeFollowingForkIsJoin() {
         // Given (joining node is JOIN)
+        ComponentOutputDescriptor node6Output = new ComponentOutputDescriptor();
+        node6Output.setPayload(singletonList(Long.class.getName()));
+        node6Output.setAttributes(singletonList(MessageAttributes.class.getName()));
+        node6Output.setDescription("My description 6");
+        mockComponentContext(node6Output, ComponentNode6.class, componentNode6);
+
+        ComponentOutputDescriptor node5Output = new ComponentOutputDescriptor();
+        node5Output.setPayload(singletonList(String.class.getName()));
+        node5Output.setAttributes(singletonList(MessageAttributes.class.getName()));
+        node5Output.setDescription("My description 5");
+        mockComponentContext(node5Output, ComponentNode5.class, componentNode5);
+
         ComponentContext componentContext = mockComponentContext(null);
         doReturn(Optional.of(joinComponent))
                 .when(componentContext)
