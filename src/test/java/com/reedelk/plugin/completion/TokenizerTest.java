@@ -260,4 +260,25 @@ class TokenizerTest {
         //  Then
         assertThat(actual).contains("payload", "each", "{", "entry", "attributes", "each", "{", "entry", "");
     }
+
+    @Test
+    void shouldReturnCorrectTokens() {
+        // Given
+        String text = "def helloWorld(context, message) {\n" +
+                "    def attributes = message.attributes()\n" +
+                "    def pathParams = attributes.pathParams\n" +
+                "\n" +
+                "    def result = 'Something elese'\n" +
+                "    \n" +
+                "    if (pathParams.containsKey('name')) {\n" +
+                "        result += ' ' + pathParams.get('name')\n" +
+                "    }\n" +
+                "    Lo";
+
+        // When
+        String[] actual = Tokenizer.tokenize(text, text.length());
+
+        // Then
+        assertThat(actual).contains("Lo");
+    }
 }

@@ -18,14 +18,22 @@ public class Parser {
     }
 
     public List<Token> find() {
+
         IElementType tokenType = lexer.getTokenType();
+
         if (tokenType == null) return tokens;
 
         if (isCurrentTokenOfType(GroovyElementTypes.T_LBRACE)) {
             lbrace();
 
         } else if (isCurrentTokenOfType(GroovyElementTypes.T_RBRACE)) {
-            return tokens; // The scope has stopped.
+            // The scope is closed, therefore all the tokens collected so far
+            // must be cleared out. This might happen in the following case:
+            // if (...) {
+            //  message.payload()
+            // } -> end of scope. // The scope has stopped.
+            // We must remove all the tokens
+            tokens.clear();
 
         } else if (isCurrentTokenOfType(GroovyElementTypes.T_LPAREN)) {
             lparen();
@@ -35,6 +43,7 @@ public class Parser {
 
         } else if (isCurrentTokenOfType(GroovyElementTypes.IDENTIFIER)) {
             identifier();
+
         } else if (isCurrentTokenOfType(GroovyElementTypes.T_DOT)) {
             tokens.add(Token.create(lexer));
 
@@ -90,14 +99,16 @@ public class Parser {
         lexer.advance();
         List<Token> subTokens = new Parser(lexer).find();
         if (lexer.getTokenType() != GroovyElementTypes.T_RBRACE) {
-            // It is a new statement, e.g 'each.collect { it.super(message.', we want messge
+            // It is a new statement, e.g 'each.collect { it.super(message.', we want message
             if (isFirstTokenOfType(subTokens, GroovyElementTypes.T_LPAREN)) {
                 tokens.clear();
                 tokens.addAll(subTokens);
             } else {
                 // We skip the parenthesis, they are not consumed.
-                tokens.add(lBraceToken);
-                tokens.addAll(subTokens);
+                if (!subTokens.isEmpty()) { // If it is empty, it means that the closure was closed
+                    tokens.add(lBraceToken);
+                    tokens.addAll(subTokens);
+                }
             }
         }
         // Otherwise they were consumed... we just continue
