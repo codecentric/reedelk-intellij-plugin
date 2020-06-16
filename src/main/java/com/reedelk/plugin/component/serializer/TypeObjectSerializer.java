@@ -7,6 +7,7 @@ import com.reedelk.module.descriptor.model.property.Shared;
 import com.reedelk.module.descriptor.model.property.WhenDescriptor;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
 import com.reedelk.plugin.commons.JsonObjectFactory;
+import com.reedelk.runtime.api.commons.ScriptUtils;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
@@ -94,6 +95,7 @@ class TypeObjectSerializer {
         Stream.of(data)
                 .filter(ExcludeEmptyObjects)
                 .filter(ExcludeBooleanFalse)
+                .filter(ExcludeEmptyStrings)
                 .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
     }
 
@@ -117,6 +119,19 @@ class TypeObjectSerializer {
     private static final Predicate<Object> ExcludeEmptyObjects = data -> {
         if (data instanceof JSONObject) {
             return !((JSONObject) data).isEmpty();
+        }
+        return true;
+    };
+
+    // Empty Strings and Empty Scripts are excluded from serialization.
+    private static final Predicate<Object> ExcludeEmptyStrings = data -> {
+        if (data instanceof String) {
+            String dataAsString = (String) data;
+            if (ScriptUtils.isScript(dataAsString)) {
+                return ScriptUtils.isNotBlank(dataAsString);
+            } else {
+                return dataAsString.length() != 0;
+            }
         }
         return true;
     };
