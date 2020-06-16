@@ -40,7 +40,7 @@ public class ScriptCompletionContributor extends CompletionContributor {
             PlatformModuleService instance = PlatformModuleService.getInstance(module);
 
 
-            // TODO: Fixme, this is to allow suggestions of types inside a closure block.
+            // We mark the token index in case we are inside a closure block.
             int closureStart = -1;
             for (int i = tokens.length - 1; i >= 0; i--) {
                 if (tokens[i].equals("{")) {
