@@ -10,6 +10,7 @@ import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrate
 import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyOneOfAware;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutputDefault;
+import com.reedelk.runtime.api.exception.ExceptionType;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +39,7 @@ public class TryCatchComponentDiscovery extends DiscoveryStrategyOneOfAware {
             // We are in the catch
             PreviousComponentOutput descriptor = new PreviousComponentOutputDefault(
                     singletonList(MessageAttributes.class.getName()),
-                    singletonList(Exception.class.getName()),
+                    singletonList(ExceptionType.class.getName()),
                     ReedelkBundle.message("metadata.trycatch.payload.description"));
             return Optional.of(descriptor);
         }
