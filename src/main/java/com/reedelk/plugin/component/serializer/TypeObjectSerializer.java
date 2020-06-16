@@ -95,7 +95,7 @@ class TypeObjectSerializer {
         Stream.of(data)
                 .filter(ExcludeEmptyObjects)
                 .filter(ExcludeBooleanFalse)
-                .filter(ExcludeEmptyStrings)
+                .filter(ExcludeEmptyStringsAndDynamicValues)
                 .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
     }
 
@@ -124,7 +124,7 @@ class TypeObjectSerializer {
     };
 
     // Empty Strings and Empty Scripts are excluded from serialization.
-    private static final Predicate<Object> ExcludeEmptyStrings = data -> {
+    private static final Predicate<Object> ExcludeEmptyStringsAndDynamicValues = data -> {
         if (data instanceof String) {
             String dataAsString = (String) data;
             if (ScriptUtils.isScript(dataAsString)) {
