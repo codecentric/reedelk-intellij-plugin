@@ -19,79 +19,79 @@
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-core</artifactId>
-            <version>${versionLatestModuleCore}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-rest</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-json</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-rabbitmq</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-google-drive-v3</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-csv</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-database</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-xml</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-mail</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-mongodb</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-file</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-ftp</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-scheduler</artifactId>
-            <version>${versionLatestModuleRest}</version>
+            <version>${versionLatestModules}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
