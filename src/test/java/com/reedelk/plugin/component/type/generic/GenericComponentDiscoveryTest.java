@@ -3,7 +3,7 @@ package com.reedelk.plugin.component.type.generic;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeBuiltIn;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import com.reedelk.runtime.api.annotation.ComponentOutput;
 import com.reedelk.runtime.api.message.MessageAttributes;
@@ -102,8 +102,8 @@ class GenericComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
         // Should use the default payload because the previous of the previous was empty
         PreviousComponentOutput expectedPayloadOutput =
                 new PreviousComponentOutputDefault(
-                        singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
-                        singletonList(TypeDefault.DEFAULT_PAYLOAD));
+                        singletonList(TypeBuiltIn.DEFAULT_ATTRIBUTES),
+                        singletonList(TypeBuiltIn.DEFAULT_PAYLOAD));
 
         // Attributes are taken from the previous component.
         PreviousComponentOutput expectedAttributeOutput =

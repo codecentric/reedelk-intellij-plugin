@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 
 class SuggestionFinderDefaultTest extends AbstractCompletionTest {
 
-    private Trie messageAndContextTrie = TypeDefault.MESSAGE_AND_CONTEXT;
+    private Trie messageAndContextTrie = TypeBuiltIn.MESSAGE_AND_CONTEXT;
     private SuggestionFinderDefault finder;
 
     @BeforeEach
@@ -216,7 +216,7 @@ class SuggestionFinderDefaultTest extends AbstractCompletionTest {
         Collection<Suggestion> suggestions = finder.suggest(messageAndContextTrie, tokens, output);
 
         // Then
-        PluginAssertion.assertThat(suggestions).hasSize(7)
+        PluginAssertion.assertThat(suggestions).hasSize(10)
                 .contains(PROPERTY,
                         "firstProperty1",
                         "firstProperty1",

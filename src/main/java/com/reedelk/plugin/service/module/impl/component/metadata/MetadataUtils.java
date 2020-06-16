@@ -1,7 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.plugin.service.module.impl.component.completion.TypeAndTries;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeBuiltIn;
 import com.reedelk.plugin.service.module.impl.component.completion.TypeProxy;
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class MetadataUtils {
                         nameMetadataType.put(metadataTypeItemDTO.name, metadataTypeItemDTO);
                     }
                 }));
-        TypeProxy typeProxy = TypeProxy.create(TypeDefault.DEFAULT_ATTRIBUTES);
+        TypeProxy typeProxy = TypeProxy.create(TypeBuiltIn.DEFAULT_ATTRIBUTES);
         String displayName = typeProxy.toSimpleName(typeAndTries);
         return new MetadataTypeDTO(displayName, typeProxy, nameMetadataType.values());
     }

@@ -12,8 +12,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.TypeDefault.DEFAULT_ATTRIBUTES;
-import static com.reedelk.plugin.service.module.impl.component.completion.TypeDefault.DEFAULT_PAYLOAD;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeBuiltIn.DEFAULT_ATTRIBUTES;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeBuiltIn.DEFAULT_PAYLOAD;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 

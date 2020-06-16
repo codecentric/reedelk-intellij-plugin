@@ -3,7 +3,7 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.completion.TypeDefault;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeBuiltIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -19,6 +19,6 @@ public interface DiscoveryStrategy {
 
     PreviousComponentOutputDefault DEFAULT =
             new PreviousComponentOutputDefault(
-                    singletonList(TypeDefault.DEFAULT_ATTRIBUTES),
-                    singletonList(TypeDefault.DEFAULT_PAYLOAD));
+                    singletonList(TypeBuiltIn.DEFAULT_ATTRIBUTES),
+                    singletonList(TypeBuiltIn.DEFAULT_PAYLOAD));
 }

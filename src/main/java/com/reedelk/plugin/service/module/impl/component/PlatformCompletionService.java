@@ -57,7 +57,7 @@ class PlatformCompletionService implements PlatformModuleService {
         Trie trie = flowControlSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = mavenModulesSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = currentModuleSignatureTypes.get(componentPropertyPath);
-        if (trie == null) trie = TypeDefault.MESSAGE_AND_CONTEXT;
+        if (trie == null) trie = TypeBuiltIn.MESSAGE_AND_CONTEXT;
 
         Collection<Suggestion> globalSuggestions = suggestionFinder.suggest(allGlobalTypes, tokens, previousComponentOutput);
         Collection<Suggestion> localSuggestions = suggestionFinder.suggest(trie, tokens, previousComponentOutput);
@@ -124,7 +124,7 @@ class PlatformCompletionService implements PlatformModuleService {
     public void registerFlowControl(ModuleDescriptor moduleDescriptor) {
         try {
             // Init Language Core types such as List, Map, ArrayList, HashMap and so on.
-            TypeDefault.BUILT_IN_TYPE.forEach(builtInType -> builtInType.register(flowControlTypes));
+            TypeBuiltIn.BUILT_IN_TYPES.forEach(builtInType -> builtInType.register(flowControlTypes, allTypes));
 
             SuggestionProcessor processor = new SuggestionProcessor(
                     allTypes,

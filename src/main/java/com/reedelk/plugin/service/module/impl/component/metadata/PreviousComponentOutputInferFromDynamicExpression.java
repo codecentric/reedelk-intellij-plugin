@@ -74,7 +74,7 @@ public class PreviousComponentOutputInferFromDynamicExpression extends AbstractP
         }
 
         String[] tokens = Tokenizer.tokenize(unwrap, unwrap.length());
-        Collection<Suggestion> suggestions = suggester.suggest(TypeDefault.MESSAGE_AND_CONTEXT, tokens, previousOutput);
+        Collection<Suggestion> suggestions = suggester.suggest(TypeBuiltIn.MESSAGE_AND_CONTEXT, tokens, previousOutput);
         if (!suggestions.isEmpty()) return suggestions;
 
         // If there are no suggestions, it means that we could not evaluate the expression,

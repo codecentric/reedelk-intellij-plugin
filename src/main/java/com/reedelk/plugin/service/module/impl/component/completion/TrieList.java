@@ -90,7 +90,7 @@ public class TrieList extends TrieDefault {
         @Override
         public Trie resolve(TypeAndTries typeAndTries) {
             TypeProxy listItemTypeProxy = TypeProxy.create(listItemType);
-            return new TypeDefault.TypeList.TrieListClosureArguments(typeAndTries, listItemTypeProxy);
+            return new TypeBuiltInList.TrieListClosureArguments(typeAndTries, listItemTypeProxy);
         }
     }
 }

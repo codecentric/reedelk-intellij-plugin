@@ -104,7 +104,7 @@ class TrieMapTest extends AbstractCompletionTest {
         Collection<Suggestion> suggestions = trie.autocomplete("", typeAndTries);
 
         // Then
-        PluginAssertion.assertThat(suggestions).hasSize(5)
+        PluginAssertion.assertThat(suggestions).hasSize(8)
                 .contains(PROPERTY,
                         "secondProperty1",
                         "secondProperty1",

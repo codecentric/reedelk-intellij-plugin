@@ -101,7 +101,7 @@ public class TrieMap extends TrieDefault {
         public Trie resolve(TypeAndTries typeAndTries) {
             TypeProxy mapValueTypeProxy = TypeProxy.create(mapValueType);
             TypeProxy mapKeyTypeProxy = TypeProxy.create(mapKeyType);
-            return new TypeDefault.TypeMap.TrieMapClosureArguments(mapKeyTypeProxy, mapValueTypeProxy, typeAndTries);
+            return new TypeBuiltInMap.TrieMapClosureArguments(mapKeyTypeProxy, mapValueTypeProxy, typeAndTries);
         }
     }
 }

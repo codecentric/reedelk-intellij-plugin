@@ -58,7 +58,7 @@ class TrieListTest extends AbstractCompletionTest {
         Collection<Suggestion> suggestions = trie.autocomplete("", typeAndTries);
 
         // Then
-        PluginAssertion.assertThat(suggestions).hasSize(4)
+        PluginAssertion.assertThat(suggestions).hasSize(8)
                 .contains(FUNCTION,
                         "toString()",
                         "toString",
