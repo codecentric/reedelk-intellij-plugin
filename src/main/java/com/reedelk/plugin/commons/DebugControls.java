@@ -27,7 +27,7 @@ public class DebugControls {
         private Script() {
         }
 
-        public static final boolean SCRIPT_EDITOR_LIFECYCLE = true;
+        public static final boolean SCRIPT_EDITOR_LIFECYCLE = false;
     }
 
     private DebugControls() {
