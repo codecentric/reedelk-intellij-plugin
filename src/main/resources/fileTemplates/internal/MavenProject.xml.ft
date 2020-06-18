@@ -27,14 +27,14 @@
         <repository>
             <id>reedelk-repository</id>
             <name>Reedelk Repository</name>
-            <url>https://www.reedelk.com/maven/</url>
+            <url>http://repository.reedelk.com/release</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>reedelk-plugin-repository</id>
             <name>Reedelk Plugin Repository</name>
-            <url>https://www.reedelk.com/maven/</url>
+            <url>http://repository.reedelk.com/release</url>
         </pluginRepository>
     </pluginRepositories>
 
