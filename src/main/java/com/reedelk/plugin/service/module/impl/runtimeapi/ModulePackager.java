@@ -35,7 +35,7 @@ public class ModulePackager {
                     callback.onError(new PluginException(error));
                 } else {
                     // The  Maven package goal was successful. The .jar artifact is in the /target folder and we can
-                    // deploy the package onto the ESB runtime.
+                    // deploy the package onto the Reedelk runtime.
                     callback.onDone();
                 }
             });

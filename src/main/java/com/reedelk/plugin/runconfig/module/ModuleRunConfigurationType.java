@@ -20,7 +20,7 @@ public class ModuleRunConfigurationType implements ConfigurationType {
     @Nls
     @Override
     public String getConfigurationTypeDescription() {
-        return "Install/Update ESB Module";
+        return "Install/Update Reedelk Module";
     }
 
     @Override

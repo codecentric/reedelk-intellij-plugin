@@ -77,7 +77,7 @@ public class DependenciesSyncServiceImpl implements DependenciesSyncService {
             // We get dependencies from the dependency tree because we only want the root dependencies,
             // i.e the ones defined in the pom file. If we would call mavenProject.getDependencies() we would
             // also get back the transitive dependencies. Moreover, we filter out some dependencies which are
-            // not ESB Modules, e.g: org.osgi.
+            // not Reedelk Modules, e.g: org.osgi.
             mavenProject.getDependencyTree()
                     .stream()
                     .filter(artifact -> Objects.equals(artifact.getOriginalScope(), MavenConstants.SCOPE_PROVIDED))

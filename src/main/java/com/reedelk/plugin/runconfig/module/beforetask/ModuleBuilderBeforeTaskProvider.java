@@ -34,7 +34,7 @@ import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {
 
-    private static final Key<ModuleBuilderBeforeTask> ID = Key.create("ESBModule.BeforeRunTask");
+    private static final Key<ModuleBuilderBeforeTask> ID = Key.create("ReedelkModule.BeforeRunTask");
 
     @Override
     public Key<ModuleBuilderBeforeTask> getId() {
