@@ -56,12 +56,19 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
 
     private boolean isNewProject;
     private JPanel runtimeChooserPanel;
+    private DownloadTask downloadTask;
 
+    @Override
+    public void onStepLeaving() {
+        super.onStepLeaving();
+        if (downloadTask != null) downloadTask.cancel();
+        downloadTask = null;
+    }
 
     @Override
     public void _init() {
         super._init();
-        loadingPanel = new JBLoadingPanel(new BorderLayout(),this, 100);
+        loadingPanel = new JBLoadingPanel(new BorderLayout(), this, 100);
         downloadedZipFile.setVisible(false);
 
         loadingPanel.getContentPanel().removeAll();
@@ -69,12 +76,9 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             loadingPanel.startLoading();
             loadingPanel.setLoadingText(message("runtimeBuilder.downloading.distribution"));
 
-            DownloadTask runnable = new DownloadTask();
-            getApplication().executeOnPooledThread(runnable);
+            downloadTask = new DownloadTask();
+            getApplication().executeOnPooledThread(downloadTask);
 
-            wizardContext.getWizard().getCancelButton().addActionListener(e -> {
-                runnable.cancel();
-            });
 
         } else if (isDownloadedAlready()) {
             ApplicationManager.getApplication().invokeLater(() -> {
@@ -239,17 +243,19 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
 
     class DownloadTask implements Runnable {
 
+        private RuntimeDistributionHelper distributionHelper = new RuntimeDistributionHelper();
         private boolean cancelled;
 
         @Override
         public void run() {
-            ApplicationManager.getApplication().invokeLater(() ->
-                    wizardContext.getWizard().updateButtons(false, false, false));
+            wizardContext.getWizard().updateButtons(false, false, false);
+
             try {
                 final int startStep = wizardContext.getWizard().getCurrentStep();
 
                 // Download and Unzip the runtime
-                Path downloadDistributionPath = RuntimeDistributionHelper.downloadAndUnzip();
+                Path downloadDistributionPath =
+                        distributionHelper.downloadAndUnzip(message -> loadingPanel.setLoadingText(message));
 
                 // If it has not been cancelled, and we are on the same step, then we can move on.
                 if (!cancelled && startStep == wizardContext.getWizard().getCurrentStep()) {
@@ -258,32 +264,32 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                     runtimeConfigNameTextField.setText(downloadDistributionPath.getFileName().toString());
                     moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
 
-                    ApplicationManager.getApplication().invokeLater(() -> {
-                        // We stop the loading spinning wheel and move on to the next step.
-                        loadingPanel.stopLoading();
-                        wizardContext.getWizard().updateButtons(false, true, false);
-                        wizardContext.getWizard().clickDefaultButton();
-                    });
+                    // We stop the loading spinning wheel and move on to the next step.
+                    loadingPanel.stopLoading();
+                    wizardContext.getWizard().updateButtons(false, true, false);
+                    wizardContext.getWizard().clickDefaultButton();
                 }
 
             } catch (Exception exception) {
-                ApplicationManager.getApplication().invokeLater(() -> {
-                    String errorMessage = message("runtimeBuilder.downloading.distribution.error.message", exception.getMessage());
-                    String errorTitle = message("runtimeBuilder.downloading.distribution.error.title");
-                    DownloadErrorPanel errorPanel = new DownloadErrorPanel();
-                    errorPanel.setTitle(errorTitle);
-                    errorPanel.setMessage(errorMessage);
 
-                    loadingPanel.getContentPanel().add(errorPanel.content());
-                    loadingPanel.stopLoading();
-                    loadingPanel.revalidate();
-                    loadingPanel.repaint();
-                    wizardContext.getWizard().updateButtons(false, false, false);
-                });
+                String errorMessage = message("runtimeBuilder.downloading.distribution.error.message", exception.getMessage());
+                String errorTitle = message("runtimeBuilder.downloading.distribution.error.title");
+                DownloadErrorPanel errorPanel = new DownloadErrorPanel();
+                errorPanel.setTitle(errorTitle);
+                errorPanel.setMessage(errorMessage);
+                loadingPanel.getContentPanel().add(errorPanel.content());
+                loadingPanel.stopLoading();
+                loadingPanel.setLoadingText("");
+                loadingPanel.revalidate();
+                loadingPanel.repaint();
+                wizardContext.getWizard().updateButtons(false, false, false);
             }
         }
 
         public void cancel() {
+            if (distributionHelper != null) {
+                distributionHelper.cancel();
+            }
             this.cancelled = true;
         }
     }

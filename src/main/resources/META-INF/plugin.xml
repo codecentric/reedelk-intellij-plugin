@@ -1,21 +1,18 @@
 <idea-plugin>
     <id>com.reedelk.plugin</id>
-    <name>Reedelk Flow Designer</name>
+    <name>Reedelk IntelliJ flow designer</name>
     <vendor email="info@reedelk.com" url="https://www.reedelk.com">Reedelk</vendor>
 
     <description>
         <![CDATA[
-            <p>Reedelk Integration Platform IntelliJ Flow Designer</p>
+            <p>Reedelk Integration Platform IntelliJ flow designer</p>
         ]]>
     </description>
 
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>Bugfix: fixed issue which did not serialize all properties from unknown components.</li>
-	        <li>Feature: improved suggestions to include method signature.</li>
-	        <li>Feature: Suggestions: now script suggestions are supported for Javascript builder functions as well (e.g MultipartBuilder).</li>
-	        <li>Feature: added support for ForEach component.</li>
+	        <li>First Reedelk IntelliJ flow designer plugin release.</li>
         </ul>
       ]]>
     </change-notes>

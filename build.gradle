@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'com.reedelk'
-version '1.0.0-SNAPSHOT'
+version '1.0.0'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -14,9 +14,8 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     mavenLocal()
-    maven {
-        url "http://localhost:8081/repository/reedelk"
-    }
+    maven { url "http://repository.reedelk.com/snapshot/" }
+    maven { url "http://repository.reedelk.com/release/" }
 }
 
 dependencies {

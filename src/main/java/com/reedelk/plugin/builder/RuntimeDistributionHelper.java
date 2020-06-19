@@ -3,9 +3,8 @@ package com.reedelk.plugin.builder;
 import com.intellij.util.io.ZipUtil;
 import com.reedelk.plugin.commons.BuildVersion;
 import com.reedelk.plugin.commons.TmpRandomDirectory;
-import com.reedelk.plugin.service.module.impl.http.RestClientProvider;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
+import okio.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -17,23 +16,67 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static java.lang.String.format;
 
 class RuntimeDistributionHelper {
 
     private static final String DISTRIBUTION_ZIP_FILE_NAME = "distribution.zip";
+    private Call call;
 
-    private RuntimeDistributionHelper() {
+    public RuntimeDistributionHelper() {
     }
 
-    static Path downloadAndUnzip() throws IOException {
+    public void cancel() {
+        if (call != null) {
+            call.cancel();
+            call = null;
+        }
+    }
+
+    interface PushProgress {
+        void onProgress(String message);
+    }
+
+    Path downloadAndUnzip(PushProgress pushProgress) throws IOException {
+
+        final ProgressListener progressListener = (bytesRead, contentLength, done) -> {
+            if (done) {
+                pushProgress.onProgress("Reedelk runtime distribution download completed.");
+            } else {
+                if (contentLength != -1) {
+                    pushProgress.onProgress(format(
+                            "Downloading Reedelk runtime distribution, please wait ... %d%% (%d MB)",
+                            (100 * bytesRead) / contentLength, bytesToMeg(contentLength)));
+                }
+            }
+        };
+
         // The service returns the runtime distribution from the given plugin version.
         String downloadDistributionByPluginVersionURL =
                 message("runtime.version.by.plugin.version.url", BuildVersion.get());
         Request request = new Request.Builder().url(downloadDistributionByPluginVersionURL).get().build();
-        try (Response response = RestClientProvider.getInstance().newCall(request).execute()) {
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(chain -> {
+                    Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                })
+                .build();
+
+        this.call = client.newCall(request);
+
+        try (Response response = call.execute()) {
+
+            if (response.code() != 200) {
+                String responseBody = response.body() != null ? response.body().string() : "";
+                String message = message("runtimeBuilder.downloading.distribution.error", response.code(), responseBody);
+                throw new IOException(message);
+            }
 
             if (response.body() == null) {
-                String message = message("runtimeBuilder.downloading.distribution.error.root.response.body.null");
+                String message = message("runtimeBuilder.downloading.distribution.error.body.null");
                 throw new IOException(message);
             }
 
@@ -70,4 +113,60 @@ class RuntimeDistributionHelper {
                 Optional.empty() :
                 Optional.of(rootFolder[0]);
     }
+
+    private static class ProgressResponseBody extends ResponseBody {
+
+        private final ResponseBody responseBody;
+        private final ProgressListener progressListener;
+        private BufferedSource bufferedSource;
+
+        ProgressResponseBody(ResponseBody responseBody, ProgressListener progressListener) {
+            this.responseBody = responseBody;
+            this.progressListener = progressListener;
+        }
+
+        @Override
+        public MediaType contentType() {
+            return responseBody.contentType();
+        }
+
+        @Override
+        public long contentLength() {
+            return responseBody.contentLength();
+        }
+
+        @Override
+        public BufferedSource source() {
+            if (bufferedSource == null) {
+                bufferedSource = Okio.buffer(source(responseBody.source()));
+            }
+            return bufferedSource;
+        }
+
+        private Source source(Source source) {
+            return new ForwardingSource(source) {
+                long totalBytesRead = 0L;
+
+                @Override
+                public long read(Buffer sink, long byteCount) throws IOException {
+                    long bytesRead = super.read(sink, byteCount);
+                    // read() returns the number of bytes read, or -1 if this source is exhausted.
+                    totalBytesRead += bytesRead != -1 ? bytesRead : 0;
+                    progressListener.update(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
+                    return bytesRead;
+                }
+            };
+        }
+    }
+
+    interface ProgressListener {
+        void update(long bytesRead, long contentLength, boolean done);
+    }
+
+    private static final long  MEGABYTE = 1024L * 1024L;
+
+    public static long bytesToMeg(long bytes) {
+        return bytes / MEGABYTE ;
+    }
+
 }
