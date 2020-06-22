@@ -156,7 +156,11 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             }
             if (moduleBuilder.isDownloadDistribution()) {
                 if (!moduleBuilder.getTmpDownloadDistributionPath().isPresent()) {
-                    errors.add("Could not download, please try again.");
+                    if (downloadTask != null) {
+                        errors.add("Please wait until the Reedelk runtime distribution has been downloaded.");
+                    } else {
+                        errors.add("Could not download, please try again.");
+                    }
                 }
             }
         } else {
@@ -248,8 +252,6 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
 
         @Override
         public void run() {
-            wizardContext.getWizard().updateButtons(false, false, false);
-
             try {
                 final int startStep = wizardContext.getWizard().getCurrentStep();
 
@@ -266,7 +268,6 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
 
                     // We stop the loading spinning wheel and move on to the next step.
                     loadingPanel.stopLoading();
-                    wizardContext.getWizard().updateButtons(false, true, false);
                     wizardContext.getWizard().clickDefaultButton();
                 }
 
@@ -282,7 +283,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                 loadingPanel.setLoadingText("");
                 loadingPanel.revalidate();
                 loadingPanel.repaint();
-                wizardContext.getWizard().updateButtons(false, false, false);
+
+                downloadTask = null;
             }
         }
 
