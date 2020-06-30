@@ -14,6 +14,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.ReedelkPluginUtil;
+import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfigurationBuilder;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationBuilder;
 import org.apache.commons.io.FileUtils;
@@ -27,9 +28,13 @@ import org.jetbrains.idea.maven.wizards.SelectPropertiesStep;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.intellij.openapi.ui.Messages.showErrorDialog;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -63,7 +68,13 @@ public class ModuleBuilder extends MavenModuleBuilder {
                     String unzippedRuntimeDirectoryName = message("unzipped.runtime.directory.name");
                     Path destination = Paths.get(contentEntryPath, unzippedRuntimeDirectoryName);
                     try {
+                        // Copy all the files from TMP download path to project/reedelk-runtime directory.
                         FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destination.toFile());
+
+                        // Change permission of reedelk-runtime.sh:
+                        // it needs to be executable for instance to start it on Heroku deployments.
+                        changeDistributionFilesPermissions(destination);
+
                     } catch (IOException e) {
                         // We cannot recover here. We should just display an error message.
                         ApplicationManager.getApplication().invokeLater(() ->
@@ -114,6 +125,17 @@ public class ModuleBuilder extends MavenModuleBuilder {
             HelloWorldProjectBuilderHelper helloWorldProjectBuilderHelper = new HelloWorldProjectBuilderHelper(project, root);
             helloWorldProjectBuilderHelper.configure();
         });
+    }
+
+    private void changeDistributionFilesPermissions(Path destination) {
+        Path runtimeStartSh = Paths.get(destination.toString(), ReedelkBundle.message("unzipped.runtime.start.sh.script"));
+        Set<PosixFilePermission> ownerWritable = PosixFilePermissions.fromString("rwxr-xr-x");
+        try {
+            Files.setPosixFilePermissions(runtimeStartSh, ownerWritable);
+        } catch (Exception ignored) {
+            // Error thrown if we cannot change permissions.
+            // On Windows this would fail, the user must manually change it.
+        }
     }
 
     @Override
