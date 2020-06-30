@@ -28,9 +28,11 @@ public class Template {
         private HelloWorld() {
         }
 
-        public static final String FLOW = "HelloWorld.flow";
+        public static final String GET_FLOW = "GETHelloWorld.flow";
+        public static final String POST_FLOW = "POSTHelloWorld.flow";
         public static final String SCRIPT = "helloWorld.groovy";
         public static final String CONFIG = "DefaultListener.fconfig";
+        public static final String GIT_IGNORE = ".gitignore";
 
     }
 }

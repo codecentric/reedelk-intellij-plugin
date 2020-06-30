@@ -11,6 +11,7 @@ import com.reedelk.plugin.template.ConfigProperties;
 import com.reedelk.plugin.template.FlowOrSubFlowFileProperties;
 import com.reedelk.plugin.template.Template.HelloWorld;
 
+import java.util.Properties;
 import java.util.UUID;
 
 import static com.reedelk.plugin.commons.DefaultConstants.PROJECT_RESOURCES_FOLDER;
@@ -42,21 +43,46 @@ class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
                 createFromTemplate(project, HelloWorld.CONFIG, configProperties, configDirectory);
             });
 
-            // Flow
+            // Flows
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Flow.RESOURCE_DIRECTORY).ifPresent(flowsDir -> {
-                String flowId = UUID.randomUUID().toString();
-                String title = ReedelkBundle.message("hello.world.sample.flow.title");
-                String description = ReedelkBundle.message("hello.world.sample.flow.description");
-                FlowOrSubFlowFileProperties propertiesValues =
-                        new FlowOrSubFlowFileProperties(flowId, title, description, configId);
-                createFromTemplate(project, HelloWorld.FLOW, propertiesValues, flowsDir)
-                        .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
+                // GET Hello World Flow
+                createGETHelloWorldFlow(configId, flowsDir);
+
+                // POST Hello World Flow
+                createPOSTHelloWorldFlow(configId, flowsDir);
             });
 
             // Assets
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Assets.RESOURCE_DIRECTORY);
 
+            // .gitignore
+            createGitIgnore(root);
+
             ToolWindowUtils.showComponentsPaletteToolWindow(project);
         });
+    }
+
+    private void createGitIgnore(VirtualFile directory) {
+        createFromTemplate(project, HelloWorld.GIT_IGNORE, new Properties(), directory);
+    }
+
+    private void createPOSTHelloWorldFlow(String configId, VirtualFile flowsDir) {
+        String flowId = UUID.randomUUID().toString();
+        String title = ReedelkBundle.message("hello.world.post.sample.flow.title");
+        String description = ReedelkBundle.message("hello.world.post.sample.flow.description");
+        FlowOrSubFlowFileProperties propertiesValues =
+                new FlowOrSubFlowFileProperties(flowId, title, description, configId);
+        createFromTemplate(project, HelloWorld.POST_FLOW, propertiesValues, flowsDir)
+                .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
+    }
+
+    private void createGETHelloWorldFlow(String configId, VirtualFile flowsDir) {
+        String flowId = UUID.randomUUID().toString();
+        String title = ReedelkBundle.message("hello.world.get.sample.flow.title");
+        String description = ReedelkBundle.message("hello.world.get.sample.flow.description");
+        FlowOrSubFlowFileProperties propertiesValues =
+                new FlowOrSubFlowFileProperties(flowId, title, description, configId);
+        createFromTemplate(project, HelloWorld.GET_FLOW, propertiesValues, flowsDir)
+                .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
     }
 }

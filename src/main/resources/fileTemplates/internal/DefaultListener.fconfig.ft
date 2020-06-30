@@ -2,8 +2,8 @@
   "id": "${id}",
   "title": "${title}",
   "implementor": "com.reedelk.rest.component.RESTListenerConfiguration",
-  "host": "localhost",
-  "port": 8282,
+  "host": "${host}",
+  "port": "${port}",
   "protocol": "HTTP",
   "basePath": "/api",
   "keepAlive": true
