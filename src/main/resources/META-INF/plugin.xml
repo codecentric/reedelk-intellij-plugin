@@ -12,7 +12,9 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>First Reedelk IntelliJ flow designer plugin release.</li>
+	        <li>Feature: Added POST Hello World Flow.</li>
+	        <li>Feature: added .gitignore file when a new project is created excluding Maven /target directory.</li>
+	        <li>Bugfix: added execute permissions to reedelk-runtime/runtime-start.sh script when project created with latest distribution.</li>
         </ul>
       ]]>
     </change-notes>

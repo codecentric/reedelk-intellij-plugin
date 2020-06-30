@@ -4,6 +4,7 @@ import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractComponentDiscoveryTest;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutput;
 import com.reedelk.plugin.service.module.impl.component.metadata.PreviousComponentOutputDefault;
+import com.reedelk.runtime.api.exception.ExceptionType;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,7 +73,7 @@ class TryCatchComponentDiscoveryTest extends AbstractComponentDiscoveryTest {
         // Then
         PreviousComponentOutput expected = new PreviousComponentOutputDefault(
                 singletonList(MessageAttributes.class.getName()),
-                singletonList(Exception.class.getName()),
+                singletonList(ExceptionType.class.getName()),
                 "The exception thrown from the try block");
         assertThat(maybeActualOutput).contains(expected);
     }

@@ -57,9 +57,9 @@ class ReedelkBundleTest {
     @Test
     void shouldCorrectlyFormatModuleCheckErrorsContent() {
         // When
-        String message = message("module.check.errors.module.errors.content", "http://localhost:1111/console");
+        String message = message("module.check.errors.module.errors.content", "http://localhost:1111/console", "Error 1, Error 2");
 
         // When
-        assertThat(message).isEqualTo("Some flow(s) could not be started: go to <a href=\"http://localhost:1111/console\">Reedelk Administration Console</a> and click on the module <b>Info</b> button to see the errors.");
+        assertThat(message).isEqualTo("Some flow(s) could not be started: go to <a href=\"http://localhost:1111/console\">Reedelk Administration Console</a> and click on the module <b>Info</b> button to view full error details.<br> <b>Error messages:</b> Error 1, Error 2");
     }
 }
