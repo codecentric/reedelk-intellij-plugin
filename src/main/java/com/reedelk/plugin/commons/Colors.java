@@ -46,7 +46,7 @@ public class Colors {
     public static final JBColor PALETTE_TEXT_SELECTED = new JBColor(Color.white, Color.white);
     public static final JBColor PALETTE_TEXT_UNSELECTED = JBColor.DARK_GRAY;
 
-    public static final JBColor INPUT_OUTPUT_PANEL_BTN_ON_HOVER_BG = new JBColor(Gray._225, Gray._225);
+    public static final JBColor INPUT_OUTPUT_PANEL_BTN_ON_HOVER_BG = new JBColor(Gray._225, Gray._40);
     public static final JBColor INPUT_OUTPUT_PANEL_BTN_BOTTOM_BORDER = new JBColor(new Color(59, 121, 197, 200), new Color(59, 121, 197, 200));
 
 }
