@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-import static com.reedelk.plugin.commons.Colors.HINT_COLOR;
+import static com.reedelk.plugin.commons.Colors.DESIGNER_HINT_COLOR;
 import static com.reedelk.plugin.commons.Images.Component.PlaceholderHintIcon;
 import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_WIDTH;
 import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.ICON_HEIGHT;
@@ -80,7 +80,7 @@ abstract class BaseStrategy implements HintStrategy {
     }
 
     private void drawLine(Graphics2D g2, int x1, int y1, int x2, int y2) {
-        g2.setColor(HINT_COLOR);
+        g2.setColor(DESIGNER_HINT_COLOR);
         g2.setStroke(STROKE);
         g2.drawLine(x1, y1, x2, y2);
     }

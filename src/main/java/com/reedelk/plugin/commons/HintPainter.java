@@ -14,7 +14,7 @@ public class HintPainter {
     }
 
     public static void from(Graphics g, JBTextField textField, String hint) {
-        from(g, textField, hint, Colors.INPUT_FIELD_HINT);
+        from(g, textField, hint, Colors.PROPERTIES_INPUT_FIELD_HINT);
     }
 
     public static void from(Graphics g, JBTextField textField, String hint, Color color) {

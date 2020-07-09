@@ -18,6 +18,6 @@ public class ChooseFileInputField extends ExtendableTextField {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        HintPainter.from(g, this, hintText, Colors.FILE_INPUT_FIELD_HINT);
+        HintPainter.from(g, this, hintText, Colors.PROPERTIES_FILE_INPUT_FIELD_HINT);
     }
 }

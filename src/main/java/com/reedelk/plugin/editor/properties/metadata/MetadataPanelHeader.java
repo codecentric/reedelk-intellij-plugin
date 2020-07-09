@@ -12,7 +12,8 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 import static com.intellij.util.ui.JBUI.Borders.customLine;
-import static com.reedelk.plugin.commons.Colors.*;
+import static com.reedelk.plugin.commons.Colors.INPUT_OUTPUT_PANEL_BTN_BOTTOM_BORDER;
+import static com.reedelk.plugin.commons.Colors.INPUT_OUTPUT_PANEL_BTN_ON_HOVER_BG;
 
 public class MetadataPanelHeader extends DisposablePanel {
 
@@ -37,8 +38,8 @@ public class MetadataPanelHeader extends DisposablePanel {
             header2Action.onClick();
         });
 
-        header1Label.setBackground(METADATA_PANEL_BTN_ON_HOVER_BG);
-        header2Label.setBackground(METADATA_PANEL_BTN_ON_HOVER_BG);
+        header1Label.setBackground(INPUT_OUTPUT_PANEL_BTN_ON_HOVER_BG);
+        header2Label.setBackground(INPUT_OUTPUT_PANEL_BTN_ON_HOVER_BG);
         setOnHoverAndExit(header1Label);
         setOnHoverAndExit(header2Label);
         setActive(header1Label);
@@ -54,14 +55,14 @@ public class MetadataPanelHeader extends DisposablePanel {
         add(panel, BorderLayout.CENTER);
 
         setPreferredSize(new Dimension(200, 27));
-        setBackground(SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG);
+        setOpaque(false);
     }
 
     private void setActive(JComponent component) {
         active = component;
         // Add Bottom and right border
         Border line = customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);
-        Border bottomLine = customLine(METADATA_PANEL_BTN_BOTTOM_BORDER, 0,0, 3, 0);
+        Border bottomLine = customLine(INPUT_OUTPUT_PANEL_BTN_BOTTOM_BORDER, 0,0, 3, 0);
         Border padding = JBUI.Borders.empty(0, 10);
         component.setBorder(new CompoundBorder(new CompoundBorder(bottomLine, line), padding));
         component.setForeground(JBColor.DARK_GRAY);

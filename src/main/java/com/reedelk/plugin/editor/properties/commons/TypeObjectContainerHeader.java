@@ -72,7 +72,7 @@ public class TypeObjectContainerHeader extends DisposablePanel {
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
             JSeparator jSeparator = new JSeparator();
-            jSeparator.setForeground(Colors.TYPE_OBJECT_HORIZONTAL_SEPARATOR);
+            jSeparator.setForeground(Colors.PROPERTIES_TYPE_OBJECT_HORIZONTAL_SEPARATOR);
 
             add(jSeparator, gbc);
             setBorder(BORDER_HORIZONTAL_SEPARATOR_CONTAINER);
