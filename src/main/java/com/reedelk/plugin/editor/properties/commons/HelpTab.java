@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.ui.JBColor;
 import com.reedelk.plugin.commons.HyperlinkListenerUtils;
 import com.reedelk.plugin.component.ComponentData;
 
@@ -55,7 +56,10 @@ public class HelpTab extends DisposableScrollPane {
                     editorPane.setContentType(CONTENT_TYPE);
                     editorPane.getDocument().putProperty(IMAGE_CACHE_PROPERTY, imageCache);
 
-                    String htmlContent = message("properties.panel.tab.help.html", componentTitle, componentImageURI, componentDescription);
+                    Color background = JBColor.foreground();
+
+                    String colorAsRGB = String.format("rgb(%d,%d,%d)", background.getRed(), background.getGreen(), background.getBlue());
+                    String htmlContent = message("properties.panel.tab.help.html", colorAsRGB, componentTitle, componentImageURI, componentDescription);
                     editorPane.setText(htmlContent);
 
                     setViewportView(editorPane);
