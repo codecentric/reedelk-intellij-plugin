@@ -89,11 +89,11 @@ public class ContainerFactory {
     private static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body, boolean outerBorder) {
         Border iconBorder;
         if (outerBorder) {
-            Border iconOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
+            Border iconOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_BORDER, 1, 1, 1, 0);
             Border iconInside = Borders.empty(0, 4);
             iconBorder = new CompoundBorder(iconOutside, iconInside);
         } else {
-            Border iconOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 0, 0, 0, 1);
+            Border iconOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_BORDER, 0, 0, 0, 1);
             Border iconInside = Borders.empty(0, 4);
             iconBorder = new CompoundBorder(iconOutside, iconInside);
         }
@@ -102,7 +102,7 @@ public class ContainerFactory {
 
         Border bodyBorder;
         if (outerBorder) {
-            Border bodyOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 1);
+            Border bodyOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_BORDER, 1, 1, 1, 1);
             Border bodyInside = Borders.empty(0, 2);
             bodyBorder = new CompoundBorder(bodyOutside, bodyInside);
         } else {

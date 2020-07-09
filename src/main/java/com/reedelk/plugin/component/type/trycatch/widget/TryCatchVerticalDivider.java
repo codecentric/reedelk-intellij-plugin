@@ -11,7 +11,7 @@ import com.reedelk.plugin.graph.utils.FindFirstNodeOutsideScope;
 import java.awt.*;
 import java.util.List;
 
-import static com.reedelk.plugin.commons.Colors.SCOPE_VERTICAL_DIVIDER;
+import static com.reedelk.plugin.commons.Colors.DESIGNER_SCOPE_VERTICAL_DIVIDER;
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
@@ -38,7 +38,7 @@ public class TryCatchVerticalDivider {
         int count = 0;
         for (GraphNode successor : successors) {
             graphics.setStroke(count == 0 ? strokeDefault : strokeDashed);
-            graphics.setColor(SCOPE_VERTICAL_DIVIDER);
+            graphics.setColor(DESIGNER_SCOPE_VERTICAL_DIVIDER);
 
             int halfWidth = Half.of(scopedGraphNode.width(graphics));
             int verticalX = x + halfWidth - scopedGraphNode.verticalDividerXOffset();

@@ -60,7 +60,7 @@ public class DynamicValueField extends DisposablePanel {
                     listener.onChange(inputFieldAdapter.getValue());
                 });
         DisposablePanel container = ContainerFactory.createLabelNextToComponentWithOuterBorder(codeIcon, editorComponent);
-        Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
+        Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_BORDER, 1, 1, 1, 0);
         codeIcon.setPreferredSize(new Dimension(25, 22));
         codeIcon.setBorder(iconOutside);
         return new FixedHeightPanel(container);

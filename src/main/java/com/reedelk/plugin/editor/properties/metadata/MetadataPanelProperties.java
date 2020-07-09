@@ -48,7 +48,7 @@ public class MetadataPanelProperties extends DisposablePanel {
 
     private void createLabelAndAdd(DisposablePanel content, String label) {
         JBLabel attributes = new JBLabel(label, JLabel.LEFT);
-        attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
+        attributes.setForeground(Colors.PROPERTIES_PROPERTY_TITLE);
         attributes.setBorder(emptyLeft(LEFT_OFFSET));
         FormBuilder.get().addLabel(attributes, content);
         FormBuilder.get().addLastField(createHorizontalGlue(), content);

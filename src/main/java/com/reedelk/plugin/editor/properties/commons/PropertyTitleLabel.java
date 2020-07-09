@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
-import static com.reedelk.plugin.commons.Colors.TOOL_WINDOW_PROPERTIES_TEXT;
+import static com.reedelk.plugin.commons.Colors.PROPERTIES_PROPERTY_TITLE;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 
@@ -20,7 +20,7 @@ public class PropertyTitleLabel extends JPanel {
     public PropertyTitleLabel(String propertyDisplayName) {
         JBLabel textLabel = new JBLabel(createLabelText(propertyDisplayName));
         textLabel.setBorder(BORDER_PROPERTY_TITLE);
-        textLabel.setForeground(TOOL_WINDOW_PROPERTIES_TEXT);
+        textLabel.setForeground(PROPERTIES_PROPERTY_TITLE);
 
         setLayout(new BorderLayout());
         add(textLabel, WEST);

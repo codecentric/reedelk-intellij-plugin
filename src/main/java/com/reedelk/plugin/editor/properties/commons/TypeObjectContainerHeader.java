@@ -40,7 +40,7 @@ public class TypeObjectContainerHeader extends DisposablePanel {
     }
 
     private TypeObjectContainerHeader(JLabel label, @Nullable TooltipContent tooltipContent, boolean horizontalBar) {
-        label.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
+        label.setForeground(Colors.PROPERTIES_PROPERTY_TITLE);
         label.setOpaque(false);
 
         JComponent westComponent = Optional.ofNullable(tooltipContent)

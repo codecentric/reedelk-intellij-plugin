@@ -24,7 +24,7 @@ public class VerticalDivider {
 
     public VerticalDivider(ScopedGraphNode scopedGraphNode) {
         this.scopedGraphNode = scopedGraphNode;
-        this.color = Colors.SCOPE_VERTICAL_DIVIDER;
+        this.color = Colors.DESIGNER_SCOPE_VERTICAL_DIVIDER;
         this.stroke = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
     }
 
