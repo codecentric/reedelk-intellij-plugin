@@ -20,7 +20,7 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
     private JPanel renderer;
     private JLabel value;
 
-    private DefaultTreeCellRenderer defaultRenderer = new DefaultTreeCellRenderer();
+    private DefaultTreeCellRenderer defaultRenderer = new DefaultTreeNodeCellRenderer();
 
     PaletteComponentTreeRenderer() {
         this.value = new JLabel();

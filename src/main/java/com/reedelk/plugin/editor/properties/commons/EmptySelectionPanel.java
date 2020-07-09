@@ -17,7 +17,7 @@ public class EmptySelectionPanel extends DisposablePanel {
 
     public EmptySelectionPanel(@NotNull Project project) {
         setLayout(new GridBagLayout());
-        setBackground(Colors.PROPERTIES_EMPTY_SELECTION_BACKGROUND);
+        setOpaque(false);
 
         ToolWindow toolWindow = ToolWindowManager
                 .getInstance(project)

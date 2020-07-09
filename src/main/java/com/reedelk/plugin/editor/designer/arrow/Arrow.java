@@ -22,7 +22,7 @@ public class Arrow {
 
     public void draw(Point source, Point target, Graphics2D graphics) {
         graphics.setStroke(stroke);
-        graphics.setColor(Colors.DESIGNER_ARROW);
+        graphics.setColor(Colors.DESIGNER_STROKE_COLOR);
 
         final double startx = source.getX();
         final double starty = source.getY();
