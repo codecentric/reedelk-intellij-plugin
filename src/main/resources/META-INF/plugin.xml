@@ -12,9 +12,7 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>Feature: Added POST Hello World Flow.</li>
-	        <li>Feature: added .gitignore file when a new project is created excluding Maven /target directory.</li>
-	        <li>Bugfix: added execute permissions to reedelk-runtime/runtime-start.sh script when project created with latest distribution.</li>
+	        <li>Feature: fixed colors for IntelliJ IDEA Dracula theme.</li>
         </ul>
       ]]>
     </change-notes>
