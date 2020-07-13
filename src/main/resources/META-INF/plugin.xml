@@ -97,6 +97,11 @@
         <action id="Reedelk.CreateProjectFile" class="com.reedelk.plugin.action.CreateProjectFile">
             <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
         </action>
+        <action id="com.reedelk.plugin.action.ImportOpenAPI" class="com.reedelk.plugin.action.ImportOpenAPI"
+                text="Import Open API"
+                description="Import Open API and generate integration flow blueprint for rest based flows.">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
     </actions>
 
     <project-components>
