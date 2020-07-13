@@ -12,6 +12,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.reedelk.plugin.commons.ChangeFilesPermissions;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.ReedelkPluginUtil;
 import com.reedelk.plugin.message.ReedelkBundle;
@@ -22,24 +23,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.utils.MavenUtil;
-import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
+import org.jetbrains.idea.maven.wizards.AbstractMavenModuleBuilder;
 import org.jetbrains.idea.maven.wizards.MavenModuleWizardStep;
 import org.jetbrains.idea.maven.wizards.SelectPropertiesStep;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.intellij.openapi.ui.Messages.showErrorDialog;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
-public class ModuleBuilder extends MavenModuleBuilder {
+public class ModuleBuilder extends AbstractMavenModuleBuilder {
 
     private Path tmpDownloadDistributionPath;
     private String runtimeConfigName;
@@ -127,17 +124,6 @@ public class ModuleBuilder extends MavenModuleBuilder {
         });
     }
 
-    private void changeDistributionFilesPermissions(Path destination) {
-        Path runtimeStartSh = Paths.get(destination.toString(), ReedelkBundle.message("unzipped.runtime.start.sh.script"));
-        Set<PosixFilePermission> ownerWritable = PosixFilePermissions.fromString("rwxr-xr-x");
-        try {
-            Files.setPosixFilePermissions(runtimeStartSh, ownerWritable);
-        } catch (Exception ignored) {
-            // Error thrown if we cannot change permissions.
-            // On Windows this would fail, the user must manually change it.
-        }
-    }
-
     @Override
     public String getBuilderId() {
         return getClass().getName();
@@ -167,7 +153,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
     public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
         return new ModuleWizardStep[]{
                 new ConfigureRuntimeStep(wizardContext, this),
-                new MavenModuleWizardStep(this, wizardContext, !wizardContext.isNewWizard()),
+                new MavenModuleWizardStep(this, wizardContext, false),
                 new SelectPropertiesStep(wizardContext.getProject(), this)
         };
     }
@@ -224,5 +210,11 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
     private boolean shouldUseDownloadedDistribution() {
         return downloadDistribution && tmpDownloadDistributionPath != null;
+    }
+
+    private void changeDistributionFilesPermissions(Path destination) {
+        Path runtimeStartSh = Paths.get(destination.toString(), ReedelkBundle.message("unzipped.runtime.start.sh.script"));
+        String wantedPermissions = "rwxr-xr-x";
+        ChangeFilesPermissions.to(runtimeStartSh, wantedPermissions);
     }
 }
