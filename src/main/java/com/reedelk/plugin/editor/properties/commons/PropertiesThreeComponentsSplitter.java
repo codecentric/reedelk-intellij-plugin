@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.reedelk.plugin.commons.DisposableUtils;
@@ -20,8 +21,9 @@ public class PropertiesThreeComponentsSplitter extends DisposableThreeComponents
 
     public PropertiesThreeComponentsSplitter(@NotNull Module module,
                                              @NotNull ContainerContext context,
-                                             @NotNull JComponent properties) {
-        super(HORIZONTAL);
+                                             @NotNull JComponent properties,
+                                             @NotNull Disposable disposable) {
+        super(HORIZONTAL, disposable);
         this.context = context;
 
         Border rightLine = customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);

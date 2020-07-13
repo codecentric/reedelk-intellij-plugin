@@ -80,7 +80,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         PropertiesPanelTabbedPanel tabbedPanel = new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context);
 
-        return new PropertiesThreeComponentsSplitter(module, context, tabbedPanel);
+        return new PropertiesThreeComponentsSplitter(module, context, tabbedPanel, context);
     }
 
 

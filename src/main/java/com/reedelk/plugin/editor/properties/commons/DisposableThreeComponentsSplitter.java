@@ -8,8 +8,8 @@ import java.awt.*;
 
 public class DisposableThreeComponentsSplitter extends ThreeComponentsSplitter {
 
-    public DisposableThreeComponentsSplitter(boolean vertical) {
-        super(vertical);
+    public DisposableThreeComponentsSplitter(boolean vertical, Disposable disposable) {
+        super(vertical, disposable);
     }
 
     @Override
