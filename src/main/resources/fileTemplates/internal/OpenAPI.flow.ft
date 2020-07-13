@@ -1,0 +1,23 @@
+{
+  "id": "${id}",
+  "title": "${title}",
+  "description": "${description}",
+  "flow": [
+    {
+      "implementor": "com.reedelk.rest.component.RESTListener",
+      "description": "${operationDescription}",
+      "configuration": {"ref": "${configId}"},
+      "path": "${operationPath}",
+      "method": "${operationMethod}",
+      "streaming": "AUTO",
+      "response": {
+        "body": "#[message.payload()]",
+        "status": 200
+      },
+      "errorResponse": {
+        "body": "#[error]",
+        "status": 500
+      }
+    }
+  ]
+}

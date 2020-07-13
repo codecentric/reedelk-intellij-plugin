@@ -9,9 +9,9 @@ import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.template.ConfigProperties;
 import com.reedelk.plugin.template.FlowOrSubFlowFileProperties;
+import com.reedelk.plugin.template.Template;
 import com.reedelk.plugin.template.Template.HelloWorld;
 
-import java.util.Properties;
 import java.util.UUID;
 
 import static com.reedelk.plugin.commons.DefaultConstants.PROJECT_RESOURCES_FOLDER;
@@ -28,19 +28,20 @@ class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
     }
 
     void configure() {
+
         WriteCommandAction.runWriteCommandAction(project, () -> {
             String configId = UUID.randomUUID().toString();
 
             // Script
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Script.RESOURCE_DIRECTORY)
-                    .flatMap(scriptDirectory -> createFromTemplate(project, HelloWorld.SCRIPT, scriptDirectory))
+                    .flatMap(scriptDirectory -> Template.HelloWorld.SCRIPT.create(project, scriptDirectory))
                     .ifPresent(virtualFile -> DisableInspectionFor.file(project, virtualFile));
 
             // Config
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Config.RESOURCE_DIRECTORY).ifPresent(configDirectory -> {
                 String title = ReedelkBundle.message("hello.world.sample.config.title");
                 ConfigProperties configProperties = new ConfigProperties(configId, title);
-                createFromTemplate(project, HelloWorld.CONFIG, configProperties, configDirectory);
+                Template.HelloWorld.CONFIG.create(project, configProperties, configDirectory);
             });
 
             // Flows
@@ -56,14 +57,10 @@ class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Assets.RESOURCE_DIRECTORY);
 
             // .gitignore
-            createGitIgnore(root);
+            Template.HelloWorld.GIT_IGNORE.create(project, root);
 
             ToolWindowUtils.showComponentsPaletteToolWindow(project);
         });
-    }
-
-    private void createGitIgnore(VirtualFile directory) {
-        createFromTemplate(project, HelloWorld.GIT_IGNORE, new Properties(), directory);
     }
 
     private void createPOSTHelloWorldFlow(String configId, VirtualFile flowsDir) {
@@ -72,7 +69,7 @@ class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
         String description = ReedelkBundle.message("hello.world.post.sample.flow.description");
         FlowOrSubFlowFileProperties propertiesValues =
                 new FlowOrSubFlowFileProperties(flowId, title, description, configId);
-        createFromTemplate(project, HelloWorld.POST_FLOW, propertiesValues, flowsDir)
+        HelloWorld.POST_FLOW.create(project, propertiesValues, flowsDir)
                 .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
     }
 
@@ -82,7 +79,7 @@ class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
         String description = ReedelkBundle.message("hello.world.get.sample.flow.description");
         FlowOrSubFlowFileProperties propertiesValues =
                 new FlowOrSubFlowFileProperties(flowId, title, description, configId);
-        createFromTemplate(project, HelloWorld.GET_FLOW, propertiesValues, flowsDir)
+        Template.HelloWorld.GET_FLOW.create(project, propertiesValues, flowsDir)
                 .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
     }
 }

@@ -16,20 +16,16 @@ class MavenProjectBuilderHelper extends AbstractProjectBuilderHelper {
         if (parentId == null) {
             // Parent ID IS NULL (configuring a new project)
             MavenProjectProperties templateProperties = new MavenProjectProperties(projectId, sdkVersion);
-            WriteCommandAction.runWriteCommandAction(project, () ->
-                    createFromTemplate(project, Maven.PROJECT, templateProperties, root, MavenConstants.POM_XML)
-                            .ifPresent(virtualFile -> {
-                                // nothing to do
-                            }));
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                Maven.PROJECT.create(project, templateProperties, root, MavenConstants.POM_XML);
+            });
 
         } else {
             // Parent ID is NOT NULL (configuring a new module)
             MavenProjectProperties templateProperties = new MavenProjectProperties(projectId, sdkVersion, parentId);
-            WriteCommandAction.runWriteCommandAction(project, () ->
-                    createFromTemplate(project, Maven.MODULE, templateProperties, root, MavenConstants.POM_XML)
-                            .ifPresent(virtualFile -> {
-                                // nothing to do
-                            }));
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                Maven.MODULE.create(project, templateProperties, root, MavenConstants.POM_XML);
+            });
         }
     }
 }

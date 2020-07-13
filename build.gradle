@@ -21,6 +21,10 @@ repositories {
 dependencies {
     compile group: 'org.json', name: 'json', version: '20190722'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.0'
+    compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    compile('io.swagger.parser.v3:swagger-parser:2.0.20') {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
     compile group: 'com.reedelk', name: 'runtime-api', version: '1.0.0'
     compile group: 'com.reedelk', name: 'runtime-commons', version: '1.0.0'
     compile group: 'com.reedelk', name: 'module-descriptor', version: '1.0.0'

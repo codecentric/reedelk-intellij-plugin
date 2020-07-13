@@ -35,8 +35,8 @@ public class CreateProjectFile extends CreateFileFromTemplateAction implements D
     @Override
     protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
         builder.setTitle(message("action.create.flow.title"))
-                .addKind(message("action.create.kind.flow"), Icons.FileTypeFlow, Template.ProjectFile.FLOW)
-                .addKind(message("action.create.kind.subflow"), Icons.FileTypeSubFlow, Template.ProjectFile.SUBFLOW);
+                .addKind(message("action.create.kind.flow"), Icons.FileTypeFlow, Template.ProjectFile.FLOW.templateName())
+                .addKind(message("action.create.kind.subflow"), Icons.FileTypeSubFlow, Template.ProjectFile.SUBFLOW.templateName());
     }
 
     @Override

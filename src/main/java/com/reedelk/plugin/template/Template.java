@@ -1,38 +1,122 @@
 package com.reedelk.plugin.template;
 
+import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+
+import java.io.IOException;
+import java.util.Optional;
+import java.util.Properties;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class Template {
+
+    private static final Logger LOG = Logger.getInstance(Template.class);
 
     private Template() {
     }
 
-    public static class Maven {
+    public enum Maven implements Buildable {
 
-        private Maven() {
+        PROJECT("MavenProject"),
+        MODULE("MavenModule");
+
+        private final String templateName;
+
+        Maven(String templateName) {
+            this.templateName = templateName;
         }
 
-        public static final String PROJECT = "MavenProject";
-        public static final String MODULE = "MavenModule";
+        @Override
+        public String templateName() {
+            return templateName;
+        }
     }
 
-    public static class ProjectFile {
+    public enum ProjectFile implements Buildable {
 
-        private ProjectFile() {
+        FLOW("FlowFile"),
+        SUBFLOW("SubflowFile");
+
+        private final String templateName;
+
+        ProjectFile(String templateName) {
+            this.templateName = templateName;
         }
 
-        public static final String FLOW = "FlowFile";
-        public static final String SUBFLOW = "SubflowFile";
+        @Override
+        public String templateName() {
+            return templateName;
+        }
     }
 
-    public static class HelloWorld {
+    public enum HelloWorld implements Buildable {
 
-        private HelloWorld() {
+        GET_FLOW("GETHelloWorld.flow"),
+        POST_FLOW("POSTHelloWorld.flow"),
+        SCRIPT("helloWorld.groovy"),
+        CONFIG("DefaultListener.fconfig"),
+        GIT_IGNORE(".gitignore");
+
+        private final String templateName;
+
+        HelloWorld(String templateName) {
+            this.templateName = templateName;
         }
 
-        public static final String GET_FLOW = "GETHelloWorld.flow";
-        public static final String POST_FLOW = "POSTHelloWorld.flow";
-        public static final String SCRIPT = "helloWorld.groovy";
-        public static final String CONFIG = "DefaultListener.fconfig";
-        public static final String GIT_IGNORE = ".gitignore";
+        @Override
+        public String templateName() {
+            return templateName;
+        }
+    }
 
+    public enum OpenAPI implements Buildable {
+
+        FLOW_WITH_REST_LISTENER("OpenAPI.flow");
+
+        private final String templateName;
+
+        OpenAPI(String templateName) {
+            this.templateName = templateName;
+        }
+
+        @Override
+        public String templateName() {
+            return templateName;
+        }
+    }
+
+    interface Buildable {
+
+        String templateName();
+
+        default Optional<VirtualFile> create(Project project, Properties templateProperties, VirtualFile destinationDir, String fileName) {
+            FileTemplateManager manager = FileTemplateManager.getInstance(project);
+            FileTemplate fileTemplate = manager.getInternalTemplate(templateName());
+            try {
+                String fileText = fileTemplate.getText(templateProperties);
+                VirtualFile file = destinationDir.findOrCreateChildData(this, fileName);
+                VfsUtil.saveText(file, fileText);
+                return Optional.of(file);
+            } catch (IOException exception) {
+                // TODO: This error message should be generic.
+                String message = message("moduleBuilder.hello.world.template.error", templateName(), exception.getMessage());
+                LOG.warn(message, exception);
+                return Optional.empty();
+            }
+        }
+
+        default Optional<VirtualFile> create(Project project, Properties templateProperties, VirtualFile destinationDir) {
+            return create(project, templateProperties, destinationDir, templateName());
+        }
+
+        default Optional<VirtualFile> create(Project project, VirtualFile destinationDir) {
+            Properties emptyProperties = new Properties();
+            return create(project, emptyProperties, destinationDir);
+        }
     }
 }
