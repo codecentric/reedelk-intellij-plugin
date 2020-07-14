@@ -18,6 +18,11 @@
         "body": "#[error]",
         "status": 500
       }
+    },
+    {
+      "implementor": "com.reedelk.core.component.PayloadSet",
+      "description": "Payload Set description",
+      "payload": "${title} flow"
     }
   ]
 }

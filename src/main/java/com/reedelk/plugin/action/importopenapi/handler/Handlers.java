@@ -10,7 +10,11 @@ public class Handlers {
 
     private static final List<Handler> HANDLERS = Arrays.asList(
             new GETHandler(),
-            new POSTHandler());
+            new POSTHandler(),
+            new PUTHandler(),
+            new HEADHandler(),
+            new DELETEHandler(),
+            new OPTIONSHandler());
 
     public static void handle(ImporterOpenAPIContext context, String pathEntry, PathItem pathItem) {
         for (Handler handler : HANDLERS) {

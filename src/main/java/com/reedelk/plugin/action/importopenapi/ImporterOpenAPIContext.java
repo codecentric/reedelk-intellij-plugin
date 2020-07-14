@@ -1,6 +1,7 @@
 package com.reedelk.plugin.action.importopenapi;
 
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -29,7 +30,8 @@ public class ImporterOpenAPIContext {
         Optional<String> flowsFolder = PluginModuleUtils.getFlowsFolder(module);
         flowsFolder.ifPresent(flowsFolder1 -> WriteCommandAction.runWriteCommandAction(project, () -> {
             VirtualFile flowsFolderVf = VfsUtil.findFile(Paths.get(flowsFolder1), true);
-            buildableTemplate.create(project, properties, flowsFolderVf, fileName);
+            buildableTemplate.create(project, properties, flowsFolderVf, fileName)
+                    .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
         }));
     }
 }

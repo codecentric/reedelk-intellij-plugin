@@ -3,14 +3,9 @@ package com.reedelk.plugin.action.importopenapi.handler;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 
-public class POSTHandler extends AbstractHandler {
+public class OPTIONSHandler extends AbstractHandler {
 
-    private static final String HTTP_METHOD = "POST";
-
-    @Override
-    public boolean isApplicable(PathItem pathItem) {
-        return pathItem.getPost() != null;
-    }
+    private static final String HTTP_METHOD = "OPTIONS";
 
     @Override
     String getHttpMethod() {
@@ -19,6 +14,11 @@ public class POSTHandler extends AbstractHandler {
 
     @Override
     Operation getOperation(PathItem pathItem) {
-        return pathItem.getPost();
+        return pathItem.getOptions();
+    }
+
+    @Override
+    public boolean isApplicable(PathItem pathEntry) {
+        return pathEntry.getOptions() != null;
     }
 }

@@ -1,18 +1,25 @@
 package com.reedelk.plugin.action.importopenapi.handler;
 
-import com.reedelk.plugin.action.importopenapi.ImporterOpenAPIContext;
+import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 
-public class GETHandler implements Handler {
+public class GETHandler extends AbstractHandler {
 
+    private static final String HTTP_METHOD = "GET";
 
     @Override
     public boolean isApplicable(PathItem pathItem) {
         return pathItem.getGet() != null;
     }
 
-    @Override
-    public void accept(ImporterOpenAPIContext context, String pathEntry, PathItem pathItem) {
 
+    @Override
+    String getHttpMethod() {
+        return HTTP_METHOD;
+    }
+
+    @Override
+    Operation getOperation(PathItem pathItem) {
+        return pathItem.getGet();
     }
 }
