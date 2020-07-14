@@ -8,6 +8,11 @@ public class OPTIONSHandler extends AbstractHandler {
     private static final String HTTP_METHOD = "OPTIONS";
 
     @Override
+    public boolean isApplicable(PathItem pathEntry) {
+        return pathEntry.getOptions() != null;
+    }
+
+    @Override
     String getHttpMethod() {
         return HTTP_METHOD;
     }
@@ -15,10 +20,5 @@ public class OPTIONSHandler extends AbstractHandler {
     @Override
     Operation getOperation(PathItem pathItem) {
         return pathItem.getOptions();
-    }
-
-    @Override
-    public boolean isApplicable(PathItem pathEntry) {
-        return pathEntry.getOptions() != null;
     }
 }

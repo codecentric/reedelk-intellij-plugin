@@ -12,7 +12,6 @@ public class GETHandler extends AbstractHandler {
         return pathItem.getGet() != null;
     }
 
-
     @Override
     String getHttpMethod() {
         return HTTP_METHOD;

@@ -8,6 +8,11 @@ public class HEADHandler extends AbstractHandler {
     private static final String HTTP_METHOD = "HEAD";
 
     @Override
+    public boolean isApplicable(PathItem pathEntry) {
+        return pathEntry.getHead() != null;
+    }
+
+    @Override
     String getHttpMethod() {
         return HTTP_METHOD;
     }
@@ -15,10 +20,5 @@ public class HEADHandler extends AbstractHandler {
     @Override
     Operation getOperation(PathItem pathItem) {
         return pathItem.getHead();
-    }
-
-    @Override
-    public boolean isApplicable(PathItem pathEntry) {
-        return pathEntry.getHead() != null;
     }
 }

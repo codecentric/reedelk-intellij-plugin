@@ -8,6 +8,11 @@ public class PUTHandler extends AbstractHandler {
     private static final String HTTP_METHOD = "PUT";
 
     @Override
+    public boolean isApplicable(PathItem pathEntry) {
+        return pathEntry.getPut() != null;
+    }
+
+    @Override
     String getHttpMethod() {
         return HTTP_METHOD;
     }
@@ -15,10 +20,5 @@ public class PUTHandler extends AbstractHandler {
     @Override
     Operation getOperation(PathItem pathItem) {
         return pathItem.getPut();
-    }
-
-    @Override
-    public boolean isApplicable(PathItem pathEntry) {
-        return pathEntry.getPut() != null;
     }
 }
