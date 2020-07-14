@@ -90,7 +90,7 @@ public class Template {
         }
     }
 
-    interface Buildable {
+    public interface Buildable {
 
         String templateName();
 

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.action.importopenapi.handler;
 
-import com.intellij.openapi.project.Project;
+import com.reedelk.plugin.action.importopenapi.ImporterOpenAPIContext;
 import io.swagger.v3.oas.models.PathItem;
 
 public class GETHandler implements Handler {
@@ -12,7 +12,7 @@ public class GETHandler implements Handler {
     }
 
     @Override
-    public void accept(Project project, String pathEntry, PathItem pathItem) {
+    public void accept(ImporterOpenAPIContext context, String pathEntry, PathItem pathItem) {
 
     }
 }

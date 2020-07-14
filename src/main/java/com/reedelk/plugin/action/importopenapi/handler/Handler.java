@@ -1,12 +1,12 @@
 package com.reedelk.plugin.action.importopenapi.handler;
 
-import com.intellij.openapi.project.Project;
+import com.reedelk.plugin.action.importopenapi.ImporterOpenAPIContext;
 import io.swagger.v3.oas.models.PathItem;
 
 public interface Handler {
 
-    boolean isApplicable(PathItem pathItem);
+    boolean isApplicable(PathItem pathEntry);
 
-    void accept(Project project, String pathEntry, PathItem pathItem);
+    void accept(ImporterOpenAPIContext context, String pathEntry, PathItem pathItem);
 
 }
