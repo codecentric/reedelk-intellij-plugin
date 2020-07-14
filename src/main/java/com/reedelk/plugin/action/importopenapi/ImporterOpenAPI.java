@@ -15,6 +15,10 @@ public class ImporterOpenAPI {
 
     public void doImport() {
         ParserOpenAPI parserOpenAPI = new ParserOpenAPI(openAPIFilePath);
-        parserOpenAPI.parse((pathEntry, pathItem) -> Handlers.handle(context, pathEntry, pathItem));
+        parserOpenAPI.parse();
+        parserOpenAPI.forEachPath((pathEntry, pathItem) -> Handlers.handle(context, pathEntry, pathItem));
+
+        String title = parserOpenAPI.getTitle();
+        context.createConfig(title + ".fconfig");
     }
 }
