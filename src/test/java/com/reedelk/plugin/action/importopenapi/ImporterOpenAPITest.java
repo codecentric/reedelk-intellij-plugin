@@ -18,11 +18,14 @@ class ImporterOpenAPITest {
 
     @Test
     void shouldDoSomething() {
-
+        // Given
         ImporterOpenAPI importer = new ImporterOpenAPI(context, "/Users/lorenzo/Desktop/petstore_openapi.yaml");
+
+        // When
         importer.doImport();
 
-        // Verify
-        verify(context, times(6)).createTemplate(any(Template.Buildable.class), anyString(), any(Properties.class));
+        // Then
+        verify(context, times(6))
+                .createTemplate(any(Template.Buildable.class), anyString(), any(Properties.class));
     }
 }
