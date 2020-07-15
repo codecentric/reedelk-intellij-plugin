@@ -1,0 +1,3 @@
+FROM reedelk/reedelk-runtime-ce:latest
+COPY target/*.jar /home/reedelk-runtime/modules
+CMD runtime-start

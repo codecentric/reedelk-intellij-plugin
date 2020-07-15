@@ -19,10 +19,12 @@ import static com.reedelk.runtime.commons.ModuleProperties.*;
 
 class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
 
-    private final Project project;
+    private final boolean isDownloadedDistribution;
     private final VirtualFile root;
+    private final Project project;
 
-    HelloWorldProjectBuilderHelper(Project project, VirtualFile root) {
+    HelloWorldProjectBuilderHelper(Project project, VirtualFile root, boolean isDownloadedDistribution) {
+        this.isDownloadedDistribution = isDownloadedDistribution;
         this.project = project;
         this.root = root;
     }
@@ -56,8 +58,16 @@ class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
             // Assets
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Assets.RESOURCE_DIRECTORY);
 
-            // .gitignore
+            // Add .gitignore
             Template.HelloWorld.GIT_IGNORE.create(project, root);
+
+            // Add Dockerfile
+            Template.HelloWorld.DOCKERFILE.create(project, root, "Dockerfile");
+
+            if (isDownloadedDistribution) {
+                // Add Heroku Proc File
+                Template.HelloWorld.HEROKU_PROCFILE.create(project, root, "Procfile");
+            }
 
             ToolWindowUtils.showComponentsPaletteToolWindow(project);
         });

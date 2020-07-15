@@ -119,7 +119,8 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
 
         ReedelkPluginUtil.runWhenInitialized(project, () -> {
             // Create Hello world flow and config
-            HelloWorldProjectBuilderHelper helloWorldProjectBuilderHelper = new HelloWorldProjectBuilderHelper(project, root);
+            HelloWorldProjectBuilderHelper helloWorldProjectBuilderHelper =
+                    new HelloWorldProjectBuilderHelper(project, root, isDownloadDistribution());
             helloWorldProjectBuilderHelper.configure();
         });
     }

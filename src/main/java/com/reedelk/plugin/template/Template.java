@@ -60,7 +60,9 @@ public class Template {
         POST_FLOW("POSTHelloWorld.flow"),
         SCRIPT("helloWorld.groovy"),
         CONFIG("DefaultListener.fconfig"),
-        GIT_IGNORE(".gitignore");
+        GIT_IGNORE(".gitignore"),
+        DOCKERFILE("Dockerfile.txt"),
+        HEROKU_PROCFILE("Procfile.txt");
 
         private final String templateName;
 
@@ -112,6 +114,11 @@ public class Template {
 
         default Optional<VirtualFile> create(Project project, Properties templateProperties, VirtualFile destinationDir) {
             return create(project, templateProperties, destinationDir, templateName());
+        }
+
+        default Optional<VirtualFile> create(Project project, VirtualFile destinationDir, String fileName) {
+            Properties emptyProperties = new Properties();
+            return create(project, emptyProperties, destinationDir, fileName);
         }
 
         default Optional<VirtualFile> create(Project project, VirtualFile destinationDir) {
