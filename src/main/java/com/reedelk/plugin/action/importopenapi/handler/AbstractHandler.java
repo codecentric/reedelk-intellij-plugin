@@ -6,20 +6,32 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
 
 import java.util.Properties;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 abstract class AbstractHandler implements Handler {
 
     @Override
     public void accept(ImporterOpenAPIContext context, String pathEntry, PathItem pathItem) {
-
-        String description = getOrDefault(pathItem.getDescription(), StringUtils.EMPTY);
-
         Operation operation = getOperation(pathItem);
+
         String operationId = operation.getOperationId();
+
+        ApiResponses responses = operation.getResponses();
+        responses.forEach(new BiConsumer<String, ApiResponse>() {
+            @Override
+            public void accept(String responseCode, ApiResponse apiResponse) {
+
+            }
+        });
+
         String summary = getOrDefault(operation.getSummary(), operationId + " Flow");
+        String description = getOrDefault(pathItem.getDescription(), summary + " description");
+
         String operationDescription = "Path: " + pathEntry;
         String httpMethod = getHttpMethod();
 
@@ -50,10 +62,10 @@ abstract class AbstractHandler implements Handler {
             put("id", UUID.randomUUID().toString());
             put("title", flowTitle);
             put("description", flowDescription);
-            put("operationDescription", restListenerDescription);
-            put("configId", configId);
-            put("operationPath", restPath);
-            put("operationMethod", restMethod);
+            put("restDescription", restListenerDescription);
+            put("restConfigId", configId);
+            put("restPath", restPath);
+            put("restMethod", restMethod);
         }
     }
 }

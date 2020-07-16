@@ -10,7 +10,7 @@ public class ActionImportOpenAPI extends AnAction {
     @Override
     public void update(@NotNull AnActionEvent event) {
         super.update(event);
-        // Enable / Disable action (this is always enabled)
+        // The import open API action is visible only when the project is open.
         Project project = event.getProject();
         event.getPresentation().setEnabledAndVisible(project != null);
     }
@@ -19,15 +19,17 @@ public class ActionImportOpenAPI extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent event) {
 
         Project currentProject = event.getProject();
+        if (currentProject == null) return;
+
 
         DialogSelectOpenAPI dialog = new DialogSelectOpenAPI(currentProject);
-
         boolean result = dialog.showAndGet();
+
         if (result) {
             ImporterOpenAPIContext context = new ImporterOpenAPIContext(currentProject);
             String openAPIFilePath = dialog.getOpenAPIFilePath();
             ImporterOpenAPI importer = new ImporterOpenAPI(context, openAPIFilePath);
-            importer.doImport();
+            importer.process();
         }
     }
 }

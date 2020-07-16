@@ -13,7 +13,7 @@ public class ImporterOpenAPI {
         this.openAPIFilePath = openAPIFilePath;
     }
 
-    public void doImport() {
+    public void process() {
         ParserOpenAPI parserOpenAPI = new ParserOpenAPI(openAPIFilePath);
         parserOpenAPI.parse();
         parserOpenAPI.forEachPath((pathEntry, pathItem) -> Handlers.handle(context, pathEntry, pathItem));
