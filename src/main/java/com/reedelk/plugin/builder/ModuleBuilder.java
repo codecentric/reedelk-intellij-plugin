@@ -58,18 +58,21 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
 
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(contentEntryPath);
 
+        final String finalRuntimeHomeDirectory;
+        if (shouldUseDownloadedDistribution()) {
+            // Copy downloaded distribution in the project's root directory.
+            Path destination = copyDownloadPathDistributionInProject(contentEntryPath);
+            // We use the Runtime Home from the downloaded Reedelk distribution.
+            finalRuntimeHomeDirectory = destination.toString();
+        } else {
+            // We use the Runtime Home selected by the user.
+            finalRuntimeHomeDirectory = runtimeHomeDirectory;
+        }
+        String reedelkRuntimeVersion = ReedelkRuntimeVersion.from(finalRuntimeHomeDirectory);
+
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
-            String finalRuntimeHomeDirectory = runtimeHomeDirectory;
-
             if (createRuntimeConfig) {
-
-                if (shouldUseDownloadedDistribution()) {
-                    // Copy downloaded distribution in the project's root directory.
-                    Path destination = copyDownloadPathDistributionInProject(contentEntryPath);
-                    finalRuntimeHomeDirectory = destination.toString();
-                }
-
                 // Create Runtime Run Configuration
                 RuntimeRunConfigurationBuilder.build()
                         .withRuntimeConfigName(runtimeConfigName)
@@ -88,7 +91,6 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
             MavenId projectId = getProjectId();
             MavenId parentId = getParentMavenId();
             String sdkVersion = rootModel.getSdkName();
-            String reedelkRuntimeVersion = ReedelkRuntimeVersion.from(finalRuntimeHomeDirectory);
 
             MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper(reedelkRuntimeVersion);
             projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
@@ -99,7 +101,7 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
         //  flows, configs, gitignore, dockerfile, heroku file ...
         ReedelkPluginUtil.runWhenInitialized(project, () -> {
             DefaultProjectBuilderHelper helper =
-                    new DefaultProjectBuilderHelper(project, root, isDownloadDistribution());
+                    new DefaultProjectBuilderHelper(project, root, reedelkRuntimeVersion, isDownloadDistribution());
             helper.build();
         });
     }

@@ -12,7 +12,9 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>Feature: fixed colors for IntelliJ IDEA Dracula theme.</li>
+	        <li>Feature: New project wizard creates a project with version equal to the Reedelk Runtime Distribution being used for the project.</li>
+	        <li>Bugfix: New project wizard creates Dockerfile and Heroku Procfile. The Dockerfile is created using the same version of the Reedelk Runtime Distribution.</li>
+	        <li>Bugfix: Fixed issue which did not correctly dispose the Script Editor Dialog.</li>
         </ul>
       ]]>
     </change-notes>
@@ -96,13 +98,6 @@
     <actions>
         <action id="Reedelk.CreateProjectFile" class="com.reedelk.plugin.action.CreateProjectFile">
             <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
-        </action>
-        <action id="com.reedelk.plugin.action.importopenapi.ActionImportOpenAPI"
-                class="com.reedelk.plugin.action.importopenapi.ActionImportOpenAPI"
-                text="Import Open API"
-                icon="/META-INF/pluginIcon-small.svg"
-                description="Import Open API and generate integration flow blueprint for rest based flows.">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
     </actions>
 

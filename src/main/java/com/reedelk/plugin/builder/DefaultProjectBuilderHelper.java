@@ -8,6 +8,7 @@ import com.reedelk.plugin.commons.DisableInspectionFor;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.template.ConfigProperties;
+import com.reedelk.plugin.template.DockerfileProperties;
 import com.reedelk.plugin.template.FlowOrSubFlowFileProperties;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.plugin.template.Template.HelloWorld;
@@ -20,11 +21,13 @@ import static com.reedelk.runtime.commons.ModuleProperties.*;
 class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
 
     private final boolean isDownloadedDistribution;
+    private final String reedelkRuntimeVersion;
     private final VirtualFile root;
     private final Project project;
 
-    DefaultProjectBuilderHelper(Project project, VirtualFile root, boolean isDownloadedDistribution) {
+    DefaultProjectBuilderHelper(Project project, VirtualFile root, String reedelkRuntimeVersion, boolean isDownloadedDistribution) {
         this.isDownloadedDistribution = isDownloadedDistribution;
+        this.reedelkRuntimeVersion = reedelkRuntimeVersion;
         this.project = project;
         this.root = root;
     }
@@ -63,7 +66,8 @@ class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
             Template.HelloWorld.GIT_IGNORE.create(project, root);
 
             // Add Dockerfile
-            Template.HelloWorld.DOCKERFILE.create(project, root, "Dockerfile");
+            DockerfileProperties dockerfileProperties = new DockerfileProperties(reedelkRuntimeVersion);
+            Template.HelloWorld.DOCKERFILE.create(project, dockerfileProperties, root, "Dockerfile");
 
             if (isDownloadedDistribution) {
                 // Add Heroku Proc File
