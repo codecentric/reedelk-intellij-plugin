@@ -60,7 +60,6 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
-            // TODO: Handle when no create runtime config.
             String finalRuntimeHomeDirectory = runtimeHomeDirectory;
 
             if (createRuntimeConfig) {
