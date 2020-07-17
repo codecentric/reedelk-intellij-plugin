@@ -60,41 +60,18 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
         if (createRuntimeConfig) {
             MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
+                String finalRuntimeHomeDirectory = runtimeHomeDirectory;
                 if (shouldUseDownloadedDistribution()) {
-                    this.runtimeConfigName = message("runtimeBuilder.name.default.value");
-                    String unzippedRuntimeDirectoryName = message("unzipped.runtime.directory.name");
-                    Path destination = Paths.get(contentEntryPath, unzippedRuntimeDirectoryName);
-                    try {
-                        // Copy all the files from TMP download path to project/reedelk-runtime directory.
-                        FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destination.toFile());
-
-                        // Change permission of reedelk-runtime.sh:
-                        // it needs to be executable for instance to start it on Heroku deployments.
-                        changeDistributionFilesPermissions(destination);
-
-                    } catch (IOException e) {
-                        // We cannot recover here. We should just display an error message.
-                        ApplicationManager.getApplication().invokeLater(() ->
-                                showErrorDialog(
-                                        message("moduleBuilder.copy.distribution.error.message",
-                                                tmpDownloadDistributionPath.toString(),
-                                                destination.toString()),
-                                        message("moduleBuilder.copy.distribution.error.title")));
-                    }
-
-                    // Create Runtime Run Configuration
-                    RuntimeRunConfigurationBuilder.build()
-                            .withRuntimeConfigName(runtimeConfigName)
-                            .withRuntimeHomeDirectory(destination.toString())
-                            .add(project);
-
-                } else {
-                    // Create Runtime Run Configuration
-                    RuntimeRunConfigurationBuilder.build()
-                            .withRuntimeConfigName(runtimeConfigName)
-                            .withRuntimeHomeDirectory(runtimeHomeDirectory)
-                            .add(project);
+                    // Copy downloaded distribution in the project's root directory.
+                    Path destination = copyDownloadPathDistributionInProject(contentEntryPath);
+                    finalRuntimeHomeDirectory = destination.toString();
                 }
+
+                // Create Runtime Run Configuration
+                RuntimeRunConfigurationBuilder.build()
+                        .withRuntimeConfigName(runtimeConfigName)
+                        .withRuntimeHomeDirectory(finalRuntimeHomeDirectory)
+                        .add(project);
             });
         }
 
@@ -118,10 +95,10 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
         });
 
         ReedelkPluginUtil.runWhenInitialized(project, () -> {
-            // Create Hello world flow and config
-            HelloWorldProjectBuilderHelper helloWorldProjectBuilderHelper =
-                    new HelloWorldProjectBuilderHelper(project, root, isDownloadDistribution());
-            helloWorldProjectBuilderHelper.configure();
+            // Create Hello world flows, configs, gitignore, dockerfile, heroku file ...
+            DefaultProjectBuilderHelper helper =
+                    new DefaultProjectBuilderHelper(project, root, isDownloadDistribution());
+            helper.build();
         });
     }
 
@@ -211,6 +188,30 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
 
     private boolean shouldUseDownloadedDistribution() {
         return downloadDistribution && tmpDownloadDistributionPath != null;
+    }
+
+    @NotNull
+    private Path copyDownloadPathDistributionInProject(String contentEntryPath) {
+        String unzippedRuntimeDirectoryName = message("unzipped.runtime.directory.name");
+        Path destination = Paths.get(contentEntryPath, unzippedRuntimeDirectoryName);
+        try {
+            // Copy all the files from TMP download path to project/reedelk-runtime directory.
+            FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destination.toFile());
+
+            // Change permission of reedelk-runtime.sh:
+            // it needs to be executable for instance to start it on Heroku deployments.
+            changeDistributionFilesPermissions(destination);
+
+        } catch (IOException e) {
+            // We cannot recover here. We should just display an error message.
+            ApplicationManager.getApplication().invokeLater(() ->
+                    showErrorDialog(
+                            message("moduleBuilder.copy.distribution.error.message",
+                                    tmpDownloadDistributionPath.toString(),
+                                    destination.toString()),
+                            message("moduleBuilder.copy.distribution.error.title")));
+        }
+        return destination;
     }
 
     private void changeDistributionFilesPermissions(Path destination) {

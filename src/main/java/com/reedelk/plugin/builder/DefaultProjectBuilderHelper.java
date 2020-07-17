@@ -17,21 +17,22 @@ import java.util.UUID;
 import static com.reedelk.plugin.commons.DefaultConstants.PROJECT_RESOURCES_FOLDER;
 import static com.reedelk.runtime.commons.ModuleProperties.*;
 
-class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
+class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
 
     private final boolean isDownloadedDistribution;
     private final VirtualFile root;
     private final Project project;
 
-    HelloWorldProjectBuilderHelper(Project project, VirtualFile root, boolean isDownloadedDistribution) {
+    DefaultProjectBuilderHelper(Project project, VirtualFile root, boolean isDownloadedDistribution) {
         this.isDownloadedDistribution = isDownloadedDistribution;
         this.project = project;
         this.root = root;
     }
 
-    void configure() {
+    void build() {
 
         WriteCommandAction.runWriteCommandAction(project, () -> {
+
             String configId = UUID.randomUUID().toString();
 
             // Script
