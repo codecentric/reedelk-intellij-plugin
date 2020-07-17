@@ -15,6 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.ChangeFilesPermissions;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.ReedelkPluginUtil;
+import com.reedelk.plugin.commons.ReedelkRuntimeVersion;
 import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfigurationBuilder;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationBuilder;
@@ -57,10 +58,13 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
 
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(contentEntryPath);
 
-        if (createRuntimeConfig) {
-            MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
+        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
-                String finalRuntimeHomeDirectory = runtimeHomeDirectory;
+            // TODO: Handle when no create runtime config.
+            String finalRuntimeHomeDirectory = runtimeHomeDirectory;
+
+            if (createRuntimeConfig) {
+
                 if (shouldUseDownloadedDistribution()) {
                     // Copy downloaded distribution in the project's root directory.
                     Path destination = copyDownloadPathDistributionInProject(contentEntryPath);
@@ -72,30 +76,29 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
                         .withRuntimeConfigName(runtimeConfigName)
                         .withRuntimeHomeDirectory(finalRuntimeHomeDirectory)
                         .add(project);
-            });
-        }
+            }
 
-        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
             // Add Module Run Configuration
             Module module = rootModel.getModule();
             ModuleRunConfigurationBuilder.build()
                     .withModuleName(module.getName())
                     .withRuntimeConfigName(runtimeConfigName)
                     .add(project);
-        });
 
-        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
             // Create Maven project files
             MavenId projectId = getProjectId();
             MavenId parentId = getParentMavenId();
             String sdkVersion = rootModel.getSdkName();
+            String reedelkRuntimeVersion = ReedelkRuntimeVersion.from(runtimeHomeDirectory);
 
-            MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper();
+            MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper(reedelkRuntimeVersion);
             projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
         });
 
+
+        // Create Default Init Project (Hello world):
+        //  flows, configs, gitignore, dockerfile, heroku file ...
         ReedelkPluginUtil.runWhenInitialized(project, () -> {
-            // Create Hello world flows, configs, gitignore, dockerfile, heroku file ...
             DefaultProjectBuilderHelper helper =
                     new DefaultProjectBuilderHelper(project, root, isDownloadDistribution());
             helper.build();

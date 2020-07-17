@@ -57,4 +57,12 @@ public class DefaultConstants {
         // NAME_CONVENTION: Depends on admin console runtime properties
         public static final String DEFAULT_ADMIN_HOST_PARAM_NAME = "admin.console.address";
     }
+
+    public static class ManifestAttribute {
+
+        private ManifestAttribute() {
+        }
+
+        public static final String IMPLEMENTATION_VERSION = "Implementation-Version";
+    }
 }
