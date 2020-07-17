@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.commons.ScriptFileUtils;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -94,6 +95,7 @@ public class DialogEditScript extends DialogWrapper {
         super.dispose();
         if (editorPanel != null) {
             editorPanel.dispose();
+            DisposableUtils.dispose(editorPanel);
         }
     }
 
