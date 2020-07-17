@@ -45,7 +45,8 @@ public class DialogEditScript extends DialogWrapper {
 
         this.scriptFilePathAndName = scriptFilePathAndName;
         this.editorPanel = PluginModuleUtils.getScriptsFolder(module)
-                .flatMap(scriptsFolder -> ofNullable(VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true))).map((Function<VirtualFile, DisposablePanel>) scriptVirtualFile -> {
+                .flatMap(scriptsFolder -> ofNullable(VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true)))
+                .map((Function<VirtualFile, DisposablePanel>) scriptVirtualFile -> {
                     originalDocument = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);
                     // We create a tmp virtual Reedelk file so that we can workaround,
                     // wrong autocompletion for Groovy files inside expression fields and script editors.
@@ -59,7 +60,7 @@ public class DialogEditScript extends DialogWrapper {
     @Override
     protected void doOKAction() {
         super.doOKAction();
-        WriteCommandAction.runWriteCommandAction(module.getProject(),() ->
+        WriteCommandAction.runWriteCommandAction(module.getProject(), () ->
                 // Whenever we are done, we must write back the updated script in the file system file.
                 originalDocument.setText(tmpDocument.getText()));
     }
@@ -75,11 +76,9 @@ public class DialogEditScript extends DialogWrapper {
     @NotNull
     @Override
     protected Action[] createActions() {
-        if (editorPanel == null) {
-            return new Action[]{getCancelAction()};
-        } else {
-            return new Action[]{getOKAction(), getCancelAction()};
-        }
+        return editorPanel == null ?
+                new Action[]{getCancelAction()} :
+                new Action[]{getOKAction(), getCancelAction()};
     }
 
     @Nullable

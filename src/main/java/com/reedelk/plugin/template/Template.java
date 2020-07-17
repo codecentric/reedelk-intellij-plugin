@@ -105,8 +105,7 @@ public class Template {
                 VfsUtil.saveText(file, fileText);
                 return Optional.of(file);
             } catch (IOException exception) {
-                // TODO: This error message should be generic.
-                String message = message("moduleBuilder.hello.world.template.error", templateName(), exception.getMessage());
+                String message = message("template.error", templateName(), exception.getMessage());
                 LOG.warn(message, exception);
                 return Optional.empty();
             }

@@ -12,8 +12,7 @@ public class MavenProjectProperties extends Properties {
         setProperty("artifactId", projectId.getArtifactId());
         setProperty("version", projectId.getVersion());
         setProperty("javaVersion", sdkVersion);
-        setProperty("versionLatestModules", ReedelkBundle.message("version.latest.modules"));
-        setProperty("versionLatestModuleParent", ReedelkBundle.message("version.latest.module.parent"));
+        setProperty("reedelkVersion", ReedelkBundle.message("reedelk.version"));
     }
 
     public MavenProjectProperties(MavenId projectId, String sdkVersion, MavenId parentId) {
