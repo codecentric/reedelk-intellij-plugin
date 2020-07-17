@@ -89,7 +89,7 @@ public class ModuleBuilder extends AbstractMavenModuleBuilder {
             MavenId projectId = getProjectId();
             MavenId parentId = getParentMavenId();
             String sdkVersion = rootModel.getSdkName();
-            String reedelkRuntimeVersion = ReedelkRuntimeVersion.from(runtimeHomeDirectory);
+            String reedelkRuntimeVersion = ReedelkRuntimeVersion.from(finalRuntimeHomeDirectory);
 
             MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper(reedelkRuntimeVersion);
             projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
