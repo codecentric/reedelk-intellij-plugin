@@ -9,7 +9,8 @@ import java.awt.*;
 public class DisposableThreeComponentsSplitter extends ThreeComponentsSplitter {
 
     public DisposableThreeComponentsSplitter(boolean vertical, Disposable disposable) {
-        super(vertical, disposable);
+        // Add: super(vertical, disposable) when IntelliJ version is supported.
+        super(vertical);
     }
 
     @Override
