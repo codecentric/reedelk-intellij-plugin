@@ -13,7 +13,7 @@
     <change-notes><![CDATA[
 	    <ul>
 	        <li>Feature: New project wizard creates a project with version equal to the Reedelk Runtime Distribution being used for the project.</li>
-	        <li>Bugfix: New project wizard creates Dockerfile and Heroku Procfile. The Dockerfile is created using the same version of the Reedelk Runtime Distribution.</li>
+	        <li>Feature: New project wizard creates Dockerfile and Heroku Procfile. The Dockerfile is created using the same version of the Reedelk Runtime Distribution.</li>
 	        <li>Bugfix: Fixed issue which did not correctly dispose the Script Editor Dialog.</li>
         </ul>
       ]]>

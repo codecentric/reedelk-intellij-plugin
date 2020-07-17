@@ -261,9 +261,9 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
 
                 // If it has not been cancelled, and we are on the same step, then we can move on.
                 if (!cancelled && startStep == wizardContext.getWizard().getCurrentStep()) {
-
-                    // The configuration name equals the name of the downloaded runtime distribution
-                    runtimeConfigNameTextField.setText(downloadDistributionPath.getFileName().toString());
+                    // Set the temporary download distribution path. The tmp distribution
+                    // path will be used at the end of the project wizard to copy the distribution
+                    // files into the {PROJECT_HOME}/reedelk_runtime/ directory.
                     moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
 
                     // We stop the loading spinning wheel and move on to the next step.
