@@ -57,7 +57,7 @@ public class ChooseFileInputField extends TextFieldWithBrowseButton {
         private final String rootDirectory;
 
         public DefaultFileChooserDescriptor(String rootDirectory, String chooseFileDialogTitle) {
-            super(true, true, true, true, false, false);
+            super(true, false, true, true, false, false);
             this.rootDirectory = rootDirectory;
             this.setTitle(chooseFileDialogTitle);
         }
@@ -141,7 +141,10 @@ public class ChooseFileInputField extends TextFieldWithBrowseButton {
                 // we are interested in. For instance we might only write in the
                 // JSON file the subdirectory starting from {PROJECT_HOME}/src/main/resources
                 // for the Resource Read Component.
-                String fileRelativePath = text.substring(rootDirectory.length() + 1);
+                String fileRelativePath = EMPTY;
+                if (text.length() > rootDirectory.length()) {
+                    fileRelativePath = text.substring(rootDirectory.length() + 1);
+                }
                 component.setText(fileRelativePath);
                 propertyAccessor.set(fileRelativePath);
             } else {
