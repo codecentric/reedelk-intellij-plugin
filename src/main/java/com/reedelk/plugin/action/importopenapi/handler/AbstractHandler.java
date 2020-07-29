@@ -1,14 +1,14 @@
 package com.reedelk.plugin.action.importopenapi.handler;
 
+import com.reedelk.openapi.v3.OperationObject;
+import com.reedelk.openapi.v3.ResponseObject;
+import com.reedelk.openapi.v3.RestMethod;
 import com.reedelk.plugin.action.importopenapi.ImporterOpenAPIContext;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
-import io.swagger.v3.oas.models.Operation;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.responses.ApiResponse;
-import io.swagger.v3.oas.models.responses.ApiResponses;
 
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -16,21 +16,21 @@ import java.util.function.BiConsumer;
 abstract class AbstractHandler implements Handler {
 
     @Override
-    public void accept(ImporterOpenAPIContext context, String pathEntry, PathItem pathItem) {
-        Operation operation = getOperation(pathItem);
+    public void accept(ImporterOpenAPIContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
+        OperationObject operation = getOperation(pathDefinition);
 
         String operationId = operation.getOperationId();
 
-        ApiResponses responses = operation.getResponses();
-        responses.forEach(new BiConsumer<String, ApiResponse>() {
+        Map<String, ResponseObject> responses = operation.getResponses();
+        responses.forEach(new BiConsumer<String, ResponseObject>() {
             @Override
-            public void accept(String responseCode, ApiResponse apiResponse) {
-
+            public void accept(String responseCode, ResponseObject apiResponse) {
+                // TODO: Complete me
             }
         });
 
         String summary = getOrDefault(operation.getSummary(), operationId + " Flow");
-        String description = getOrDefault(pathItem.getDescription(), summary + " description");
+        String description = getOrDefault(operation.getDescription(), summary + " description");
 
         String operationDescription = "Path: " + pathEntry;
         String httpMethod = getHttpMethod();
@@ -54,7 +54,7 @@ abstract class AbstractHandler implements Handler {
 
     abstract String getHttpMethod();
 
-    abstract Operation getOperation(PathItem pathItem);
+    abstract OperationObject getOperation(Map<RestMethod, OperationObject> pathDefinition);
 
     static class OperationFlowProperties extends Properties {
 

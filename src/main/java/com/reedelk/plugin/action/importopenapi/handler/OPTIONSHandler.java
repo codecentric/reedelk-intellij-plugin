@@ -1,24 +1,24 @@
 package com.reedelk.plugin.action.importopenapi.handler;
 
-import io.swagger.v3.oas.models.Operation;
-import io.swagger.v3.oas.models.PathItem;
+import com.reedelk.openapi.v3.OperationObject;
+import com.reedelk.openapi.v3.RestMethod;
+
+import java.util.Map;
 
 public class OPTIONSHandler extends AbstractHandler {
 
-    private static final String HTTP_METHOD = "OPTIONS";
-
-    @Override
-    public boolean isApplicable(PathItem pathEntry) {
-        return pathEntry.getOptions() != null;
-    }
-
     @Override
     String getHttpMethod() {
-        return HTTP_METHOD;
+        return RestMethod.OPTIONS.name();
     }
 
     @Override
-    Operation getOperation(PathItem pathItem) {
-        return pathItem.getOptions();
+    OperationObject getOperation(Map<RestMethod, OperationObject> pathDefinition) {
+        return pathDefinition.get(RestMethod.OPTIONS);
+    }
+
+    @Override
+    public boolean isApplicable(Map<RestMethod, OperationObject> pathDefinition) {
+        return pathDefinition.containsKey(RestMethod.OPTIONS);
     }
 }

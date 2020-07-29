@@ -1,18 +1,23 @@
 package com.reedelk.plugin.action.importopenapi;
 
 
+import com.reedelk.openapi.OpenApiDeserializer;
+import com.reedelk.openapi.v3.OpenApiObject;
+import com.reedelk.openapi.v3.OperationObject;
+import com.reedelk.openapi.v3.PathsObject;
+import com.reedelk.openapi.v3.RestMethod;
 import com.reedelk.runtime.api.commons.StringUtils;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.Paths;
-import io.swagger.v3.parser.OpenAPIV3Parser;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class ParserOpenAPI {
 
     private final String inputFilePath;
-    private OpenAPI openAPI;
+    private OpenApiObject openApiObject;
 
     public ParserOpenAPI(String inputFilePath) {
         // TODO: Check not empty
@@ -20,15 +25,21 @@ public class ParserOpenAPI {
     }
 
     public void parse() {
-        openAPI = new OpenAPIV3Parser().read(inputFilePath);
+        try {
+            String content = org.apache.commons.io.FileUtils.readFileToString(new File(inputFilePath), StandardCharsets.UTF_8);
+            openApiObject = OpenApiDeserializer.from(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void forEachPath(BiConsumer<String, PathItem> processor) {
-        Paths paths = openAPI.getPaths();
-        paths.forEach(processor);
+    public void forEachPath(BiConsumer<String, Map<RestMethod, OperationObject>> processor) {
+        PathsObject paths = openApiObject.getPaths();
+        paths.getPaths().forEach(processor);
     }
 
     public String getTitle() {
-        return openAPI.getInfo() != null ? openAPI.getInfo().getTitle() : StringUtils.EMPTY;
+        return openApiObject.getInfo() != null ?
+                openApiObject.getInfo().getTitle() : StringUtils.EMPTY;
     }
 }

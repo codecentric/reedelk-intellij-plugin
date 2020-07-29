@@ -1,10 +1,12 @@
 package com.reedelk.plugin.action.importopenapi.handler;
 
+import com.reedelk.openapi.v3.OperationObject;
+import com.reedelk.openapi.v3.RestMethod;
 import com.reedelk.plugin.action.importopenapi.ImporterOpenAPIContext;
-import io.swagger.v3.oas.models.PathItem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Handlers {
 
@@ -16,10 +18,10 @@ public class Handlers {
             new DELETEHandler(),
             new OPTIONSHandler());
 
-    public static void handle(ImporterOpenAPIContext context, String pathEntry, PathItem pathItem) {
+    public static void handle(ImporterOpenAPIContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
         for (Handler handler : HANDLERS) {
-            if (handler.isApplicable(pathItem)) {
-                handler.accept(context, pathEntry, pathItem);
+            if (handler.isApplicable(pathDefinition)) {
+                handler.accept(context, pathEntry, pathDefinition);
             }
         }
     }
