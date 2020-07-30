@@ -18,7 +18,7 @@
         "body": "#[error]",
         "status": 500
       },
-      "openApi": {"responses": {"200": {"content": {"application/json": {}}}}}
+      "openApi": ${openApiOperationObject}
     },
     {
       "implementor": "com.reedelk.core.component.PayloadSet",

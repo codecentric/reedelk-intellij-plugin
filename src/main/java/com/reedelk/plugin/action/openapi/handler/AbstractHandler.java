@@ -1,5 +1,6 @@
 package com.reedelk.plugin.action.openapi.handler;
 
+import com.reedelk.openapi.OpenApiSerializer;
 import com.reedelk.openapi.v3.OperationObject;
 import com.reedelk.openapi.v3.ResponseObject;
 import com.reedelk.openapi.v3.RestMethod;
@@ -35,8 +36,10 @@ abstract class AbstractHandler implements Handler {
         String operationDescription = "Path: " + pathEntry;
         String httpMethod = getHttpMethod();
 
+        String openApiOperation = OpenApiSerializer.toJson(operation);
+
         Properties properties =
-                new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod);
+                new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
 
         String fileName = operationId + "." + FileExtension.FLOW.value();
         context.createTemplate(Template.OpenAPI.FLOW_WITH_REST_LISTENER, fileName, properties);
@@ -52,7 +55,7 @@ abstract class AbstractHandler implements Handler {
 
     static class OperationFlowProperties extends Properties {
 
-        OperationFlowProperties(String configId, String flowTitle, String flowDescription, String restListenerDescription, String restPath, String restMethod) {
+        OperationFlowProperties(String configId, String flowTitle, String flowDescription, String restListenerDescription, String restPath, String restMethod, String openApiOperationObject) {
             put("id", UUID.randomUUID().toString());
             put("title", flowTitle);
             put("description", flowDescription);
@@ -60,6 +63,7 @@ abstract class AbstractHandler implements Handler {
             put("restConfigId", configId);
             put("restPath", restPath);
             put("restMethod", restMethod);
+            put("openApiOperationObject", openApiOperationObject);
         }
     }
 }
