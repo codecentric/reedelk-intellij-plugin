@@ -3,12 +3,12 @@ package com.reedelk.plugin.action.openapi;
 import com.reedelk.plugin.action.openapi.handler.Handlers;
 import org.jetbrains.annotations.NotNull;
 
-public class ImporterOpenAPI {
+public class OpenApiImporter1 {
 
-    private final ImporterOpenAPIContext context;
+    private final OpenApiImporterContext context;
     private final String openAPIFilePath;
 
-    public ImporterOpenAPI(@NotNull ImporterOpenAPIContext context, @NotNull String openAPIFilePath) {
+    public OpenApiImporter1(@NotNull OpenApiImporterContext context, @NotNull String openAPIFilePath) {
         this.context = context;
         this.openAPIFilePath = openAPIFilePath;
     }

@@ -17,12 +17,12 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
-public class ImporterOpenAPIContext {
+public class OpenApiImporterContext {
 
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
 
-    public ImporterOpenAPIContext(@NotNull Project project) {
+    public OpenApiImporterContext(@NotNull Project project) {
         this.project = project;
     }
 

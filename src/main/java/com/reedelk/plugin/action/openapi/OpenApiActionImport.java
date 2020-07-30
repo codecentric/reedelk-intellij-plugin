@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-public class ActionImportOpenAPI extends AnAction {
+public class OpenApiActionImport extends AnAction {
 
     @Override
     public void update(@NotNull AnActionEvent event) {
@@ -22,13 +22,13 @@ public class ActionImportOpenAPI extends AnAction {
         if (currentProject == null) return;
 
 
-        DialogSelectOpenAPI dialog = new DialogSelectOpenAPI(currentProject);
+        OpenApiDialogSelectFile dialog = new OpenApiDialogSelectFile(currentProject);
         boolean result = dialog.showAndGet();
 
         if (result) {
-            ImporterOpenAPIContext context = new ImporterOpenAPIContext(currentProject);
+            OpenApiImporterContext context = new OpenApiImporterContext(currentProject);
             String openAPIFilePath = dialog.getOpenAPIFilePath();
-            ImporterOpenAPI importer = new ImporterOpenAPI(context, openAPIFilePath);
+            OpenApiImporter1 importer = new OpenApiImporter1(context, openAPIFilePath);
             importer.process();
         }
     }

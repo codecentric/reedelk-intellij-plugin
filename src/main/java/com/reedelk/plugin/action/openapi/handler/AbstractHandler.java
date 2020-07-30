@@ -4,7 +4,7 @@ import com.reedelk.openapi.OpenApiSerializer;
 import com.reedelk.openapi.v3.OperationObject;
 import com.reedelk.openapi.v3.ResponseObject;
 import com.reedelk.openapi.v3.RestMethod;
-import com.reedelk.plugin.action.openapi.ImporterOpenAPIContext;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
@@ -17,8 +17,9 @@ import java.util.function.BiConsumer;
 abstract class AbstractHandler implements Handler {
 
     @Override
-    public void accept(ImporterOpenAPIContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
+    public void accept(OpenApiImporterContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
         OperationObject operation = getOperation(pathDefinition);
+
         // Replace all schemas with reference object to the Resource Text.
 
         String operationId = operation.getOperationId();

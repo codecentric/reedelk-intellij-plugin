@@ -11,12 +11,12 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class DialogSelectOpenAPI extends DialogWrapper {
+public class OpenApiDialogSelectFile extends DialogWrapper {
 
     private final Project project;
     private final PropertyAccessorInMemory propertyAccessorInMemory = new PropertyAccessorInMemory();
 
-    protected DialogSelectOpenAPI(@Nullable Project project) {
+    protected OpenApiDialogSelectFile(@Nullable Project project) {
         super(project);
         this.project = project;
         setResizable(false);

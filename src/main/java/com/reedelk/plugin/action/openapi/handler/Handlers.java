@@ -2,7 +2,7 @@ package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.v3.OperationObject;
 import com.reedelk.openapi.v3.RestMethod;
-import com.reedelk.plugin.action.openapi.ImporterOpenAPIContext;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,7 @@ public class Handlers {
             new DELETEHandler(),
             new OPTIONSHandler());
 
-    public static void handle(ImporterOpenAPIContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
+    public static void handle(OpenApiImporterContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
         for (Handler handler : HANDLERS) {
             if (handler.isApplicable(pathDefinition)) {
                 handler.accept(context, pathEntry, pathDefinition);
