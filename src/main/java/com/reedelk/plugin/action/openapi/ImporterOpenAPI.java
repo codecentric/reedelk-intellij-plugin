@@ -1,6 +1,6 @@
-package com.reedelk.plugin.action.importopenapi;
+package com.reedelk.plugin.action.openapi;
 
-import com.reedelk.plugin.action.importopenapi.handler.Handlers;
+import com.reedelk.plugin.action.openapi.handler.Handlers;
 import org.jetbrains.annotations.NotNull;
 
 public class ImporterOpenAPI {

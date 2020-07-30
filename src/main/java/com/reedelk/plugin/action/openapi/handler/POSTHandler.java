@@ -1,24 +1,24 @@
-package com.reedelk.plugin.action.importopenapi.handler;
+package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.v3.OperationObject;
 import com.reedelk.openapi.v3.RestMethod;
 
 import java.util.Map;
 
-public class HEADHandler extends AbstractHandler {
+public class POSTHandler extends AbstractHandler {
 
     @Override
     String getHttpMethod() {
-        return RestMethod.HEAD.name();
+        return RestMethod.POST.name();
     }
 
     @Override
     OperationObject getOperation(Map<RestMethod, OperationObject> pathDefinition) {
-        return pathDefinition.get(RestMethod.HEAD);
+        return pathDefinition.get(RestMethod.POST);
     }
 
     @Override
     public boolean isApplicable(Map<RestMethod, OperationObject> pathDefinition) {
-        return pathDefinition.containsKey(RestMethod.HEAD);
+        return pathDefinition.containsKey(RestMethod.POST);
     }
 }

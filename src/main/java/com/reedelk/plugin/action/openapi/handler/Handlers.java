@@ -1,8 +1,8 @@
-package com.reedelk.plugin.action.importopenapi.handler;
+package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.v3.OperationObject;
 import com.reedelk.openapi.v3.RestMethod;
-import com.reedelk.plugin.action.importopenapi.ImporterOpenAPIContext;
+import com.reedelk.plugin.action.openapi.ImporterOpenAPIContext;
 
 import java.util.Arrays;
 import java.util.List;

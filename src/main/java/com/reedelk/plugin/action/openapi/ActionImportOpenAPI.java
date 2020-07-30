@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.importopenapi;
+package com.reedelk.plugin.action.openapi;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

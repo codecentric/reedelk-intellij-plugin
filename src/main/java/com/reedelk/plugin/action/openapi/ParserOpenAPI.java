@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.importopenapi;
+package com.reedelk.plugin.action.openapi;
 
 
 import com.reedelk.openapi.OpenApiDeserializer;

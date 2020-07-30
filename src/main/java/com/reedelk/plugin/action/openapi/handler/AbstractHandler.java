@@ -1,9 +1,9 @@
-package com.reedelk.plugin.action.importopenapi.handler;
+package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.v3.OperationObject;
 import com.reedelk.openapi.v3.ResponseObject;
 import com.reedelk.openapi.v3.RestMethod;
-import com.reedelk.plugin.action.importopenapi.ImporterOpenAPIContext;
+import com.reedelk.plugin.action.openapi.ImporterOpenAPIContext;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
@@ -36,13 +36,7 @@ abstract class AbstractHandler implements Handler {
         String httpMethod = getHttpMethod();
 
         Properties properties =
-                new OperationFlowProperties(
-                        context.getConfigId(),
-                        summary,
-                        description,
-                        operationDescription,
-                        pathEntry,
-                        httpMethod);
+                new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod);
 
         String fileName = operationId + "." + FileExtension.FLOW.value();
         context.createTemplate(Template.OpenAPI.FLOW_WITH_REST_LISTENER, fileName, properties);

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.importopenapi;
+package com.reedelk.plugin.action.openapi;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
