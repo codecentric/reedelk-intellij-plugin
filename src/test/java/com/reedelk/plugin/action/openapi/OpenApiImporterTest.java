@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class OpenApiImporter1Test {
+class OpenApiImporterTest {
 
     @Mock
     private OpenApiImporterContext context;
@@ -14,7 +14,7 @@ class OpenApiImporter1Test {
     @Test
     void shouldDoSomething() {
         // Given
-        OpenApiImporter1 importer = new OpenApiImporter1(context, "/Users/lorenzo/Desktop/petstore_openapi.yaml");
+        OpenApiImporter importer = new OpenApiImporter(context, "/Users/lorenzo/Desktop/petstore_openapi.yaml");
 
         // When
 //        importer.doImport();
