@@ -19,6 +19,7 @@ abstract class AbstractHandler implements Handler {
     @Override
     public void accept(ImporterOpenAPIContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
         OperationObject operation = getOperation(pathDefinition);
+        // Replace all schemas with reference object to the Resource Text.
 
         String operationId = operation.getOperationId();
 
