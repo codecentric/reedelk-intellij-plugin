@@ -1,5 +1,7 @@
 package com.reedelk.plugin.action.openapi;
 
+import com.reedelk.plugin.action.openapi.importer.OpenApiImporter;
+import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
