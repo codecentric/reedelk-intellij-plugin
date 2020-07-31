@@ -10,7 +10,8 @@ import com.reedelk.runtime.commons.FileExtension;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.function.BiConsumer;
+
+import static com.reedelk.runtime.api.commons.ImmutableMap.of;
 
 abstract class AbstractHandler implements Handler {
 
@@ -18,17 +19,7 @@ abstract class AbstractHandler implements Handler {
     public void accept(OpenApiImporterContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
         OperationObject operation = getOperation(pathDefinition);
 
-        // Replace all schemas with reference object to the Resource Text.
-
         String operationId = operation.getOperationId();
-
-        Map<String, ResponseObject> responses = operation.getResponses();
-        responses.forEach(new BiConsumer<String, ResponseObject>() {
-            @Override
-            public void accept(String responseCode, ResponseObject apiResponse) {
-                // TODO: Complete me
-            }
-        });
 
         String summary = getOrDefault(operation.getSummary(), operationId + " Flow");
         String description = getOrDefault(operation.getDescription(), summary + " description");
@@ -36,19 +27,10 @@ abstract class AbstractHandler implements Handler {
         String operationDescription = "Path: " + pathEntry;
         String httpMethod = getHttpMethod();
 
-        operation.getResponses().forEach(new BiConsumer<String, ResponseObject>() {
-            @Override
-            public void accept(String s, ResponseObject responseObject) {
-                responseObject.getContent().forEach(new BiConsumer<String, MediaTypeObject>() {
-                    @Override
-                    public void accept(String s, MediaTypeObject mediaTypeObject) {
-                        Schema schema = mediaTypeObject.getSchema();
-
-                    }
-                });
-            }
-        });
-        String openApiOperation = OpenApi.toJson(operation);
+        String openApiOperation = OpenApi.toJson(operation,
+                of(MediaTypeObject.class, new MediaTypeObjectSerializer(),
+                        ParameterObject.class, new ParameterObjectSerializer(),
+                        HeaderObject.class, new HeaderObjectSerializer()));
 
         Properties properties =
                 new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);

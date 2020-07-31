@@ -47,7 +47,8 @@ public class OpenApiImporter {
 
         // Paths
         PathsObject paths = openApiObject.getPaths();
-        paths.getPaths().forEach((pathEntry, pathItem) -> Handlers.handle(context, pathEntry, pathItem));
+        paths.getPaths().forEach((pathEntry, pathItem) ->
+                Handlers.handle(context, pathEntry, pathItem));
 
 
         // Config
