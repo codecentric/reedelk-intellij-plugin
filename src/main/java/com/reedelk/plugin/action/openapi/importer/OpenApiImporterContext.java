@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.openapi;
+package com.reedelk.plugin.action.openapi.importer;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;

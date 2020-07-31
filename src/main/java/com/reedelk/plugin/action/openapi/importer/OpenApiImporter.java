@@ -1,8 +1,8 @@
-package com.reedelk.plugin.action.openapi;
+package com.reedelk.plugin.action.openapi.importer;
 
 import com.reedelk.openapi.OpenApi;
 import com.reedelk.openapi.v3.model.*;
-import com.reedelk.plugin.action.openapi.handler.Handlers;
+import com.reedelk.plugin.action.openapi.importer.handler.Handlers;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;

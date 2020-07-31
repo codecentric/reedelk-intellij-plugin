@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.openapi.handler;
+package com.reedelk.plugin.action.openapi.serializer;
 
 import com.reedelk.openapi.Serializer;
 import com.reedelk.openapi.v3.SerializerContext;

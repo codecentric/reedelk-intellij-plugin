@@ -1,8 +1,11 @@
-package com.reedelk.plugin.action.openapi.handler;
+package com.reedelk.plugin.action.openapi.importer.handler;
 
 import com.reedelk.openapi.OpenApi;
 import com.reedelk.openapi.v3.model.*;
-import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.serializer.HeaderObjectSerializer;
+import com.reedelk.plugin.action.openapi.serializer.MediaTypeObjectSerializer;
+import com.reedelk.plugin.action.openapi.serializer.ParameterObjectSerializer;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
