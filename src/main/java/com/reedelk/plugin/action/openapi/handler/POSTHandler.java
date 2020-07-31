@@ -1,7 +1,7 @@
 package com.reedelk.plugin.action.openapi.handler;
 
-import com.reedelk.openapi.v3.OperationObject;
-import com.reedelk.openapi.v3.RestMethod;
+import com.reedelk.openapi.v3.model.OperationObject;
+import com.reedelk.openapi.v3.model.RestMethod;
 
 import java.util.Map;
 

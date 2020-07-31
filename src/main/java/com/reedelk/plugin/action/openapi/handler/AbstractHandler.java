@@ -1,9 +1,7 @@
 package com.reedelk.plugin.action.openapi.handler;
 
-import com.reedelk.openapi.OpenApiSerializer;
-import com.reedelk.openapi.v3.OperationObject;
-import com.reedelk.openapi.v3.ResponseObject;
-import com.reedelk.openapi.v3.RestMethod;
+import com.reedelk.openapi.OpenApi;
+import com.reedelk.openapi.v3.model.*;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -38,7 +36,19 @@ abstract class AbstractHandler implements Handler {
         String operationDescription = "Path: " + pathEntry;
         String httpMethod = getHttpMethod();
 
-        String openApiOperation = OpenApiSerializer.toJson(operation);
+        operation.getResponses().forEach(new BiConsumer<String, ResponseObject>() {
+            @Override
+            public void accept(String s, ResponseObject responseObject) {
+                responseObject.getContent().forEach(new BiConsumer<String, MediaTypeObject>() {
+                    @Override
+                    public void accept(String s, MediaTypeObject mediaTypeObject) {
+                        Schema schema = mediaTypeObject.getSchema();
+
+                    }
+                });
+            }
+        });
+        String openApiOperation = OpenApi.toJson(operation);
 
         Properties properties =
                 new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
