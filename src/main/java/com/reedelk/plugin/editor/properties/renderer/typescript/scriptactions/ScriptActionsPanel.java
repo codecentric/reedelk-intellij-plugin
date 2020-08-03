@@ -73,7 +73,12 @@ public class ScriptActionsPanel extends DisposablePanel {
 
     public void onSelect(ScriptResource newSelected) {
         this.selected = newSelected;
-        this.editAction.setEnabled(newSelected.isEditable());
-        this.deleteAction.setEnabled(newSelected.isRemovable());
+        if (selected != null) {
+            this.editAction.setEnabled(newSelected.isEditable());
+            this.deleteAction.setEnabled(newSelected.isRemovable());
+        } else {
+            this.editAction.setEnabled(false);
+            this.deleteAction.setEnabled(false);
+        }
     }
 }

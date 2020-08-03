@@ -45,7 +45,7 @@ public class DialogEditScript extends DialogWrapper {
         setResizable(true);
 
         this.scriptFilePathAndName = scriptFilePathAndName;
-        this.editorPanel = PluginModuleUtils.getScriptsFolder(module)
+        this.editorPanel = PluginModuleUtils.getScriptsDirectory(module)
                 .flatMap(scriptsFolder -> ofNullable(VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true)))
                 .map((Function<VirtualFile, DisposablePanel>) scriptVirtualFile -> {
                     originalDocument = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);

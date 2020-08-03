@@ -78,7 +78,9 @@ public class Template {
 
     public enum OpenAPI implements Buildable {
 
-        FLOW_WITH_REST_LISTENER("OpenAPI.flow");
+        FLOW_WITH_REST_LISTENER("OpenAPI.flow"),
+        EXAMPLE("OpenAPIExample.txt"),
+        SCHEMA("OpenAPISchema.txt");
 
         private final String templateName;
 

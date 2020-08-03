@@ -15,22 +15,27 @@ public class PluginModuleUtils {
     private PluginModuleUtils() {
     }
 
-    public static Optional<String> getFlowsFolder(Module module) {
-        return getResourcesFolder(module).map(resources ->
+    public static Optional<String> getAssetsDirectory(Module module) {
+        return getResourcesDirectory(module).map(resources ->
+                Paths.get(resources, Assets.RESOURCE_DIRECTORY).toString());
+    }
+
+    public static Optional<String> getFlowsDirectory(Module module) {
+        return getResourcesDirectory(module).map(resources ->
                 Paths.get(resources, Flow.RESOURCE_DIRECTORY).toString());
     }
 
-    public static Optional<String> getConfigsFolder(Module module) {
-        return getResourcesFolder(module).map(resources ->
+    public static Optional<String> getConfigsDirectory(Module module) {
+        return getResourcesDirectory(module).map(resources ->
                 Paths.get(resources, Config.RESOURCE_DIRECTORY).toString());
     }
 
-    public static Optional<String> getScriptsFolder(Module module) {
-        return getResourcesFolder(module).map(resources ->
+    public static Optional<String> getScriptsDirectory(Module module) {
+        return getResourcesDirectory(module).map(resources ->
                 Paths.get(resources, Script.RESOURCE_DIRECTORY).toString());
     }
 
-    public static Optional<String> getResourcesFolder(@NotNull Module module) {
+    public static Optional<String> getResourcesDirectory(@NotNull Module module) {
         return ModuleRootManager.getInstance(module)
                 .orderEntries()
                 .withoutSdk()

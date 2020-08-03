@@ -20,7 +20,7 @@ public class DisableInspectionFor {
     }
 
     public static void file(Module module, String filePath) {
-        PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
+        PluginModuleUtils.getScriptsDirectory(module).ifPresent(scriptsFolder -> {
             VirtualFile theFile = VfsUtil.findFile(Paths.get(scriptsFolder, filePath), true);
             if (theFile == null) return;
             file(module.getProject(), theFile);

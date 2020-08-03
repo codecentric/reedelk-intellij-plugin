@@ -93,7 +93,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public void addConfiguration(@NotNull ConfigMetadata newConfig) {
         String configTypeFullyQualifiedName = newConfig.getFullyQualifiedName();
 
-        PluginModuleUtils.getConfigsFolder(module).ifPresent(configsFolder ->
+        PluginModuleUtils.getConfigsDirectory(module).ifPresent(configsFolder ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
 
                     String finalFileName = FileUtils.appendExtensionToFileName(newConfig.getFileName(), FileExtension.CONFIG);

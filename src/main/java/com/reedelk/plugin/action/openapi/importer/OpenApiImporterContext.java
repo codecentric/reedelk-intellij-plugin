@@ -34,7 +34,7 @@ public class OpenApiImporterContext {
         Module[] modules = ModuleManager.getInstance(project).getModules();
         Module module = modules[0];
 
-        Optional<String> flowsFolder = PluginModuleUtils.getFlowsFolder(module);
+        Optional<String> flowsFolder = PluginModuleUtils.getFlowsDirectory(module);
         flowsFolder.ifPresent(flowsFolder1 -> WriteCommandAction.runWriteCommandAction(project, () -> {
             VirtualFile flowsFolderVf = VfsUtil.findFile(Paths.get(flowsFolder1), true);
             buildableTemplate.create(project, properties, flowsFolderVf, fileName)
@@ -48,7 +48,7 @@ public class OpenApiImporterContext {
         Module[] modules = ModuleManager.getInstance(project).getModules();
         Module module = modules[0];
 
-        Optional<String> configsFolder = PluginModuleUtils.getConfigsFolder(module);
+        Optional<String> configsFolder = PluginModuleUtils.getConfigsDirectory(module);
         configsFolder.ifPresent(configsFolder1 -> WriteCommandAction.runWriteCommandAction(project, () -> {
             VirtualFile configsDirectoryVf = VfsUtil.findFile(Paths.get(configsFolder1), true);
             ConfigProperties configProperties = new ConfigProperties(configId, title);

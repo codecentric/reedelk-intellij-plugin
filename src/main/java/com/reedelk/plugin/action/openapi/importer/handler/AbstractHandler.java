@@ -31,7 +31,7 @@ abstract class AbstractHandler implements Handler {
         String httpMethod = getHttpMethod();
 
         String openApiOperation = OpenApi.toJson(operation,
-                of(MediaTypeObject.class, new MediaTypeObjectSerializer(),
+                of(MediaTypeObject.class, new MediaTypeObjectSerializer(context),
                         ParameterObject.class, new ParameterObjectSerializer(),
                         HeaderObject.class, new HeaderObjectSerializer()));
 

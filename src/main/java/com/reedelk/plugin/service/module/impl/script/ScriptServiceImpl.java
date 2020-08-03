@@ -38,7 +38,7 @@ public class ScriptServiceImpl implements ScriptService {
     public void fetchScriptResources() {
         // If the scripts folder is empty, it means that there is no resources folder created
         // in the current project, therefore no action is required.
-        PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
+        PluginModuleUtils.getScriptsDirectory(module).ifPresent(scriptsFolder -> {
             // We access the index, therefore we must wait to access.
             PluginExecutors.runSmartReadAction(module, () -> {
                 List<ScriptResource> scripts = new ArrayList<>();
@@ -68,7 +68,7 @@ public class ScriptServiceImpl implements ScriptService {
 
         // If the scripts folder is empty, it means that there is no resources folder created
         // in the current project, therefore no action is required.
-        PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
+        PluginModuleUtils.getScriptsDirectory(module).ifPresent(scriptsDirectory ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
 
                     final String normalizedScriptFile = ScriptResourceUtil.normalize(scriptFileName);
@@ -109,7 +109,7 @@ public class ScriptServiceImpl implements ScriptService {
 
     @Override
     public void removeScript(String scriptFileName) {
-        PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
+        PluginModuleUtils.getScriptsDirectory(module).ifPresent(scriptsDirectory ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
                     final VirtualFile file = VfsUtil.findFile(Paths.get(scriptsDirectory, scriptFileName), true);
                     if (file == null) {

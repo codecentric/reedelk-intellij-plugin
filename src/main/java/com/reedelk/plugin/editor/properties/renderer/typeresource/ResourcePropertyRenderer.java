@@ -40,7 +40,7 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
 
         // The root directory is {PROJECT_HOME}/src/main/resources because
         // we only want to allow users to select files from resources.
-        String chooseFileRootDirectory = PluginModuleUtils.getResourcesFolder(module)
+        String chooseFileRootDirectory = PluginModuleUtils.getResourcesDirectory(module)
                 .orElseThrow(() -> new IllegalStateException(message("error.resource.dir.not.found")));
 
         ChooseFileInputField choseInput = new ChooseFileInputField(
