@@ -7,10 +7,12 @@ import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import com.reedelk.runtime.api.commons.ImmutableMap;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 public class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
@@ -28,14 +30,17 @@ public class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
         // Replace all schemas with reference object to the Resource Text.
         // Example?
         Schema schema = mediaTypeObject.getSchema();
-        if (schema != null && schema.getSchemaData() != null) {
-            Map<String, Object> schemaData = schema.getSchemaData();
-            if (schemaData.containsKey("$ref")) {
-                // Create schema
-                // Must resolve asset file from the reference.
-                return ImmutableMap.of("schema", "/assets/schemas/test.yaml");
 
-            } else {
+        if (schema != null) {
+            if (StringUtils.isNotBlank(schema.getSchemaId())) {
+                Optional<String> schemaAsset = context.assetFrom(schema.getSchemaId());
+                if (schemaAsset.isPresent()) {
+                    return ImmutableMap.of("schema", schemaAsset.get());
+                }
+
+
+            } else if (schema.getSchemaData() != null){
+                // Must create the schema dn set a name.
                 Properties properties = new Properties();
                 properties.put("schema", new Yaml().dump(schema.getSchemaData()));
                 String schemaPath = context.createSchema("template", properties);

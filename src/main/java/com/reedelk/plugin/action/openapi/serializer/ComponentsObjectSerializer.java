@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
 
@@ -42,13 +41,11 @@ public class ComponentsObjectSerializer implements Serializer<ComponentsObject> 
                 if (schema.getSchemaData() != null) {
                     Properties schemaProperties = new Properties();
                     schemaProperties.put("schema", new Yaml().dump(schema.getSchemaData()));
-                    context.createSchema(schemaId, schemaObject, schemaFormat).ifPresent(new Consumer<String>() {
-                        @Override
-                        public void accept(String schemaPath) {
-                            Map<String, Object> schemasMap1 = new LinkedHashMap<>();
-                            schemasMap1.put("schema", schemaPath);
-                            schemasMap.put(schemaId, schemasMap1);
-                        }
+                    context.createSchema(schemaId, schemaObject, schemaFormat).ifPresent(schemaPath -> {
+                        context.register(schemaId, schemaPath);
+                        Map<String, Object> schemasMap1 = new LinkedHashMap<>();
+                        schemasMap1.put("schema", schemaPath);
+                        schemasMap.put(schemaId, schemasMap1);
                     });
                 }
             }

@@ -16,13 +16,11 @@ import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
 import java.nio.file.Paths;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 public class OpenApiImporterContext {
 
+    private Map<String,String> schemaIdAndPath = new HashMap<>();
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
 
@@ -119,5 +117,19 @@ public class OpenApiImporterContext {
             configProperties.put("openApiObject", configOpenApi);
             Template.OpenAPI.FLOW_CONFIG.create(project, configProperties, configsDirectoryVf, configFileName);
         }));
+    }
+
+    public void register(String schemaId, String schemaAssetPath) {
+        schemaIdAndPath.put(schemaId, schemaAssetPath);
+    }
+
+    public Optional<String> assetFrom(String $ref) {
+        for (Map.Entry<String,String> schemaIdAndPath : schemaIdAndPath.entrySet()) {
+            String schemaId = schemaIdAndPath.getKey();
+            if ($ref.endsWith(schemaId)) {
+                return Optional.of(schemaIdAndPath.getValue());
+            }
+        }
+        return Optional.empty();
     }
 }
