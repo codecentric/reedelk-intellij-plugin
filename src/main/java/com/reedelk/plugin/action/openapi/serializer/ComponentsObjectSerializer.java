@@ -7,11 +7,9 @@ import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.importer.SchemaFormat;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.function.BiConsumer;
 
 public class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
@@ -39,8 +37,6 @@ public class ComponentsObjectSerializer implements Serializer<ComponentsObject> 
                 // For each schema we must create a file and assign an ID.
                 Schema schema = schemaObject.getSchema();
                 if (schema.getSchemaData() != null) {
-                    Properties schemaProperties = new Properties();
-                    schemaProperties.put("schema", new Yaml().dump(schema.getSchemaData()));
                     context.createSchema(schemaId, schemaObject, schemaFormat).ifPresent(schemaPath -> {
                         context.register(schemaId, schemaPath);
                         Map<String, Object> schemasMap1 = new LinkedHashMap<>();
