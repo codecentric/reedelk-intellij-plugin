@@ -6,7 +6,6 @@ import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.serializer.HeaderObjectSerializer;
 import com.reedelk.plugin.action.openapi.serializer.MediaTypeObjectSerializer;
 import com.reedelk.plugin.action.openapi.serializer.ParameterObjectSerializer;
-import com.reedelk.plugin.template.Template;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 
@@ -39,7 +38,7 @@ abstract class AbstractHandler implements Handler {
                 new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
 
         String fileName = operationId + "." + FileExtension.FLOW.value();
-        context.createTemplate(Template.OpenAPI.FLOW_WITH_REST_LISTENER, fileName, properties);
+        context.createFlow(fileName, properties);
     }
 
     private String getOrDefault(String value, String defaultValue) {

@@ -6,7 +6,6 @@ import com.reedelk.openapi.v3.model.Example;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
-import com.reedelk.plugin.template.Template;
 import com.reedelk.runtime.api.commons.ImmutableMap;
 import org.yaml.snakeyaml.Yaml;
 
@@ -33,12 +32,14 @@ public class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
             Map<String, Object> schemaData = schema.getSchemaData();
             if (schemaData.containsKey("$ref")) {
                 // Create schema
+                // Must resolve asset file from the reference.
                 return ImmutableMap.of("schema", "/assets/schemas/test.yaml");
+
             } else {
                 Properties properties = new Properties();
                 properties.put("schema", new Yaml().dump(schema.getSchemaData()));
-                context.createTemplate(Template.OpenAPI.SCHEMA, "template.json", properties);
-                return ImmutableMap.of("schema", "/assets/template.json");
+                String schemaPath = context.createSchema("template", properties);
+                return ImmutableMap.of("schema", schemaPath);
             }
         }
         return new HashMap<>();

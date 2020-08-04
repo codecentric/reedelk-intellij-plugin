@@ -1,0 +1,11 @@
+{
+  "id": "${id}",
+  "title": "${title}",
+  "implementor": "com.reedelk.rest.component.RESTListenerConfiguration",
+  "host": "${host}",
+  "port": "${port}",
+  "protocol": "HTTP",
+  "basePath": "/api",
+  "keepAlive": true,
+  "openApi": ${openApiObject}
+}
