@@ -1,6 +1,7 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
 import com.reedelk.openapi.Serializer;
+import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.Example;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
@@ -10,7 +11,7 @@ import com.reedelk.runtime.api.commons.ImmutableMap;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -24,7 +25,7 @@ public class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
     }
 
     @Override
-    public Map<String, Object> serialize(SerializerContext serializerContext, MediaTypeObject mediaTypeObject) {
+    public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, MediaTypeObject mediaTypeObject) {
         Example example = mediaTypeObject.getExample();
 
         // Replace all schemas with reference object to the Resource Text.
@@ -47,6 +48,6 @@ public class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
                 return ImmutableMap.of("schema", schemaPath);
             }
         }
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
 }

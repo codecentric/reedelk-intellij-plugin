@@ -1,6 +1,7 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
 import com.reedelk.openapi.Serializer;
+import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.ComponentsObject;
 import com.reedelk.openapi.v3.model.Schema;
@@ -23,7 +24,7 @@ public class ComponentsObjectSerializer implements Serializer<ComponentsObject> 
     }
 
     @Override
-    public Map<String, Object> serialize(SerializerContext serializerContext, ComponentsObject componentsObject) {
+    public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ComponentsObject componentsObject) {
         // TODO: Response objects?
         Map<String, Object> map = new LinkedHashMap<>();
         Map<String, Object> schemasMap = new LinkedHashMap<>();

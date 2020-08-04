@@ -3,6 +3,7 @@ package com.reedelk.plugin.action.openapi.importer;
 import com.reedelk.openapi.OpenApi;
 import com.reedelk.openapi.OpenApiModel;
 import com.reedelk.openapi.commons.AbstractSerializer;
+import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.*;
 import com.reedelk.plugin.action.openapi.importer.handler.Handlers;
@@ -67,21 +68,22 @@ public class OpenApiImporter {
     static class CustomOpenApiObjectSerializer extends AbstractSerializer<CustomOpenApiObject> {
 
         @Override
-        public Map<String, Object> serialize(SerializerContext serializerContext, CustomOpenApiObject customOpenApiObject) {
+        public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, CustomOpenApiObject customOpenApiObject) {
             Map<String, Object> map = new LinkedHashMap<>();
 
 
-            Map<String, Object> serializedInfo = serializerContext.serialize(customOpenApiObject.getInfo());
+            Map<String, Object> serializedInfo = serializerContext.serialize(navigationPath, customOpenApiObject.getInfo());
             set(map, "info", serializedInfo); // REQUIRED
 
             List<Map<String, Object>> mappedServers = customOpenApiObject
                     .getServers()
                     .stream()
-                    .map(serializerContext::serialize)
+                    .map(serverObject ->
+                            serializerContext.serialize(navigationPath, serverObject))
                     .collect(toList());
             map.put("servers", mappedServers);
 
-            Map<String, Object> serializedComponents = serializerContext.serialize(customOpenApiObject.getComponents());
+            Map<String, Object> serializedComponents = serializerContext.serialize(navigationPath, customOpenApiObject.getComponents());
             set(map, "components", serializedComponents);
 
             return map;
