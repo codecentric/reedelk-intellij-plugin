@@ -32,9 +32,9 @@ abstract class AbstractHandler implements Handler {
 
         String openApiOperation = OpenApi.toJson(operation,
                 of(MediaTypeObject.class, new MediaTypeObjectSerializer(context),
-                        ParameterObject.class, new ParameterObjectSerializer(),
-                        HeaderObject.class, new HeaderObjectSerializer()),
-                NavigationPath.create().with(NavigationPath.SegmentKey.OPERATION_ID, operationId));
+                        ParameterObject.class, new ParameterObjectSerializer(context),
+                        HeaderObject.class, new HeaderObjectSerializer(context)),
+                NavigationPath.create().with(NavigationPath.SegmentKey.OPERATION_ID, operationId)); // TODO: Path entry as well in the navigation path
 
         Properties properties =
                 new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);

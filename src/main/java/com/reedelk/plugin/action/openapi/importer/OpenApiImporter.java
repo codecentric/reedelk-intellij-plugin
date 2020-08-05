@@ -10,6 +10,7 @@ import com.reedelk.plugin.action.openapi.importer.handler.Handlers;
 import com.reedelk.plugin.action.openapi.serializer.ComponentsObjectSerializer;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -25,22 +26,21 @@ import static java.util.stream.Collectors.toList;
 public class OpenApiImporter {
 
     private final OpenApiImporterContext context;
-    private final String openAPIFilePath;
 
-    public OpenApiImporter(@NotNull OpenApiImporterContext context, @NotNull String openAPIFilePath) {
+    public OpenApiImporter(@NotNull OpenApiImporterContext context) {
         this.context = context;
-        this.openAPIFilePath = openAPIFilePath;
     }
 
     public void process() {
         // Read the OpenAPI file as string.
         String content;
         try {
-            content = org.apache.commons.io.FileUtils.readFileToString(new File(openAPIFilePath), StandardCharsets.UTF_8);
+            // TODO: File utils?
+
+            content = FileUtils.readFileToString(new File(context.getOpenApiFilePath()), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new PluginException("Could not read OpenAPI file");
         }
-
 
 
         // Deserialize the content into the OpenAPI Model
@@ -57,7 +57,7 @@ public class OpenApiImporter {
 
         String configOpenApi = OpenApi.toJson(customOpenApiObject,
                 of(CustomOpenApiObject.class, new CustomOpenApiObjectSerializer(),
-                        ComponentsObject.class, new ComponentsObjectSerializer(context, SchemaFormat.formatOf(openAPIFilePath))));
+                        ComponentsObject.class, new ComponentsObjectSerializer(context)));
         context.createConfig(title + ".fconfig", configOpenApi);
 
         // Paths

@@ -28,9 +28,9 @@ public class OpenApiActionImport extends AnAction {
         boolean result = dialog.showAndGet();
 
         if (result) {
-            OpenApiImporterContext context = new OpenApiImporterContext(currentProject);
             String openAPIFilePath = dialog.getOpenAPIFilePath();
-            OpenApiImporter importer = new OpenApiImporter(context, openAPIFilePath);
+            OpenApiImporterContext context = new OpenApiImporterContext(currentProject, openAPIFilePath);
+            OpenApiImporter importer = new OpenApiImporter(context);
             importer.process();
         }
     }

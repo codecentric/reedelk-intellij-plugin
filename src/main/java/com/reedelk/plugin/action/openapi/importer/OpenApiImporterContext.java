@@ -20,12 +20,22 @@ import java.util.*;
 
 public class OpenApiImporterContext {
 
+    private final String openApiFilePath;
     private Map<String,String> schemaIdAndPath = new HashMap<>();
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
 
-    public OpenApiImporterContext(@NotNull Project project) {
+    public OpenApiImporterContext(@NotNull Project project, String openApiFilePath) {
         this.project = project;
+        this.openApiFilePath = openApiFilePath;
+    }
+
+    public String getOpenApiFilePath() {
+        return openApiFilePath;
+    }
+
+    public SchemaFormat getSchemaFormat() {
+        return SchemaFormat.formatOf(openApiFilePath);
     }
 
     public String getConfigId() {

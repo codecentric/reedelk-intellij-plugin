@@ -7,7 +7,6 @@ import com.reedelk.openapi.v3.model.ComponentsObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
-import com.reedelk.plugin.action.openapi.importer.SchemaFormat;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,11 +15,9 @@ import java.util.function.BiConsumer;
 public class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
 
     private final OpenApiImporterContext context;
-    private final SchemaFormat schemaFormat;
 
-    public ComponentsObjectSerializer(OpenApiImporterContext context, SchemaFormat schemaFormat) {
+    public ComponentsObjectSerializer(OpenApiImporterContext context) {
         this.context = context;
-        this.schemaFormat = schemaFormat;
     }
 
     @Override
@@ -38,7 +35,7 @@ public class ComponentsObjectSerializer implements Serializer<ComponentsObject> 
                 // For each schema we must create a file and assign an ID.
                 Schema schema = schemaObject.getSchema();
                 if (schema.getSchemaData() != null) {
-                    context.createSchema(schemaId, schemaObject, schemaFormat).ifPresent(schemaPath -> {
+                    context.createSchema(schemaId, schemaObject, context.getSchemaFormat()).ifPresent(schemaPath -> {
                         context.register(schemaId, schemaPath);
                         Map<String, Object> schemasMap1 = new LinkedHashMap<>();
                         schemasMap1.put("schema", schemaPath);
