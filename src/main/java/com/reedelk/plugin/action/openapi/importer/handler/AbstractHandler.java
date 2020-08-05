@@ -1,6 +1,7 @@
 package com.reedelk.plugin.action.openapi.importer.handler;
 
 import com.reedelk.openapi.OpenApi;
+import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.*;
 import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.serializer.HeaderObjectSerializer;
@@ -32,7 +33,8 @@ abstract class AbstractHandler implements Handler {
         String openApiOperation = OpenApi.toJson(operation,
                 of(MediaTypeObject.class, new MediaTypeObjectSerializer(context),
                         ParameterObject.class, new ParameterObjectSerializer(),
-                        HeaderObject.class, new HeaderObjectSerializer()));
+                        HeaderObject.class, new HeaderObjectSerializer()),
+                NavigationPath.create().with(NavigationPath.SegmentKey.OPERATION_ID, operationId));
 
         Properties properties =
                 new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);

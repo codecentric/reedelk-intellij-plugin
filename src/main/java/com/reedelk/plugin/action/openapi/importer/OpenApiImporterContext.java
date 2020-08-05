@@ -24,8 +24,6 @@ public class OpenApiImporterContext {
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
 
-    private int counter = 1;
-
     public OpenApiImporterContext(@NotNull Project project) {
         this.project = project;
     }
@@ -75,17 +73,13 @@ public class OpenApiImporterContext {
         //      be in a list when importing the project.
         Module module = modules[0];
 
-        Optional<String> flowsDirectory = PluginModuleUtils.getAssetsDirectory(module);
-        flowsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
-            VirtualFile flowsFolderVf = VfsUtil.findFile(Paths.get(directory), true);
-            Template.OpenAPI.SCHEMA.create(project, properties, flowsFolderVf, fileName + counter + ".json")
-                    .ifPresent(virtualFile -> FileEditorManager.getInstance(project)
-                            .openFile(virtualFile, false));
+        Optional<String> assetsDirectory = PluginModuleUtils.getAssetsDirectory(module);
+        assetsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
+            VirtualFile assetsDirectoryVf = VfsUtil.findFile(Paths.get(directory), true);
+            Template.OpenAPI.SCHEMA.create(project, properties, assetsDirectoryVf, fileName);
         }));
 
-        String finalPath =  "/assets/" + fileName + counter + ".json";
-        counter++;
-        return finalPath;
+        return  "assets/" + fileName;
     }
 
     public void createFlow(String fileName, Properties properties) {
