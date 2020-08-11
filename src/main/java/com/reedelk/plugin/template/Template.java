@@ -3,6 +3,8 @@ package com.reedelk.plugin.template;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -104,9 +106,19 @@ public class Template {
             FileTemplate fileTemplate = manager.getInternalTemplate(templateName());
             try {
                 String fileText = fileTemplate.getText(templateProperties);
+
                 VirtualFile file = destinationDir.findOrCreateChildData(this, fileName);
-                // TODO: In most recent intellij versions (load from file system popup should be removed)
-                VfsUtil.saveText(file, fileText);
+                Document document = FileDocumentManager.getInstance().getDocument(file);
+
+                if (document != null) {
+                    // File already cached, therefore we must update the cached file and *not*
+                    // the one in the file system.
+                    document.setText(fileText);
+                } else {
+                    // File not cached, we can save the text on the file system.
+                    VfsUtil.saveText(file, fileText);
+                }
+
                 return Optional.of(file);
             } catch (IOException exception) {
                 String message = message("template.error", templateName(), exception.getMessage());
