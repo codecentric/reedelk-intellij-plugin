@@ -105,6 +105,7 @@ public class Template {
             try {
                 String fileText = fileTemplate.getText(templateProperties);
                 VirtualFile file = destinationDir.findOrCreateChildData(this, fileName);
+                // TODO: In most recent intellij versions (load from file system popup should be removed)
                 VfsUtil.saveText(file, fileText);
                 return Optional.of(file);
             } catch (IOException exception) {

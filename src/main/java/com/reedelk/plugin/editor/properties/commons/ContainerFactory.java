@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.TooltipContent;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,11 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 public class ContainerFactory {
 
     private ContainerFactory() {
+    }
+
+    public static DisposablePanel createLabelNextToComponent(String labelText, JComponent body) {
+        JBLabel label = new JBLabel(labelText);
+        return createLabelNextToComponent(label, body);
     }
 
     public static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body) {
