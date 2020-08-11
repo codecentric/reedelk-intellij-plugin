@@ -24,6 +24,7 @@ import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 public class OpenApiDialogSelectFile extends DialogWrapper {
 
     private final Project project;
+    private JComboBox<String> modulesCombo;
     private final PropertyAccessorInMemory propertyAccessorInMemory = new PropertyAccessorInMemory();
 
     protected OpenApiDialogSelectFile(@Nullable Project project) {
@@ -49,7 +50,7 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
         Module[] modules = ModuleManager.getInstance(project).getModules();
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
         Arrays.stream(modules).forEach(module -> comboBoxModel.addElement(module.getName()));
-        JComboBox<String> modulesCombo = new ComboBox<>(comboBoxModel);
+        this.modulesCombo = new ComboBox<>(comboBoxModel);
 
         // Build the panel
         DisposablePanel panel = new DisposablePanel(new GridBagLayout());
@@ -58,6 +59,9 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
         return panel;
     }
 
+    String getImportModule() {
+        return (String) modulesCombo.getSelectedItem();
+    }
     String getOpenAPIFilePath() {
         return propertyAccessorInMemory.get();
     }

@@ -21,13 +21,19 @@ import java.util.*;
 public class OpenApiImporterContext {
 
     private final String openApiFilePath;
+    private final String importModuleName;
     private Map<String,String> schemaIdAndPath = new HashMap<>();
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
 
-    public OpenApiImporterContext(@NotNull Project project, String openApiFilePath) {
+    public OpenApiImporterContext(@NotNull Project project, String openAPIFilePath, String importModuleName) {
         this.project = project;
-        this.openApiFilePath = openApiFilePath;
+        this.openApiFilePath = openAPIFilePath;
+        this.importModuleName = importModuleName;
+    }
+
+    public String getImportModuleName() {
+        return importModuleName;
     }
 
     public String getOpenApiFilePath() {
@@ -42,7 +48,6 @@ public class OpenApiImporterContext {
         return configId;
     }
 
-    // TODO: Add target directory.
     public Optional<String> createSchema(String schemaId, SchemaObject schemaObject, SchemaFormat schemaFormat) {
         if (schemaObject.getSchema() != null) {
             Map<String, Object> schemaData = schemaObject.getSchema().getSchemaData();
@@ -56,10 +61,8 @@ public class OpenApiImporterContext {
                 properties.put("schema", new Yaml().dump(schemaData));
             }
 
-            Module[] modules = ModuleManager.getInstance(project).getModules();
-            // TODO: This is wrong. We should get the current module or the module should
-            //      be in a list when importing the project.
-            Module module = modules[0];
+
+            Module module = getImportModule();
 
             String finalFileName = schemaId + "." + schemaFormat.getExtension();
             Optional<String> flowsDirectory = PluginModuleUtils.getAssetsDirectory(module);
@@ -75,13 +78,8 @@ public class OpenApiImporterContext {
         return Optional.empty();
     }
 
-
-
     public String createSchema(String fileName, Properties properties) {
-        Module[] modules = ModuleManager.getInstance(project).getModules();
-        // TODO: This is wrong. We should get the current module or the module should
-        //      be in a list when importing the project.
-        Module module = modules[0];
+        Module module = getImportModule();
 
         Optional<String> assetsDirectory = PluginModuleUtils.getAssetsDirectory(module);
         assetsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -93,10 +91,7 @@ public class OpenApiImporterContext {
     }
 
     public void createFlow(String fileName, Properties properties) {
-
-        // TODO: Module 0 is wrong. The module should be selectable from the Dialog.
-        Module[] modules = ModuleManager.getInstance(project).getModules();
-        Module module = modules[0];
+        Module module = getImportModule();
 
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -110,9 +105,7 @@ public class OpenApiImporterContext {
     public void createConfig(String configFileName, String configOpenApi) {
         String title = "Open API Config";
 
-        // TODO: Module 0 is wrong. The module should be selectable from the Dialog.
-        Module[] modules = ModuleManager.getInstance(project).getModules();
-        Module module = modules[0];
+        Module module = getImportModule();
 
         Optional<String> configsFolder = PluginModuleUtils.getConfigsDirectory(module);
         configsFolder.ifPresent(configsFolder1 -> WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -135,5 +128,9 @@ public class OpenApiImporterContext {
             }
         }
         return Optional.empty();
+    }
+
+    private Module getImportModule() {
+        return ModuleManager.getInstance(project).findModuleByName(importModuleName);
     }
 }
