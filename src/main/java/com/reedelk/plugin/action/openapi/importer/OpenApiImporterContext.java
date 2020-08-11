@@ -19,6 +19,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static com.reedelk.plugin.action.openapi.OpenApiUtils.SchemaFormat;
+
 public class OpenApiImporterContext {
 
     private final String openApiFilePath;

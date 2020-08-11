@@ -10,17 +10,17 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
-class CustomOpenApiObjectSerializer extends AbstractSerializer<CustomOpenApiObject> {
+class ConfigOpenApiObjectSerializer extends AbstractSerializer<ConfigOpenApiObject> {
 
     @Override
-    public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, CustomOpenApiObject customOpenApiObject) {
+    public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ConfigOpenApiObject configOpenApiObject) {
         Map<String, Object> map = new LinkedHashMap<>();
 
 
-        Map<String, Object> serializedInfo = serializerContext.serialize(navigationPath, customOpenApiObject.getInfo());
+        Map<String, Object> serializedInfo = serializerContext.serialize(navigationPath, configOpenApiObject.getInfo());
         set(map, "info", serializedInfo); // REQUIRED
 
-        List<Map<String, Object>> mappedServers = customOpenApiObject
+        List<Map<String, Object>> mappedServers = configOpenApiObject
                 .getServers()
                 .stream()
                 .map(serverObject ->
@@ -28,7 +28,7 @@ class CustomOpenApiObjectSerializer extends AbstractSerializer<CustomOpenApiObje
                 .collect(toList());
         map.put("servers", mappedServers);
 
-        Map<String, Object> serializedComponents = serializerContext.serialize(navigationPath, customOpenApiObject.getComponents());
+        Map<String, Object> serializedComponents = serializerContext.serialize(navigationPath, configOpenApiObject.getComponents());
         set(map, "components", serializedComponents);
 
         return map;

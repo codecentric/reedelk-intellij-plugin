@@ -3,11 +3,10 @@ package com.reedelk.plugin.action.openapi.importer;
 import com.reedelk.openapi.OpenApi;
 import com.reedelk.openapi.v3.model.OpenApiObject;
 import com.reedelk.openapi.v3.model.PathsObject;
+import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.action.openapi.importer.handler.Handlers;
-import com.reedelk.plugin.action.openapi.serializer.CustomOpenApiObject;
+import com.reedelk.plugin.action.openapi.serializer.ConfigOpenApiObject;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
-import com.reedelk.runtime.api.commons.StringUtils;
-import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -28,16 +27,14 @@ public class OpenApiImporter {
         // Deserialize the content into the OpenAPI Model
         OpenApiObject openApiObject = OpenApi.from(content);
 
+
         // Generate listener config
-        String openApiTitle = openApiObject.getInfo() != null ?
-                openApiObject.getInfo().getTitle() : StringUtils.EMPTY; // TODO: Normalize the title
+        String openApiConfigFileName = OpenApiUtils.configFileNameOf(openApiObject);
+        ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
+        String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
+        context.createConfig(openApiConfigFileName, configOpenApiObjectJson);
 
-        CustomOpenApiObject customOpenApiObject = new CustomOpenApiObject(openApiObject);
-
-        String configOpenApi = Serializer.toJson(customOpenApiObject, context);
-        context.createConfig(openApiTitle + "." + FileExtension.CONFIG.value(), configOpenApi);
-
-        // Generate rest flows from paths
+        // Generate REST flows from paths
         PathsObject paths = openApiObject.getPaths();
         paths.getPaths().forEach((pathEntry, pathItem) ->
                 Handlers.handle(context, pathEntry, pathItem));

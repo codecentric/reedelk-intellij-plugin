@@ -28,7 +28,7 @@ public class Serializer {
         serializerMap.put(ParameterObject.class, new ParameterObjectSerializer(context));
         serializerMap.put(HeaderObject.class, new HeaderObjectSerializer(context));
         serializerMap.put(RequestBodyObject.class, new RequestBodyObjectSerializer(context));
-        serializerMap.put(CustomOpenApiObjectSerializer.CustomOpenApiObject.class, new CustomOpenApiObjectSerializer());
+        serializerMap.put(ConfigOpenApiObject.class, new ConfigOpenApiObjectSerializer());
         serializerMap.put(ComponentsObject.class, new ComponentsObjectSerializer(context));
         return serializerMap;
     }
