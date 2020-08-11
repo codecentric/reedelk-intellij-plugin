@@ -83,7 +83,7 @@ public class Template {
         FLOW_CONFIG("OpenAPIConfig.fconfig"),
         FLOW_WITH_REST_LISTENER("OpenAPI.flow"),
         EXAMPLE("OpenAPIExample.txt"),
-        SCHEMA("OpenAPISchema.txt");
+        ASSET("OpenAPIAsset.txt");
 
         private final String templateName;
 

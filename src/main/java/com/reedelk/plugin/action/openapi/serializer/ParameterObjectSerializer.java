@@ -8,7 +8,6 @@ import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
-import java.util.Properties;
 
 class ParameterObjectSerializer extends com.reedelk.openapi.v3.serializer.ParameterObjectSerializer {
 
@@ -22,13 +21,11 @@ class ParameterObjectSerializer extends com.reedelk.openapi.v3.serializer.Parame
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ParameterObject input) {
         Map<String, Object> serialize = super.serialize(serializerContext, navigationPath, input);
         if (input.getSchema() != null) {
-            Properties properties = new Properties();
-            properties.put("schema", new Yaml().dump(input.getSchema().getSchemaData()));  // TODO: Might be JSON instead of YAML
+            String data = new Yaml().dump(input.getSchema().getSchemaData()); // TODO: Might be JSON instead of YAML
 
             String finalFileName = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);
-            String schemaAssetPath = context.createSchema(finalFileName, properties);
+            String schemaAssetPath = context.createAsset(finalFileName, data);
             serialize.put("schema", schemaAssetPath);
-
         }
         return serialize;
     }

@@ -49,7 +49,7 @@ public class OpenApiImporterContext {
         return configId;
     }
 
-    public Optional<String> createSchema(String schemaId, SchemaObject schemaObject, SchemaFormat schemaFormat) {
+    public Optional<String> createAsset(String schemaId, SchemaObject schemaObject, SchemaFormat schemaFormat) {
         if (schemaObject.getSchema() != null) {
             Map<String, Object> schemaData = schemaObject.getSchema().getSchemaData();
             Properties properties = new Properties();
@@ -69,7 +69,7 @@ public class OpenApiImporterContext {
             Optional<String> flowsDirectory = PluginModuleUtils.getAssetsDirectory(module);
             flowsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
                 VirtualFile flowsFolderVf = VfsUtil.findFile(Paths.get(directory), true);
-                Template.OpenAPI.SCHEMA.create(project, properties, flowsFolderVf, finalFileName)
+                Template.OpenAPI.ASSET.create(project, properties, flowsFolderVf, finalFileName)
                         .ifPresent(virtualFile -> FileEditorManager.getInstance(project)
                                 .openFile(virtualFile, false));
             }));
@@ -79,13 +79,16 @@ public class OpenApiImporterContext {
         return Optional.empty();
     }
 
-    public String createSchema(String fileName, Properties properties) {
+    public String createAsset(String fileName, String data) {
         Module module = getImportModule();
+
+        Properties properties = new Properties();
+        properties.put("data", data);
 
         Optional<String> assetsDirectory = PluginModuleUtils.getAssetsDirectory(module);
         assetsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
             VirtualFile assetsDirectoryVf = VfsUtil.findFile(Paths.get(directory), true);
-            Template.OpenAPI.SCHEMA.create(project, properties, assetsDirectoryVf, fileName);
+            Template.OpenAPI.ASSET.create(project, properties, assetsDirectoryVf, fileName);
         }));
 
         return  "assets/" + fileName;

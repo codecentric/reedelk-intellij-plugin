@@ -30,6 +30,14 @@ public class OpenApiUtils {
     }
 
     @NotNull
+    public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
+        // TODO: Complete me.
+        return "example.yaml";
+    }
+
+
+
+    @NotNull
     public static String schemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         List<NavigationPath.PathSegment> pathList = navigationPath.getPathList();
 
@@ -138,6 +146,44 @@ public class OpenApiUtils {
         String parameterName = segmentKeyValue.get(NavigationPath.SegmentKey.PARAMETER_NAME);
         fileName.append("parameter").append("_")
                 .append(parameterName).append(".")
+                .append("schema").append(".")
+                .append(context.getSchemaFormat().getExtension());
+
+        return fileName.toString().replace('/', '_');
+    }
+
+    @NotNull
+    public static String headerFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
+        List<NavigationPath.PathSegment> pathList = navigationPath.getPathList();
+
+        Map<NavigationPath.SegmentKey,String> segmentKeyValue = new HashMap<>();
+
+        pathList.forEach(pathSegment ->
+                segmentKeyValue.put(pathSegment.getSegmentKey(), pathSegment.getSegmentValue()));
+
+        String operationId = segmentKeyValue.get(NavigationPath.SegmentKey.OPERATION_ID);
+        StringBuilder fileName = new StringBuilder();
+
+        // operationId + 'response' + statusCode + contentType.schema.[json|yaml]
+        // or
+        // method + path + 'response' + statusCode + contentType.schema.[json|yaml]
+        //[paths, /pet/{petId} (path), GET (method), getPetById (operationId), responses, 200 (statusCode), content, application/xml (contentType), schema]
+
+        if (StringUtils.isNotBlank(operationId)) {
+            fileName.append(operationId).append("_");
+
+        } else {
+            String method = segmentKeyValue.get(NavigationPath.SegmentKey.METHOD);
+            String path = segmentKeyValue.get(NavigationPath.SegmentKey.PATH);
+            fileName = new StringBuilder()
+                    .append(method).append("_")
+                    .append(path).append("_");
+
+        }
+
+        String headerName = segmentKeyValue.get(NavigationPath.SegmentKey.HEADER_NAME);
+        fileName.append("header").append("_")
+                .append(headerName).append(".")
                 .append("schema").append(".")
                 .append(context.getSchemaFormat().getExtension());
 

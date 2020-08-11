@@ -36,7 +36,7 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
             // For each schema we must create a file and assign an ID.
             Schema schema = schemaObject.getSchema();
             if (schema.getSchemaData() != null) {
-                context.createSchema(schemaId, schemaObject, context.getSchemaFormat()).ifPresent(schemaPath -> {
+                context.createAsset(schemaId, schemaObject, context.getSchemaFormat()).ifPresent(schemaPath -> {
                     context.register(schemaId, schemaPath);
                     Map<String, Object> schemasMap1 = new LinkedHashMap<>();
                     schemasMap1.put("schema", schemaPath);

@@ -3,6 +3,7 @@ package com.reedelk.plugin.action.openapi.serializer;
 import com.reedelk.openapi.Serializer;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
+import com.reedelk.openapi.v3.model.Example;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
@@ -14,7 +15,6 @@ import org.yaml.snakeyaml.Yaml;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 
 class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
 
@@ -26,14 +26,18 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
 
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, MediaTypeObject mediaTypeObject) {
-        // TODO: Example: should create a file in the assets and add the reference in the serialized object.
-        // TODO: Add custom example object serializer.
-        //Example example = mediaTypeObject.getExample();
+        Example example = mediaTypeObject.getExample();
+        if (example != null) {
+            // We must create an example asset.
+            String finalFileName = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
+
+            String exampleAssetPath = context.createAsset(finalFileName, example.data());
+            return ImmutableMap.of("example", exampleAssetPath);
+        }
+
 
         // Replace all schemas with reference object to the Resource Text.
-        // Example?
         Schema schema = mediaTypeObject.getSchema();
-
         if (schema != null) {
             // It is a schema reference
             if (StringUtils.isNotBlank(schema.getSchemaId())) {
@@ -47,9 +51,8 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
                 // We must create a schema asset.
                 String finalFileName = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
 
-                Properties properties = new Properties();
-                properties.put("schema", new Yaml().dump(schema.getSchemaData())); // TODO: Might be JSON instead of YAML
-                String schemaAssetPath = context.createSchema(finalFileName, properties);
+                String data = new Yaml().dump(schema.getSchemaData()); // TODO: Might be JSON instead of YAML
+                String schemaAssetPath = context.createAsset(finalFileName, data);
                 return ImmutableMap.of("schema", schemaAssetPath);
             }
         }
