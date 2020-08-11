@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class ParameterObjectSerializer extends com.reedelk.openapi.v3.serializer.ParameterObjectSerializer {
+class ParameterObjectSerializer extends com.reedelk.openapi.v3.serializer.ParameterObjectSerializer {
 
     private final OpenApiImporterContext context;
 

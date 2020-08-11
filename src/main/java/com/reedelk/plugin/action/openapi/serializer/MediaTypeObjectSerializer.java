@@ -13,7 +13,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
 
-public class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
+class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
 
     private final OpenApiImporterContext context;
 

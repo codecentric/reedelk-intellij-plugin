@@ -11,7 +11,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> {
+class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> {
 
     private final OpenApiImporterContext context;
 

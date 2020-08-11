@@ -1,18 +1,13 @@
 package com.reedelk.plugin.action.openapi.importer.handler;
 
-import com.reedelk.openapi.OpenApi;
-import com.reedelk.openapi.Serializer;
 import com.reedelk.openapi.commons.NavigationPath;
-import com.reedelk.openapi.v3.model.*;
+import com.reedelk.openapi.v3.model.OperationObject;
+import com.reedelk.openapi.v3.model.RestMethod;
 import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
-import com.reedelk.plugin.action.openapi.serializer.HeaderObjectSerializer;
-import com.reedelk.plugin.action.openapi.serializer.MediaTypeObjectSerializer;
-import com.reedelk.plugin.action.openapi.serializer.ParameterObjectSerializer;
-import com.reedelk.plugin.action.openapi.serializer.RequestBodyObjectSerializer;
+import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -34,7 +29,7 @@ abstract class AbstractHandler implements Handler {
         // TODO: Path entry as well in the navigation path
         NavigationPath navigationPath = NavigationPath.create().with(NavigationPath.SegmentKey.OPERATION_ID, operationId);
 
-        String openApiOperation = OpenApi.toJson(operation, serializers(context), navigationPath);
+        String openApiOperation = Serializer.toJson(operation, context, navigationPath);
 
         Properties properties =
                 new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
@@ -63,14 +58,5 @@ abstract class AbstractHandler implements Handler {
             put("restMethod", restMethod);
             put("openApiOperationObject", openApiOperationObject);
         }
-    }
-
-    private Map<Class<?>, Serializer<?>> serializers(OpenApiImporterContext context) {
-        Map<Class<?>, Serializer<?>> serializerMap = new HashMap<>();
-        serializerMap.put(MediaTypeObject.class, new MediaTypeObjectSerializer(context));
-        serializerMap.put(ParameterObject.class, new ParameterObjectSerializer(context));
-        serializerMap.put(HeaderObject.class, new HeaderObjectSerializer(context));
-        serializerMap.put(RequestBodyObject.class, new RequestBodyObjectSerializer(context));
-        return serializerMap;
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class HeaderObjectSerializer extends com.reedelk.openapi.v3.serializer.HeaderObjectSerializer {
+class HeaderObjectSerializer extends com.reedelk.openapi.v3.serializer.HeaderObjectSerializer {
 
     private final OpenApiImporterContext context;
 

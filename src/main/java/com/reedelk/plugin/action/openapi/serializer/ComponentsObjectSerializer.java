@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
+class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
 
     private final OpenApiImporterContext context;
 
