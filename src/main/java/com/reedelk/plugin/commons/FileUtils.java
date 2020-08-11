@@ -4,8 +4,11 @@ import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.runtime.commons.FileExtension;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.Scanner;
 
 import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -34,5 +37,11 @@ public class FileUtils {
         return fileName.endsWith("." + extension.value()) ?
                 fileName :
                 fileName + "." + extension.value();
+    }
+
+    public static String readFileToString(String filePath) throws IOException {
+        try (Scanner scanner = new Scanner(Paths.get(filePath), StandardCharsets.UTF_8.name())) {
+            return scanner.useDelimiter("\\A").next();
+        }
     }
 }
