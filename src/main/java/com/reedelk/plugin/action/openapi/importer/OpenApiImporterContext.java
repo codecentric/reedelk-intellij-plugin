@@ -7,6 +7,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.template.ConfigProperties;
@@ -23,6 +24,7 @@ public class OpenApiImporterContext {
     private final String openApiFilePath;
     private final String importModuleName;
     private Map<String,String> schemaIdAndPath = new HashMap<>();
+    private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
 
@@ -118,6 +120,14 @@ public class OpenApiImporterContext {
 
     public void register(String schemaId, String schemaAssetPath) {
         schemaIdAndPath.put(schemaId, schemaAssetPath);
+    }
+
+    public void registerRequestBody(String requestBodyId, RequestBodyObject requestBodyMediaType) {
+        this.requestBodyIdAndData.put(requestBodyId, requestBodyMediaType);
+    }
+
+    public RequestBodyObject getRequestBodyById(String requestBodyId) {
+        return this.requestBodyIdAndData.get(requestBodyId);
     }
 
     public Optional<String> assetFrom(String $ref) {

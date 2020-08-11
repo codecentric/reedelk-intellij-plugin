@@ -37,6 +37,7 @@ public class OpenApiImporter {
 
         CustomOpenApiObject customOpenApiObject = new CustomOpenApiObject(openApiObject);
 
+        // TODO: Collect all the places where we do this and create a unique entry point to toJson.
         String configOpenApi = OpenApi.toJson(customOpenApiObject,
                 of(CustomOpenApiObject.class, new CustomOpenApiObjectSerializer(),
                         ComponentsObject.class, new ComponentsObjectSerializer(context)));

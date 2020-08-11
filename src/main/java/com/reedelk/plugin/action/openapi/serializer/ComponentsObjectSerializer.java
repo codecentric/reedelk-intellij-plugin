@@ -4,6 +4,7 @@ import com.reedelk.openapi.Serializer;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.ComponentsObject;
+import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
@@ -22,11 +23,14 @@ public class ComponentsObjectSerializer implements Serializer<ComponentsObject> 
 
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ComponentsObject componentsObject) {
-        // TODO: Response objects?
         Map<String, Object> map = new LinkedHashMap<>();
+
+        // Request bodies are not serialized here.
+        Map<String, RequestBodyObject> requestBodies = componentsObject.getRequestBodies();
+        requestBodies.forEach(context::registerRequestBody);
+
+
         Map<String, Object> schemasMap = new LinkedHashMap<>();
-
-
         Map<String, SchemaObject> schemas = componentsObject.getSchemas();
         schemas.forEach(new BiConsumer<String, SchemaObject>() {
             @Override
