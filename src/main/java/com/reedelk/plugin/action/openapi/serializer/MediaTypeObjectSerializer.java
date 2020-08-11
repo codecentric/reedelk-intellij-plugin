@@ -91,7 +91,8 @@ public class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
 
-            return fileName.toString().replace('/', '_');
+
+            return normalizeFileName(fileName.toString());
 
         } else {
             // It is a response.
@@ -124,7 +125,11 @@ public class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
 
-            return fileName.toString().replace('/', '_');
+            return normalizeFileName(fileName.toString());
         }
+    }
+
+    private static String normalizeFileName(String originalName) {
+        return originalName.replace('/', '_');
     }
 }

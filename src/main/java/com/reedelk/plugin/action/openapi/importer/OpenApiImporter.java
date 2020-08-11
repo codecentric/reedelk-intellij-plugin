@@ -33,7 +33,7 @@ public class OpenApiImporter {
 
         // Generate listener config
         String openApiTitle = openApiObject.getInfo() != null ?
-                openApiObject.getInfo().getTitle() : StringUtils.EMPTY;
+                openApiObject.getInfo().getTitle() : StringUtils.EMPTY; // TODO: Normalize the title
 
         CustomOpenApiObject customOpenApiObject = new CustomOpenApiObject(openApiObject);
 
