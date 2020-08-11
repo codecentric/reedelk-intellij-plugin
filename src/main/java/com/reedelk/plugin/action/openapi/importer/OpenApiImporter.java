@@ -41,7 +41,7 @@ public class OpenApiImporter {
         String configOpenApi = OpenApi.toJson(customOpenApiObject,
                 of(CustomOpenApiObject.class, new CustomOpenApiObjectSerializer(),
                         ComponentsObject.class, new ComponentsObjectSerializer(context)));
-        context.createConfig(openApiTitle + "." + FileExtension.CONFIG, configOpenApi);
+        context.createConfig(openApiTitle + "." + FileExtension.CONFIG.value(), configOpenApi);
 
         // Generate rest flows from paths
         PathsObject paths = openApiObject.getPaths();
