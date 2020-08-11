@@ -64,6 +64,8 @@ public class HelpTab extends DisposableScrollPane {
 
                     setViewportView(editorPane);
 
+                    HelpTab.this.repaint();
+
                     loaded = true;
                 });
             }
