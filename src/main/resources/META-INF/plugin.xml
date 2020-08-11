@@ -13,6 +13,7 @@
     <change-notes><![CDATA[
 	    <ul>
 	        <li>Feature: added OpenAPI import tool generating REST flows skeleton starting from JSON or YAML OpenAPI specifications.</li>
+	        <li>Bugfix: Help Tab for components did not properly render.</li>
         </ul>
       ]]>
     </change-notes>
