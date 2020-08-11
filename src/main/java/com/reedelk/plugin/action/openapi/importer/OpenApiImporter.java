@@ -8,6 +8,7 @@ import com.reedelk.plugin.action.openapi.importer.handler.Handlers;
 import com.reedelk.plugin.action.openapi.serializer.ComponentsObjectSerializer;
 import com.reedelk.plugin.action.openapi.serializer.CustomOpenApiObjectSerializer;
 import com.reedelk.runtime.api.commons.StringUtils;
+import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -39,11 +40,12 @@ public class OpenApiImporter {
         String configOpenApi = OpenApi.toJson(customOpenApiObject,
                 of(CustomOpenApiObject.class, new CustomOpenApiObjectSerializer(),
                         ComponentsObject.class, new ComponentsObjectSerializer(context)));
-        context.createConfig(openApiTitle + ".fconfig", configOpenApi);
+        context.createConfig(openApiTitle + "." + FileExtension.CONFIG, configOpenApi);
 
         // Generate rest flows from paths
         PathsObject paths = openApiObject.getPaths();
-        paths.getPaths().forEach((pathEntry, pathItem) -> Handlers.handle(context, pathEntry, pathItem));
+        paths.getPaths().forEach((pathEntry, pathItem) ->
+                Handlers.handle(context, pathEntry, pathItem));
     }
 
     private String readOpenApiFile() throws OpenApiException {
