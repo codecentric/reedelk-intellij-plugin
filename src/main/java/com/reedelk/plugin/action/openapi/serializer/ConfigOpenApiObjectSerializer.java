@@ -33,5 +33,4 @@ class ConfigOpenApiObjectSerializer extends AbstractSerializer<ConfigOpenApiObje
 
         return map;
     }
-
 }
