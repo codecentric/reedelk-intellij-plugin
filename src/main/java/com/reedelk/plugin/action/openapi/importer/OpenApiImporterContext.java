@@ -23,19 +23,16 @@ public class OpenApiImporterContext {
 
     private final String openApiFilePath;
     private final String importModuleName;
-    private Map<String,String> schemaIdAndPath = new HashMap<>();
-    private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
+
+    private Map<String,String> schemaIdAndPath = new HashMap<>();
+    private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
 
     public OpenApiImporterContext(@NotNull Project project, String openAPIFilePath, String importModuleName) {
         this.project = project;
         this.openApiFilePath = openAPIFilePath;
         this.importModuleName = importModuleName;
-    }
-
-    public String getImportModuleName() {
-        return importModuleName;
     }
 
     public String getOpenApiFilePath() {
