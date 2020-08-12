@@ -55,11 +55,11 @@ public class OpenApiImporterContext {
             Properties properties = new Properties();
 
             if (SchemaFormat.JSON.equals(schemaFormat)) {
-                properties.put("schema", new JSONObject(schemaData).toString(2));
+                properties.put("data", new JSONObject(schemaData).toString(2));
             }
 
             if (SchemaFormat.YAML.equals(schemaFormat)) {
-                properties.put("schema", new Yaml().dump(schemaData));
+                properties.put("data", new Yaml().dump(schemaData));
             }
 
 

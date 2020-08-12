@@ -8,7 +8,6 @@ import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
-import com.reedelk.runtime.api.commons.ImmutableMap;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
@@ -26,13 +25,15 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
 
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, MediaTypeObject mediaTypeObject) {
+        Map<String,Object> dataMap = new LinkedHashMap<>();
+
         Example example = mediaTypeObject.getExample();
         if (example != null) {
             // We must create an example asset.
             String finalFileName = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
 
             String exampleAssetPath = context.createAsset(finalFileName, example.data());
-            return ImmutableMap.of("example", exampleAssetPath);
+            dataMap.put("example", exampleAssetPath);
         }
 
 
@@ -42,9 +43,7 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
             // It is a schema reference
             if (StringUtils.isNotBlank(schema.getSchemaId())) {
                 Optional<String> schemaAsset = context.assetFrom(schema.getSchemaId());
-                if (schemaAsset.isPresent()) {
-                    return ImmutableMap.of("schema", schemaAsset.get());
-                }
+                schemaAsset.ifPresent(schemaAssetPath -> dataMap.put("schema", schemaAssetPath));
 
 
             } else if (schema.getSchemaData() != null){
@@ -53,9 +52,10 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
 
                 String data = new Yaml().dump(schema.getSchemaData()); // TODO: Might be JSON instead of YAML
                 String schemaAssetPath = context.createAsset(finalFileName, data);
-                return ImmutableMap.of("schema", schemaAssetPath);
+                dataMap.put("schema", schemaAssetPath);
             }
         }
-        return new LinkedHashMap<>();
+
+        return dataMap;
     }
 }
