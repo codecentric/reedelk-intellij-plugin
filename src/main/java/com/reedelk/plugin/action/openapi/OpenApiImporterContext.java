@@ -31,12 +31,14 @@ public class OpenApiImporterContext {
     private final String targetDirectory;
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
+    private final String apiFileUrl;
 
     private Map<String,String> schemaIdAndPath = new HashMap<>();
     private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
 
-    public OpenApiImporterContext(@NotNull Project project, String openAPIFilePath, String importModuleName, String targetDirectory) {
+    public OpenApiImporterContext(@NotNull Project project, String openAPIFilePath, String importModuleName, String targetDirectory, String apiFileUrl) {
         this.project = project;
+        this.apiFileUrl = apiFileUrl;
         this.targetDirectory = targetDirectory;
         this.openApiFilePath = openAPIFilePath;
         this.importModuleName = importModuleName;
@@ -44,6 +46,10 @@ public class OpenApiImporterContext {
 
     public String getOpenApiFilePath() {
         return openApiFilePath;
+    }
+
+    public String getApiFileUrl() {
+        return apiFileUrl;
     }
 
     public OpenApiSchemaFormat getSchemaFormat() {

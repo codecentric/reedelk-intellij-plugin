@@ -20,21 +20,23 @@ public class OpenApiActionImport extends AnAction {
         Project currentProject = event.getProject();
         if (currentProject == null) return;
 
-        OpenApiDialogSelectFile dialog = new OpenApiDialogSelectFile(currentProject);
+        OpenApiImportDialog dialog = new OpenApiImportDialog(currentProject);
         if (dialog.showAndGet()) {
             doImport(currentProject, dialog);
         }
     }
 
-    private void doImport(Project currentProject, OpenApiDialogSelectFile dialog) {
+    private void doImport(Project currentProject, OpenApiImportDialog dialog) {
         String openAPIFilePath = dialog.getOpenAPIFilePath();
         String importModule = dialog.getImportModule();
         String targetDirectory = dialog.getTargetDirectory();
-        OpenApiImporterContext context = new OpenApiImporterContext(currentProject, openAPIFilePath, importModule, targetDirectory);
+        String urlField = dialog.getUrlField();
+        OpenApiImporterContext context = new OpenApiImporterContext(currentProject, openAPIFilePath, importModule, targetDirectory, urlField);
         OpenApiImporter importer = new OpenApiImporter(context);
         try {
             importer.processImport();
         } catch (Exception exception) {
+            exception.printStackTrace();
             ErrorDialogImport errorDialogImport = new ErrorDialogImport(currentProject);
             errorDialogImport.showAndGet();
         }

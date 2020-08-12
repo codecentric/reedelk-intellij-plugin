@@ -23,14 +23,15 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 
 
-public class OpenApiDialogSelectFile extends DialogWrapper {
+public class OpenApiImportDialog extends DialogWrapper {
 
     private final Project project;
     private StringInputField targetDirectory;
+    private StringInputField urlField;
     private JComboBox<String> modulesCombo;
     private final PropertyAccessorInMemory propertyAccessorInMemory = new PropertyAccessorInMemory();
 
-    protected OpenApiDialogSelectFile(@Nullable Project project) {
+    protected OpenApiImportDialog(@Nullable Project project) {
         super(project);
         this.project = project;
         setTitle(message("openapi.importer.dialog.title"));
@@ -54,6 +55,9 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
                         EMPTY,
                         propertyAccessorInMemory);
 
+        // Input Field
+        urlField = new StringInputField("https://example.com/api/openapi.yaml");
+
         // Modules chooser
         Module[] modules = ModuleManager.getInstance(project).getModules();
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
@@ -68,6 +72,7 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
         DisposablePanel panel = new DisposablePanel(new GridBagLayout());
         FormBuilder.get().addLastField(label, panel);
         FormBuilder.get().addLabel(message("openapi.importer.select.openapi.file.tile"), panel).addLastField(chooseFileInputField, panel);
+        FormBuilder.get().addLabel(message("openapi.importer.select.openapi.url"), panel).addLastField(urlField, panel);
         FormBuilder.get().addLabel(message("openapi.importer.select.module"), panel).addLastField(modulesCombo, panel);
         FormBuilder.get().addLabel(message("openapi.importer.target.directory"), panel).addLastField(targetDirectory, panel);
         return panel;
@@ -83,6 +88,10 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
 
     public String getTargetDirectory() {
         return (String) targetDirectory.getValue();
+    }
+
+    public String getUrlField() {
+        return (String) urlField.getValue();
     }
 
     static class PropertyAccessorInMemory implements PropertyAccessor {

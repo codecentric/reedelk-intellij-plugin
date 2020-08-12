@@ -10,6 +10,7 @@ import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.service.module.impl.http.HttpResponse;
 import com.reedelk.plugin.service.module.impl.http.HttpService;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -44,11 +45,10 @@ public class OpenApiImporter {
     }
 
     private String read() throws OpenApiException {
-        if (context.getOpenApiFilePath().startsWith("http://") ||
-        context.getOpenApiFilePath().startsWith("https://")) {
-            return new RemoteFileReader().read(context.getOpenApiFilePath());
-        } else {
+        if (StringUtils.isNotBlank(context.getOpenApiFilePath())) {
             return new FileSystemFileReader().read(context.getOpenApiFilePath());
+        } else {
+            return new RemoteFileReader().read(context.getApiFileUrl());
         }
     }
 
