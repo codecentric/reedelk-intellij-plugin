@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.openapi.importer.handler;
+package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.v3.model.OperationObject;
 import com.reedelk.openapi.v3.model.RestMethod;

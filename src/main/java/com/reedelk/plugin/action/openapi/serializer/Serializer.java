@@ -4,7 +4,7 @@ import com.reedelk.openapi.OpenApi;
 import com.reedelk.openapi.OpenApiModel;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.*;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 
 import java.util.HashMap;
 import java.util.Map;

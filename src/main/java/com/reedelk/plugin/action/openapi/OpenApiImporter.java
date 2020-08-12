@@ -1,10 +1,9 @@
-package com.reedelk.plugin.action.openapi.importer;
+package com.reedelk.plugin.action.openapi;
 
 import com.reedelk.openapi.OpenApi;
 import com.reedelk.openapi.v3.model.OpenApiObject;
 import com.reedelk.openapi.v3.model.PathsObject;
-import com.reedelk.plugin.action.openapi.OpenApiUtils;
-import com.reedelk.plugin.action.openapi.importer.handler.Handlers;
+import com.reedelk.plugin.action.openapi.handler.Handlers;
 import com.reedelk.plugin.action.openapi.serializer.ConfigOpenApiObject;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import org.jetbrains.annotations.NotNull;

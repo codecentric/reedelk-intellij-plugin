@@ -1,9 +1,9 @@
-package com.reedelk.plugin.action.openapi.importer.handler;
+package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.OperationObject;
 import com.reedelk.openapi.v3.model.RestMethod;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-abstract class AbstractHandler implements Handler {
+abstract class AbstractHandler implements Handler1 {
 
     @Override
     public void accept(OpenApiImporterContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {

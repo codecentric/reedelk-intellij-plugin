@@ -1,24 +1,24 @@
-package com.reedelk.plugin.action.openapi.importer.handler;
+package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.v3.model.OperationObject;
 import com.reedelk.openapi.v3.model.RestMethod;
 
 import java.util.Map;
 
-public class DELETEHandler extends AbstractHandler {
+public class HEADHandler extends AbstractHandler {
 
     @Override
     String getHttpMethod() {
-        return RestMethod.DELETE.name();
+        return RestMethod.HEAD.name();
     }
 
     @Override
     OperationObject getOperation(Map<RestMethod, OperationObject> pathDefinition) {
-        return pathDefinition.get(RestMethod.DELETE);
+        return pathDefinition.get(RestMethod.HEAD);
     }
 
     @Override
     public boolean isApplicable(Map<RestMethod, OperationObject> pathDefinition) {
-        return pathDefinition.containsKey(RestMethod.DELETE);
+        return pathDefinition.containsKey(RestMethod.HEAD);
     }
 }

@@ -6,8 +6,8 @@ import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.Example;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 

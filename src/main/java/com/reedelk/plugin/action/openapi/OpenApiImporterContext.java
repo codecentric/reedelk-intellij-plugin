@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.openapi.importer;
+package com.reedelk.plugin.action.openapi;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -9,7 +9,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.SchemaObject;
-import com.reedelk.plugin.action.openapi.OpenApiSchemaFormat;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.template.ConfigProperties;
 import com.reedelk.plugin.template.Template;

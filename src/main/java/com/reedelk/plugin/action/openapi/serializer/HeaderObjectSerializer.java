@@ -3,8 +3,8 @@ package com.reedelk.plugin.action.openapi.serializer;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.HeaderObject;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;

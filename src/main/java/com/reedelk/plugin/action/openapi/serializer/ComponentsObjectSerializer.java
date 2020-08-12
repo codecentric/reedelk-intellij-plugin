@@ -7,7 +7,7 @@ import com.reedelk.openapi.v3.model.ComponentsObject;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

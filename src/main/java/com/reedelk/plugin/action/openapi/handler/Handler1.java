@@ -1,12 +1,12 @@
-package com.reedelk.plugin.action.openapi.importer.handler;
+package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.v3.model.OperationObject;
 import com.reedelk.openapi.v3.model.RestMethod;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 
 import java.util.Map;
 
-public interface Handler {
+public interface Handler1 {
 
     boolean isApplicable(Map<RestMethod, OperationObject> pathDefinition);
 

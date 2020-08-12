@@ -5,7 +5,7 @@ import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.LinkedHashMap;

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.openapi.importer;
+package com.reedelk.plugin.action.openapi;
 
 import java.io.IOException;
 

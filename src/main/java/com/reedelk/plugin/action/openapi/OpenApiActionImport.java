@@ -3,9 +3,6 @@ package com.reedelk.plugin.action.openapi;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.reedelk.plugin.action.openapi.importer.OpenApiException;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporter;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import org.jetbrains.annotations.NotNull;
 
 public class OpenApiActionImport extends AnAction {

@@ -2,7 +2,6 @@ package com.reedelk.plugin.action.openapi;
 
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.OpenApiObject;
-import com.reedelk.plugin.action.openapi.importer.OpenApiImporterContext;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
