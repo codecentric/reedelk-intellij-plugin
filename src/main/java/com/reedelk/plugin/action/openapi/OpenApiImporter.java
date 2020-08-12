@@ -69,6 +69,7 @@ public class OpenApiImporter {
 
     static class RemoteFileReader implements FileReader {
 
+        // TODO: Better error handling.
         @Override
         public String read(String openApiResource) throws OpenApiException {
             HttpService service = ServiceManager.getService(HttpService.class);
