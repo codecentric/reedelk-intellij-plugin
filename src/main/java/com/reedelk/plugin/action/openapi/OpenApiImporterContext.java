@@ -12,12 +12,15 @@ import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.template.ConfigProperties;
 import com.reedelk.plugin.template.Template;
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.ModuleProperties;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -25,14 +28,16 @@ public class OpenApiImporterContext {
 
     private final String openApiFilePath;
     private final String importModuleName;
+    private final String targetDirectory;
     private final Project project;
     private final String configId = UUID.randomUUID().toString();
 
     private Map<String,String> schemaIdAndPath = new HashMap<>();
     private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
 
-    public OpenApiImporterContext(@NotNull Project project, String openAPIFilePath, String importModuleName) {
+    public OpenApiImporterContext(@NotNull Project project, String openAPIFilePath, String importModuleName, String targetDirectory) {
         this.project = project;
+        this.targetDirectory = targetDirectory;
         this.openApiFilePath = openAPIFilePath;
         this.importModuleName = importModuleName;
     }
@@ -66,9 +71,16 @@ public class OpenApiImporterContext {
             Module module = getImportModule();
 
             String finalFileName = schemaId + "." + schemaFormat.getExtension();
-            Optional<String> flowsDirectory = PluginModuleUtils.getAssetsDirectory(module);
-            flowsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
-                VirtualFile flowsFolderVf = VfsUtil.findFile(Paths.get(directory), true);
+            Optional<String> assetsDirectory = PluginModuleUtils.getAssetsDirectory(module);
+            assetsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
+
+                Path targetDirectory = Paths.get(directory, this.targetDirectory);
+                try {
+                    VfsUtil.createDirectoryIfMissing(targetDirectory.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                VirtualFile flowsFolderVf = VfsUtil.findFile(targetDirectory, true);
                 Template.OpenAPI.ASSET.create(project, properties, flowsFolderVf, finalFileName)
                         .ifPresent(virtualFile -> FileEditorManager.getInstance(project)
                                 .openFile(virtualFile, false));
@@ -88,7 +100,15 @@ public class OpenApiImporterContext {
 
         Optional<String> assetsDirectory = PluginModuleUtils.getAssetsDirectory(module);
         assetsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
-            VirtualFile assetsDirectoryVf = VfsUtil.findFile(Paths.get(directory), true);
+
+            Path targetDirectory = Paths.get(directory, this.targetDirectory);
+            try {
+                VfsUtil.createDirectoryIfMissing(targetDirectory.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            VirtualFile assetsDirectoryVf = VfsUtil.findFile(targetDirectory, true);
             Template.OpenAPI.ASSET.create(project, properties, assetsDirectoryVf, fileName);
         }));
 
@@ -100,7 +120,15 @@ public class OpenApiImporterContext {
 
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory -> WriteCommandAction.runWriteCommandAction(project, () -> {
-            VirtualFile flowsFolderVf = VfsUtil.findFile(Paths.get(directory), true);
+
+            Path targetDirectory = Paths.get(directory, this.targetDirectory);
+            try {
+                VfsUtil.createDirectoryIfMissing(targetDirectory.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            VirtualFile flowsFolderVf = VfsUtil.findFile(targetDirectory, true);
             Template.OpenAPI.FLOW_WITH_REST_LISTENER.create(project, properties, flowsFolderVf, fileName)
                     .ifPresent(virtualFile -> FileEditorManager.getInstance(project)
                             .openFile(virtualFile, true));
@@ -121,8 +149,13 @@ public class OpenApiImporterContext {
         }));
     }
 
-    private static String assetResource(String fileName) {
-        return ModuleProperties.Assets.RESOURCE_DIRECTORY + File.separator + fileName;
+    private String assetResource(String fileName) {
+        if (StringUtils.isBlank(targetDirectory)) {
+            return ModuleProperties.Assets.RESOURCE_DIRECTORY + File.separator + fileName;
+        } else {
+            return ModuleProperties.Assets.RESOURCE_DIRECTORY +
+                    File.separator + targetDirectory + File.separator + fileName;
+        }
     }
 
     public void register(String schemaId, String schemaAssetPath) {

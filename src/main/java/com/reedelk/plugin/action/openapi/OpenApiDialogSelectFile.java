@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.commons.ChooseFileInputField;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
@@ -25,6 +26,7 @@ import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 public class OpenApiDialogSelectFile extends DialogWrapper {
 
     private final Project project;
+    private StringInputField targetDirectory;
     private JComboBox<String> modulesCombo;
     private final PropertyAccessorInMemory propertyAccessorInMemory = new PropertyAccessorInMemory();
 
@@ -42,6 +44,7 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
         // Text
         JBLabel label = new JBLabel();
         label.setText(message("openapi.importer.help"));
+        label.setBorder(JBUI.Borders.empty(5, 0));
 
         // File chooser
         ChooseFileInputField chooseFileInputField =
@@ -58,7 +61,8 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
         this.modulesCombo = new ComboBox<>(comboBoxModel);
 
         // Target directory
-        StringInputField targetDirectory = new StringInputField("myApi");
+        targetDirectory = new StringInputField("myApi");
+        targetDirectory.setValue("myApi");
 
         // Build the panel
         DisposablePanel panel = new DisposablePanel(new GridBagLayout());
@@ -72,8 +76,13 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
     String getImportModule() {
         return (String) modulesCombo.getSelectedItem();
     }
+
     String getOpenAPIFilePath() {
         return propertyAccessorInMemory.get();
+    }
+
+    public String getTargetDirectory() {
+        return (String) targetDirectory.getValue();
     }
 
     static class PropertyAccessorInMemory implements PropertyAccessor {
