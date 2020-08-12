@@ -52,8 +52,13 @@ public class OpenApiImporterContext {
         return apiFileUrl;
     }
 
+    // TODO: Can we rely on the extension for file url as well? perhaps the safest bet is to parse it.
     public OpenApiSchemaFormat getSchemaFormat() {
-        return OpenApiSchemaFormat.formatOf(openApiFilePath);
+        if (StringUtils.isNotBlank(openApiFilePath)) {
+            return OpenApiSchemaFormat.formatOf(openApiFilePath);
+        } else {
+            return OpenApiSchemaFormat.formatOf(apiFileUrl);
+        }
     }
 
     public String getConfigId() {
