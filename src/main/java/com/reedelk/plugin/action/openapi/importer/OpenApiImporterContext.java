@@ -9,6 +9,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.SchemaObject;
+import com.reedelk.plugin.action.openapi.OpenApiSchemaFormat;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.template.ConfigProperties;
 import com.reedelk.plugin.template.Template;
@@ -20,8 +21,6 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
-
-import static com.reedelk.plugin.action.openapi.OpenApiUtils.SchemaFormat;
 
 public class OpenApiImporterContext {
 
@@ -43,24 +42,24 @@ public class OpenApiImporterContext {
         return openApiFilePath;
     }
 
-    public SchemaFormat getSchemaFormat() {
-        return SchemaFormat.formatOf(openApiFilePath);
+    public OpenApiSchemaFormat getSchemaFormat() {
+        return OpenApiSchemaFormat.formatOf(openApiFilePath);
     }
 
     public String getConfigId() {
         return configId;
     }
 
-    public Optional<String> createAsset(String schemaId, SchemaObject schemaObject, SchemaFormat schemaFormat) {
+    public Optional<String> createAsset(String schemaId, SchemaObject schemaObject, OpenApiSchemaFormat schemaFormat) {
         if (schemaObject.getSchema() != null) {
             Map<String, Object> schemaData = schemaObject.getSchema().getSchemaData();
 
             Properties properties = new Properties();
-            if (SchemaFormat.JSON.equals(schemaFormat)) {
+            if (OpenApiSchemaFormat.JSON.equals(schemaFormat)) {
                 properties.put("data", new JSONObject(schemaData).toString(2));
             }
 
-            if (SchemaFormat.YAML.equals(schemaFormat)) {
+            if (OpenApiSchemaFormat.YAML.equals(schemaFormat)) {
                 properties.put("data", new Yaml().dump(schemaData));
             }
 

@@ -36,8 +36,6 @@ public class OpenApiUtils {
         return "example.yaml";
     }
 
-
-
     @NotNull
     public static String schemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         List<NavigationPath.PathSegment> pathList = navigationPath.getPathList();
@@ -195,28 +193,4 @@ public class OpenApiUtils {
         return originalName.replace('/', '_');
     }
 
-    public enum SchemaFormat {
-
-        YAML("yaml"),
-        JSON("json");
-
-        final String extension;
-
-        SchemaFormat(String extension) {
-            this.extension = extension;
-        }
-
-        public String getExtension() {
-            return extension;
-        }
-
-        public static SchemaFormat formatOf(String fileName) {
-            for (SchemaFormat schemaFormat : SchemaFormat.values()) {
-                if (fileName.toLowerCase().endsWith("." + schemaFormat.extension)) {
-                    return schemaFormat;
-                }
-            }
-            throw new IllegalArgumentException("Could not find schema format for file with name=[" + fileName + "]");
-        }
-    }
 }
