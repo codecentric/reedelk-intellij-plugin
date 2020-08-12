@@ -5,12 +5,13 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.editor.properties.commons.ChooseFileInputField;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.editor.properties.commons.StringInputField;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.graph.FlowSnapshot;
-import com.reedelk.plugin.message.ReedelkBundle;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -30,7 +31,7 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
     protected OpenApiDialogSelectFile(@Nullable Project project) {
         super(project);
         this.project = project;
-        setTitle(ReedelkBundle.message("openapi.importer.dialog.title"));
+        setTitle(message("openapi.importer.dialog.title"));
         setResizable(false);
         init();
     }
@@ -38,6 +39,10 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
+        // Text
+        JBLabel label = new JBLabel();
+        label.setText(message("openapi.importer.help"));
+
         // File chooser
         ChooseFileInputField chooseFileInputField =
                 new ChooseFileInputField(project,
@@ -52,10 +57,15 @@ public class OpenApiDialogSelectFile extends DialogWrapper {
         Arrays.stream(modules).forEach(module -> comboBoxModel.addElement(module.getName()));
         this.modulesCombo = new ComboBox<>(comboBoxModel);
 
+        // Target directory
+        StringInputField targetDirectory = new StringInputField("myApi");
+
         // Build the panel
         DisposablePanel panel = new DisposablePanel(new GridBagLayout());
+        FormBuilder.get().addLastField(label, panel);
         FormBuilder.get().addLabel(message("openapi.importer.select.openapi.file.tile"), panel).addLastField(chooseFileInputField, panel);
         FormBuilder.get().addLabel(message("openapi.importer.select.module"), panel).addLastField(modulesCombo, panel);
+        FormBuilder.get().addLabel(message("openapi.importer.target.directory"), panel).addLastField(targetDirectory, panel);
         return panel;
     }
 
