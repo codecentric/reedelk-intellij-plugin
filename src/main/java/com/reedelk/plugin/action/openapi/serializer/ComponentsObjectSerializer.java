@@ -38,14 +38,14 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
             if (schema.getSchemaData() != null) {
                 context.createAsset(schemaId, schemaObject, context.getSchemaFormat()).ifPresent(schemaPath -> {
                     context.register(schemaId, schemaPath);
-                    Map<String, Object> schemasMap1 = new LinkedHashMap<>();
-                    schemasMap1.put("schema", schemaPath);
-                    schemasMap.put(schemaId, schemasMap1);
+                    Map<String, Object> schemaMap = new LinkedHashMap<>();
+                    schemaMap.put(SchemaObject.Properties.SCHEMA.value(), schemaPath);
+                    schemasMap.put(schemaId, schemaMap);
                 });
             }
         });
 
-        map.put("schemas", schemasMap);
+        map.put(ComponentsObject.Properties.SCHEMAS.value(), schemasMap);
         return map;
     }
 }

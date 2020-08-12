@@ -25,7 +25,7 @@ class HeaderObjectSerializer extends com.reedelk.openapi.v3.serializer.HeaderObj
 
             String finalFileName = OpenApiUtils.headerFileNameFrom(navigationPath, context);
             String schemaAssetPath = context.createAsset(finalFileName, data);
-            serialize.put("schema", schemaAssetPath);
+            serialize.put(HeaderObject.Properties.SCHEMA.value(), schemaAssetPath);
         }
         return serialize;
     }

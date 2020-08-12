@@ -33,7 +33,7 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
             String finalFileName = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
 
             String exampleAssetPath = context.createAsset(finalFileName, example.data());
-            dataMap.put("example", exampleAssetPath);
+            dataMap.put(MediaTypeObject.Properties.EXAMPLE.value(), exampleAssetPath);
         }
 
 
@@ -43,7 +43,7 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
             // It is a schema reference
             if (StringUtils.isNotBlank(schema.getSchemaId())) {
                 Optional<String> schemaAsset = context.assetFrom(schema.getSchemaId());
-                schemaAsset.ifPresent(schemaAssetPath -> dataMap.put("schema", schemaAssetPath));
+                schemaAsset.ifPresent(schemaAssetPath -> dataMap.put(MediaTypeObject.Properties.SCHEMA.value(), schemaAssetPath));
 
 
             } else if (schema.getSchemaData() != null){
@@ -52,7 +52,7 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
 
                 String data = new Yaml().dump(schema.getSchemaData()); // TODO: Might be JSON instead of YAML
                 String schemaAssetPath = context.createAsset(finalFileName, data);
-                dataMap.put("schema", schemaAssetPath);
+                dataMap.put(MediaTypeObject.Properties.SCHEMA.value(), schemaAssetPath);
             }
         }
 

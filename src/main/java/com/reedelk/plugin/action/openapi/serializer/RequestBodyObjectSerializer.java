@@ -11,6 +11,8 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.reedelk.openapi.v3.model.RequestBodyObject.Properties;
+
 class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> {
 
     private final OpenApiImporterContext context;
@@ -33,9 +35,9 @@ class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> 
             realRequestBodyObject = context.getRequestBodyById(segment);
         }
 
-        set(map, "description", realRequestBodyObject.getDescription());
+        set(map, Properties.DESCRIPTION.value(), realRequestBodyObject.getDescription());
         if (realRequestBodyObject.getContent().isEmpty()) {
-            map.put("content", new LinkedHashMap<>());
+            map.put(Properties.CONTENT.value(), new LinkedHashMap<>());
 
         } else {
             Map<String, Map<String, Object>> contentTypeMediaTypeMap = new LinkedHashMap<>();
@@ -47,10 +49,10 @@ class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> 
                 Map<String, Object> serialized = serializerContext.serialize(currentNavigationPath, mediaTypeObject);
                 contentTypeMediaTypeMap.put(contentType, serialized);
             });
-            map.put("content", contentTypeMediaTypeMap);
+            map.put(Properties.CONTENT.value(), contentTypeMediaTypeMap);
         }
 
-        set(map, "required", realRequestBodyObject.getRequired());
+        set(map, Properties.REQUIRED.value(), realRequestBodyObject.getRequired());
 
         return map;
     }
