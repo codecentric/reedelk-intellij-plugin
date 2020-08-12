@@ -1,12 +1,13 @@
 package com.reedelk.plugin.service.module.impl.runtimeapi;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.FlowErrorResponse;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.maven.MavenUtils;
-import com.reedelk.plugin.service.module.HttpService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.plugin.service.module.impl.http.HttpResponse;
+import com.reedelk.plugin.service.module.impl.http.HttpService;
 import com.reedelk.runtime.api.message.content.MimeType;
 import com.reedelk.runtime.rest.api.InternalAPI;
 import com.reedelk.runtime.rest.api.InternalAPI.Module.V1;
@@ -44,7 +45,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         String jsonBody = InternalAPI.HotSwap.V1.POST.Req.serialize(req);
         String requestUrl = RestApi.apiURLOf(address, port, RestApi.HOT_SWAP);
         try {
-            HttpResponse response = HttpService.getInstance(module).post(requestUrl, jsonBody, JSON);
+            HttpResponse response = ServiceManager.getService(HttpService.class).post(requestUrl, jsonBody, JSON);
             if (response.isNotFound()) {
                 handleModulePackageNotInstalled(moduleJarFile, address, port, callback);
             } else if (response.isSuccessful()) {
@@ -65,7 +66,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         String jsonBody = InternalAPI.Module.V1.POST.Req.serialize(req);
         String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE);
         try {
-            HttpResponse response = HttpService.getInstance(module).post(requestUrl, jsonBody, JSON);
+            HttpResponse response = ServiceManager.getService(HttpService.class).post(requestUrl, jsonBody, JSON);
             if (response.isSuccessful()) {
                 // We must wait because this the deployment and start of the module is async.
                 waitUntilInstalled(address, port);
@@ -83,7 +84,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE_DEPLOY);
         File file = new File(moduleFile);
         try {
-            HttpResponse response = HttpService.getInstance(module).postMultipart(requestUrl, file, "moduleFilePath");
+            HttpResponse response = ServiceManager.getService(HttpService.class).postMultipart(requestUrl, file, "moduleFilePath");
             if (response.isSuccessful()) {
                 callback.onSuccess();
             } else {
@@ -102,7 +103,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         String jsonBody = InternalAPI.Module.V1.DELETE.Req.serialize(req);
         String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE);
         try {
-            HttpResponse response = HttpService.getInstance(module).delete(requestUrl, jsonBody, JSON);
+            HttpResponse response = ServiceManager.getService(HttpService.class).delete(requestUrl, jsonBody, JSON);
             if (response.isSuccessful()) {
                 callback.onSuccess();
             } else {
@@ -117,7 +118,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
     public Collection<ModuleGETRes> installedModules(String address, int port) {
         String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE);
         try {
-            HttpResponse response = HttpService.getInstance(module).get(requestUrl);
+            HttpResponse response = ServiceManager.getService(HttpService.class).get(requestUrl);
             if (response.isSuccessful()) {
                 ModulesGETRes installedModules = V1.GET.Res.deserialize(response.getBody());
                 return installedModules.getModules();

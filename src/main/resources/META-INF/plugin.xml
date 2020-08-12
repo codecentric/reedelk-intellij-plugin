@@ -39,9 +39,6 @@
         <moduleBuilder builderClass="com.reedelk.plugin.builder.ModuleBuilder" id="REEDELK_MODULE_BUILDER" order="first"/>
 
         <!-- Services -->
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.HttpService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.http.HttpServiceImpl"/>
-
         <moduleService serviceInterface="com.reedelk.plugin.service.module.PlatformModuleService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.component.PlatformModuleServiceImpl"/>
 

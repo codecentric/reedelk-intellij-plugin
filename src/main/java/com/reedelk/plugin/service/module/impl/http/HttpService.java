@@ -1,36 +1,34 @@
 package com.reedelk.plugin.service.module.impl.http;
 
-import com.reedelk.plugin.service.module.HttpService;
+import com.intellij.openapi.components.Service;
 import com.reedelk.runtime.api.message.content.MimeType;
 import okhttp3.*;
 
 import java.io.File;
 import java.io.IOException;
 
-public class HttpServiceImpl implements HttpService {
+@Service
+public final class HttpService {
 
     private static final MediaType MEDIA_TYPE_BINARY = MediaType.get(MimeType.APPLICATION_BINARY.toString());
 
     private OkHttpClient client;
 
-    public HttpServiceImpl() {
+    public HttpService() {
         this.client = RestClientProvider.getInstance();
     }
 
-    @Override
     public HttpResponse get(String url) throws IOException {
         Request request = new Request.Builder().url(url).get().build();
         return make(request);
     }
 
-    @Override
     public HttpResponse post(String url, String payload, MediaType mediaType) throws IOException {
         RequestBody body = RequestBody.create(mediaType, payload);
         Request request = new Request.Builder().url(url).post(body).build();
         return make(request);
     }
 
-    @Override
     public HttpResponse postMultipart(String url, File file, String partName) throws IOException {
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -40,7 +38,6 @@ public class HttpServiceImpl implements HttpService {
         return make(request);
     }
 
-    @Override
     public HttpResponse delete(String url, String payload, MediaType mediaType) throws IOException {
         RequestBody body = RequestBody.create(mediaType, payload);
         Request request = new Request.Builder().url(url).delete(body).build();
