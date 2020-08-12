@@ -6,9 +6,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -38,34 +36,26 @@ public class OpenApiUtils {
 
     @NotNull
     public static String schemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        List<NavigationPath.PathSegment> pathList = navigationPath.getPathList();
-
-        Map<NavigationPath.SegmentKey,String> segmentKeyValue = new HashMap<>();
-
-        pathList.forEach(pathSegment ->
-                segmentKeyValue.put(pathSegment.getSegmentKey(), pathSegment.getSegmentValue()));
-
-        if (segmentKeyValue.containsKey(NavigationPath.SegmentKey.REQUEST_BODY)) {
+        StringBuilder baseFileName = baseFindFile(navigationPath);
+        if (findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.REQUEST_BODY) != null) {
             // It is request body.
-            StringBuilder fileName = baseFindFile(navigationPath);
-            String contentType = segmentKeyValue.get(NavigationPath.SegmentKey.CONTENT_TYPE);
-            fileName.append("requestBody").append("_")
+            String contentType = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.CONTENT_TYPE);
+            baseFileName.append("requestBody").append("_")
                     .append(contentType).append(".")
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
-            return normalizeFileName(fileName.toString());
+            return normalizeFileName(baseFileName.toString());
 
         } else {
             // It is a response.
-            StringBuilder fileName = baseFindFile(navigationPath);
-            String statusCode = segmentKeyValue.get(NavigationPath.SegmentKey.STATUS_CODE);
-            String contentType = segmentKeyValue.get(NavigationPath.SegmentKey.CONTENT_TYPE);
-            fileName.append("response").append("_")
+            String statusCode = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.STATUS_CODE);
+            String contentType = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.CONTENT_TYPE);
+            baseFileName.append("response").append("_")
                     .append(statusCode).append("_")
                     .append(contentType).append(".")
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
-            return normalizeFileName(fileName.toString());
+            return normalizeFileName(baseFileName.toString());
         }
     }
 
@@ -122,6 +112,6 @@ public class OpenApiUtils {
         Optional<NavigationPath.PathSegment> matchingPathSegment = pathList.stream()
                 .filter(pathSegment -> segmentKey.equals(pathSegment.getSegmentKey()))
                 .findFirst();
-        return matchingPathSegment.get().getSegmentValue();
+        return matchingPathSegment.map(NavigationPath.PathSegment::getSegmentValue).orElse(null);
     }
 }
