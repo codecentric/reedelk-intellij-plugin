@@ -12,10 +12,12 @@ import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.template.ConfigProperties;
 import com.reedelk.plugin.template.Template;
+import com.reedelk.runtime.commons.ModuleProperties;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -52,8 +54,8 @@ public class OpenApiImporterContext {
     public Optional<String> createAsset(String schemaId, SchemaObject schemaObject, SchemaFormat schemaFormat) {
         if (schemaObject.getSchema() != null) {
             Map<String, Object> schemaData = schemaObject.getSchema().getSchemaData();
-            Properties properties = new Properties();
 
+            Properties properties = new Properties();
             if (SchemaFormat.JSON.equals(schemaFormat)) {
                 properties.put("data", new JSONObject(schemaData).toString(2));
             }
@@ -74,8 +76,9 @@ public class OpenApiImporterContext {
                                 .openFile(virtualFile, false));
             }));
 
-            return  Optional.of("assets/" + finalFileName);
+            return  Optional.of(assetResource(finalFileName));
         }
+
         return Optional.empty();
     }
 
@@ -91,7 +94,7 @@ public class OpenApiImporterContext {
             Template.OpenAPI.ASSET.create(project, properties, assetsDirectoryVf, fileName);
         }));
 
-        return  "assets/" + fileName;
+        return assetResource(fileName);
     }
 
     public void createFlow(String fileName, Properties properties) {
@@ -118,6 +121,10 @@ public class OpenApiImporterContext {
             configProperties.put("openApiObject", configOpenApi);
             Template.OpenAPI.FLOW_CONFIG.create(project, configProperties, configsDirectoryVf, configFileName);
         }));
+    }
+
+    private static String assetResource(String fileName) {
+        return ModuleProperties.Assets.RESOURCE_DIRECTORY + File.pathSeparator + fileName;
     }
 
     public void register(String schemaId, String schemaAssetPath) {
