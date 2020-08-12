@@ -19,7 +19,7 @@ public class OpenApiImporter {
         this.context = context;
     }
 
-    public void process() throws OpenApiException {
+    public void processImport() throws OpenApiException {
         // Read the OpenAPI file as string.
         String content = readOpenApiFile();
 

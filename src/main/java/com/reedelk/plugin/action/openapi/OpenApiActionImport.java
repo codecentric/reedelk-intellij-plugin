@@ -33,9 +33,10 @@ public class OpenApiActionImport extends AnAction {
         OpenApiImporterContext context = new OpenApiImporterContext(currentProject, openAPIFilePath, importModule, targetDirectory);
         OpenApiImporter importer = new OpenApiImporter(context);
         try {
-            importer.process();
-        } catch (OpenApiException e) {
-            // TODO: Show error dialog
+            importer.processImport();
+        } catch (Exception exception) {
+            ErrorDialogImport errorDialogImport = new ErrorDialogImport(currentProject);
+            errorDialogImport.showAndGet();
         }
     }
 }
