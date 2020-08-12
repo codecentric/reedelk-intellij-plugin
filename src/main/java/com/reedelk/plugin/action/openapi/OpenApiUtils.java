@@ -30,8 +30,15 @@ public class OpenApiUtils {
 
     @NotNull
     public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        // TODO: Complete me.
-        return "example.yaml";
+        StringBuilder baseFileName = baseFindFile(navigationPath);
+        String statusCode = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.STATUS_CODE);
+        String contentType = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.CONTENT_TYPE);
+        baseFileName.append("response").append("_")
+                .append(statusCode).append("_")
+                .append(contentType).append(".")
+                .append("example").append(".")
+                .append(context.getSchemaFormat().getExtension());
+        return normalizeFileName(baseFileName.toString());
     }
 
     @NotNull
