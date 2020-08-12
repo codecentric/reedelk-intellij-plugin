@@ -143,7 +143,10 @@ public class OpenApiImporterContext {
         Optional<String> configsFolder = PluginModuleUtils.getConfigsDirectory(module);
         configsFolder.ifPresent(configsFolder1 -> WriteCommandAction.runWriteCommandAction(project, () -> {
             VirtualFile configsDirectoryVf = VfsUtil.findFile(Paths.get(configsFolder1), true);
-            ConfigProperties configProperties = new ConfigProperties(configId, title);
+            // TODO: Need to find out host and port.
+            // TODO: Strategy: If the openapi defines it, then we use the localhost or 0.0.0.0 otherwise we use 8484.
+            // TODO: Add success popup with the host where it is bound!
+            ConfigProperties configProperties = new ConfigProperties(configId, title, "localhost", "8282");
             configProperties.put("openApiObject", configOpenApi);
             Template.OpenAPI.FLOW_CONFIG.create(project, configProperties, configsDirectoryVf, configFileName);
         }));
