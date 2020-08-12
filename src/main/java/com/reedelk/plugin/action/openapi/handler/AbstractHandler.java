@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-abstract class AbstractHandler implements Handler1 {
+abstract class AbstractHandler implements Handler {
 
     @Override
     public void accept(OpenApiImporterContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {

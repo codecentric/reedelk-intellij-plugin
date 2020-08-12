@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Handlers {
 
-    private static final List<Handler1> HANDLER_1s = Arrays.asList(
+    private static final List<Handler> HANDLER_1s = Arrays.asList(
             new GETHandler(),
             new POSTHandler(),
             new PUTHandler(),
@@ -19,9 +19,9 @@ public class Handlers {
             new OPTIONSHandler());
 
     public static void handle(OpenApiImporterContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
-        for (Handler1 handler1 : HANDLER_1s) {
-            if (handler1.isApplicable(pathDefinition)) {
-                handler1.accept(context, pathEntry, pathDefinition);
+        for (Handler handler : HANDLER_1s) {
+            if (handler.isApplicable(pathDefinition)) {
+                handler.accept(context, pathEntry, pathDefinition);
             }
         }
     }

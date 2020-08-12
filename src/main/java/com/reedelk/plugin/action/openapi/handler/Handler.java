@@ -6,7 +6,7 @@ import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 
 import java.util.Map;
 
-public interface Handler1 {
+public interface Handler {
 
     boolean isApplicable(Map<RestMethod, OperationObject> pathDefinition);
 
