@@ -9,8 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-// TODO: This class needs work.
+
 public class OpenApiUtils {
 
     private static final String DEFAULT_TITLE = "my_api";
@@ -46,60 +47,17 @@ public class OpenApiUtils {
 
         if (segmentKeyValue.containsKey(NavigationPath.SegmentKey.REQUEST_BODY)) {
             // It is request body.
-            // It is a response.
-
-            String operationId = segmentKeyValue.get(NavigationPath.SegmentKey.OPERATION_ID);
-            StringBuilder fileName = new StringBuilder();
-
-            // operationId + 'response' + statusCode + contentType.schema.[json|yaml]
-            // or
-            // method + path + 'response' + statusCode + contentType.schema.[json|yaml]
-            //[paths, /pet/{petId} (path), GET (method), getPetById (operationId), responses, 200 (statusCode), content, application/xml (contentType), schema]
-
-            if (StringUtils.isNotBlank(operationId)) {
-                fileName.append(operationId).append("_");
-
-            } else {
-                String method = segmentKeyValue.get(NavigationPath.SegmentKey.METHOD);
-                String path = segmentKeyValue.get(NavigationPath.SegmentKey.PATH);
-                fileName = new StringBuilder()
-                        .append(method).append("_")
-                        .append(path).append("_");
-
-            }
-
+            StringBuilder fileName = baseFindFile(navigationPath);
             String contentType = segmentKeyValue.get(NavigationPath.SegmentKey.CONTENT_TYPE);
             fileName.append("requestBody").append("_")
                     .append(contentType).append(".")
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
-
-
             return normalizeFileName(fileName.toString());
 
         } else {
             // It is a response.
-
-            String operationId = segmentKeyValue.get(NavigationPath.SegmentKey.OPERATION_ID);
-            StringBuilder fileName = new StringBuilder();
-
-            // operationId + 'response' + statusCode + contentType.schema.[json|yaml]
-            // or
-            // method + path + 'response' + statusCode + contentType.schema.[json|yaml]
-            //[paths, /pet/{petId} (path), GET (method), getPetById (operationId), responses, 200 (statusCode), content, application/xml (contentType), schema]
-
-            if (StringUtils.isNotBlank(operationId)) {
-                fileName.append(operationId).append("_");
-
-            } else {
-                String method = segmentKeyValue.get(NavigationPath.SegmentKey.METHOD);
-                String path = segmentKeyValue.get(NavigationPath.SegmentKey.PATH);
-                fileName = new StringBuilder()
-                        .append(method).append("_")
-                        .append(path).append("_");
-
-            }
-
+            StringBuilder fileName = baseFindFile(navigationPath);
             String statusCode = segmentKeyValue.get(NavigationPath.SegmentKey.STATUS_CODE);
             String contentType = segmentKeyValue.get(NavigationPath.SegmentKey.CONTENT_TYPE);
             fileName.append("response").append("_")
@@ -107,89 +65,63 @@ public class OpenApiUtils {
                     .append(contentType).append(".")
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
-
             return normalizeFileName(fileName.toString());
         }
     }
 
     @NotNull
     public static String parameterSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        List<NavigationPath.PathSegment> pathList = navigationPath.getPathList();
-
-        Map<NavigationPath.SegmentKey,String> segmentKeyValue = new HashMap<>();
-
-        pathList.forEach(pathSegment ->
-                segmentKeyValue.put(pathSegment.getSegmentKey(), pathSegment.getSegmentValue()));
-
-        String operationId = segmentKeyValue.get(NavigationPath.SegmentKey.OPERATION_ID);
-        StringBuilder fileName = new StringBuilder();
-
-        // operationId + 'response' + statusCode + contentType.schema.[json|yaml]
-        // or
-        // method + path + 'response' + statusCode + contentType.schema.[json|yaml]
-        //[paths, /pet/{petId} (path), GET (method), getPetById (operationId), responses, 200 (statusCode), content, application/xml (contentType), schema]
-
-        if (StringUtils.isNotBlank(operationId)) {
-            fileName.append(operationId).append("_");
-
-        } else {
-            String method = segmentKeyValue.get(NavigationPath.SegmentKey.METHOD);
-            String path = segmentKeyValue.get(NavigationPath.SegmentKey.PATH);
-            fileName = new StringBuilder()
-                    .append(method).append("_")
-                    .append(path).append("_");
-
-        }
-
-        String parameterName = segmentKeyValue.get(NavigationPath.SegmentKey.PARAMETER_NAME);
+        StringBuilder fileName = baseFindFile(navigationPath);
+        String parameterName = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.PARAMETER_NAME);
         fileName.append("parameter").append("_")
                 .append(parameterName).append(".")
                 .append("schema").append(".")
                 .append(context.getSchemaFormat().getExtension());
-
         return fileName.toString().replace('/', '_');
     }
 
     @NotNull
     public static String headerFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        List<NavigationPath.PathSegment> pathList = navigationPath.getPathList();
-
-        Map<NavigationPath.SegmentKey,String> segmentKeyValue = new HashMap<>();
-
-        pathList.forEach(pathSegment ->
-                segmentKeyValue.put(pathSegment.getSegmentKey(), pathSegment.getSegmentValue()));
-
-        String operationId = segmentKeyValue.get(NavigationPath.SegmentKey.OPERATION_ID);
-        StringBuilder fileName = new StringBuilder();
-
-        // operationId + 'response' + statusCode + contentType.schema.[json|yaml]
-        // or
-        // method + path + 'response' + statusCode + contentType.schema.[json|yaml]
-        //[paths, /pet/{petId} (path), GET (method), getPetById (operationId), responses, 200 (statusCode), content, application/xml (contentType), schema]
-
-        if (StringUtils.isNotBlank(operationId)) {
-            fileName.append(operationId).append("_");
-
-        } else {
-            String method = segmentKeyValue.get(NavigationPath.SegmentKey.METHOD);
-            String path = segmentKeyValue.get(NavigationPath.SegmentKey.PATH);
-            fileName = new StringBuilder()
-                    .append(method).append("_")
-                    .append(path).append("_");
-
-        }
-
-        String headerName = segmentKeyValue.get(NavigationPath.SegmentKey.HEADER_NAME);
+        StringBuilder fileName = baseFindFile(navigationPath);
+        String headerName = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.HEADER_NAME);
         fileName.append("header").append("_")
                 .append(headerName).append(".")
                 .append("schema").append(".")
                 .append(context.getSchemaFormat().getExtension());
-
         return fileName.toString().replace('/', '_');
+    }
+
+    /**
+     * operationId + 'response' + statusCode + contentType.schema.[json|yaml]
+     * or
+     * method + path + 'response' + statusCode + contentType.schema.[json|yaml]
+     * [paths, /pet/{petId} (path), GET (method), getPetById (operationId), responses, 200 (statusCode), content, application/xml (contentType), schema]
+     */
+    @NotNull
+    private static StringBuilder baseFindFile(NavigationPath navigationPath) {
+        String operationId = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.OPERATION_ID);
+        StringBuilder fileName = new StringBuilder();
+        if (StringUtils.isNotBlank(operationId)) {
+            fileName.append(operationId).append("_");
+        } else {
+            String method = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.METHOD);
+            String path = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.PATH);
+            fileName = new StringBuilder()
+                    .append(method).append("_")
+                    .append(path).append("_");
+        }
+        return fileName;
     }
 
     private static String normalizeFileName(String originalName) {
         return originalName.replace('/', '_');
     }
 
+    private static String findSegmentValueFrom(NavigationPath navigationPath, NavigationPath.SegmentKey segmentKey) {
+        List<NavigationPath.PathSegment> pathList = navigationPath.getPathList();
+        Optional<NavigationPath.PathSegment> matchingPathSegment = pathList.stream()
+                .filter(pathSegment -> segmentKey.equals(pathSegment.getSegmentKey()))
+                .findFirst();
+        return matchingPathSegment.get().getSegmentValue();
+    }
 }
