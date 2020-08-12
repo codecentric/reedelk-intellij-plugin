@@ -124,7 +124,7 @@ public class OpenApiImporterContext {
     }
 
     private static String assetResource(String fileName) {
-        return ModuleProperties.Assets.RESOURCE_DIRECTORY + File.pathSeparator + fileName;
+        return ModuleProperties.Assets.RESOURCE_DIRECTORY + File.separator + fileName;
     }
 
     public void register(String schemaId, String schemaAssetPath) {
