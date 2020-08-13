@@ -354,4 +354,32 @@ class OpenApiUtilsTest {
         // Then
         assertThat(actual).isEqualTo("get_response_200_application_json.example.json");
     }
+
+    // Get API title
+    @Test
+    void shouldReturnCorrectApiTitle() {
+        // Given
+        InfoObject infoObject = new InfoObject();
+        infoObject.setTitle("My Awesome API");
+        OpenApiObject openApiObject = new OpenApiObject();
+        openApiObject.setInfo(infoObject);
+
+        // When
+        String actual = OpenApiUtils.getApiTitle(openApiObject);
+
+        // Then
+        assertThat(actual).isEqualTo("My Awesome API");
+    }
+
+    @Test
+    void shouldReturnDefaultApiTitle() {
+        // Given
+        OpenApiObject openApiObject = new OpenApiObject();
+
+        // When
+        String actual = OpenApiUtils.getApiTitle(openApiObject);
+
+        // Then
+        assertThat(actual).isEqualTo("My Api");
+    }
 }
