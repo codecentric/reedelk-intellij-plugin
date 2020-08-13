@@ -3,6 +3,7 @@ package com.reedelk.plugin.action.openapi;
 import com.reedelk.openapi.OpenApi;
 import com.reedelk.openapi.v3.model.OpenApiObject;
 import com.reedelk.openapi.v3.model.PathsObject;
+import com.reedelk.openapi.v3.model.ServerObject;
 import com.reedelk.plugin.action.openapi.handler.Handlers;
 import com.reedelk.plugin.action.openapi.reader.FileReader;
 import com.reedelk.plugin.action.openapi.reader.Readers;
@@ -10,10 +11,17 @@ import com.reedelk.plugin.action.openapi.serializer.ConfigOpenApiObject;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 
 public class OpenApiImporter {
+
+    private static final int DEFAULT_PORT = 8484;
+    private static final String LOCALHOST = "localhost";
+    private static final String ANY_ADDRESS = "0.0.0.0";
 
     private final OpenApiImporterContext context;
 
@@ -34,16 +42,45 @@ public class OpenApiImporter {
         // if does not exist a config using that port, then we can create it, otherwise we come up with a free port.
 
         String title = "Open API Config";
-        // TODO: Logic should be: if there is a server with localhost:8080 use that port, otherwise come up with a port.
-        String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
+        int listenerPort = findListenerPort(openApiObject);
+
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
+
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
-        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, "localhost", 8282);
+        String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
+        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, LOCALHOST, listenerPort);
 
         // Generate REST flows from paths
         PathsObject paths = openApiObject.getPaths();
         paths.getPaths().forEach((pathEntry, pathItem) ->
                 Handlers.handle(context, pathEntry, pathItem));
+    }
+
+    private int findListenerPort(OpenApiObject openApiObject) {
+        return openApiObject.getServers().stream()
+                .filter(this::isLocalhost)
+                .map(serverObject -> getPortOrDefault(serverObject, DEFAULT_PORT))
+                .findFirst().orElse(DEFAULT_PORT);
+    }
+
+    private int getPortOrDefault(ServerObject serverObject, int defaultPort) {
+        try {
+            URL url = new URL(serverObject.getUrl());
+            return url.getPort();
+        } catch (MalformedURLException e) {
+            return defaultPort;
+        }
+    }
+
+    private boolean isLocalhost(ServerObject serverObject) {
+        try {
+            URL url = new URL(serverObject.getUrl());
+            String host = url.getHost();
+            return LOCALHOST.equals(host) ||
+                    ANY_ADDRESS.equals(host);
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 
     private FileReader createOpenApiReader() {
