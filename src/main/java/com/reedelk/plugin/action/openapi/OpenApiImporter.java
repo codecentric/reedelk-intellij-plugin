@@ -25,6 +25,8 @@ public class OpenApiImporter {
         // Read the OpenAPI file as string.
         String content = createOpenApiReader().read();
 
+        context.setSchemaFormat(content);
+
         // Deserialize the content into the OpenAPI Model
         OpenApiObject openApiObject = OpenApi.from(content);
 

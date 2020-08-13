@@ -15,6 +15,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.ModuleProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,12 +28,14 @@ import static com.reedelk.plugin.template.Template.OpenAPI;
 
 public class OpenApiImporterContext {
 
+    private final Project project;
+    private final String apiFileUrl;
+    private final String targetDirectory;
     private final String openApiFilePath;
     private final String importModuleName;
-    private final String targetDirectory;
-    private final Project project;
     private final String restListenerConfigId;
-    private final String apiFileUrl;
+
+    private OpenApiSchemaFormat schemaFormat;
 
     private Map<String, String> schemaIdAndPath = new HashMap<>();
     private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
@@ -84,13 +87,18 @@ public class OpenApiImporterContext {
         return Optional.empty();
     }
 
-    // TODO: Can we rely on the extension for file url as well? perhaps the safest bet is to parse it.
-    public OpenApiSchemaFormat getSchemaFormat() {
-        if (StringUtils.isNotBlank(openApiFilePath)) {
-            return OpenApiSchemaFormat.formatOf(openApiFilePath);
-        } else {
-            return OpenApiSchemaFormat.formatOf(apiFileUrl);
+    public void setSchemaFormat(String content) {
+        try {
+            new JSONObject(content);
+            this.schemaFormat = OpenApiSchemaFormat.JSON;
+        } catch (Exception e) {
+            // not JSON, but YAML
+            this.schemaFormat = OpenApiSchemaFormat.YAML;
         }
+    }
+
+    public OpenApiSchemaFormat getSchemaFormat() {
+        return schemaFormat;
     }
 
     public String createAsset(String fileName, String data) {

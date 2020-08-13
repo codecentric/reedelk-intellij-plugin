@@ -8,10 +8,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.plugin.editor.properties.commons.ChooseFileInputFieldWithEraseBtn;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.editor.properties.commons.StringInputField;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.Nullable;
@@ -86,7 +83,7 @@ public class DialogImport extends DialogWrapper {
                 .addLastField(label, centerPanel);
         FormBuilder.get()
                 .addLabel(message("openapi.importer.dialog.import.file"), centerPanel)
-                .addLastField(chooseFileInputField, centerPanel);
+                .addLastField(ContainerFactory.pushLeft(chooseFileInputField), centerPanel);
         FormBuilder.get()
                 .addLabel(message("openapi.importer.dialog.import.url"), centerPanel)
                 .addLastField(this.openApiURLField, centerPanel);
