@@ -31,11 +31,17 @@ public class OpenApiUtils {
     }
 
     @NotNull
+    public static String flowFileNameFrom(NavigationPath navigationPath) {
+        return baseOperationAwareFile(navigationPath) + "." + FileExtension.FLOW.value();
+    }
+
+    @NotNull
     public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String statusCode = segmentValueOf(navigationPath, SegmentKey.STATUS_CODE);
         String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
-        fileName.append("response").append("_")
+        fileName.append("_")
+                .append("response").append("_")
                 .append(statusCode).append("_")
                 .append(normalizeContentType(contentType)).append(".")
                 .append("example").append(".")
@@ -49,7 +55,8 @@ public class OpenApiUtils {
         if (segmentValueOf(navigationPath, SegmentKey.REQUEST_BODY) != null) {
             // It is request body.
             String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
-            fileName.append("requestBody").append("_")
+            fileName.append("_")
+                    .append("requestBody").append("_")
                     .append(normalizeContentType(contentType)).append(".")
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
@@ -59,7 +66,8 @@ public class OpenApiUtils {
             // It is a response.
             String statusCode = segmentValueOf(navigationPath, SegmentKey.STATUS_CODE);
             String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
-            fileName.append("response").append("_")
+            fileName.append("_")
+                    .append("response").append("_")
                     .append(statusCode).append("_")
                     .append(normalizeContentType(contentType)).append(".")
                     .append("schema").append(".")
@@ -72,7 +80,8 @@ public class OpenApiUtils {
     public static String parameterSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String parameterName = segmentValueOf(navigationPath, SegmentKey.PARAMETER_NAME);
-        fileName.append("parameter").append("_")
+        fileName.append("_")
+                .append("parameter").append("_")
                 .append(parameterName).append(".")
                 .append("schema").append(".")
                 .append(context.getSchemaFormat().getExtension());
@@ -83,7 +92,8 @@ public class OpenApiUtils {
     public static String headerFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String headerName = segmentValueOf(navigationPath, SegmentKey.HEADER_NAME);
-        fileName.append("header").append("_")
+        fileName.append("_")
+                .append("header").append("_")
                 .append(headerName).append(".")
                 .append("schema").append(".")
                 .append(context.getSchemaFormat().getExtension());
@@ -104,13 +114,13 @@ public class OpenApiUtils {
         String operationId = segmentValueOf(navigationPath, SegmentKey.OPERATION_ID);
         StringBuilder fileName = new StringBuilder();
         if (isNotBlank(operationId)) {
-            fileName.append(operationId).append("_");
+            fileName.append(operationId);
         } else {
             String method = segmentValueOf(navigationPath, SegmentKey.METHOD);
             String path = segmentValueOf(navigationPath, SegmentKey.PATH);
             fileName = new StringBuilder()
                     .append(method.toLowerCase())
-                    .append(normalizePath(path)).append("_");
+                    .append(normalizePath(path));
         }
         return fileName;
     }

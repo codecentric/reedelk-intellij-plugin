@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.reedelk.openapi.commons.NavigationPath.SegmentKey;
+import static com.reedelk.openapi.commons.NavigationPath.create;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
 
@@ -81,18 +83,18 @@ class OpenApiUtilsTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    // Schema
+    // Schema Response
     @Test
-    void shouldReturnCorrectSchemaFileNameWhenOperationIdPresent() {
+    void shouldReturnCorrectSchemaResponseFileNameWhenOperationIdPresent() {
         // Given
-        NavigationPath navigationPath = NavigationPath.create()
-                .with(NavigationPath.SegmentKey.OPERATION_ID, "getPetById")
-                .with(NavigationPath.SegmentKey.METHOD, "GET")
-                .with(NavigationPath.SegmentKey.PATH, "/order/{id}")
-                .with(NavigationPath.SegmentKey.RESPONSES)
-                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
-                .with(NavigationPath.SegmentKey.CONTENT)
-                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.OPERATION_ID, "getPetById")
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/{id}")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
         String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
@@ -102,15 +104,15 @@ class OpenApiUtilsTest {
     }
 
     @Test
-    void shouldReturnCorrectSchemaFileNameWhenOperationIdNotPresent() {
+    void shouldReturnCorrectSchemaResponseFileNameWhenOperationIdNotPresent() {
         // Given
-        NavigationPath navigationPath = NavigationPath.create()
-                .with(NavigationPath.SegmentKey.METHOD, "GET")
-                .with(NavigationPath.SegmentKey.PATH, "/order/{id}")
-                .with(NavigationPath.SegmentKey.RESPONSES)
-                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
-                .with(NavigationPath.SegmentKey.CONTENT)
-                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/{id}")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
         String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
@@ -120,15 +122,15 @@ class OpenApiUtilsTest {
     }
 
     @Test
-    void shouldReturnCorrectSchemaFileNameWhenOperationIdNotPresentAndRootPath() {
+    void shouldReturnCorrectSchemaResponseFileNameWhenOperationIdNotPresentAndRootPath() {
         // Given
-        NavigationPath navigationPath = NavigationPath.create()
-                .with(NavigationPath.SegmentKey.METHOD, "GET")
-                .with(NavigationPath.SegmentKey.PATH, "/")
-                .with(NavigationPath.SegmentKey.RESPONSES)
-                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
-                .with(NavigationPath.SegmentKey.CONTENT)
-                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
         String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
@@ -137,18 +139,72 @@ class OpenApiUtilsTest {
         assertThat(actual).isEqualTo("get_response_200_application_json.schema.json");
     }
 
+    // Schema Request Body
+
+    @Test
+    void shouldReturnCorrectSchemaRequestBodyFileNameWhenOperationIdPresent() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.OPERATION_ID, "getPetById")
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/{id}")
+                .with(SegmentKey.REQUEST_BODY)
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/x-www-form-urlencoded");
+
+        // When
+        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("getPetById_requestBody_application_x-www-form-urlencoded.schema.json");
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaRequestBodyFileNameWhenOperationIdNotPresent() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/{id}")
+                .with(SegmentKey.REQUEST_BODY)
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/x-www-form-urlencoded");
+
+        // When
+        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("getOrderId_requestBody_application_x-www-form-urlencoded.schema.json");
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaRequestBodyFileNameWhenOperationIdNotPresentAndRootPath() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/")
+                .with(SegmentKey.REQUEST_BODY)
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/x-www-form-urlencoded");
+
+        // When
+        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("get_requestBody_application_x-www-form-urlencoded.schema.json");
+    }
+
     // Example
     @Test
     void shouldReturnCorrectExampleFileNameWhenOperationIdPresent() {
         // Given
-        NavigationPath navigationPath = NavigationPath.create()
-                .with(NavigationPath.SegmentKey.OPERATION_ID, "getPetById")
-                .with(NavigationPath.SegmentKey.METHOD, "GET")
-                .with(NavigationPath.SegmentKey.PATH, "/order/{id}")
-                .with(NavigationPath.SegmentKey.RESPONSES)
-                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
-                .with(NavigationPath.SegmentKey.CONTENT)
-                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.OPERATION_ID, "getPetById")
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/{id}")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
         String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
@@ -160,13 +216,13 @@ class OpenApiUtilsTest {
     @Test
     void shouldReturnCorrectExampleFileNameWhenOperationIdNotPresent() {
         // Given
-        NavigationPath navigationPath = NavigationPath.create()
-                .with(NavigationPath.SegmentKey.METHOD, "GET")
-                .with(NavigationPath.SegmentKey.PATH, "/order/{id}")
-                .with(NavigationPath.SegmentKey.RESPONSES)
-                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
-                .with(NavigationPath.SegmentKey.CONTENT)
-                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/{id}")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
         String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
@@ -178,13 +234,13 @@ class OpenApiUtilsTest {
     @Test
     void shouldReturnCorrectExampleFileNameWhenOperationIdNotPresentAndRootPath() {
         // Given
-        NavigationPath navigationPath = NavigationPath.create()
-                .with(NavigationPath.SegmentKey.METHOD, "GET")
-                .with(NavigationPath.SegmentKey.PATH, "/")
-                .with(NavigationPath.SegmentKey.RESPONSES)
-                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
-                .with(NavigationPath.SegmentKey.CONTENT)
-                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
         String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
