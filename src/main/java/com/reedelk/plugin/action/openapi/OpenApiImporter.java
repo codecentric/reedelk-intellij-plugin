@@ -34,6 +34,7 @@ public class OpenApiImporter {
         // if does not exist a config using that port, then we can create it, otherwise we come up with a free port.
 
         String title = "Open API Config";
+        // TODO: Logic should be: if there is a server with localhost:8080 use that port, otherwise come up with a port.
         String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);

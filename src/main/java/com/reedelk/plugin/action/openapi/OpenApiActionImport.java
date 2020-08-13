@@ -41,7 +41,8 @@ public class OpenApiActionImport extends AnAction {
         try {
             importer.processImport();
 
-            DialogImportSuccess successDialog = new DialogImportSuccess(currentProject, "Port and host: localhost:8080");
+            DialogImportSuccess successDialog =
+                    new DialogImportSuccess(currentProject, "Port and host: localhost:8080");
             successDialog.show();
 
         } catch (Exception exception) {

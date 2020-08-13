@@ -17,7 +17,7 @@ public class ChooseFileInputFieldWithEraseBtn extends DisposablePanel {
                                             @Nullable String hintText,
                                             @Nullable String rootDirectory,
                                             @NotNull PropertyAccessor propertyAccessor) {
-        super(new FlowLayout());
+        super(new BorderLayout());
         ChooseFileInputField chooseFileInputField =
                 new ChooseFileInputField(project, title, hintText, rootDirectory, propertyAccessor);
 
@@ -26,9 +26,9 @@ public class ChooseFileInputFieldWithEraseBtn extends DisposablePanel {
             propertyAccessor.set(null);
             chooseFileInputField.setText(null);
         });
-        eraseButton.setBorder(emptyLeft(2));
+        eraseButton.setBorder(emptyLeft(5));
 
-        add(chooseFileInputField);
-        add(eraseButton);
+        add(chooseFileInputField, BorderLayout.WEST);
+        add(ContainerFactory.pushLeft(eraseButton), BorderLayout.CENTER);
     }
 }
