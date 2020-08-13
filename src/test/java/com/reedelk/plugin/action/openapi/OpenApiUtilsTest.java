@@ -25,6 +25,51 @@ class OpenApiUtilsTest {
         lenient().doReturn(OpenApiSchemaFormat.JSON).when(context).getSchemaFormat();
     }
 
+    // Flow File Name
+    @Test
+    void shouldReturnCorrectFlowFileName() {
+        // Given
+        NavigationPath navigationPath = NavigationPath.create()
+                .with(SegmentKey.OPERATION_ID, "addPet")
+                .with(SegmentKey.PATH, "/pet")
+                .with(SegmentKey.METHOD, "POST");
+
+        // When
+        String actual = OpenApiUtils.flowFileNameFrom(navigationPath);
+
+        // Then
+        assertThat(actual).isEqualTo("addPet.flow");
+    }
+
+    @Test
+    void shouldReturnCorrectFlowFileNameWhenOperationIdNotPresent() {
+        // Given
+        NavigationPath navigationPath = NavigationPath.create()
+                .with(SegmentKey.PATH, "/pet")
+                .with(SegmentKey.METHOD, "POST");
+
+        // When
+        String actual = OpenApiUtils.flowFileNameFrom(navigationPath);
+
+        // Then
+        assertThat(actual).isEqualTo("postPet.flow");
+    }
+
+    @Test
+    void shouldReturnCorrectFlowFileNameWhenOperationIdNotPresentAndRoot() {
+        // Given
+        NavigationPath navigationPath = NavigationPath.create()
+                .with(SegmentKey.PATH, "/")
+                .with(SegmentKey.METHOD, "PUT");
+
+        // When
+        String actual = OpenApiUtils.flowFileNameFrom(navigationPath);
+
+        // Then
+        assertThat(actual).isEqualTo("put.flow");
+    }
+
+    // REST Listener Config Title
     @Test
     void shouldReturnCorrectConfigTitle() {
         // Given
