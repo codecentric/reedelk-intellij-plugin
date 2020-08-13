@@ -5,6 +5,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.commons.ChooseFileInputField;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class DialogImport extends DialogWrapper {
 
@@ -36,6 +38,16 @@ public class DialogImport extends DialogWrapper {
         setTitle(message("openapi.importer.dialog.import.title"));
         setResizable(false);
         init();
+    }
+
+    @Nullable
+    @Override
+    protected ValidationInfo doValidate() {
+        if (isBlank(getOpenApiFile()) && isBlank(getOpenApiURL())) {
+            String message = "OpenAPI resource not selected";
+            return new ValidationInfo(message);
+        }
+        return super.doValidate();
     }
 
     @Nullable
