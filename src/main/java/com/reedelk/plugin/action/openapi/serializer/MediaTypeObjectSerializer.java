@@ -48,7 +48,7 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
 
             } else if (schema.getSchemaData() != null){
                 // We must create a schema asset.
-                String finalFileName = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+                String finalFileName = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
                 String data = new Yaml().dump(schema.getSchemaData()); // TODO: Might be JSON instead of YAML
                 String schemaAssetPath = context.createAsset(finalFileName, data);

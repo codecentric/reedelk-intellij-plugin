@@ -97,7 +97,7 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
-        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
         assertThat(actual).isEqualTo("getPetById_response_200_application_json.schema.json");
@@ -115,7 +115,7 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
-        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
         assertThat(actual).isEqualTo("getOrderId_response_200_application_json.schema.json");
@@ -133,7 +133,7 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
-        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
         assertThat(actual).isEqualTo("get_response_200_application_json.schema.json");
@@ -153,7 +153,7 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/x-www-form-urlencoded");
 
         // When
-        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
         assertThat(actual).isEqualTo("getPetById_requestBody_application_x-www-form-urlencoded.schema.json");
@@ -170,7 +170,7 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/x-www-form-urlencoded");
 
         // When
-        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
         assertThat(actual).isEqualTo("getOrderId_requestBody_application_x-www-form-urlencoded.schema.json");
@@ -187,10 +187,116 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/x-www-form-urlencoded");
 
         // When
-        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
         assertThat(actual).isEqualTo("get_requestBody_application_x-www-form-urlencoded.schema.json");
+    }
+
+    // Schema Parameter
+    @Test
+    void shouldReturnCorrectSchemaParameterFileNameWhenOperationIdPresent() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.OPERATION_ID, "getPetById")
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/findByStatus")
+                .with(SegmentKey.PARAMETERS)
+                .with(SegmentKey.PARAMETER_NAME, "status");
+
+        // When
+        String actual = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("getPetById_parameter_status.schema.json");
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaParameterFileNameWhenOperationIdNotPresent() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/findByStatus")
+                .with(SegmentKey.PARAMETERS)
+                .with(SegmentKey.PARAMETER_NAME, "status");
+
+        // When
+        String actual = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("getOrderFindByStatus_parameter_status.schema.json");
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaParameterFileNameWhenOperationIdNotPresentAndRootPath() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "POST")
+                .with(SegmentKey.PATH, "/")
+                .with(SegmentKey.PARAMETERS)
+                .with(SegmentKey.PARAMETER_NAME, "status");
+
+        // When
+        String actual = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("post_parameter_status.schema.json");
+    }
+
+    // Schema Header
+    @Test
+    void shouldReturnCorrectSchemaHeaderFileNameWhenOperationIdPresent() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.OPERATION_ID, "getPetById")
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/findByStatus")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.HEADERS)
+                .with(SegmentKey.HEADER_NAME, "X-Rate-Limit");
+
+        // When
+        String actual = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("getPetById_response_200_header_X-Rate-Limit.schema.json");
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaHeaderFileNameWhenOperationIdNotPresent() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "DELETE")
+                .with(SegmentKey.PATH, "/order/findByStatus")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.HEADERS)
+                .with(SegmentKey.HEADER_NAME, "X-Rate-Limit");
+
+        // When
+        String actual = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("deleteOrderFindByStatus_response_200_header_X-Rate-Limit.schema.json");
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaHeaderFileNameWhenOperationIdNotPresentAndRootPath() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.METHOD, "DELETE")
+                .with(SegmentKey.PATH, "/")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.HEADERS)
+                .with(SegmentKey.HEADER_NAME, "X-Rate-Limit");
+
+        // When
+        String actual = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("delete_response_200_header_X-Rate-Limit.schema.json");
     }
 
     // Example

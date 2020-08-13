@@ -3,6 +3,7 @@ package com.reedelk.plugin.action.openapi;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.InfoObject;
 import com.reedelk.openapi.v3.model.OpenApiObject;
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +51,7 @@ public class OpenApiUtils {
     }
 
     @NotNull
-    public static String schemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
+    public static String requestResponseSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
         if (segmentValueOf(navigationPath, SegmentKey.REQUEST_BODY) != null) {
             // It is request body.
@@ -89,15 +90,23 @@ public class OpenApiUtils {
     }
 
     @NotNull
-    public static String headerFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
+    public static String headerSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
+        String statusCode = segmentValueOf(navigationPath, SegmentKey.STATUS_CODE);
         String headerName = segmentValueOf(navigationPath, SegmentKey.HEADER_NAME);
         fileName.append("_")
+                .append("response").append("_")
+                .append(statusCode).append("_")
                 .append("header").append("_")
                 .append(headerName).append(".")
                 .append("schema").append(".")
                 .append(context.getSchemaFormat().getExtension());
         return fileName.toString();
+    }
+
+    @NotNull
+    public static String getApiTitle(OpenApiObject openApiObject) {
+        return getApiTitle(openApiObject, message("openapi.importer.config.default.file.title"));
     }
 
     /**
@@ -133,18 +142,16 @@ public class OpenApiUtils {
         return matchingPathSegment.map(PathSegment::getSegmentValue).orElse(null);
     }
 
-    public static String getApiTitle(OpenApiObject openApiObject) {
-        return getApiTitle(openApiObject, message("openapi.importer.config.default.file.title"));
-    }
-
-    public static String getApiTitle(OpenApiObject openApiObject, String defaultValue) {
+    private static String getApiTitle(OpenApiObject openApiObject, String defaultValue) {
         InfoObject info = openApiObject.getInfo();
         return info != null && isNotBlank(info.getTitle()) ?
                 info.getTitle() : defaultValue;
     }
 
     private static String normalizeContentType(String contentType) {
-        return contentType.replace('/', '_');
+        return contentType != null ?
+                contentType.replace('/', '_') :
+                StringUtils.EMPTY;
     }
 
     private static String normalizePath(String path) {
@@ -167,9 +174,10 @@ public class OpenApiUtils {
         return result;
     }
 
-    public static String capitalize(String value) {
-        if (value == null) return null;
+    @NotNull
+    private static String capitalize(String value) {
+        if (value == null) return StringUtils.EMPTY;
         if (value.length() == 0) return value;
-        return value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase();
+        return value.substring(0, 1).toUpperCase() + value.substring(1);
     }
 }
