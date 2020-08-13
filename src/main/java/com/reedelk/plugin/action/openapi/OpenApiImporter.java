@@ -19,11 +19,9 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class OpenApiImporter {
 
-    private static final int DEFAULT_PORT = 8484;
-    private static final String LOCALHOST = "localhost";
-    private static final String ANY_ADDRESS = "0.0.0.0";
-
     private final OpenApiImporterContext context;
+    private String host = Defaults.LOCALHOST;
+    private int listenerPort;
 
     public OpenApiImporter(@NotNull OpenApiImporterContext context) {
         this.context = context;
@@ -41,7 +39,7 @@ public class OpenApiImporter {
         // The logic should be: if the openapi object contains a server on localhost with a port,
         // if does not exist a config using that port, then we can create it, otherwise we come up with a free port.
 
-        int listenerPort = findListenerPort(openApiObject);
+        listenerPort = findListenerPort(openApiObject);
 
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
 
@@ -49,7 +47,7 @@ public class OpenApiImporter {
 
         String title = OpenApiUtils.configTitleOf(openApiObject);
         String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
-        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, LOCALHOST, listenerPort);
+        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, listenerPort);
 
         // Generate REST flows from paths
         PathsObject paths = openApiObject.getPaths();
@@ -70,7 +68,7 @@ public class OpenApiImporter {
         return openApiObject.getServers().stream()
                 .filter(this::isLocalhost)
                 .map(this::getPortOrDefault)
-                .findFirst().orElse(DEFAULT_PORT);
+                .findFirst().orElse(Defaults.HTTP_PORT);
     }
 
     private int getPortOrDefault(ServerObject serverObject) {
@@ -78,7 +76,7 @@ public class OpenApiImporter {
             URL url = new URL(serverObject.getUrl());
             return url.getPort();
         } catch (MalformedURLException e) {
-            return OpenApiImporter.DEFAULT_PORT;
+            return Defaults.HTTP_PORT;
         }
     }
 
@@ -86,8 +84,8 @@ public class OpenApiImporter {
         try {
             URL url = new URL(serverObject.getUrl());
             String host = url.getHost();
-            return LOCALHOST.equals(host) ||
-                    ANY_ADDRESS.equals(host);
+            return Defaults.LOCALHOST.equals(host) ||
+                    Defaults.ANY_ADDRESS.equals(host);
         } catch (MalformedURLException e) {
             return false;
         }

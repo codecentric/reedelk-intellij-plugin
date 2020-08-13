@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.template.Template.Buildable;
 import static com.reedelk.plugin.template.Template.OpenAPI;
 
@@ -162,9 +163,9 @@ public class OpenApiImporterContext {
     private void createDirectoryIfMissing(Path targetDirectory) throws PluginException {
         try {
             VfsUtil.createDirectoryIfMissing(targetDirectory.toString());
-        } catch (IOException e) {
-            // TODO: Extract resources
-            throw new PluginException("Could not create directory=[%s], cause: " + e.getMessage());
+        } catch (IOException exception) {
+            String message = message("openapi.importer.create.directory.error", targetDirectory.toString(), exception.getMessage());
+            throw new PluginException(message);
         }
     }
 }

@@ -9,29 +9,24 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class OpenApiUtils {
 
-    private static final String DEFAULT_TITLE = "My API Configuration";
-    private static final String DEFAULT_FILE_NAME = "my_api";
-
     public static String configTitleOf(OpenApiObject openApiObject) {
-        String openApiName = DEFAULT_TITLE;
+        String openApiName = message("openapi.importer.config.default.file.title");
         if (openApiObject.getInfo() != null) {
             openApiName = openApiObject.getInfo().getTitle();
         }
-        return StringUtils.isBlank(openApiName) ?
-                DEFAULT_TITLE : openApiName + " Configuration";
+        return openApiName + " Configuration";
     }
 
     public static String configFileNameOf(OpenApiObject openApiObject) {
-        String openApiName = DEFAULT_FILE_NAME;
+        String openApiName = message("openapi.importer.config.default.file.name");
         if (openApiObject.getInfo() != null) {
             openApiName = openApiObject.getInfo().getTitle();
         }
-        return StringUtils.isBlank(openApiName) ?
-                DEFAULT_FILE_NAME + "." + FileExtension.CONFIG.value() :
-                normalize(openApiName) + "." + FileExtension.CONFIG.value();
+        return normalize(openApiName) + "_configuration" + "." + FileExtension.CONFIG.value();
     }
 
     public static String normalize(String value) {

@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
+import com.reedelk.plugin.action.openapi.Defaults;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.typeinteger.IntegerInputField;
@@ -35,7 +36,7 @@ public class DialogImport extends DialogWrapper {
         super(project);
         this.project = project;
         setTitle(message("openapi.importer.dialog.import.title"));
-        setResizable(false);
+        setResizable(true);
         init();
     }
 
@@ -75,11 +76,11 @@ public class DialogImport extends DialogWrapper {
         this.modulesCombo = new ComboBox<>(comboBoxModel);
 
         // Target directory
-        this.targetDirectory = new StringInputField("myApi");
-        this.targetDirectory.setValue("myApi");
+        this.targetDirectory = new StringInputField(Defaults.TARGET_DIRECTORY);
+        this.targetDirectory.setValue(Defaults.TARGET_DIRECTORY);
 
         // API Port
-        this.openApiPort = new IntegerInputField("8484"); // TODO: Replace with default
+        this.openApiPort = new IntegerInputField(String.valueOf(Defaults.HTTP_PORT));
 
         // Build the center panel
         DisposablePanel centerPanel = new DisposablePanel(new GridBagLayout());
