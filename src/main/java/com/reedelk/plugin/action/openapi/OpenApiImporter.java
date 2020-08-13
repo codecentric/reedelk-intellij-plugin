@@ -65,16 +65,16 @@ public class OpenApiImporter {
     private int findListenerPort(OpenApiObject openApiObject) {
         return openApiObject.getServers().stream()
                 .filter(this::isLocalhost)
-                .map(serverObject -> getPortOrDefault(serverObject, DEFAULT_PORT))
+                .map(this::getPortOrDefault)
                 .findFirst().orElse(DEFAULT_PORT);
     }
 
-    private int getPortOrDefault(ServerObject serverObject, int defaultPort) {
+    private int getPortOrDefault(ServerObject serverObject) {
         try {
             URL url = new URL(serverObject.getUrl());
             return url.getPort();
         } catch (MalformedURLException e) {
-            return defaultPort;
+            return OpenApiImporter.DEFAULT_PORT;
         }
     }
 
