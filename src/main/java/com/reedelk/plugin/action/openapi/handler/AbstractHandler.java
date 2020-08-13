@@ -32,7 +32,7 @@ abstract class AbstractHandler implements Handler {
         String openApiOperation = Serializer.toJson(operation, context, navigationPath);
 
         Properties properties =
-                new FlowWithRestListenerProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
+                new FlowWithRestListenerProperties(context.getRestListenerConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
 
         String fileName = operationId + "." + FileExtension.FLOW.value();
         context.createRestListenerFlow(fileName, properties);

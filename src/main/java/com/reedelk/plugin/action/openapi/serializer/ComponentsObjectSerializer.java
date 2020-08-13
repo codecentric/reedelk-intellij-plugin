@@ -8,6 +8,9 @@ import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.OpenApiSchemaFormat;
+import org.json.JSONObject;
+import org.yaml.snakeyaml.Yaml;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,12 +39,22 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
             // For each schema we must create a file and assign an ID.
             Schema schema = schemaObject.getSchema();
             if (schema.getSchemaData() != null) {
-                context.createAsset(schemaId, schemaObject, context.getSchemaFormat()).ifPresent(schemaPath -> {
-                    context.register(schemaId, schemaPath);
-                    Map<String, Object> schemaMap = new LinkedHashMap<>();
-                    schemaMap.put(SchemaObject.Properties.SCHEMA.value(), schemaPath);
-                    schemasMap.put(schemaId, schemaMap);
-                });
+
+                OpenApiSchemaFormat schemaFormat = context.getSchemaFormat();
+                Map<String, Object> schemaData = schemaObject.getSchema().getSchemaData();
+
+                String data = OpenApiSchemaFormat.JSON.equals(schemaFormat) ?
+                        new JSONObject(schemaData).toString(2) : // JSON
+                        new Yaml().dump(schemaData); // YAML
+
+                String finalFileName = schemaId + "." + schemaFormat.getExtension();
+                String schemaAssetPath = context.createAsset(finalFileName, data);
+
+                context.register(schemaId, schemaAssetPath);
+
+                Map<String, Object> schemaMap = new LinkedHashMap<>();
+                schemaMap.put(SchemaObject.Properties.SCHEMA.value(), schemaAssetPath);
+                schemasMap.put(schemaId, schemaMap);
             }
         });
 
