@@ -25,6 +25,8 @@ import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class DialogImport extends DialogWrapper {
 
+    private static final int MAX_WIDTH = 450;
+
     private final Project project;
     private StringInputField targetDirectory;
     private StringInputField openApiURLField;
@@ -37,6 +39,7 @@ public class DialogImport extends DialogWrapper {
         super(project);
         this.project = project;
         setTitle(message("openapi.importer.dialog.import.title"));
+        setSize(MAX_WIDTH, 0);
         setResizable(true);
         init();
     }
@@ -55,9 +58,9 @@ public class DialogImport extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         // Text
-        JBLabel label = new JBLabel();
-        label.setText(message("openapi.importer.dialog.import.help"));
+        JBLabel label = new JBLabel(message("openapi.importer.dialog.import.help"));
         label.setBorder(JBUI.Borders.empty(5, 0));
+        DisposablePanelFixedWidth fixedWidthPanel = new DisposablePanelFixedWidth(label, MAX_WIDTH);
 
         // File chooser
         ChooseFileInputFieldWithEraseBtn chooseFileInputField =
@@ -90,7 +93,7 @@ public class DialogImport extends DialogWrapper {
         DisposablePanel centerPanel = new DisposablePanel(new GridBagLayout());
 
         FormBuilder.get()
-                .addLastField(label, centerPanel);
+                .addLastField(fixedWidthPanel, centerPanel);
         FormBuilder.get()
                 .addLabel(message("openapi.importer.dialog.import.file"), centerPanel)
                 .addLastField(ContainerFactory.pushLeft(chooseFileInputField), centerPanel);
@@ -109,7 +112,8 @@ public class DialogImport extends DialogWrapper {
         FormBuilder.get()
                 .addLabel(message("openapi.importer.dialog.import.basePath"), centerPanel)
                 .addLastField(this.basePath, centerPanel);
-        return centerPanel;
+
+        return ContainerFactory.pushTop(centerPanel);
     }
 
     public String getImportModule() {
