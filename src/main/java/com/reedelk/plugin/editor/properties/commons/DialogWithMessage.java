@@ -16,7 +16,7 @@ import static java.awt.BorderLayout.WEST;
 
 public abstract class DialogWithMessage extends DialogWrapper {
 
-    private static final int MAX_WIDTH = 350;
+    private static final int MAX_WIDTH = 450;
 
     private final DialogType dialogType;
     private final String message;
