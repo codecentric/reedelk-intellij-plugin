@@ -8,6 +8,8 @@ import com.reedelk.plugin.action.openapi.dialog.DialogImportError;
 import com.reedelk.plugin.action.openapi.dialog.DialogImportSuccess;
 import org.jetbrains.annotations.NotNull;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class OpenApiActionImport extends AnAction {
 
     @Override
@@ -47,9 +49,14 @@ public class OpenApiActionImport extends AnAction {
 
         try {
             importer.processImport();
+            String apiTitle = importer.getApiTitle();
+            String host = importer.getHost();
+            int port = importer.getPort();
 
             DialogImportSuccess successDialog =
-                    new DialogImportSuccess(currentProject, "Port and host: localhost:8080");
+                    new DialogImportSuccess(currentProject,
+                            message("openapi.importer.dialog.success.message.details",
+                                    apiTitle, host, String.valueOf(port)));
             successDialog.show();
 
         } catch (Exception exception) {

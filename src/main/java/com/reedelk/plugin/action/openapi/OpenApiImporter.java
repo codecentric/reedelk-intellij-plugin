@@ -13,7 +13,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 
@@ -21,10 +23,23 @@ public class OpenApiImporter {
 
     private final OpenApiImporterContext context;
     private String host = Defaults.LOCALHOST;
-    private int listenerPort;
+    private int port;
+    private String apiTitle = message("openapi.importer.config.default.file.title");
 
     public OpenApiImporter(@NotNull OpenApiImporterContext context) {
         this.context = context;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getApiTitle() {
+        return apiTitle;
     }
 
     public void processImport() throws OpenApiException {
@@ -39,7 +54,12 @@ public class OpenApiImporter {
         // The logic should be: if the openapi object contains a server on localhost with a port,
         // if does not exist a config using that port, then we can create it, otherwise we come up with a free port.
 
-        listenerPort = findListenerPort(openApiObject);
+        if (openApiObject.getInfo() != null) {
+            apiTitle = Optional.ofNullable(openApiObject.getInfo().getTitle())
+                    .orElse(message("openapi.importer.config.default.file.title"));
+        }
+
+        port = findListenerPort(openApiObject);
 
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
 
@@ -47,7 +67,7 @@ public class OpenApiImporter {
 
         String title = OpenApiUtils.configTitleOf(openApiObject);
         String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
-        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, listenerPort);
+        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, port);
 
         // Generate REST flows from paths
         PathsObject paths = openApiObject.getPaths();
