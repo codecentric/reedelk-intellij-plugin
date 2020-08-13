@@ -44,7 +44,7 @@ public abstract class DialogAbstractProperties extends DialogWrapper implements 
     @Override
     protected JComponent createCenterPanel() {
         JComponent content = content();
-        FixedWidthConfigPropertiesPanel decorator = new FixedWidthConfigPropertiesPanel(content);
+        DisposablePanelFixedWidth decorator = new DisposablePanelFixedWidth(content, MINIMUM_PANEL_WIDTH);
 
         panel = ContainerFactory.makeItScrollable(ContainerFactory.pushTop(decorator));
         panel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
@@ -60,21 +60,4 @@ public abstract class DialogAbstractProperties extends DialogWrapper implements 
 
     protected abstract JComponent content();
 
-
-    private static class FixedWidthConfigPropertiesPanel extends DisposablePanel {
-
-        FixedWidthConfigPropertiesPanel(JComponent decorated) {
-            setLayout(new BorderLayout());
-            add(decorated, BorderLayout.CENTER);
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension preferredSize = super.getPreferredSize();
-            if (preferredSize.width > MINIMUM_PANEL_WIDTH) {
-                preferredSize.width = MINIMUM_PANEL_WIDTH;
-            }
-            return preferredSize;
-        }
-    }
 }

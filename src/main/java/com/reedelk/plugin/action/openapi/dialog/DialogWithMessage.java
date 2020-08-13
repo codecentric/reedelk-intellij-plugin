@@ -1,22 +1,32 @@
-package com.reedelk.plugin.action.openapi;
+package com.reedelk.plugin.action.openapi.dialog;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanelFixedWidth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ErrorDialogImport extends DialogWrapper {
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.WEST;
 
-    protected ErrorDialogImport(@Nullable Project project) {
+public abstract class DialogWithMessage extends DialogWrapper {
+
+    private static final int MAX_WIDTH = 350;
+
+    private final Icon icon;
+    private final String message;
+
+    protected DialogWithMessage(@Nullable Project project, String message, Icon icon) {
         super(project, false);
-        setTitle("Import OpenAPI Error");
+        this.icon = icon;
+        this.message = message;
         setResizable(false);
         init();
     }
@@ -31,11 +41,11 @@ public class ErrorDialogImport extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         DisposablePanel panel = new DisposablePanel(new BorderLayout());
-        panel.add(new JLabel(AllIcons.General.ErrorDialog), BorderLayout.WEST);
+        panel.add(ContainerFactory.pushTop(new JLabel(icon)), WEST);
 
-        JBLabel label = new JBLabel("Error importing OpenAPI file");
+        JBLabel label = new JBLabel(message);
         label.setBorder(JBUI.Borders.empty(0, 20));
-        panel.add(label, BorderLayout.CENTER);
+        panel.add(new DisposablePanelFixedWidth(label, MAX_WIDTH), CENTER);
         panel.setBorder(JBUI.Borders.empty(10, 5));
         return panel;
     }

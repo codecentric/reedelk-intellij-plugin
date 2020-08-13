@@ -1,4 +1,4 @@
-package com.reedelk.plugin.action.openapi;
+package com.reedelk.plugin.action.openapi.dialog;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -22,19 +22,18 @@ import java.util.Arrays;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 
-
-public class OpenApiImportDialog extends DialogWrapper {
+public class DialogImport extends DialogWrapper {
 
     private final Project project;
     private StringInputField targetDirectory;
-    private StringInputField urlField;
+    private StringInputField openApiURLField;
     private JComboBox<String> modulesCombo;
     private final PropertyAccessorInMemory propertyAccessorInMemory = new PropertyAccessorInMemory();
 
-    protected OpenApiImportDialog(@Nullable Project project) {
+    public DialogImport(@Nullable Project project) {
         super(project);
         this.project = project;
-        setTitle(message("openapi.importer.dialog.title"));
+        setTitle(message("openapi.importer.dialog.import.title"));
         setResizable(false);
         init();
     }
@@ -44,19 +43,19 @@ public class OpenApiImportDialog extends DialogWrapper {
     protected JComponent createCenterPanel() {
         // Text
         JBLabel label = new JBLabel();
-        label.setText(message("openapi.importer.help"));
+        label.setText(message("openapi.importer.dialog.import.help"));
         label.setBorder(JBUI.Borders.empty(5, 0));
 
         // File chooser
         ChooseFileInputField chooseFileInputField =
                 new ChooseFileInputField(project,
-                        message("openapi.importer.select.openapi.file.choose.tile"),
-                        message("openapi.importer.select.openapi.file.choose.hint"),
+                        message("openapi.importer.dialog.import.file.hint"),
+                        message("openapi.importer.dialog.import.file.hint"),
                         EMPTY,
                         propertyAccessorInMemory);
 
         // Input Field
-        urlField = new StringInputField("https://example.com/api/openapi.yaml");
+        this.openApiURLField = new StringInputField("https://example.com/api/openapi.yaml");
 
         // Modules chooser
         Module[] modules = ModuleManager.getInstance(project).getModules();
@@ -65,24 +64,34 @@ public class OpenApiImportDialog extends DialogWrapper {
         this.modulesCombo = new ComboBox<>(comboBoxModel);
 
         // Target directory
-        targetDirectory = new StringInputField("myApi");
-        targetDirectory.setValue("myApi");
+        this.targetDirectory = new StringInputField("myApi");
+        this.targetDirectory.setValue("myApi");
 
         // Build the panel
         DisposablePanel panel = new DisposablePanel(new GridBagLayout());
-        FormBuilder.get().addLastField(label, panel);
-        FormBuilder.get().addLabel(message("openapi.importer.select.openapi.file.tile"), panel).addLastField(chooseFileInputField, panel);
-        FormBuilder.get().addLabel(message("openapi.importer.select.openapi.url"), panel).addLastField(urlField, panel);
-        FormBuilder.get().addLabel(message("openapi.importer.select.module"), panel).addLastField(modulesCombo, panel);
-        FormBuilder.get().addLabel(message("openapi.importer.target.directory"), panel).addLastField(targetDirectory, panel);
+
+        FormBuilder.get()
+                .addLastField(label, panel);
+        FormBuilder.get()
+                .addLabel(message("openapi.importer.dialog.import.file"), panel)
+                .addLastField(chooseFileInputField, panel);
+        FormBuilder.get()
+                .addLabel(message("openapi.importer.dialog.import.url"), panel)
+                .addLastField(this.openApiURLField, panel);
+        FormBuilder.get()
+                .addLabel(message("openapi.importer.dialog.import.module"), panel)
+                .addLastField(this.modulesCombo, panel);
+        FormBuilder.get()
+                .addLabel(message("openapi.importer.dialog.import.directory"), panel)
+                .addLastField(this.targetDirectory, panel);
         return panel;
     }
 
-    String getImportModule() {
+    public String getImportModule() {
         return (String) modulesCombo.getSelectedItem();
     }
 
-    String getOpenAPIFilePath() {
+    public String getOpenApiFile() {
         return propertyAccessorInMemory.get();
     }
 
@@ -90,8 +99,8 @@ public class OpenApiImportDialog extends DialogWrapper {
         return (String) targetDirectory.getValue();
     }
 
-    public String getUrlField() {
-        return (String) urlField.getValue();
+    public String getOpenApiURL() {
+        return (String) openApiURLField.getValue();
     }
 
     static class PropertyAccessorInMemory implements PropertyAccessor {

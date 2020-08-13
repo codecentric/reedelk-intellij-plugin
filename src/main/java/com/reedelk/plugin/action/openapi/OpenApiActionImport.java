@@ -3,6 +3,9 @@ package com.reedelk.plugin.action.openapi;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.reedelk.plugin.action.openapi.dialog.DialogImport;
+import com.reedelk.plugin.action.openapi.dialog.DialogImportError;
+import com.reedelk.plugin.action.openapi.dialog.DialogImportSuccess;
 import org.jetbrains.annotations.NotNull;
 
 public class OpenApiActionImport extends AnAction {
@@ -20,25 +23,31 @@ public class OpenApiActionImport extends AnAction {
         Project currentProject = event.getProject();
         if (currentProject == null) return;
 
-        OpenApiImportDialog dialog = new OpenApiImportDialog(currentProject);
+        DialogImport dialog = new DialogImport(currentProject);
         if (dialog.showAndGet()) {
             doImport(currentProject, dialog);
         }
     }
 
-    private void doImport(Project currentProject, OpenApiImportDialog dialog) {
-        String openAPIFilePath = dialog.getOpenAPIFilePath();
-        String importModule = dialog.getImportModule();
-        String targetDirectory = dialog.getTargetDirectory();
-        String urlField = dialog.getUrlField();
-        OpenApiImporterContext context = new OpenApiImporterContext(currentProject, openAPIFilePath, importModule, targetDirectory, urlField);
+    private void doImport(Project currentProject, DialogImport importDialog) {
+        String targetDirectory = importDialog.getTargetDirectory();
+        String openAPIFilePath = importDialog.getOpenApiFile();
+        String importModule = importDialog.getImportModule();
+        String openApiURL = importDialog.getOpenApiURL();
+
+        OpenApiImporterContext context = new OpenApiImporterContext(currentProject, openAPIFilePath, importModule, targetDirectory, openApiURL);
         OpenApiImporter importer = new OpenApiImporter(context);
+
         try {
             importer.processImport();
+
+            DialogImportSuccess successDialog = new DialogImportSuccess(currentProject, "Port and host: localhost:8080");
+            successDialog.showAndGet();
+
         } catch (Exception exception) {
-            exception.printStackTrace();
-            ErrorDialogImport errorDialogImport = new ErrorDialogImport(currentProject);
-            errorDialogImport.showAndGet();
+            String cause = exception.getMessage();
+            DialogImportError errorDialog = new DialogImportError(currentProject, cause);
+            errorDialog.showAndGet();
         }
     }
 }
