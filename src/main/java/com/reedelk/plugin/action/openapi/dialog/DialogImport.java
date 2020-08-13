@@ -10,6 +10,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.renderer.typeinteger.IntegerInputField;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,7 @@ public class DialogImport extends DialogWrapper {
     private final Project project;
     private StringInputField targetDirectory;
     private StringInputField openApiURLField;
+    private IntegerInputField openApiPort;
     private JComboBox<String> modulesCombo;
     private final PropertyAccessorInMemory propertyAccessorInMemory = new PropertyAccessorInMemory();
 
@@ -76,6 +78,9 @@ public class DialogImport extends DialogWrapper {
         this.targetDirectory = new StringInputField("myApi");
         this.targetDirectory.setValue("myApi");
 
+        // API Port
+        this.openApiPort = new IntegerInputField("8484"); // TODO: Replace with default
+
         // Build the center panel
         DisposablePanel centerPanel = new DisposablePanel(new GridBagLayout());
 
@@ -93,6 +98,9 @@ public class DialogImport extends DialogWrapper {
         FormBuilder.get()
                 .addLabel(message("openapi.importer.dialog.import.directory"), centerPanel)
                 .addLastField(this.targetDirectory, centerPanel);
+        FormBuilder.get()
+                .addLabel(message("openapi.importer.dialog.import.port"), centerPanel)
+                .addLastField(this.openApiPort, centerPanel);
         return centerPanel;
     }
 
@@ -110,6 +118,10 @@ public class DialogImport extends DialogWrapper {
 
     public String getOpenApiURL() {
         return (String) openApiURLField.getValue();
+    }
+
+    public Integer getOpenApiPort() {
+        return (Integer) openApiPort.getValue();
     }
 
     static class PropertyAccessorInMemory implements PropertyAccessor {

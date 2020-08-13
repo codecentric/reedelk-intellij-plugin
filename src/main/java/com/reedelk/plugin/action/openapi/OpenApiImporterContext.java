@@ -30,6 +30,7 @@ public class OpenApiImporterContext {
 
     private final Project project;
     private final String apiFileUrl;
+    private final Integer openApiPort;
     private final String targetDirectory;
     private final String openApiFilePath;
     private final String importModuleName;
@@ -44,9 +45,11 @@ public class OpenApiImporterContext {
                                   @Nullable String openAPIFilePath,
                                   @NotNull String importModuleName,
                                   @Nullable String targetDirectory,
-                                  @Nullable String apiFileUrl) {
+                                  @Nullable String apiFileUrl,
+                                  @Nullable Integer openApiPort) {
         this.project = project;
         this.apiFileUrl = apiFileUrl;
+        this.openApiPort = openApiPort;
         this.targetDirectory = targetDirectory;
         this.openApiFilePath = openAPIFilePath;
         this.importModuleName = importModuleName;
@@ -63,6 +66,10 @@ public class OpenApiImporterContext {
 
     public String getRestListenerConfigId() {
         return restListenerConfigId;
+    }
+
+    public Integer getOpenApiPort() {
+        return openApiPort;
     }
 
     public void registerRequestBody(String requestBodyId, RequestBodyObject requestBodyMediaType) {

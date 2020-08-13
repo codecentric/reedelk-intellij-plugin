@@ -64,6 +64,9 @@ public class OpenApiImporter {
     }
 
     private int findListenerPort(OpenApiObject openApiObject) {
+        if (context.getOpenApiPort() != null) {
+            return context.getOpenApiPort();
+        }
         return openApiObject.getServers().stream()
                 .filter(this::isLocalhost)
                 .map(this::getPortOrDefault)
