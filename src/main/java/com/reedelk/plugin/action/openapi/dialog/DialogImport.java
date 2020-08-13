@@ -116,7 +116,7 @@ public class DialogImport extends DialogWrapper {
                 .addLastField(this.targetDirectory, centerPanel);
         FormBuilder.get()
                 .addLabel(message("openapi.importer.dialog.import.port"), centerPanel)
-                .addLastField(this.openApiPort, centerPanel);
+                .addLastField(ContainerFactory.pushLeft(this.openApiPort), centerPanel);
         FormBuilder.get()
                 .addLabel(message("openapi.importer.dialog.import.basePath"), centerPanel)
                 .addLastField(this.basePath, centerPanel);
