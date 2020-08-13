@@ -14,6 +14,7 @@ import com.reedelk.plugin.template.RestListenerOpenApiConfigProperties;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.ModuleProperties;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,13 +37,17 @@ public class OpenApiImporterContext {
     private Map<String, String> schemaIdAndPath = new HashMap<>();
     private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
 
-    public OpenApiImporterContext(@NotNull Project project, String openAPIFilePath, String importModuleName, String targetDirectory, String apiFileUrl) {
-        this.restListenerConfigId = UUID.randomUUID().toString();
+    public OpenApiImporterContext(@NotNull Project project,
+                                  @Nullable String openAPIFilePath,
+                                  @NotNull String importModuleName,
+                                  @Nullable String targetDirectory,
+                                  @Nullable String apiFileUrl) {
         this.project = project;
         this.apiFileUrl = apiFileUrl;
         this.targetDirectory = targetDirectory;
         this.openApiFilePath = openAPIFilePath;
         this.importModuleName = importModuleName;
+        this.restListenerConfigId = UUID.randomUUID().toString();
     }
 
     public String getOpenApiFilePath() {
