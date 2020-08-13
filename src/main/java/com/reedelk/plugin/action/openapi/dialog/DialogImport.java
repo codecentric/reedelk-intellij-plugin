@@ -28,6 +28,7 @@ public class DialogImport extends DialogWrapper {
     private final Project project;
     private StringInputField targetDirectory;
     private StringInputField openApiURLField;
+    private StringInputField basePath;
     private IntegerInputField openApiPort;
     private JComboBox<String> modulesCombo;
     private final PropertyAccessorInMemory propertyAccessorInMemory = new PropertyAccessorInMemory();
@@ -82,6 +83,9 @@ public class DialogImport extends DialogWrapper {
         // API Port
         this.openApiPort = new IntegerInputField(String.valueOf(Defaults.HTTP_PORT));
 
+        // Base Path
+        this.basePath = new StringInputField(Defaults.BASE_PATH);
+
         // Build the center panel
         DisposablePanel centerPanel = new DisposablePanel(new GridBagLayout());
 
@@ -102,6 +106,9 @@ public class DialogImport extends DialogWrapper {
         FormBuilder.get()
                 .addLabel(message("openapi.importer.dialog.import.port"), centerPanel)
                 .addLastField(this.openApiPort, centerPanel);
+        FormBuilder.get()
+                .addLabel(message("openapi.importer.dialog.import.basePath"), centerPanel)
+                .addLastField(this.basePath, centerPanel);
         return centerPanel;
     }
 
@@ -119,6 +126,10 @@ public class DialogImport extends DialogWrapper {
 
     public String getOpenApiURL() {
         return (String) openApiURLField.getValue();
+    }
+
+    public String getBasePath() {
+        return (String) basePath.getValue();
     }
 
     public Integer getOpenApiPort() {

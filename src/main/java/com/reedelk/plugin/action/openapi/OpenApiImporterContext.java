@@ -29,6 +29,7 @@ import static com.reedelk.plugin.template.Template.OpenAPI;
 
 public class OpenApiImporterContext {
 
+    private final String basePath;
     private final Project project;
     private final String apiFileUrl;
     private final Integer openApiPort;
@@ -47,8 +48,10 @@ public class OpenApiImporterContext {
                                   @NotNull String importModuleName,
                                   @Nullable String targetDirectory,
                                   @Nullable String apiFileUrl,
-                                  @Nullable Integer openApiPort) {
+                                  @Nullable Integer openApiPort,
+                                  @Nullable String basePath) {
         this.project = project;
+        this.basePath = basePath;
         this.apiFileUrl = apiFileUrl;
         this.openApiPort = openApiPort;
         this.targetDirectory = targetDirectory;
@@ -71,6 +74,10 @@ public class OpenApiImporterContext {
 
     public Integer getOpenApiPort() {
         return openApiPort;
+    }
+
+    public String getBasePath() {
+        return basePath;
     }
 
     public void registerRequestBody(String requestBodyId, RequestBodyObject requestBodyMediaType) {
@@ -125,10 +132,10 @@ public class OpenApiImporterContext {
                 createBuildable(OpenAPI.FLOW_WITH_REST_LISTENER, properties, fileName, directory, true));
     }
 
-    public void createRestListenerConfig(String configFileName, String configTitle, String configOpenApiObject, String host, int port) {
+    public void createRestListenerConfig(String configFileName, String configTitle, String configOpenApiObject, String host, int port, String basePath) {
         Module module = getImportModule();
         RestListenerOpenApiConfigProperties properties =
-                new RestListenerOpenApiConfigProperties(restListenerConfigId, configTitle, host, port, configOpenApiObject);
+                new RestListenerOpenApiConfigProperties(restListenerConfigId, configTitle, host, port, configOpenApiObject, basePath);
         PluginModuleUtils.getConfigsDirectory(module)
                 .ifPresent(configsDirectory ->
                         createBuildable(OpenAPI.REST_LISTENER_CONFIG, properties, configFileName, configsDirectory, false));

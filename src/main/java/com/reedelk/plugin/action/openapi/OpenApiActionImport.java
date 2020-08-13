@@ -35,6 +35,7 @@ public class OpenApiActionImport extends AnAction {
         String targetDirectory = importDialog.getTargetDirectory();
         String openAPIFilePath = importDialog.getOpenApiFile();
         String importModule = importDialog.getImportModule();
+        String openApiBasePath = importDialog.getBasePath();
         String openApiURL = importDialog.getOpenApiURL();
         Integer openApiPort = importDialog.getOpenApiPort();
 
@@ -44,7 +45,8 @@ public class OpenApiActionImport extends AnAction {
                 importModule,
                 targetDirectory,
                 openApiURL,
-                openApiPort);
+                openApiPort,
+                openApiBasePath);
         OpenApiImporter importer = new OpenApiImporter(context);
 
         try {
@@ -52,11 +54,12 @@ public class OpenApiActionImport extends AnAction {
             String apiTitle = importer.getApiTitle();
             String host = importer.getHost();
             int port = importer.getPort();
+            String basePath = importer.getBasePath();
 
             DialogImportSuccess successDialog =
                     new DialogImportSuccess(currentProject,
                             message("openapi.importer.dialog.success.message.details",
-                                    apiTitle, host, String.valueOf(port)));
+                                    apiTitle, host, String.valueOf(port), basePath));
             successDialog.show();
 
         } catch (Exception exception) {

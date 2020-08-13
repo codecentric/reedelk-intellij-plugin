@@ -23,23 +23,12 @@ public class OpenApiImporter {
 
     private final OpenApiImporterContext context;
     private String host = Defaults.LOCALHOST;
+    private String basePath;
     private int port;
     private String apiTitle = message("openapi.importer.config.default.file.title");
 
     public OpenApiImporter(@NotNull OpenApiImporterContext context) {
         this.context = context;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getApiTitle() {
-        return apiTitle;
     }
 
     public void processImport() throws OpenApiException {
@@ -59,6 +48,7 @@ public class OpenApiImporter {
                     .orElse(message("openapi.importer.config.default.file.title"));
         }
 
+        basePath = getBasePath(openApiObject);
         port = findListenerPort(openApiObject);
 
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
@@ -67,12 +57,28 @@ public class OpenApiImporter {
 
         String title = OpenApiUtils.configTitleOf(openApiObject);
         String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
-        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, port);
+        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, port, basePath);
 
         // Generate REST flows from paths
         PathsObject paths = openApiObject.getPaths();
         paths.getPaths().forEach((pathEntry, pathItem) ->
                 Handlers.handle(context, pathEntry, pathItem));
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getApiTitle() {
+        return apiTitle;
+    }
+
+    public String getBasePath() {
+        return basePath;
     }
 
     private FileReader createOpenApiReader() {
@@ -89,6 +95,17 @@ public class OpenApiImporter {
                 .filter(this::isLocalhost)
                 .map(this::getPortOrDefault)
                 .findFirst().orElse(Defaults.HTTP_PORT);
+    }
+
+    private String getBasePath(OpenApiObject openApiObject) {
+        if (isNotBlank(context.getBasePath())) {
+            return context.getBasePath();
+        }
+        return openApiObject.getServers()
+                .stream()
+                .findFirst()
+                .map(this::extractBasePath)
+                .orElse(Defaults.BASE_PATH);
     }
 
     private int getPortOrDefault(ServerObject serverObject) {
@@ -108,6 +125,17 @@ public class OpenApiImporter {
                     Defaults.ANY_ADDRESS.equals(host);
         } catch (MalformedURLException e) {
             return false;
+        }
+    }
+
+    private String extractBasePath(ServerObject serverObject) {
+        try {
+            URL url = new URL(serverObject.getUrl());
+            String path = url.getPath();
+            String[] pathSegments = path.split("/");
+            return pathSegments.length > 1 ? "/" + pathSegments[1] : "/";
+        } catch (MalformedURLException e) {
+            return Defaults.BASE_PATH;
         }
     }
 }

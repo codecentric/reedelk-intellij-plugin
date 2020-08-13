@@ -5,7 +5,7 @@
   "host": "${host}",
   "port": "${port}",
   "protocol": "HTTP",
-  "basePath": "/api",
+  "basePath": "${basePath}",
   "keepAlive": true,
   "openApi": ${openApiObject}
 }
