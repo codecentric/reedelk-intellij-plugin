@@ -9,6 +9,7 @@ import com.reedelk.plugin.action.openapi.reader.FileReader;
 import com.reedelk.plugin.action.openapi.reader.Readers;
 import com.reedelk.plugin.action.openapi.serializer.ConfigOpenApiObject;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
+import com.reedelk.plugin.commons.DefaultConstants;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
@@ -22,7 +23,7 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 public class OpenApiImporter {
 
     private final OpenApiImporterContext context;
-    private String host = Defaults.LOCALHOST;
+    private String host = DefaultConstants.OpenApi.LOCALHOST;
     private String basePath;
     private int port;
     private String apiTitle = message("openapi.importer.config.default.file.title");
@@ -94,7 +95,7 @@ public class OpenApiImporter {
         return openApiObject.getServers().stream()
                 .filter(this::isLocalhost)
                 .map(this::getPortOrDefault)
-                .findFirst().orElse(Defaults.HTTP_PORT);
+                .findFirst().orElse(DefaultConstants.OpenApi.HTTP_PORT);
     }
 
     private String getBasePath(OpenApiObject openApiObject) {
@@ -105,7 +106,7 @@ public class OpenApiImporter {
                 .stream()
                 .findFirst()
                 .map(this::extractBasePath)
-                .orElse(Defaults.BASE_PATH);
+                .orElse(DefaultConstants.OpenApi.BASE_PATH);
     }
 
     private int getPortOrDefault(ServerObject serverObject) {
@@ -113,7 +114,7 @@ public class OpenApiImporter {
             URL url = new URL(serverObject.getUrl());
             return url.getPort();
         } catch (MalformedURLException e) {
-            return Defaults.HTTP_PORT;
+            return DefaultConstants.OpenApi.HTTP_PORT;
         }
     }
 
@@ -121,8 +122,8 @@ public class OpenApiImporter {
         try {
             URL url = new URL(serverObject.getUrl());
             String host = url.getHost();
-            return Defaults.LOCALHOST.equals(host) ||
-                    Defaults.ANY_ADDRESS.equals(host);
+            return DefaultConstants.OpenApi.LOCALHOST.equals(host) ||
+                    DefaultConstants.OpenApi.ANY_ADDRESS.equals(host);
         } catch (MalformedURLException e) {
             return false;
         }
@@ -135,7 +136,7 @@ public class OpenApiImporter {
             String[] pathSegments = path.split("/");
             return pathSegments.length > 1 ? "/" + pathSegments[1] : "/";
         } catch (MalformedURLException e) {
-            return Defaults.BASE_PATH;
+            return DefaultConstants.OpenApi.BASE_PATH;
         }
     }
 }

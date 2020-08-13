@@ -65,4 +65,25 @@ public class DefaultConstants {
 
         public static final String IMPLEMENTATION_VERSION = "Implementation-Version";
     }
+
+    public static class OpenApi {
+
+        private OpenApi() {
+        }
+
+        public static final String TARGET_DIRECTORY = "my-api";
+        public static final String LOCALHOST = "localhost";
+        public static final String ANY_ADDRESS = "0.0.0.0";
+        public static final String BASE_PATH = "/v1";
+        public static final int HTTP_PORT = 8484;
+    }
+
+    public static class Template {
+
+        private Template() {
+        }
+
+        public static final String DEFAULT_HOST = "0.0.0.0";
+        public static final int DEFAULT_PORT = 8282;
+    }
 }

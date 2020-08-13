@@ -26,11 +26,11 @@ public class OpenApiUtils {
         if (openApiObject.getInfo() != null) {
             openApiName = openApiObject.getInfo().getTitle();
         }
-        return normalize(openApiName) + "_configuration" + "." + FileExtension.CONFIG.value();
+        return normalizeSpaces(openApiName) + "Configuration" + "." + FileExtension.CONFIG.value();
     }
 
-    public static String normalize(String value) {
-        return value.replaceAll(" ", "_");
+    public static String normalizeSpaces(String value) {
+        return value.replaceAll(" ", "");
     }
 
     @NotNull
