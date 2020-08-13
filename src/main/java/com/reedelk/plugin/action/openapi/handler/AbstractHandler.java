@@ -35,7 +35,7 @@ abstract class AbstractHandler implements Handler {
                 new FlowWithRestListenerProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
 
         String fileName = operationId + "." + FileExtension.FLOW.value();
-        context.createFlow(fileName, properties);
+        context.createRestListenerFlow(fileName, properties);
     }
 
     private String getOrDefault(String value, String defaultValue) {

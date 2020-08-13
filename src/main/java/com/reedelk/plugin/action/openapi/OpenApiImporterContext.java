@@ -56,6 +56,10 @@ public class OpenApiImporterContext {
         return apiFileUrl;
     }
 
+    public String getConfigId() {
+        return configId;
+    }
+
     // TODO: Can we rely on the extension for file url as well? perhaps the safest bet is to parse it.
     public OpenApiSchemaFormat getSchemaFormat() {
         if (StringUtils.isNotBlank(openApiFilePath)) {
@@ -65,13 +69,8 @@ public class OpenApiImporterContext {
         }
     }
 
-    public String getConfigId() {
-        return configId;
-    }
-
     public Optional<String> createAsset(String schemaId, SchemaObject schemaObject, OpenApiSchemaFormat schemaFormat) {
         if (schemaObject.getSchema() == null) return Optional.empty();
-
 
         Map<String, Object> schemaData = schemaObject.getSchema().getSchemaData();
 
@@ -103,7 +102,7 @@ public class OpenApiImporterContext {
         return assetResource(fileName);
     }
 
-    public void createFlow(String fileName, Properties properties) {
+    public void createRestListenerFlow(String fileName, Properties properties) {
         Module module = getImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
