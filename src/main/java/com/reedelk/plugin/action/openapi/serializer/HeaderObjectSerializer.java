@@ -23,6 +23,7 @@ class HeaderObjectSerializer extends com.reedelk.openapi.v3.serializer.HeaderObj
         if (input.getSchema() != null) {
             String data = new Yaml().dump(input.getSchema().getSchemaData()); // TODO: Might be JSON instead of YAML
 
+            // TODO: This one should be predefined in the header? The schema if it is a predefined should be predefined.
             String finalFileName = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);
             String schemaAssetPath = context.createAsset(finalFileName, data);
             serialize.put(HeaderObject.Properties.SCHEMA.value(), schemaAssetPath);
