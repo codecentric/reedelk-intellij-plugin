@@ -1,7 +1,7 @@
 package com.reedelk.plugin.action.openapi.dialog;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
+import com.reedelk.plugin.editor.properties.commons.DialogWithMessage;
 import org.jetbrains.annotations.Nullable;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -10,7 +10,7 @@ import static java.lang.String.format;
 public class DialogImportError extends DialogWithMessage {
 
     public DialogImportError(@Nullable Project project, String cause) {
-        super(project, formatMessage(cause), AllIcons.General.ErrorDialog);
+        super(project, formatMessage(cause), DialogType.ERROR);
     }
 
     @Override
