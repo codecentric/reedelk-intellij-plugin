@@ -6,8 +6,10 @@ import com.reedelk.openapi.v3.model.OpenApiObject;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
@@ -15,20 +17,20 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 public class OpenApiUtils {
 
     @NotNull
-    public static String restListenerConfigTitleOf(OpenApiObject openApiObject) {
-        String openApiTitle = getApiTitle(openApiObject, message("openapi.importer.config.default.file.title"));
+    public static String restListenerConfigTitleFrom(OpenApiObject openApiObject) {
+        String openApiTitle = getApiTitle(openApiObject);
         return openApiTitle + " REST Listener";
     }
 
     @NotNull
-    public static String restListenerConfigFileNameOf(OpenApiObject openApiObject) {
-        String openApiTitle = getApiTitle(openApiObject, message("openapi.importer.config.default.file.name"));
+    public static String restListenerConfigFileNameFrom(OpenApiObject openApiObject) {
+        String openApiTitle = getApiTitle(openApiObject);
         return removeWhiteSpaces(openApiTitle) + "RESTListener" + "." + FileExtension.CONFIG.value();
     }
 
     @NotNull
     public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        StringBuilder baseFileName = baseFindFile(navigationPath);
+        StringBuilder baseFileName = baseOperationAwareFile(navigationPath);
         String statusCode = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.STATUS_CODE);
         String contentType = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.CONTENT_TYPE);
         baseFileName.append("response").append("_")
@@ -41,7 +43,7 @@ public class OpenApiUtils {
 
     @NotNull
     public static String schemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        StringBuilder baseFileName = baseFindFile(navigationPath);
+        StringBuilder baseFileName = baseOperationAwareFile(navigationPath);
         if (findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.REQUEST_BODY) != null) {
             // It is request body.
             String contentType = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.CONTENT_TYPE);
@@ -66,7 +68,7 @@ public class OpenApiUtils {
 
     @NotNull
     public static String parameterSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        StringBuilder fileName = baseFindFile(navigationPath);
+        StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String parameterName = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.PARAMETER_NAME);
         fileName.append("parameter").append("_")
                 .append(parameterName).append(".")
@@ -77,7 +79,7 @@ public class OpenApiUtils {
 
     @NotNull
     public static String headerFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        StringBuilder fileName = baseFindFile(navigationPath);
+        StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String headerName = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.HEADER_NAME);
         fileName.append("header").append("_")
                 .append(headerName).append(".")
@@ -93,7 +95,7 @@ public class OpenApiUtils {
      * [paths, /pet/{petId} (path), GET (method), getPetById (operationId), responses, 200 (statusCode), content, application/xml (contentType), schema]
      */
     @NotNull
-    private static StringBuilder baseFindFile(NavigationPath navigationPath) {
+    private static StringBuilder baseOperationAwareFile(NavigationPath navigationPath) {
         String operationId = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.OPERATION_ID);
         StringBuilder fileName = new StringBuilder();
         if (isNotBlank(operationId)) {
@@ -102,15 +104,18 @@ public class OpenApiUtils {
             String method = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.METHOD);
             String path = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.PATH);
             fileName = new StringBuilder()
-                    .append(method).append("_")
-                    .append(path).append("_");
+                    .append(method.toLowerCase())
+                    .append(normalizePath(path)).append("_");
         }
         return fileName;
     }
 
-    // TODO: White spaces?
-    private static String normalizeFileName(String originalName) {
-        return originalName.replace('/', '_');
+    private static String normalizePath(String path) {
+        String[] pathSegments = path.split("/");
+        return Arrays.stream(pathSegments)
+                .map(OpenApiUtils::removeSpecialChars)
+                .map(OpenApiUtils::capitalize)
+                .collect(Collectors.joining());
     }
 
     private static String findSegmentValueFrom(NavigationPath navigationPath, NavigationPath.SegmentKey segmentKey) {
@@ -121,13 +126,36 @@ public class OpenApiUtils {
         return matchingPathSegment.map(NavigationPath.PathSegment::getSegmentValue).orElse(null);
     }
 
-    private static String getApiTitle(OpenApiObject openApiObject, String defaultValue) {
+    public static String getApiTitle(OpenApiObject openApiObject) {
+        return getApiTitle(openApiObject, message("openapi.importer.config.default.file.title"));
+    }
+
+    public static String getApiTitle(OpenApiObject openApiObject, String defaultValue) {
         InfoObject info = openApiObject.getInfo();
         return info != null && isNotBlank(info.getTitle()) ?
                 info.getTitle() : defaultValue;
     }
 
+    // TODO: White spaces?
+    private static String normalizeFileName(String originalName) {
+        return originalName.replace('/', '_');
+    }
+
     private static String removeWhiteSpaces(String value) {
         return value.replaceAll(" ", "");
+    }
+
+    public static String capitalize(String value) {
+        if (value == null) return null;
+        if (value.length() == 0) return value;
+        return value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase();
+    }
+
+    private static String removeSpecialChars(String value) {
+        String result = value.replaceAll("\\{", "");
+        result = result.replaceAll("}", "");
+        result = result.replaceAll(":", "");
+        result = result.replaceAll("\\*", "");
+        return result;
     }
 }

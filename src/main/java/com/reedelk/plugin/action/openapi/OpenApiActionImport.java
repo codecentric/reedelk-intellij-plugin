@@ -53,8 +53,8 @@ public class OpenApiActionImport extends AnAction {
             importer.processImport();
             String apiTitle = importer.getApiTitle();
             String host = importer.getHost();
-            int port = importer.getPort();
-            String basePath = importer.getBasePath();
+            int port = importer.getApiPort();
+            String basePath = importer.getApiBasePath();
 
             DialogImportSuccess successDialog =
                     new DialogImportSuccess(currentProject,

@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Optional;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
@@ -24,8 +23,8 @@ public class OpenApiImporter {
 
     private final OpenApiImporterContext context;
     private String host = DefaultConstants.OpenApi.LOCALHOST;
-    private String basePath;
-    private int port;
+    private String apiBasePath;
+    private int apiPort;
     private String apiTitle = message("openapi.importer.config.default.file.title");
 
     public OpenApiImporter(@NotNull OpenApiImporterContext context) {
@@ -41,24 +40,17 @@ public class OpenApiImporter {
         // Deserialize the content into the OpenAPI Model
         OpenApiObject openApiObject = OpenApi.from(content);
 
-        // The logic should be: if the openapi object contains a server on localhost with a port,
-        // if does not exist a config using that port, then we can create it, otherwise we come up with a free port.
-
-        if (openApiObject.getInfo() != null) {
-            apiTitle = Optional.ofNullable(openApiObject.getInfo().getTitle())
-                    .orElse(message("openapi.importer.config.default.file.title"));
-        }
-
-        basePath = getBasePath(openApiObject);
-        port = findListenerPort(openApiObject);
+        apiTitle = OpenApiUtils.getApiTitle(openApiObject);
+        apiBasePath = getBasePath(openApiObject);
+        apiPort = findListenerPort(openApiObject);
 
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
 
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
 
-        String title = OpenApiUtils.restListenerConfigTitleOf(openApiObject);
-        String configFileName = OpenApiUtils.restListenerConfigFileNameOf(openApiObject);
-        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, port, basePath);
+        String title = OpenApiUtils.restListenerConfigTitleFrom(openApiObject);
+        String configFileName = OpenApiUtils.restListenerConfigFileNameFrom(openApiObject);
+        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, apiPort, apiBasePath);
 
         // Generate REST flows from paths
         PathsObject paths = openApiObject.getPaths();
@@ -70,16 +62,16 @@ public class OpenApiImporter {
         return host;
     }
 
-    public int getPort() {
-        return port;
+    public int getApiPort() {
+        return apiPort;
     }
 
     public String getApiTitle() {
         return apiTitle;
     }
 
-    public String getBasePath() {
-        return basePath;
+    public String getApiBasePath() {
+        return apiBasePath;
     }
 
     private FileReader createOpenApiReader() {
@@ -129,6 +121,7 @@ public class OpenApiImporter {
         }
     }
 
+    // TODO: Test this.
     private String extractBasePath(ServerObject serverObject) {
         try {
             URL url = new URL(serverObject.getUrl());
