@@ -41,12 +41,13 @@ public class OpenApiImporter {
         // The logic should be: if the openapi object contains a server on localhost with a port,
         // if does not exist a config using that port, then we can create it, otherwise we come up with a free port.
 
-        String title = "Open API Config";
         int listenerPort = findListenerPort(openApiObject);
 
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
 
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
+
+        String title = OpenApiUtils.configTitleOf(openApiObject);
         String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
         context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, LOCALHOST, listenerPort);
 

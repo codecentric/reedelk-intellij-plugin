@@ -12,15 +12,25 @@ import java.util.Optional;
 
 public class OpenApiUtils {
 
-    private static final String DEFAULT_TITLE = "my_api";
+    private static final String DEFAULT_TITLE = "My API Configuration";
+    private static final String DEFAULT_FILE_NAME = "my_api";
 
-    public static String configFileNameOf(OpenApiObject openApiObject) {
+    public static String configTitleOf(OpenApiObject openApiObject) {
         String openApiName = DEFAULT_TITLE;
         if (openApiObject.getInfo() != null) {
             openApiName = openApiObject.getInfo().getTitle();
         }
         return StringUtils.isBlank(openApiName) ?
-                DEFAULT_TITLE + "." + FileExtension.CONFIG.value() :
+                DEFAULT_TITLE : openApiName + " Configuration";
+    }
+
+    public static String configFileNameOf(OpenApiObject openApiObject) {
+        String openApiName = DEFAULT_FILE_NAME;
+        if (openApiObject.getInfo() != null) {
+            openApiName = openApiObject.getInfo().getTitle();
+        }
+        return StringUtils.isBlank(openApiName) ?
+                DEFAULT_FILE_NAME + "." + FileExtension.CONFIG.value() :
                 normalize(openApiName) + "." + FileExtension.CONFIG.value();
     }
 
