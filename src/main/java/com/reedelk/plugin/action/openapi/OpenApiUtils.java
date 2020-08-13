@@ -1,8 +1,8 @@
 package com.reedelk.plugin.action.openapi;
 
 import com.reedelk.openapi.commons.NavigationPath;
+import com.reedelk.openapi.v3.model.InfoObject;
 import com.reedelk.openapi.v3.model.OpenApiObject;
-import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,15 +10,17 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class OpenApiUtils {
 
     public static String configTitleOf(OpenApiObject openApiObject) {
         String openApiName = message("openapi.importer.config.default.file.title");
-        if (openApiObject.getInfo() != null) {
-            openApiName = openApiObject.getInfo().getTitle();
+        InfoObject info = openApiObject.getInfo();
+        if (info != null && isNotBlank(info.getTitle())) {
+            openApiName = info.getTitle();
         }
-        return openApiName + " Configuration";
+        return openApiName + " REST Listener";
     }
 
     public static String configFileNameOf(OpenApiObject openApiObject) {
@@ -26,7 +28,7 @@ public class OpenApiUtils {
         if (openApiObject.getInfo() != null) {
             openApiName = openApiObject.getInfo().getTitle();
         }
-        return normalizeSpaces(openApiName) + "Configuration" + "." + FileExtension.CONFIG.value();
+        return normalizeSpaces(openApiName) + "RESTListener" + "." + FileExtension.CONFIG.value();
     }
 
     public static String normalizeSpaces(String value) {
@@ -103,7 +105,7 @@ public class OpenApiUtils {
     private static StringBuilder baseFindFile(NavigationPath navigationPath) {
         String operationId = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.OPERATION_ID);
         StringBuilder fileName = new StringBuilder();
-        if (StringUtils.isNotBlank(operationId)) {
+        if (isNotBlank(operationId)) {
             fileName.append(operationId).append("_");
         } else {
             String method = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.METHOD);
