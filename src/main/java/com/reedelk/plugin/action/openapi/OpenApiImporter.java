@@ -32,22 +32,22 @@ public class OpenApiImporter {
     }
 
     public void processImport() throws OpenApiException {
-        // Read the OpenAPI file as string.
-        String content = createOpenApiReader().read();
 
+        // Read the OpenAPI definition as string
+        String content = createOpenApiReader().read();
         context.setSchemaFormat(content);
 
         // Deserialize the content into the OpenAPI Model
         OpenApiObject openApiObject = OpenApi.from(content);
 
+        // Discover open api properties
         apiTitle = OpenApiUtils.getApiTitle(openApiObject);
         apiBasePath = getBasePath(openApiObject);
         apiPort = findListenerPort(openApiObject);
 
+        // Generate REST Listener configuration
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
-
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
-
         String title = OpenApiUtils.restListenerConfigTitleFrom(openApiObject);
         String configFileName = OpenApiUtils.restListenerConfigFileNameFrom(openApiObject);
         context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, apiPort, apiBasePath);
