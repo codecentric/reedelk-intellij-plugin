@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.reedelk.openapi.commons.NavigationPath.PathSegment;
+import static com.reedelk.openapi.commons.NavigationPath.SegmentKey;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
@@ -30,79 +32,82 @@ public class OpenApiUtils {
 
     @NotNull
     public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        StringBuilder baseFileName = baseOperationAwareFile(navigationPath);
-        String statusCode = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.STATUS_CODE);
-        String contentType = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.CONTENT_TYPE);
-        baseFileName.append("response").append("_")
+        StringBuilder fileName = baseOperationAwareFile(navigationPath);
+        String statusCode = segmentValueOf(navigationPath, SegmentKey.STATUS_CODE);
+        String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
+        fileName.append("response").append("_")
                 .append(statusCode).append("_")
-                .append(contentType).append(".")
+                .append(normalizeContentType(contentType)).append(".")
                 .append("example").append(".")
                 .append(context.getSchemaFormat().getExtension());
-        return normalizeFileName(baseFileName.toString());
+        return fileName.toString();
     }
 
     @NotNull
     public static String schemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
-        StringBuilder baseFileName = baseOperationAwareFile(navigationPath);
-        if (findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.REQUEST_BODY) != null) {
+        StringBuilder fileName = baseOperationAwareFile(navigationPath);
+        if (segmentValueOf(navigationPath, SegmentKey.REQUEST_BODY) != null) {
             // It is request body.
-            String contentType = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.CONTENT_TYPE);
-            baseFileName.append("requestBody").append("_")
-                    .append(contentType).append(".")
+            String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
+            fileName.append("requestBody").append("_")
+                    .append(normalizeContentType(contentType)).append(".")
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
-            return normalizeFileName(baseFileName.toString());
+            return fileName.toString();
 
         } else {
             // It is a response.
-            String statusCode = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.STATUS_CODE);
-            String contentType = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.CONTENT_TYPE);
-            baseFileName.append("response").append("_")
+            String statusCode = segmentValueOf(navigationPath, SegmentKey.STATUS_CODE);
+            String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
+            fileName.append("response").append("_")
                     .append(statusCode).append("_")
-                    .append(contentType).append(".")
+                    .append(normalizeContentType(contentType)).append(".")
                     .append("schema").append(".")
                     .append(context.getSchemaFormat().getExtension());
-            return normalizeFileName(baseFileName.toString());
+            return fileName.toString();
         }
     }
 
     @NotNull
     public static String parameterSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
-        String parameterName = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.PARAMETER_NAME);
+        String parameterName = segmentValueOf(navigationPath, SegmentKey.PARAMETER_NAME);
         fileName.append("parameter").append("_")
                 .append(parameterName).append(".")
                 .append("schema").append(".")
                 .append(context.getSchemaFormat().getExtension());
-        return fileName.toString().replace('/', '_');
+        return fileName.toString();
     }
 
     @NotNull
     public static String headerFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
-        String headerName = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.HEADER_NAME);
+        String headerName = segmentValueOf(navigationPath, SegmentKey.HEADER_NAME);
         fileName.append("header").append("_")
                 .append(headerName).append(".")
                 .append("schema").append(".")
                 .append(context.getSchemaFormat().getExtension());
-        return fileName.toString().replace('/', '_');
+        return fileName.toString();
     }
 
     /**
-     * operationId + 'response' + statusCode + contentType.schema.[json|yaml]
-     * or
-     * method + path + 'response' + statusCode + contentType.schema.[json|yaml]
-     * [paths, /pet/{petId} (path), GET (method), getPetById (operationId), responses, 200 (statusCode), content, application/xml (contentType), schema]
+     * Returns base file name given the navigation path. e.g given navigation path:
+     *
+     * Navigation path: [
+     *          paths, /pet/{petId} (path), GET (method), getPetById (operationId),
+     *          responses, 200 (statusCode), content, application/xml (contentType), schema]
+     *
+     * returns 'getPetById' if operation id is not empty, otherwise 'getPetPetId'.
      */
     @NotNull
     private static StringBuilder baseOperationAwareFile(NavigationPath navigationPath) {
-        String operationId = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.OPERATION_ID);
+        String operationId = segmentValueOf(navigationPath, SegmentKey.OPERATION_ID);
         StringBuilder fileName = new StringBuilder();
         if (isNotBlank(operationId)) {
             fileName.append(operationId).append("_");
         } else {
-            String method = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.METHOD);
-            String path = findSegmentValueFrom(navigationPath, NavigationPath.SegmentKey.PATH);
+            String method = segmentValueOf(navigationPath, SegmentKey.METHOD);
+            String path = segmentValueOf(navigationPath, SegmentKey.PATH);
             fileName = new StringBuilder()
                     .append(method.toLowerCase())
                     .append(normalizePath(path)).append("_");
@@ -110,20 +115,12 @@ public class OpenApiUtils {
         return fileName;
     }
 
-    private static String normalizePath(String path) {
-        String[] pathSegments = path.split("/");
-        return Arrays.stream(pathSegments)
-                .map(OpenApiUtils::removeSpecialChars)
-                .map(OpenApiUtils::capitalize)
-                .collect(Collectors.joining());
-    }
-
-    private static String findSegmentValueFrom(NavigationPath navigationPath, NavigationPath.SegmentKey segmentKey) {
-        List<NavigationPath.PathSegment> pathList = navigationPath.getPathList();
-        Optional<NavigationPath.PathSegment> matchingPathSegment = pathList.stream()
+    private static String segmentValueOf(NavigationPath navigationPath, SegmentKey segmentKey) {
+        List<PathSegment> pathList = navigationPath.getPathList();
+        Optional<PathSegment> matchingPathSegment = pathList.stream()
                 .filter(pathSegment -> segmentKey.equals(pathSegment.getSegmentKey()))
                 .findFirst();
-        return matchingPathSegment.map(NavigationPath.PathSegment::getSegmentValue).orElse(null);
+        return matchingPathSegment.map(PathSegment::getSegmentValue).orElse(null);
     }
 
     public static String getApiTitle(OpenApiObject openApiObject) {
@@ -136,19 +133,20 @@ public class OpenApiUtils {
                 info.getTitle() : defaultValue;
     }
 
-    // TODO: White spaces?
-    private static String normalizeFileName(String originalName) {
-        return originalName.replace('/', '_');
+    private static String normalizeContentType(String contentType) {
+        return contentType.replace('/', '_');
+    }
+
+    private static String normalizePath(String path) {
+        String[] pathSegments = path.split("/");
+        return Arrays.stream(pathSegments)
+                .map(OpenApiUtils::removeSpecialChars)
+                .map(OpenApiUtils::capitalize)
+                .collect(Collectors.joining());
     }
 
     private static String removeWhiteSpaces(String value) {
         return value.replaceAll(" ", "");
-    }
-
-    public static String capitalize(String value) {
-        if (value == null) return null;
-        if (value.length() == 0) return value;
-        return value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase();
     }
 
     private static String removeSpecialChars(String value) {
@@ -157,5 +155,11 @@ public class OpenApiUtils {
         result = result.replaceAll(":", "");
         result = result.replaceAll("\\*", "");
         return result;
+    }
+
+    public static String capitalize(String value) {
+        if (value == null) return null;
+        if (value.length() == 0) return value;
+        return value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase();
     }
 }

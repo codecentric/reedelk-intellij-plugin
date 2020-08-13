@@ -81,6 +81,7 @@ class OpenApiUtilsTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    // Example
     @Test
     void shouldReturnCorrectExampleFileNameWhenOperationIdPresent() {
         // Given
@@ -116,5 +117,23 @@ class OpenApiUtilsTest {
 
         // Then
         assertThat(actual).isEqualTo("getOrderId_response_200_application_json.example.json");
+    }
+
+    @Test
+    void shouldReturnCorrectExampleFileNameWhenOperationIdNotPresentAndRootPath() {
+        // Given
+        NavigationPath navigationPath = NavigationPath.create()
+                .with(NavigationPath.SegmentKey.METHOD, "GET")
+                .with(NavigationPath.SegmentKey.PATH, "/")
+                .with(NavigationPath.SegmentKey.RESPONSES)
+                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
+                .with(NavigationPath.SegmentKey.CONTENT)
+                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+
+        // When
+        String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("get_response_200_application_json.example.json");
     }
 }
