@@ -14,25 +14,16 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class OpenApiUtils {
 
-    public static String configTitleOf(OpenApiObject openApiObject) {
-        String openApiName = message("openapi.importer.config.default.file.title");
-        InfoObject info = openApiObject.getInfo();
-        if (info != null && isNotBlank(info.getTitle())) {
-            openApiName = info.getTitle();
-        }
-        return openApiName + " REST Listener";
+    @NotNull
+    public static String restListenerConfigTitleOf(OpenApiObject openApiObject) {
+        String openApiTitle = getApiTitle(openApiObject, message("openapi.importer.config.default.file.title"));
+        return openApiTitle + " REST Listener";
     }
 
-    public static String configFileNameOf(OpenApiObject openApiObject) {
-        String openApiName = message("openapi.importer.config.default.file.name");
-        if (openApiObject.getInfo() != null) {
-            openApiName = openApiObject.getInfo().getTitle();
-        }
-        return normalizeSpaces(openApiName) + "RESTListener" + "." + FileExtension.CONFIG.value();
-    }
-
-    public static String normalizeSpaces(String value) {
-        return value.replaceAll(" ", "");
+    @NotNull
+    public static String restListenerConfigFileNameOf(OpenApiObject openApiObject) {
+        String openApiTitle = getApiTitle(openApiObject, message("openapi.importer.config.default.file.name"));
+        return removeWhiteSpaces(openApiTitle) + "RESTListener" + "." + FileExtension.CONFIG.value();
     }
 
     @NotNull
@@ -117,6 +108,7 @@ public class OpenApiUtils {
         return fileName;
     }
 
+    // TODO: White spaces?
     private static String normalizeFileName(String originalName) {
         return originalName.replace('/', '_');
     }
@@ -127,5 +119,15 @@ public class OpenApiUtils {
                 .filter(pathSegment -> segmentKey.equals(pathSegment.getSegmentKey()))
                 .findFirst();
         return matchingPathSegment.map(NavigationPath.PathSegment::getSegmentValue).orElse(null);
+    }
+
+    private static String getApiTitle(OpenApiObject openApiObject, String defaultValue) {
+        InfoObject info = openApiObject.getInfo();
+        return info != null && isNotBlank(info.getTitle()) ?
+                info.getTitle() : defaultValue;
+    }
+
+    private static String removeWhiteSpaces(String value) {
+        return value.replaceAll(" ", "");
     }
 }

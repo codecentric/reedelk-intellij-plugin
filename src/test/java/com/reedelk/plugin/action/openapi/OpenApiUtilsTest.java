@@ -17,7 +17,7 @@ class OpenApiUtilsTest {
         openApiObject.setInfo(infoObject);
 
         // When
-        String actual = OpenApiUtils.configTitleOf(openApiObject);
+        String actual = OpenApiUtils.restListenerConfigTitleOf(openApiObject);
 
         // Then
         String expected = "Test API REST Listener";
@@ -30,10 +30,39 @@ class OpenApiUtilsTest {
         OpenApiObject openApiObject = new OpenApiObject();
 
         // When
-        String actual = OpenApiUtils.configTitleOf(openApiObject);
+        String actual = OpenApiUtils.restListenerConfigTitleOf(openApiObject);
 
         // Then
-        String expected = "My API REST Listener";
+        String expected = "My Api REST Listener";
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnCorrectConfigFileName() {
+        // Given
+        InfoObject infoObject = new InfoObject();
+        infoObject.setTitle("Test API");
+        OpenApiObject openApiObject = new OpenApiObject();
+        openApiObject.setInfo(infoObject);
+
+        // When
+        String actual = OpenApiUtils.restListenerConfigFileNameOf(openApiObject);
+
+        // Then
+        String expected = "TestAPIRESTListener.fconfig";
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnDefaultConfigFileName() {
+        // Given
+        OpenApiObject openApiObject = new OpenApiObject();
+
+        // When
+        String actual = OpenApiUtils.restListenerConfigFileNameOf(openApiObject);
+
+        // Then
+        String expected = "MyApiRESTListener.fconfig";
         assertThat(actual).isEqualTo(expected);
     }
 }

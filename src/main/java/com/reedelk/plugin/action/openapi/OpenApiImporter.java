@@ -56,8 +56,8 @@ public class OpenApiImporter {
 
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
 
-        String title = OpenApiUtils.configTitleOf(openApiObject);
-        String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
+        String title = OpenApiUtils.restListenerConfigTitleOf(openApiObject);
+        String configFileName = OpenApiUtils.restListenerConfigFileNameOf(openApiObject);
         context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, port, basePath);
 
         // Generate REST flows from paths
