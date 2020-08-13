@@ -8,7 +8,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.plugin.editor.properties.commons.ChooseFileInputField;
+import com.reedelk.plugin.editor.properties.commons.ChooseFileInputFieldWithEraseBtn;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.commons.StringInputField;
@@ -59,8 +59,8 @@ public class DialogImport extends DialogWrapper {
         label.setBorder(JBUI.Borders.empty(5, 0));
 
         // File chooser
-        ChooseFileInputField chooseFileInputField =
-                new ChooseFileInputField(project,
+        ChooseFileInputFieldWithEraseBtn chooseFileInputField =
+                new ChooseFileInputFieldWithEraseBtn(project,
                         message("openapi.importer.dialog.import.file.hint"),
                         message("openapi.importer.dialog.import.file.hint"),
                         EMPTY,
@@ -79,24 +79,24 @@ public class DialogImport extends DialogWrapper {
         this.targetDirectory = new StringInputField("myApi");
         this.targetDirectory.setValue("myApi");
 
-        // Build the panel
-        DisposablePanel panel = new DisposablePanel(new GridBagLayout());
+        // Build the center panel
+        DisposablePanel centerPanel = new DisposablePanel(new GridBagLayout());
 
         FormBuilder.get()
-                .addLastField(label, panel);
+                .addLastField(label, centerPanel);
         FormBuilder.get()
-                .addLabel(message("openapi.importer.dialog.import.file"), panel)
-                .addLastField(chooseFileInputField, panel);
+                .addLabel(message("openapi.importer.dialog.import.file"), centerPanel)
+                .addLastField(chooseFileInputField, centerPanel);
         FormBuilder.get()
-                .addLabel(message("openapi.importer.dialog.import.url"), panel)
-                .addLastField(this.openApiURLField, panel);
+                .addLabel(message("openapi.importer.dialog.import.url"), centerPanel)
+                .addLastField(this.openApiURLField, centerPanel);
         FormBuilder.get()
-                .addLabel(message("openapi.importer.dialog.import.module"), panel)
-                .addLastField(this.modulesCombo, panel);
+                .addLabel(message("openapi.importer.dialog.import.module"), centerPanel)
+                .addLastField(this.modulesCombo, centerPanel);
         FormBuilder.get()
-                .addLabel(message("openapi.importer.dialog.import.directory"), panel)
-                .addLastField(this.targetDirectory, panel);
-        return panel;
+                .addLabel(message("openapi.importer.dialog.import.directory"), centerPanel)
+                .addLastField(this.targetDirectory, centerPanel);
+        return centerPanel;
     }
 
     public String getImportModule() {
