@@ -81,6 +81,62 @@ class OpenApiUtilsTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    // Schema
+    @Test
+    void shouldReturnCorrectSchemaFileNameWhenOperationIdPresent() {
+        // Given
+        NavigationPath navigationPath = NavigationPath.create()
+                .with(NavigationPath.SegmentKey.OPERATION_ID, "getPetById")
+                .with(NavigationPath.SegmentKey.METHOD, "GET")
+                .with(NavigationPath.SegmentKey.PATH, "/order/{id}")
+                .with(NavigationPath.SegmentKey.RESPONSES)
+                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
+                .with(NavigationPath.SegmentKey.CONTENT)
+                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+
+        // When
+        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("getPetById_response_200_application_json.schema.json");
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaFileNameWhenOperationIdNotPresent() {
+        // Given
+        NavigationPath navigationPath = NavigationPath.create()
+                .with(NavigationPath.SegmentKey.METHOD, "GET")
+                .with(NavigationPath.SegmentKey.PATH, "/order/{id}")
+                .with(NavigationPath.SegmentKey.RESPONSES)
+                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
+                .with(NavigationPath.SegmentKey.CONTENT)
+                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+
+        // When
+        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("getOrderId_response_200_application_json.schema.json");
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaFileNameWhenOperationIdNotPresentAndRootPath() {
+        // Given
+        NavigationPath navigationPath = NavigationPath.create()
+                .with(NavigationPath.SegmentKey.METHOD, "GET")
+                .with(NavigationPath.SegmentKey.PATH, "/")
+                .with(NavigationPath.SegmentKey.RESPONSES)
+                .with(NavigationPath.SegmentKey.STATUS_CODE, "200")
+                .with(NavigationPath.SegmentKey.CONTENT)
+                .with(NavigationPath.SegmentKey.CONTENT_TYPE, "application/json");
+
+        // When
+        String actual = OpenApiUtils.schemaFileNameFrom(navigationPath, context);
+
+        // Then
+        assertThat(actual).isEqualTo("get_response_200_application_json.schema.json");
+    }
+
     // Example
     @Test
     void shouldReturnCorrectExampleFileNameWhenOperationIdPresent() {
