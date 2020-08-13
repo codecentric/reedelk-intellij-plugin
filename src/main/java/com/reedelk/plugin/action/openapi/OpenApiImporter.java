@@ -56,6 +56,12 @@ public class OpenApiImporter {
                 Handlers.handle(context, pathEntry, pathItem));
     }
 
+    private FileReader createOpenApiReader() {
+        return isNotBlank(context.getOpenApiFilePath()) ?
+                new Readers.FileSystemFileReader(context.getOpenApiFilePath()) :
+                new Readers.RemoteFileReader(context.getApiFileUrl());
+    }
+
     private int findListenerPort(OpenApiObject openApiObject) {
         return openApiObject.getServers().stream()
                 .filter(this::isLocalhost)
@@ -81,11 +87,5 @@ public class OpenApiImporter {
         } catch (MalformedURLException e) {
             return false;
         }
-    }
-
-    private FileReader createOpenApiReader() {
-        return isNotBlank(context.getOpenApiFilePath()) ?
-                new Readers.FileSystemFileReader(context.getOpenApiFilePath()) :
-                new Readers.RemoteFileReader(context.getApiFileUrl());
     }
 }
