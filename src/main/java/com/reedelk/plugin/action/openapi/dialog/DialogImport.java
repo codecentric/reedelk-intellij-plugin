@@ -65,7 +65,7 @@ public class DialogImport extends DialogWrapper {
         reedelkLogoLabel.setBorder(JBUI.Borders.empty(0, 5));
 
         JBLabel label =
-                new JBLabel(message("openapi.importer.dialog.import.help", OpenApi.HTTP_PORT, OpenApi.BASE_PATH));
+                new JBLabel(message("openapi.importer.dialog.import.help", String.valueOf(OpenApi.HTTP_PORT), OpenApi.BASE_PATH));
         label.setBorder(empty(5, 0));
         DisposablePanelFixedWidth fixedWidthPanel = new DisposablePanelFixedWidth(label, MAX_WIDTH);
 
