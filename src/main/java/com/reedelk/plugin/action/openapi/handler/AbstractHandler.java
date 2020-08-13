@@ -5,12 +5,12 @@ import com.reedelk.openapi.v3.model.OperationObject;
 import com.reedelk.openapi.v3.model.RestMethod;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
+import com.reedelk.plugin.template.FlowWithRestListenerProperties;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 
 import java.util.Map;
 import java.util.Properties;
-import java.util.UUID;
 
 abstract class AbstractHandler implements Handler {
 
@@ -32,7 +32,7 @@ abstract class AbstractHandler implements Handler {
         String openApiOperation = Serializer.toJson(operation, context, navigationPath);
 
         Properties properties =
-                new OperationFlowProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
+                new FlowWithRestListenerProperties(context.getConfigId(), summary, description, operationDescription, pathEntry, httpMethod, openApiOperation);
 
         String fileName = operationId + "." + FileExtension.FLOW.value();
         context.createFlow(fileName, properties);
@@ -45,18 +45,4 @@ abstract class AbstractHandler implements Handler {
     abstract String getHttpMethod();
 
     abstract OperationObject getOperation(Map<RestMethod, OperationObject> pathDefinition);
-
-    static class OperationFlowProperties extends Properties {
-
-        OperationFlowProperties(String configId, String flowTitle, String flowDescription, String restListenerDescription, String restPath, String restMethod, String openApiOperationObject) {
-            put("id", UUID.randomUUID().toString());
-            put("title", flowTitle);
-            put("description", flowDescription);
-            put("restDescription", restListenerDescription);
-            put("restConfigId", configId);
-            put("restPath", restPath);
-            put("restMethod", restMethod);
-            put("openApiOperationObject", openApiOperationObject);
-        }
-    }
 }

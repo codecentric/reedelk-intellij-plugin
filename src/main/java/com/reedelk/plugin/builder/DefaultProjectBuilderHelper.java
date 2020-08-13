@@ -7,9 +7,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.DisableInspectionFor;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.message.ReedelkBundle;
-import com.reedelk.plugin.template.ConfigProperties;
 import com.reedelk.plugin.template.DockerfileProperties;
 import com.reedelk.plugin.template.FlowOrSubFlowFileProperties;
+import com.reedelk.plugin.template.RestListenerConfigProperties;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.plugin.template.Template.HelloWorld;
 
@@ -46,8 +46,8 @@ class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
             // Config
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Config.RESOURCE_DIRECTORY).ifPresent(configDirectory -> {
                 String title = ReedelkBundle.message("hello.world.sample.config.title");
-                ConfigProperties configProperties = new ConfigProperties(configId, title);
-                Template.HelloWorld.CONFIG.create(project, configProperties, configDirectory);
+                RestListenerConfigProperties restListenerConfigProperties = new RestListenerConfigProperties(configId, title);
+                Template.HelloWorld.CONFIG.create(project, restListenerConfigProperties, configDirectory);
             });
 
             // Flows

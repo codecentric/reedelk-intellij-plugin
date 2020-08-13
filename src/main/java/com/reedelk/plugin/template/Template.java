@@ -80,7 +80,7 @@ public class Template {
 
     public enum OpenAPI implements Buildable {
 
-        FLOW_CONFIG("OpenAPIConfig.fconfig"),
+        REST_LISTENER_CONFIG("OpenAPIConfig.fconfig"),
         FLOW_WITH_REST_LISTENER("OpenAPI.flow"),
         EXAMPLE("OpenAPIExample.txt"),
         ASSET("OpenAPIAsset.txt");

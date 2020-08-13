@@ -28,12 +28,14 @@ public class OpenApiImporter {
         // Deserialize the content into the OpenAPI Model
         OpenApiObject openApiObject = OpenApi.from(content);
 
+        // The logic should be: if the openapi object contains a server on localhost with a port,
+        // if does not exist a config using that port, then we can create it, otherwise we come up with a free port.
 
-        // Generate listener config
-        String openApiConfigFileName = OpenApiUtils.configFileNameOf(openApiObject);
+        String title = "Open API Config";
+        String configFileName = OpenApiUtils.configFileNameOf(openApiObject);
         ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
-        context.createConfig(openApiConfigFileName, configOpenApiObjectJson);
+        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, "localhost", 8282);
 
         // Generate REST flows from paths
         PathsObject paths = openApiObject.getPaths();
