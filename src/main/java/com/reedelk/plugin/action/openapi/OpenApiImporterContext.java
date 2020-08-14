@@ -13,8 +13,6 @@ import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.plugin.template.OpenAPIRESTListenerConfig;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithPayloadSet;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithResource;
-import com.reedelk.runtime.api.commons.StringUtils;
-import com.reedelk.runtime.commons.ModuleProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -28,6 +26,8 @@ import java.util.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.template.Template.Buildable;
 import static com.reedelk.plugin.template.Template.OpenAPI.*;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
+import static com.reedelk.runtime.commons.ModuleProperties.Assets.RESOURCE_DIRECTORY;
 
 public class OpenApiImporterContext {
 
@@ -148,12 +148,11 @@ public class OpenApiImporterContext {
     }
 
     private String assetResource(String fileName) {
-        if (StringUtils.isBlank(targetDirectory)) {
-            return ModuleProperties.Assets.RESOURCE_DIRECTORY + File.separator + fileName;
-        } else {
-            return ModuleProperties.Assets.RESOURCE_DIRECTORY +
-                    File.separator + targetDirectory + File.separator + fileName;
-        }
+        String assetResourcePath = isBlank(targetDirectory) ?
+                RESOURCE_DIRECTORY.substring(1) + File.separator + fileName :
+                RESOURCE_DIRECTORY.substring(1) + File.separator + targetDirectory + File.separator + fileName;
+        // We remove the first '/' from the directory
+        return removeFrontSlashIfNeeded(assetResourcePath);
     }
 
     private void createBuildable(Buildable buildable, Properties properties, String finalFileName, String directory, boolean openFile) {
@@ -180,5 +179,9 @@ public class OpenApiImporterContext {
 
     private Module getImportModule() {
         return ModuleManager.getInstance(project).findModuleByName(importModuleName);
+    }
+
+    private String removeFrontSlashIfNeeded(String path) {
+        return path.startsWith("/") ?  path.substring(1) : path;
     }
 }
