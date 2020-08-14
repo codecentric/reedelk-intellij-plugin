@@ -2,6 +2,9 @@ package com.reedelk.plugin.action.openapi;
 
 public class OpenApiStringConstants {
 
+    private OpenApiStringConstants() {
+    }
+
     // Reedelk REST Listener only property. This is not part of the OpenAPI specification.
     // Be careful changing these! They must match the name of the REST Listener's:
     // - ParameterObject
