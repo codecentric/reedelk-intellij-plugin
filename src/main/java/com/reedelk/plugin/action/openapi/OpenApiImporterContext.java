@@ -150,10 +150,6 @@ public class OpenApiImporterContext {
         }
     }
 
-    private Module getImportModule() {
-        return ModuleManager.getInstance(project).findModuleByName(importModuleName);
-    }
-
     private void createBuildable(Buildable buildable, Properties properties, String finalFileName, String directory, boolean openFile) {
         WriteCommandAction.runWriteCommandAction(project, () -> {
             Path targetDirectory = Paths.get(directory, this.targetDirectory);
@@ -174,5 +170,9 @@ public class OpenApiImporterContext {
             String message = message("openapi.importer.create.directory.error", targetDirectory.toString(), exception.getMessage());
             throw new PluginException(message);
         }
+    }
+
+    private Module getImportModule() {
+        return ModuleManager.getInstance(project).findModuleByName(importModuleName);
     }
 }
