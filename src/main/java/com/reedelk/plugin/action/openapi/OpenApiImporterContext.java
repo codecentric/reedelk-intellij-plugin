@@ -10,6 +10,7 @@ import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.template.AssetProperties;
+import com.reedelk.plugin.template.FlowWithRestListenerAndResourceProperties;
 import com.reedelk.plugin.template.RestListenerOpenApiConfigProperties;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.ModuleProperties;
@@ -123,6 +124,13 @@ public class OpenApiImporterContext {
         assetsDirectory.ifPresent(directory ->
                 createBuildable(OpenAPI.ASSET, properties, fileName, directory, false));
         return assetResource(fileName);
+    }
+
+    public void createRestListenerFlowWithExample(String fileName, FlowWithRestListenerAndResourceProperties properties) {
+        Module module = getImportModule();
+        Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
+        flowsDirectory.ifPresent(directory ->
+                createBuildable(OpenAPI.FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
     }
 
     public void createRestListenerFlow(String fileName, Properties properties) {

@@ -1,0 +1,30 @@
+{
+  "id": "${id}",
+  "title": "${title}",
+  "description": "${description}",
+  "flow": [
+    {
+      "implementor": "com.reedelk.rest.component.RESTListener",
+      "description": "${restDescription}",
+      "configuration": {"ref": "${restConfigId}"},
+      "path": "${restPath}",
+      "method": "${restMethod}",
+      "streaming": "AUTO",
+      "response": {
+        "body": "#[message.payload()]",
+        "status": 200
+      },
+      "errorResponse": {
+        "body": "#[error]",
+        "status": 500
+      },
+      "openApi": ${openApiOperationObject}
+    },
+    {
+      "implementor": "com.reedelk.core.component.ResourceReadText",
+      "description": "Example",
+      "resourceFile": "${exampleResourceFile}",
+      "mimeType": "${exampleMimeType}"
+    }
+  ]
+}

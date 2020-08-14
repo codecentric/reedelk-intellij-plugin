@@ -82,6 +82,7 @@ public class Template {
 
         REST_LISTENER_CONFIG("OpenAPIConfig.fconfig"),
         FLOW_WITH_REST_LISTENER("OpenAPI.flow"),
+        FLOW_WITH_REST_LISTENER_AND_RESOURCE("OpenAPIRESTListenerWithResource.flow"),
         EXAMPLE("OpenAPIExample.txt"),
         ASSET("OpenAPIAsset.txt");
 

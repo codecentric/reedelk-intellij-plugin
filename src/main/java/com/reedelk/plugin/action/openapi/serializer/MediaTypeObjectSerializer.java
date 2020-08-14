@@ -31,7 +31,6 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
         if (example != null) {
             // We must create an example asset.
             String finalFileName = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
-
             String exampleAssetPath = context.createAsset(finalFileName, example.data());
             dataMap.put(MediaTypeObject.Properties.EXAMPLE.value(), exampleAssetPath);
         }
