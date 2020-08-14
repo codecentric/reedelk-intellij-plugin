@@ -8,7 +8,7 @@ import com.reedelk.openapi.v3.model.ServerObject;
 
 import java.util.List;
 
-// The rest listener config
+// Object encapsulating data structure for REST Listener Configuration.
 public class ConfigOpenApiObject implements OpenApiModel {
 
     private InfoObject info;
