@@ -17,9 +17,10 @@ import com.reedelk.plugin.template.Template.HelloWorld;
 import java.util.UUID;
 
 import static com.reedelk.plugin.commons.DefaultConstants.PROJECT_RESOURCES_FOLDER;
+import static com.reedelk.plugin.commons.FileUtils.createDirectory;
 import static com.reedelk.runtime.commons.ModuleProperties.*;
 
-class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
+class DefaultProjectBuilderHelper {
 
     private final boolean isDownloadedDistribution;
     private final String reedelkRuntimeVersion;

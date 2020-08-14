@@ -5,10 +5,8 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.plugin.commons.PluginModuleUtils;
-import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.plugin.template.OpenAPIRESTListenerConfig;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithPayloadSet;
@@ -18,12 +16,11 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.plugin.commons.FileUtils.createDirectory;
 import static com.reedelk.plugin.template.Template.Buildable;
 import static com.reedelk.plugin.template.Template.OpenAPI.*;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
@@ -158,24 +155,12 @@ public class OpenApiImporterContext {
     private void createBuildable(Buildable buildable, Properties properties, String finalFileName, String directory, boolean openFile) {
         WriteCommandAction.runWriteCommandAction(project, () -> {
             Path finalTargetDirectory = Paths.get(directory, this.targetDirectory);
-            createDirectoryIfMissing(finalTargetDirectory);
-            Optional.ofNullable(VfsUtil.findFile(finalTargetDirectory, true))
-                    .flatMap(targetDirectoryVf ->
-                            buildable.create(project, properties, targetDirectoryVf, finalFileName))
+            createDirectory(finalTargetDirectory).flatMap(targedDirectoryVf ->
+                    buildable.create(project, properties, targedDirectoryVf, finalFileName))
                     .ifPresent(virtualFile -> {
                         if (openFile) FileEditorManager.getInstance(project).openFile(virtualFile, false);
-                    });
+            });
         });
-    }
-
-    // TODO: Refactor this one extract htis logic:
-    private void createDirectoryIfMissing(Path targetDirectory) {
-        try {
-            VfsUtil.createDirectoryIfMissing(targetDirectory.toString());
-        } catch (IOException exception) {
-            String message = message("openapi.importer.create.directory.error", targetDirectory.toString(), exception.getMessage());
-            throw new PluginException(message);
-        }
     }
 
     private Module getImportModule() {

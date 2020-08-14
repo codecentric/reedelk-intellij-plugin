@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenConstants;
 import org.jetbrains.idea.maven.model.MavenId;
 
-class MavenProjectBuilderHelper extends AbstractProjectBuilderHelper {
+class MavenProjectBuilderHelper {
 
     private final String reedelkRuntimeVersion;
 

@@ -1,11 +1,15 @@
 package com.reedelk.plugin.commons;
 
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.runtime.commons.FileExtension;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Scanner;
@@ -15,6 +19,8 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class FileUtils {
+
+    private static final Logger LOG = Logger.getInstance(FileUtils.class);
 
     private FileUtils() {
     }
@@ -42,6 +48,28 @@ public class FileUtils {
     public static String readFileToString(String filePath) throws IOException {
         try (Scanner scanner = new Scanner(Paths.get(filePath), StandardCharsets.UTF_8.name())) {
             return scanner.useDelimiter("\\A").next();
+        }
+    }
+
+    public static Optional<VirtualFile> createDirectory(VirtualFile root, String suffix) {
+        String finalDirectoryPath = Paths.get(root.getPath(), suffix).toString();
+        try {
+            return Optional.ofNullable(VfsUtil.createDirectoryIfMissing(finalDirectoryPath));
+        } catch (IOException exception) {
+            String message = message("create.directory.error", finalDirectoryPath, exception.getMessage());
+            LOG.warn(message, exception);
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<VirtualFile> createDirectory(Path directoryPath) {
+        String finalDirectoryPath = directoryPath.toString();
+        try {
+            return Optional.ofNullable(VfsUtil.createDirectoryIfMissing(finalDirectoryPath));
+        } catch (IOException exception) {
+            String message = message("create.directory.error", finalDirectoryPath, exception.getMessage());
+            LOG.warn(message, exception);
+            return Optional.empty();
         }
     }
 }
