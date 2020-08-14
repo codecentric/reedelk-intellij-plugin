@@ -6,6 +6,7 @@ import com.reedelk.openapi.v3.model.OpenApiObject;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -127,13 +128,13 @@ public class OpenApiUtils {
         } else {
             String method = segmentValueOf(navigationPath, SegmentKey.METHOD);
             String path = segmentValueOf(navigationPath, SegmentKey.PATH);
-            fileName = new StringBuilder()
-                    .append(method.toLowerCase())
-                    .append(normalizePath(path));
+            if (method != null) fileName.append(method.toLowerCase());
+            if (path != null) fileName.append(normalizePath(path));
         }
         return fileName;
     }
 
+    @Nullable
     private static String segmentValueOf(NavigationPath navigationPath, SegmentKey segmentKey) {
         List<PathSegment> pathList = navigationPath.getPathList();
         Optional<PathSegment> matchingPathSegment = pathList.stream()
@@ -142,18 +143,21 @@ public class OpenApiUtils {
         return matchingPathSegment.map(PathSegment::getSegmentValue).orElse(null);
     }
 
+    @NotNull
     private static String getApiTitle(OpenApiObject openApiObject, String defaultValue) {
         InfoObject info = openApiObject.getInfo();
         return info != null && isNotBlank(info.getTitle()) ?
                 info.getTitle() : defaultValue;
     }
 
+    @NotNull
     private static String normalizeContentType(String contentType) {
         return contentType != null ?
                 contentType.replace('/', '_') :
                 StringUtils.EMPTY;
     }
 
+    @NotNull
     private static String normalizePath(String path) {
         String[] pathSegments = path.split("/");
         return Arrays.stream(pathSegments)
@@ -162,10 +166,12 @@ public class OpenApiUtils {
                 .collect(Collectors.joining());
     }
 
+    @NotNull
     private static String removeWhiteSpaces(String value) {
         return value.replaceAll(" ", "");
     }
 
+    @NotNull
     private static String removeSpecialChars(String value) {
         String result = value.replaceAll("\\{", "");
         result = result.replaceAll("}", "");

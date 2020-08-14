@@ -36,7 +36,6 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
             dataMap.put(MediaTypeObject.Properties.EXAMPLE.value(), exampleAssetPath);
         }
 
-
         // Replace all schemas with reference object to the Resource Text.
         Schema schema = mediaTypeObject.getSchema();
         if (schema != null) {

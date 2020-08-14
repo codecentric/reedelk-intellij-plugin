@@ -31,7 +31,7 @@ public class OpenApiImporter {
         this.context = context;
     }
 
-    public void processImport() throws OpenApiException {
+    public void openApiImport() throws OpenApiException {
 
         // Read the OpenAPI definition as string
         String content = createOpenApiReader().read();
@@ -80,17 +80,18 @@ public class OpenApiImporter {
                 new Readers.RemoteFileReader(context.getApiFileUrl());
     }
 
-    private int findListenerPort(OpenApiObject openApiObject) {
+    int findListenerPort(OpenApiObject openApiObject) {
         if (context.getOpenApiPort() != null) {
             return context.getOpenApiPort();
         }
         return openApiObject.getServers().stream()
                 .filter(this::isLocalhost)
                 .map(this::getPortOrDefault)
-                .findFirst().orElse(DefaultConstants.OpenApi.HTTP_PORT);
+                .findFirst()
+                .orElse(DefaultConstants.OpenApi.HTTP_PORT);
     }
 
-    private String getBasePath(OpenApiObject openApiObject) {
+    String getBasePath(OpenApiObject openApiObject) {
         if (isNotBlank(context.getBasePath())) {
             return context.getBasePath();
         }
@@ -101,18 +102,20 @@ public class OpenApiImporter {
                 .orElse(DefaultConstants.OpenApi.BASE_PATH);
     }
 
-    private int getPortOrDefault(ServerObject serverObject) {
+    int getPortOrDefault(ServerObject serverObject) {
+        String serverUrl = appendProtocolIfNotExists(serverObject);
         try {
-            URL url = new URL(serverObject.getUrl());
-            return url.getPort();
-        } catch (MalformedURLException e) {
+            URL url = new URL(serverUrl);
+            return url.getPort() > 0 ? url.getPort() : DefaultConstants.OpenApi.HTTP_PORT;
+        } catch (MalformedURLException exception) {
             return DefaultConstants.OpenApi.HTTP_PORT;
         }
     }
 
-    private boolean isLocalhost(ServerObject serverObject) {
+    boolean isLocalhost(ServerObject serverObject) {
+        String serverUrl = appendProtocolIfNotExists(serverObject);
         try {
-            URL url = new URL(serverObject.getUrl());
+            URL url = new URL(serverUrl);
             String host = url.getHost();
             return DefaultConstants.OpenApi.LOCALHOST.equals(host) ||
                     DefaultConstants.OpenApi.ANY_ADDRESS.equals(host);
@@ -121,15 +124,28 @@ public class OpenApiImporter {
         }
     }
 
-    // TODO: Test this.
-    private String extractBasePath(ServerObject serverObject) {
+    String extractBasePath(ServerObject serverObject) {
+        String serverUrl = appendProtocolIfNotExists(serverObject);
         try {
-            URL url = new URL(serverObject.getUrl());
+            URL url = new URL(serverUrl);
             String path = url.getPath();
             String[] pathSegments = path.split("/");
             return pathSegments.length > 1 ? "/" + pathSegments[1] : "/";
         } catch (MalformedURLException e) {
             return DefaultConstants.OpenApi.BASE_PATH;
         }
+    }
+
+    // localhost:8282
+    // localhost
+    // http://localhost:8282
+    // http://localhost
+    @NotNull
+    private String appendProtocolIfNotExists(ServerObject serverObject) {
+        String serverUrl = serverObject.getUrl();
+        if (!(serverUrl.startsWith("http://") || serverUrl.startsWith("https://"))) {
+            serverUrl = "http://" + serverUrl;
+        }
+        return serverUrl;
     }
 }

@@ -9,8 +9,6 @@ import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiSchemaFormat;
-import org.json.JSONObject;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,7 +29,6 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
         Map<String, RequestBodyObject> requestBodies = componentsObject.getRequestBodies();
         requestBodies.forEach(context::registerRequestBody);
 
-
         Map<String, Object> schemasMap = new LinkedHashMap<>();
         Map<String, SchemaObject> schemas = componentsObject.getSchemas();
         schemas.forEach((schemaId, schemaObject) -> {
@@ -41,11 +38,7 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
             if (schema.getSchemaData() != null) {
 
                 OpenApiSchemaFormat schemaFormat = context.getSchemaFormat();
-                Map<String, Object> schemaData = schemaObject.getSchema().getSchemaData();
-
-                String data = OpenApiSchemaFormat.JSON.equals(schemaFormat) ?
-                        new JSONObject(schemaData).toString(2) : // JSON
-                        new Yaml().dump(schemaData); // YAML
+                String data = schemaFormat.dump(schemaObject.getSchema());
 
                 String finalFileName = schemaId + "." + schemaFormat.getExtension();
                 String schemaAssetPath = context.createAsset(finalFileName, data);

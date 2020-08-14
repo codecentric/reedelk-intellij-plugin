@@ -51,7 +51,7 @@ public class OpenApiActionImport extends AnAction {
         OpenApiImporter importer = new OpenApiImporter(context);
 
         try {
-            importer.processImport();
+            importer.openApiImport();
             String apiTitle = importer.getApiTitle();
             String host = importer.getHost();
             int port = importer.getApiPort();
