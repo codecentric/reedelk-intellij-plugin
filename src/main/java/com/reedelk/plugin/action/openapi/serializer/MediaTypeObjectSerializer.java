@@ -38,7 +38,7 @@ class MediaTypeObjectSerializer extends AbstractSerializer<MediaTypeObject> {
         Schema schema = mediaTypeObject.getSchema();
         if (schema != null) {
             String finalFileName = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
-            setSchema(SCHEMA.value(), navigationPath, serialized, schema, finalFileName);
+            setSchema(SCHEMA.value(), serialized, schema, finalFileName);
         }
 
         return serialized;

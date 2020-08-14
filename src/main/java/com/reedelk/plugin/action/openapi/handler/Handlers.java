@@ -10,6 +10,9 @@ import java.util.Map;
 
 public class Handlers {
 
+    private Handlers() {
+    }
+
     private static final List<Handler> HANDLER_1s = Arrays.asList(
             new GETHandler(),
             new POSTHandler(),

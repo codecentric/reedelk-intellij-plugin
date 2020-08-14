@@ -12,6 +12,9 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class Readers {
 
+    private Readers() {
+    }
+
     public static class FileSystemFileReader implements FileReader {
 
         private final String openApiFile;

@@ -1,7 +1,6 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
 import com.reedelk.openapi.Serializer;
-import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.template.AssetProperties;
@@ -14,7 +13,7 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 abstract class AbstractSerializer<T> implements Serializer<T> {
 
-    private final String propertyInlineSchema = "inlineSchema";
+    private static final String PROPERTY_INLINE_SCHEMA = "inlineSchema";
 
     protected final OpenApiImporterContext context;
 
@@ -22,7 +21,7 @@ abstract class AbstractSerializer<T> implements Serializer<T> {
         this.context = context;
     }
 
-    protected void setSchema(String propertyKey, NavigationPath navigationPath, Map<String, Object> dataMap, Schema schema, String finalFileName) {
+    protected void setSchema(String propertyKey, Map<String, Object> dataMap, Schema schema, String finalFileName) {
         // It is a schema reference
         if (isNotBlank(schema.getSchemaId())) {
             Optional<String> schemaAsset = context.assetFrom(schema.getSchemaId());
@@ -36,7 +35,7 @@ abstract class AbstractSerializer<T> implements Serializer<T> {
             String schemaAssetPath = context.createAsset(finalFileName, properties);
 
             dataMap.put(propertyKey, schemaAssetPath);
-            dataMap.put(propertyInlineSchema, true);
+            dataMap.put(PROPERTY_INLINE_SCHEMA, true);
         }
     }
 }

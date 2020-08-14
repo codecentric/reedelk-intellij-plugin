@@ -9,6 +9,7 @@ import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 
 public class TypeBuiltIn {
 
@@ -18,11 +19,15 @@ public class TypeBuiltIn {
     public static final String DEFAULT_PAYLOAD = Object.class.getName();
     public static final String DEFAULT_ATTRIBUTES = MessageAttributes.class.getName();
 
-    public static final Collection<BuiltInType> BUILT_IN_TYPES =
-            asList(new TypeBuiltInPrimitive(), new TypeBuiltInObject(), new TypeBuiltInList(), new TypeBuiltInMap());
+    public static final Collection<BuiltInType> BUILT_IN_TYPES = unmodifiableList(asList(
+            new TypeBuiltInPrimitive(),
+            new TypeBuiltInObject(),
+            new TypeBuiltInList(),
+            new TypeBuiltInMap()));
 
     // Default script signature is message and context.
     public static final Trie MESSAGE_AND_CONTEXT = new TrieRoot();
+
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .returnTypeDisplayValue(Message.class.getSimpleName())

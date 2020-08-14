@@ -20,6 +20,9 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class OpenApiUtils {
 
+    private OpenApiUtils() {
+    }
+
     @NotNull
     public static String restListenerConfigTitleFrom(OpenApiObject openApiObject) {
         String openApiTitle = getApiTitle(openApiObject);

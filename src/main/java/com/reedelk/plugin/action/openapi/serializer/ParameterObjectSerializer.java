@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.reedelk.openapi.v3.model.ParameterObject.Properties.SCHEMA;
-import static com.reedelk.plugin.action.openapi.serializer.HeaderObjectSerializer.propertyPredefinedSchema;
-import static com.reedelk.plugin.action.openapi.serializer.HeaderObjectSerializer.propertyPredefinedSchemaNone;
+import static com.reedelk.plugin.action.openapi.serializer.HeaderObjectSerializer.PROPERTY_PREDEFINED_SCHEMA;
+import static com.reedelk.plugin.action.openapi.serializer.HeaderObjectSerializer.PROPERTY_PREDEFINED_SCHEMA_NONE;
 
 class ParameterObjectSerializer extends AbstractSerializer<ParameterObject> {
 
@@ -38,15 +38,15 @@ class ParameterObjectSerializer extends AbstractSerializer<ParameterObject> {
                 .findFirst();
 
         if (isPredefinedSchema.isPresent()) {
-            serialize.put(propertyPredefinedSchema, isPredefinedSchema.get().name());
+            serialize.put(PROPERTY_PREDEFINED_SCHEMA, isPredefinedSchema.get().name());
             // schema must be set to null because the super.serialize would serialize the schema inline.
             // The REST listener expects the asset path (a string), rather than the inline schema definition.
             serialize.put(SCHEMA.value(), null);
 
         } else {
             String finalFileName = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);
-            setSchema(SCHEMA.value(), navigationPath, serialize, schema, finalFileName);
-            serialize.put(propertyPredefinedSchema, propertyPredefinedSchemaNone);
+            setSchema(SCHEMA.value(), serialize, schema, finalFileName);
+            serialize.put(PROPERTY_PREDEFINED_SCHEMA, PROPERTY_PREDEFINED_SCHEMA_NONE);
         }
 
         return serialize;

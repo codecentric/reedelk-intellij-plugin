@@ -19,7 +19,7 @@ import static com.reedelk.openapi.commons.NavigationPath.create;
 
 abstract class AbstractHandler implements Handler {
 
-    private final String HTTP_SUCCESS_CODE = "200";
+    private static final String HTTP_SUCCESS_CODE = "200";
 
     @SuppressWarnings("UnnecessaryLocalVariable")
     @Override

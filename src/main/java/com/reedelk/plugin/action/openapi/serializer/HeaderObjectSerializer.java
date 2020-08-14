@@ -20,8 +20,8 @@ class HeaderObjectSerializer extends AbstractSerializer<HeaderObject> {
             new com.reedelk.openapi.v3.serializer.HeaderObjectSerializer();
 
     // Reedelk REST Listener only property. This is not part of the OpenAPI specification.
-    public static final String propertyPredefinedSchema = "predefinedSchema";
-    public static final String propertyPredefinedSchemaNone = "NONE";
+    public static final String PROPERTY_PREDEFINED_SCHEMA = "predefinedSchema";
+    public static final String PROPERTY_PREDEFINED_SCHEMA_NONE = "NONE";
 
     public HeaderObjectSerializer(OpenApiImporterContext context) {
         super(context);
@@ -39,15 +39,15 @@ class HeaderObjectSerializer extends AbstractSerializer<HeaderObject> {
                 .findFirst();
 
         if (isPredefinedSchema.isPresent()) {
-            serialize.put(propertyPredefinedSchema, isPredefinedSchema.get().name());
+            serialize.put(PROPERTY_PREDEFINED_SCHEMA, isPredefinedSchema.get().name());
             // schema must be set to null because the super.serialize would serialize the schema inline.
             // The REST listener expects the asset path (a string), rather than the inline schema definition.
             serialize.put(Properties.SCHEMA.value(), null);
 
         } else {
             String finalFileName = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);
-            setSchema(Properties.SCHEMA.value(), navigationPath, serialize, schema, finalFileName);
-            serialize.put(propertyPredefinedSchema, propertyPredefinedSchemaNone);
+            setSchema(Properties.SCHEMA.value(), serialize, schema, finalFileName);
+            serialize.put(PROPERTY_PREDEFINED_SCHEMA, PROPERTY_PREDEFINED_SCHEMA_NONE);
         }
 
         return serialize;

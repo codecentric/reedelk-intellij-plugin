@@ -14,7 +14,8 @@ public abstract class AbstractProjectBuilderHelper {
 
     private static final Logger LOG = Logger.getInstance(MavenProjectBuilderHelper.class);
 
-    public static Optional<VirtualFile> createDirectory(VirtualFile root, String suffix) {
+    // TODO: This logic is duplicated
+    public Optional<VirtualFile> createDirectory(VirtualFile root, String suffix) {
         try {
             String finalDirectoryPath = Paths.get(root.getPath(), suffix).toString();
             return Optional.ofNullable(VfsUtil.createDirectories(finalDirectoryPath));

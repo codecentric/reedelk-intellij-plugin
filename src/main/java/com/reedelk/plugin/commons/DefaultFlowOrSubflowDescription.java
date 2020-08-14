@@ -9,9 +9,9 @@ public class DefaultFlowOrSubflowDescription {
 
     public static String from(String name, String templateName) {
         String description = SplitWords.from(name);
-        if (Template.ProjectFile.FLOW.equals(templateName)) {
+        if (Template.ProjectFile.FLOW.templateName().equals(templateName)) {
             description += " Flow";
-        } else if (Template.ProjectFile.SUBFLOW.equals(templateName)) {
+        } else if (Template.ProjectFile.SUBFLOW.templateName().equals(templateName)) {
             description += " Subflow";
         }
         return description;

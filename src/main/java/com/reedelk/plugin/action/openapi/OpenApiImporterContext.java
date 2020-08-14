@@ -42,7 +42,7 @@ public class OpenApiImporterContext {
 
     private OpenApiSchemaFormat schemaFormat;
 
-    private Map<String, String> schemaIdAndPath = new HashMap<>();
+    private Map<String, String> schemaIdAndPathMap = new HashMap<>();
     private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
 
     public OpenApiImporterContext(@NotNull Project project,
@@ -91,11 +91,11 @@ public class OpenApiImporterContext {
     }
 
     public void register(String schemaId, String schemaAssetPath) {
-        schemaIdAndPath.put(schemaId, schemaAssetPath);
+        schemaIdAndPathMap.put(schemaId, schemaAssetPath);
     }
 
     public Optional<String> assetFrom(String $ref) {
-        for (Map.Entry<String, String> schemaIdAndPath : schemaIdAndPath.entrySet()) {
+        for (Map.Entry<String, String> schemaIdAndPath : schemaIdAndPathMap.entrySet()) {
             String schemaId = schemaIdAndPath.getKey();
             if ($ref.endsWith(schemaId)) {
                 return Optional.of(schemaIdAndPath.getValue());
@@ -168,6 +168,7 @@ public class OpenApiImporterContext {
         });
     }
 
+    // TODO: Refactor this one extract htis logic:
     private void createDirectoryIfMissing(Path targetDirectory) throws PluginException {
         try {
             VfsUtil.createDirectoryIfMissing(targetDirectory.toString());

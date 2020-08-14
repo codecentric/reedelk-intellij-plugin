@@ -125,9 +125,9 @@ public class OpenApiImporter {
         String serverUrl = appendProtocolIfNotExists(serverObject);
         try {
             URL url = new URL(serverUrl);
-            String host = url.getHost();
-            return DefaultConstants.OpenApi.LOCALHOST.equals(host) ||
-                    DefaultConstants.OpenApi.ANY_ADDRESS.equals(host);
+            String urlHost = url.getHost();
+            return DefaultConstants.OpenApi.LOCALHOST.equals(urlHost) ||
+                    DefaultConstants.OpenApi.ANY_ADDRESS.equals(urlHost);
         } catch (MalformedURLException e) {
             return false;
         }
@@ -165,6 +165,6 @@ public class OpenApiImporter {
         return serverUrl;
     }
 
-    private final String PROTOCOL_HTTP = "http://";
-    private final String PROTOCOL_HTTPS = "https://";
+    private static final String PROTOCOL_HTTP = "http://";
+    private static final String PROTOCOL_HTTPS = "https://";
 }
