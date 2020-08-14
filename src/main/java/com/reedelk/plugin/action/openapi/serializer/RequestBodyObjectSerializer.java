@@ -6,12 +6,12 @@ import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.reedelk.openapi.v3.model.RequestBodyObject.Properties;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> {
 
@@ -27,9 +27,9 @@ class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> 
 
         RequestBodyObject realRequestBodyObject = requestBodyObject;
 
-        String request$ref = requestBodyObject.get$ref();
-        if (StringUtils.isNotBlank(request$ref)) {
-            String[] segments = request$ref.split("/");
+        String requestBodyReference = requestBodyObject.get$ref();
+        if (isNotBlank(requestBodyReference)) {
+            String[] segments = requestBodyReference.split("/");
             // Last segment is the id
             String segment = segments[segments.length - 1];
             realRequestBodyObject = context.getRequestBodyById(segment);

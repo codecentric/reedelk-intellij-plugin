@@ -157,9 +157,9 @@ public class OpenApiImporterContext {
 
     private void createBuildable(Buildable buildable, Properties properties, String finalFileName, String directory, boolean openFile) {
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            Path targetDirectory = Paths.get(directory, this.targetDirectory);
-            createDirectoryIfMissing(targetDirectory);
-            Optional.ofNullable(VfsUtil.findFile(targetDirectory, true))
+            Path finalTargetDirectory = Paths.get(directory, this.targetDirectory);
+            createDirectoryIfMissing(finalTargetDirectory);
+            Optional.ofNullable(VfsUtil.findFile(finalTargetDirectory, true))
                     .flatMap(targetDirectoryVf ->
                             buildable.create(project, properties, targetDirectoryVf, finalFileName))
                     .ifPresent(virtualFile -> {
@@ -169,7 +169,7 @@ public class OpenApiImporterContext {
     }
 
     // TODO: Refactor this one extract htis logic:
-    private void createDirectoryIfMissing(Path targetDirectory) throws PluginException {
+    private void createDirectoryIfMissing(Path targetDirectory) {
         try {
             VfsUtil.createDirectoryIfMissing(targetDirectory.toString());
         } catch (IOException exception) {

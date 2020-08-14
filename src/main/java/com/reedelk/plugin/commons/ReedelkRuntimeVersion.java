@@ -16,6 +16,9 @@ import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 
 public class ReedelkRuntimeVersion {
 
+    private ReedelkRuntimeVersion() {
+    }
+
     public static String from(String runtimeHomeDirectory) {
         return FileUtils.findRuntimeJarName(runtimeHomeDirectory)
                 .flatMap(runtimeJarFileName -> {
