@@ -14,7 +14,6 @@ import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 
 import static com.reedelk.openapi.commons.NavigationPath.SegmentKey;
 import static com.reedelk.openapi.commons.NavigationPath.create;
@@ -51,7 +50,7 @@ abstract class AbstractHandler implements Handler {
                     successExample.assetResourceFile, successExample.contentType);
             context.createRestListenerFlowWithExample(fileName, properties);
         } else {
-            Properties properties = new FlowWithRestListenerProperties(
+            FlowWithRestListenerProperties properties = new FlowWithRestListenerProperties(
                     configId, flowTitle, flowDescription, restListenerDescription,
                     restPath, restMethod, openApiOperationObject);
             context.createRestListenerFlow(fileName, properties);

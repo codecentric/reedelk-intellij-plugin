@@ -11,6 +11,7 @@ import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.plugin.template.FlowWithRestListenerAndResourceProperties;
+import com.reedelk.plugin.template.FlowWithRestListenerProperties;
 import com.reedelk.plugin.template.RestListenerOpenApiConfigProperties;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.ModuleProperties;
@@ -133,11 +134,11 @@ public class OpenApiImporterContext {
                 createBuildable(OpenAPI.FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
     }
 
-    public void createRestListenerFlow(String fileName, Properties properties) {
+    public void createRestListenerFlow(String fileName, FlowWithRestListenerProperties properties) {
         Module module = getImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
-                createBuildable(OpenAPI.FLOW_WITH_REST_LISTENER, properties, fileName, directory, true));
+                createBuildable(OpenAPI.FLOW_WITH_REST_LISTENER_AND_PAYLOAD_SET, properties, fileName, directory, true));
     }
 
     public void createRestListenerConfig(String configFileName, String configTitle, String configOpenApiObject, String host, int port, String basePath) {
