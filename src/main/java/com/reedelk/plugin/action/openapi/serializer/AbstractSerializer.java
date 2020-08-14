@@ -9,11 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.reedelk.openapi.v3.model.MediaTypeObject.Properties.SCHEMA;
+import static com.reedelk.plugin.action.openapi.OpenApiStringConstants.PROPERTY_INLINE_SCHEMA;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 abstract class AbstractSerializer<T> implements Serializer<T> {
-
-    private static final String PROPERTY_INLINE_SCHEMA = "inlineSchema";
 
     protected final OpenApiImporterContext context;
 

@@ -14,6 +14,8 @@ import com.reedelk.plugin.template.AssetProperties;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.SCHEMAS;
+
 class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
 
     private final OpenApiImporterContext context;
@@ -53,7 +55,7 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
             }
         });
 
-        map.put(ComponentsObject.Properties.SCHEMAS.value(), schemasMap);
+        map.put(SCHEMAS.value(), schemasMap);
         return map;
     }
 }

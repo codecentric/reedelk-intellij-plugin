@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import static com.reedelk.openapi.commons.NavigationPath.PathSegment;
 import static com.reedelk.openapi.commons.NavigationPath.SegmentKey;
+import static com.reedelk.openapi.commons.NavigationPath.SegmentKey.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
@@ -43,13 +44,13 @@ public class OpenApiUtils {
     @NotNull
     public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
-        String statusCode = segmentValueOf(navigationPath, SegmentKey.STATUS_CODE);
-        String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
+        String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
+        String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
         fileName.append("_")
-                .append("response").append("_")
+                .append(RESPONSE.getKey()).append("_")
                 .append(statusCode).append("_")
                 .append(normalizeContentType(contentType)).append(".")
-                .append("example").append(".")
+                .append(EXAMPLE.getKey()).append(".")
                 .append(context.getSchemaFormat().getExtension());
         return fileName.toString();
     }
@@ -57,25 +58,25 @@ public class OpenApiUtils {
     @NotNull
     public static String requestResponseSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
-        if (segmentValueOf(navigationPath, SegmentKey.REQUEST_BODY) != null) {
+        if (segmentValueOf(navigationPath, REQUEST_BODY) != null) {
             // It is request body.
-            String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
+            String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
             fileName.append("_")
-                    .append("requestBody").append("_")
+                    .append(REQUEST_BODY.getKey()).append("_")
                     .append(normalizeContentType(contentType)).append(".")
-                    .append("schema").append(".")
+                    .append(SCHEMA.getKey()).append(".")
                     .append(context.getSchemaFormat().getExtension());
             return fileName.toString();
 
         } else {
             // It is a response.
-            String statusCode = segmentValueOf(navigationPath, SegmentKey.STATUS_CODE);
-            String contentType = segmentValueOf(navigationPath, SegmentKey.CONTENT_TYPE);
+            String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
+            String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
             fileName.append("_")
-                    .append("response").append("_")
+                    .append(RESPONSE.getKey()).append("_")
                     .append(statusCode).append("_")
                     .append(normalizeContentType(contentType)).append(".")
-                    .append("schema").append(".")
+                    .append(SCHEMA.getKey()).append(".")
                     .append(context.getSchemaFormat().getExtension());
             return fileName.toString();
         }
@@ -84,11 +85,11 @@ public class OpenApiUtils {
     @NotNull
     public static String parameterSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
-        String parameterName = segmentValueOf(navigationPath, SegmentKey.PARAMETER_NAME);
+        String parameterName = segmentValueOf(navigationPath, PARAMETER_NAME);
         fileName.append("_")
-                .append("parameter").append("_")
+                .append(PARAMETER.getKey()).append("_")
                 .append(parameterName).append(".")
-                .append("schema").append(".")
+                .append(SCHEMA.getKey()).append(".")
                 .append(context.getSchemaFormat().getExtension());
         return fileName.toString();
     }
@@ -96,14 +97,14 @@ public class OpenApiUtils {
     @NotNull
     public static String headerSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
-        String statusCode = segmentValueOf(navigationPath, SegmentKey.STATUS_CODE);
-        String headerName = segmentValueOf(navigationPath, SegmentKey.HEADER_NAME);
+        String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
+        String headerName = segmentValueOf(navigationPath, HEADER_NAME);
         fileName.append("_")
-                .append("response").append("_")
+                .append(RESPONSE.getKey()).append("_")
                 .append(statusCode).append("_")
-                .append("header").append("_")
+                .append(HEADER.getKey()).append("_")
                 .append(headerName).append(".")
-                .append("schema").append(".")
+                .append(SCHEMA.getKey()).append(".")
                 .append(context.getSchemaFormat().getExtension());
         return fileName.toString();
     }
@@ -124,13 +125,13 @@ public class OpenApiUtils {
      */
     @NotNull
     private static StringBuilder baseOperationAwareFile(NavigationPath navigationPath) {
-        String operationId = segmentValueOf(navigationPath, SegmentKey.OPERATION_ID);
+        String operationId = segmentValueOf(navigationPath, OPERATION_ID);
         StringBuilder fileName = new StringBuilder();
         if (isNotBlank(operationId)) {
             fileName.append(operationId);
         } else {
-            String method = segmentValueOf(navigationPath, SegmentKey.METHOD);
-            String path = segmentValueOf(navigationPath, SegmentKey.PATH);
+            String method = segmentValueOf(navigationPath, METHOD);
+            String path = segmentValueOf(navigationPath, PATH);
             if (method != null) fileName.append(method.toLowerCase());
             if (path != null) fileName.append(normalizePath(path));
         }
