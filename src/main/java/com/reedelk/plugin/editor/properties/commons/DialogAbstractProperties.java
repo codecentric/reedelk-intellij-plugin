@@ -17,7 +17,7 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
  */
 public abstract class DialogAbstractProperties extends DialogWrapper implements Disposable {
 
-    private static final int MINIMUM_PANEL_WIDTH = 550;
+    private static final int MINIMUM_PANEL_WIDTH = 560;
     private static final int MINIMUM_PANEL_HEIGHT = 0;
 
     private DisposableScrollPane panel;
