@@ -24,6 +24,7 @@ class ParameterObjectSerializer extends com.reedelk.openapi.v3.serializer.Parame
             String finalFileName = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);
             String schemaAssetPath = context.createAsset(finalFileName, data);
             serialize.put(ParameterObject.Properties.SCHEMA.value(), schemaAssetPath);
+            // TODO: serialize.put("predefinedSchema", "NONE");
         }
         return serialize;
     }

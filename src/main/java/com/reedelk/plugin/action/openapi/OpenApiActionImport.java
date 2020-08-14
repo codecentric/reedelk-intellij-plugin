@@ -2,10 +2,11 @@ package com.reedelk.plugin.action.openapi;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.action.openapi.dialog.DialogImport;
 import com.reedelk.plugin.action.openapi.dialog.DialogImportError;
-import com.reedelk.plugin.action.openapi.dialog.DialogImportSuccess;
+import com.reedelk.plugin.commons.NotificationUtils;
 import org.jetbrains.annotations.NotNull;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -56,11 +57,10 @@ public class OpenApiActionImport extends AnAction {
             int port = importer.getApiPort();
             String basePath = importer.getApiBasePath();
 
-            DialogImportSuccess successDialog =
-                    new DialogImportSuccess(currentProject,
-                            message("openapi.importer.dialog.success.message.details",
-                                    apiTitle, host, String.valueOf(port), basePath));
-            successDialog.show();
+            ApplicationManager.getApplication().invokeLater(() ->
+                    NotificationUtils.notifyInfo("Import OpenAPI successful",
+                    message("openapi.importer.dialog.success.message.details",
+                            apiTitle, host, String.valueOf(port), basePath)));
 
         } catch (Exception exception) {
             String cause = exception.getMessage();
