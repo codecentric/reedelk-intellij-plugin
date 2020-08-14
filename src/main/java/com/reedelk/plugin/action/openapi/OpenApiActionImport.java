@@ -3,6 +3,7 @@ package com.reedelk.plugin.action.openapi;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.action.openapi.dialog.DialogImport;
 import com.reedelk.plugin.action.openapi.dialog.DialogImportError;
@@ -12,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class OpenApiActionImport extends AnAction {
+
+    private static final Logger LOG = Logger.getInstance(OpenApiActionImport.class);
 
     @Override
     public void update(@NotNull AnActionEvent event) {
@@ -63,6 +66,8 @@ public class OpenApiActionImport extends AnAction {
                             apiTitle, host, String.valueOf(port), basePath)));
 
         } catch (Exception exception) {
+            LOG.warn(exception);
+
             String cause = exception.getMessage();
             DialogImportError errorDialog = new DialogImportError(currentProject, cause);
             errorDialog.showAndGet();
