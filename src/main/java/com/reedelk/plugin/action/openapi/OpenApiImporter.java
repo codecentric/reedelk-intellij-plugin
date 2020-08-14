@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
@@ -102,7 +103,7 @@ public class OpenApiImporter {
                 .orElse(DefaultConstants.OpenApi.BASE_PATH);
     }
 
-    int getPortOrDefault(ServerObject serverObject) {
+    private int getPortOrDefault(ServerObject serverObject) {
         String serverUrl = appendProtocolIfNotExists(serverObject);
         try {
             URL url = new URL(serverUrl);
@@ -112,7 +113,7 @@ public class OpenApiImporter {
         }
     }
 
-    boolean isLocalhost(ServerObject serverObject) {
+    private boolean isLocalhost(ServerObject serverObject) {
         String serverUrl = appendProtocolIfNotExists(serverObject);
         try {
             URL url = new URL(serverUrl);
@@ -124,13 +125,19 @@ public class OpenApiImporter {
         }
     }
 
-    String extractBasePath(ServerObject serverObject) {
+    private String extractBasePath(ServerObject serverObject) {
         String serverUrl = appendProtocolIfNotExists(serverObject);
         try {
             URL url = new URL(serverUrl);
             String path = url.getPath();
             String[] pathSegments = path.split("/");
-            return pathSegments.length > 1 ? "/" + pathSegments[1] : "/";
+            if (pathSegments.length > 1) {
+                // If there are more segments, http://myhost.com/api/v35 we expect: /api/v35.
+                String[] subSegments = Arrays.copyOfRange(pathSegments, 1, pathSegments.length);
+                return "/" + String.join("/", subSegments);
+            } else {
+                return "/";
+            }
         } catch (MalformedURLException e) {
             return DefaultConstants.OpenApi.BASE_PATH;
         }
@@ -140,6 +147,7 @@ public class OpenApiImporter {
     // localhost
     // http://localhost:8282
     // http://localhost
+    // We just add the protocol in order to let the java.net object to correctly parse it.
     @NotNull
     private String appendProtocolIfNotExists(ServerObject serverObject) {
         String serverUrl = serverObject.getUrl();
