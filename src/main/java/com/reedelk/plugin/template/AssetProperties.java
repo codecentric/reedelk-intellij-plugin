@@ -7,4 +7,5 @@ public class AssetProperties extends Properties {
     public AssetProperties(String data) {
         put("data", data);
     }
+
 }

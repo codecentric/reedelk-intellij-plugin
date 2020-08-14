@@ -8,6 +8,7 @@ import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
+import com.reedelk.plugin.template.AssetProperties;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,8 +31,9 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
         Example example = mediaTypeObject.getExample();
         if (example != null) {
             // We must create an example asset.
+            AssetProperties properties = new AssetProperties(example.data());
             String finalFileName = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
-            String exampleAssetPath = context.createAsset(finalFileName, example.data());
+            String exampleAssetPath = context.createAsset(finalFileName, properties);
             dataMap.put(MediaTypeObject.Properties.EXAMPLE.value(), exampleAssetPath);
         }
 
@@ -47,7 +49,8 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
                 // We must create a schema asset.
                 String finalFileName = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
                 String data = context.getSchemaFormat().dump(schema);
-                String schemaAssetPath = context.createAsset(finalFileName, data);
+                AssetProperties properties = new AssetProperties(data);
+                String schemaAssetPath = context.createAsset(finalFileName, properties);
                 dataMap.put(MediaTypeObject.Properties.SCHEMA.value(), schemaAssetPath);
             }
         }

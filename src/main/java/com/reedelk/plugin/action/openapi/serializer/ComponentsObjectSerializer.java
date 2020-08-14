@@ -9,6 +9,7 @@ import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiSchemaFormat;
+import com.reedelk.plugin.template.AssetProperties;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,9 +40,10 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
 
                 OpenApiSchemaFormat schemaFormat = context.getSchemaFormat();
                 String data = schemaFormat.dump(schemaObject.getSchema());
+                AssetProperties properties = new AssetProperties(data);
 
                 String finalFileName = schemaId + "." + schemaFormat.getExtension();
-                String schemaAssetPath = context.createAsset(finalFileName, data);
+                String schemaAssetPath = context.createAsset(finalFileName, properties);
 
                 context.register(schemaId, schemaAssetPath);
 

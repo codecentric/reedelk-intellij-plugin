@@ -1,16 +1,15 @@
 package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.commons.NavigationPath;
-import com.reedelk.openapi.v3.model.MediaTypeObject;
-import com.reedelk.openapi.v3.model.OperationObject;
-import com.reedelk.openapi.v3.model.ResponseObject;
-import com.reedelk.openapi.v3.model.RestMethod;
+import com.reedelk.openapi.v3.model.*;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
+import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.plugin.template.FlowWithRestListenerAndResourceProperties;
 import com.reedelk.plugin.template.FlowWithRestListenerProperties;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +18,8 @@ import static com.reedelk.openapi.commons.NavigationPath.SegmentKey;
 import static com.reedelk.openapi.commons.NavigationPath.create;
 
 abstract class AbstractHandler implements Handler {
+
+    private final String HTTP_SUCCESS_CODE = "200";
 
     @SuppressWarnings("UnnecessaryLocalVariable")
     @Override
@@ -57,38 +58,46 @@ abstract class AbstractHandler implements Handler {
         }
     }
 
-    protected Optional<SuccessExample> findSuccessExampleForFlow(Map<String, ResponseObject> responses, NavigationPath navigationPath, OpenApiImporterContext context) {
-        if (responses.containsKey("200")) {
-            ResponseObject responseObject = responses.get("200");
+    abstract String getHttpMethod();
+
+    abstract OperationObject getOperation(Map<RestMethod, OperationObject> pathDefinition);
+
+    @NotNull
+    private Optional<SuccessExample> findSuccessExampleForFlow(Map<String, ResponseObject> responses, NavigationPath navigationPath, OpenApiImporterContext context) {
+        if (responses.containsKey(HTTP_SUCCESS_CODE)) {
+            ResponseObject responseObject = responses.get(HTTP_SUCCESS_CODE);
             Map<String, MediaTypeObject> content = responseObject.getContent();
             for (Map.Entry<String, MediaTypeObject> response : content.entrySet()) {
                 String contentType = response.getKey();
                 MediaTypeObject mediaTypeObject = response.getValue();
                 if (mediaTypeObject.getExample() != null) {
-                    // We have found an example for 200
-                    NavigationPath responseNavigationPath = navigationPath
-                            .with(SegmentKey.RESPONSES)
-                            .with(SegmentKey.STATUS_CODE, "200")
-                            .with(SegmentKey.CONTENT)
-                            .with(SegmentKey.CONTENT_TYPE, contentType);
-
-                    String exampleFileName = OpenApiUtils.exampleFileNameFrom(responseNavigationPath, context);
-                    String assetPath = context.createAsset(exampleFileName, mediaTypeObject.getExample().data());
-                    SuccessExample successExample = new SuccessExample(contentType, assetPath);
-                    return Optional.of(successExample);
+                    return createSuccessExample(navigationPath, context, contentType, mediaTypeObject.getExample());
                 }
             }
         }
         return Optional.empty();
     }
 
+    @NotNull
+    private Optional<SuccessExample> createSuccessExample(NavigationPath navigationPath, OpenApiImporterContext context, String contentType, Example example) {
+        // We have found an example for 200
+        NavigationPath responseNavigationPath = navigationPath
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, HTTP_SUCCESS_CODE)
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, contentType);
+
+        String exampleFileName = OpenApiUtils.exampleFileNameFrom(responseNavigationPath, context);
+
+        AssetProperties properties = new AssetProperties(example.data());
+        String assetPath = context.createAsset(exampleFileName, properties);
+        SuccessExample successExample = new SuccessExample(contentType, assetPath);
+        return Optional.of(successExample);
+    }
+
     private String getOrDefault(String value, String defaultValue) {
         return StringUtils.isBlank(value) ? defaultValue : value;
     }
-
-    abstract String getHttpMethod();
-
-    abstract OperationObject getOperation(Map<RestMethod, OperationObject> pathDefinition);
 
     static class SuccessExample {
 

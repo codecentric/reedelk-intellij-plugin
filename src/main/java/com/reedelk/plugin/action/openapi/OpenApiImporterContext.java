@@ -27,7 +27,7 @@ import java.util.*;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.template.Template.Buildable;
-import static com.reedelk.plugin.template.Template.OpenAPI;
+import static com.reedelk.plugin.template.Template.OpenAPI.*;
 
 public class OpenApiImporterContext {
 
@@ -118,12 +118,11 @@ public class OpenApiImporterContext {
         return schemaFormat;
     }
 
-    public String createAsset(String fileName, String data) {
+    public String createAsset(String fileName, AssetProperties properties) {
         Module module = getImportModule();
-        Properties properties = new AssetProperties(data);
         Optional<String> assetsDirectory = PluginModuleUtils.getAssetsDirectory(module);
         assetsDirectory.ifPresent(directory ->
-                createBuildable(OpenAPI.ASSET, properties, fileName, directory, false));
+                createBuildable(ASSET, properties, fileName, directory, false));
         return assetResource(fileName);
     }
 
@@ -131,14 +130,14 @@ public class OpenApiImporterContext {
         Module module = getImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
-                createBuildable(OpenAPI.FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
+                createBuildable(FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
     }
 
     public void createRestListenerFlow(String fileName, FlowWithRestListenerProperties properties) {
         Module module = getImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
-                createBuildable(OpenAPI.FLOW_WITH_REST_LISTENER_AND_PAYLOAD_SET, properties, fileName, directory, true));
+                createBuildable(FLOW_WITH_REST_LISTENER_AND_PAYLOAD_SET, properties, fileName, directory, true));
     }
 
     public void createRestListenerConfig(String configFileName, String configTitle, String configOpenApiObject, String host, int port, String basePath) {
@@ -147,7 +146,7 @@ public class OpenApiImporterContext {
                 new RestListenerOpenApiConfigProperties(restListenerConfigId, configTitle, host, port, configOpenApiObject, basePath);
         PluginModuleUtils.getConfigsDirectory(module)
                 .ifPresent(configsDirectory ->
-                        createBuildable(OpenAPI.REST_LISTENER_CONFIG, properties, configFileName, configsDirectory, false));
+                        createBuildable(REST_LISTENER_CONFIG, properties, configFileName, configsDirectory, false));
     }
 
     private String assetResource(String fileName) {
