@@ -4,12 +4,13 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.plugin.commons.DisableInspectionFor;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.template.DockerfileProperties;
 import com.reedelk.plugin.template.FlowOrSubFlowFileProperties;
-import com.reedelk.plugin.template.RestListenerConfigProperties;
+import com.reedelk.plugin.template.RESTListenerConfig;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.plugin.template.Template.HelloWorld;
 
@@ -46,8 +47,12 @@ class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
             // Config
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Config.RESOURCE_DIRECTORY).ifPresent(configDirectory -> {
                 String title = ReedelkBundle.message("hello.world.sample.config.title");
-                RestListenerConfigProperties restListenerConfigProperties = new RestListenerConfigProperties(configId, title);
-                Template.HelloWorld.CONFIG.create(project, restListenerConfigProperties, configDirectory);
+                RESTListenerConfig properties = new RESTListenerConfig();
+                properties.setId(configId);
+                properties.setTitle(title);
+                properties.setHost(DefaultConstants.Template.DEFAULT_HOST);
+                properties.setPort(DefaultConstants.Template.DEFAULT_PORT);
+                Template.HelloWorld.CONFIG.create(project, properties, configDirectory);
             });
 
             // Flows

@@ -3,9 +3,9 @@ package com.reedelk.plugin.template;
 import java.util.Properties;
 import java.util.UUID;
 
-public class FlowWithRestListenerProperties extends Properties {
+public class OpenAPIRESTListenerWithPayloadSet extends Properties {
 
-    public FlowWithRestListenerProperties(String configId, String flowTitle, String flowDescription, String restListenerDescription, String restPath, String restMethod, String openApiOperationObject) {
+    public OpenAPIRESTListenerWithPayloadSet(String configId, String flowTitle, String flowDescription, String restListenerDescription, String restPath, String restMethod, String openApiOperationObject) {
         put("id", UUID.randomUUID().toString());
         put("title", flowTitle);
         put("description", flowDescription);

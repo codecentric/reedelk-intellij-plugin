@@ -10,6 +10,7 @@ import com.reedelk.plugin.action.openapi.reader.Readers;
 import com.reedelk.plugin.action.openapi.serializer.ConfigOpenApiObject;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import com.reedelk.plugin.commons.DefaultConstants;
+import com.reedelk.plugin.template.OpenAPIRESTListenerConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
@@ -51,12 +52,19 @@ public class OpenApiImporter {
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
         String title = OpenApiUtils.restListenerConfigTitleFrom(openApiObject);
         String configFileName = OpenApiUtils.restListenerConfigFileNameFrom(openApiObject);
-        context.createRestListenerConfig(configFileName, title, configOpenApiObjectJson, host, apiPort, apiBasePath);
+
+        OpenAPIRESTListenerConfig properties = new OpenAPIRESTListenerConfig();
+        properties.setOpenApiObject(configOpenApiObjectJson);
+        properties.setId(context.getRestListenerConfigId());
+        properties.setBasePath(apiBasePath);
+        properties.setPort(apiPort);
+        properties.setTitle(title);
+        properties.setHost(host);
+        context.createRestListenerConfig(configFileName, properties);
 
         // Generate REST flows from paths
         PathsObject paths = openApiObject.getPaths();
-        paths.getPaths().forEach((pathEntry, pathItem) ->
-                Handlers.handle(context, pathEntry, pathItem));
+        paths.getPaths().forEach((pathEntry, pathItem) -> Handlers.handle(context, pathEntry, pathItem));
     }
 
     public String getHost() {
@@ -151,9 +159,12 @@ public class OpenApiImporter {
     @NotNull
     private String appendProtocolIfNotExists(ServerObject serverObject) {
         String serverUrl = serverObject.getUrl();
-        if (!(serverUrl.startsWith("http://") || serverUrl.startsWith("https://"))) {
-            serverUrl = "http://" + serverUrl;
+        if (!(serverUrl.startsWith(PROTOCOL_HTTP) || serverUrl.startsWith(PROTOCOL_HTTPS))) {
+            serverUrl = PROTOCOL_HTTP + serverUrl;
         }
         return serverUrl;
     }
+
+    private final String PROTOCOL_HTTP = "http://";
+    private final String PROTOCOL_HTTPS = "https://";
 }

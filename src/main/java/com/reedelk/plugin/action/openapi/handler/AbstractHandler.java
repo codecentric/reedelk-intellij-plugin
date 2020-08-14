@@ -6,8 +6,8 @@ import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import com.reedelk.plugin.template.AssetProperties;
-import com.reedelk.plugin.template.FlowWithRestListenerAndResourceProperties;
-import com.reedelk.plugin.template.FlowWithRestListenerProperties;
+import com.reedelk.plugin.template.OpenAPIRESTListenerWithPayloadSet;
+import com.reedelk.plugin.template.OpenAPIRESTListenerWithResource;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,14 +44,15 @@ abstract class AbstractHandler implements Handler {
 
         Optional<SuccessExample> example = findSuccessExampleForFlow(operation.getResponses(), navigationPath, context);
         if (example.isPresent()) {
+            // The generated flow will return the example from the project's asset directory.
             SuccessExample successExample = example.get();
-            FlowWithRestListenerAndResourceProperties properties = new FlowWithRestListenerAndResourceProperties(
+            OpenAPIRESTListenerWithResource properties = new OpenAPIRESTListenerWithResource(
                     configId, flowTitle, flowDescription, restListenerDescription,
                     restPath, restMethod, openApiOperationObject,
                     successExample.assetResourceFile, successExample.contentType);
             context.createRestListenerFlowWithExample(fileName, properties);
         } else {
-            FlowWithRestListenerProperties properties = new FlowWithRestListenerProperties(
+            OpenAPIRESTListenerWithPayloadSet properties = new OpenAPIRESTListenerWithPayloadSet(
                     configId, flowTitle, flowDescription, restListenerDescription,
                     restPath, restMethod, openApiOperationObject);
             context.createRestListenerFlow(fileName, properties);
