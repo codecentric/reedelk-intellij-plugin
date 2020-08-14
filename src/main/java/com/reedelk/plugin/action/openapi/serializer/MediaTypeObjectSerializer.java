@@ -8,12 +8,12 @@ import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
-import com.reedelk.runtime.api.commons.StringUtils;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
 
@@ -41,16 +41,14 @@ class MediaTypeObjectSerializer implements Serializer<MediaTypeObject> {
         Schema schema = mediaTypeObject.getSchema();
         if (schema != null) {
             // It is a schema reference
-            if (StringUtils.isNotBlank(schema.getSchemaId())) {
+            if (isNotBlank(schema.getSchemaId())) {
                 Optional<String> schemaAsset = context.assetFrom(schema.getSchemaId());
                 schemaAsset.ifPresent(schemaAssetPath -> dataMap.put(MediaTypeObject.Properties.SCHEMA.value(), schemaAssetPath));
-
 
             } else if (schema.getSchemaData() != null){
                 // We must create a schema asset.
                 String finalFileName = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
-
-                String data = new Yaml().dump(schema.getSchemaData()); // TODO: Might be JSON instead of YAML
+                String data = context.getSchemaFormat().dump(schema);
                 String schemaAssetPath = context.createAsset(finalFileName, data);
                 dataMap.put(MediaTypeObject.Properties.SCHEMA.value(), schemaAssetPath);
             }

@@ -5,10 +5,10 @@ import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.HeaderObject;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
 
+// TODO: This one should be predefined in the header? The schema if it is a predefined should be predefined.
 class HeaderObjectSerializer extends com.reedelk.openapi.v3.serializer.HeaderObjectSerializer {
 
     private final OpenApiImporterContext context;
@@ -21,9 +21,7 @@ class HeaderObjectSerializer extends com.reedelk.openapi.v3.serializer.HeaderObj
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, HeaderObject input) {
         Map<String, Object> serialize = super.serialize(serializerContext, navigationPath, input);
         if (input.getSchema() != null) {
-            String data = new Yaml().dump(input.getSchema().getSchemaData()); // TODO: Might be JSON instead of YAML
-
-            // TODO: This one should be predefined in the header? The schema if it is a predefined should be predefined.
+            String data = context.getSchemaFormat().dump(input.getSchema());
             String finalFileName = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);
             String schemaAssetPath = context.createAsset(finalFileName, data);
             serialize.put(HeaderObject.Properties.SCHEMA.value(), schemaAssetPath);

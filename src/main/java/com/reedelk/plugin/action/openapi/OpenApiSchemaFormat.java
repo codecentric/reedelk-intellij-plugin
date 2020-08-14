@@ -1,9 +1,28 @@
 package com.reedelk.plugin.action.openapi;
 
+import com.reedelk.openapi.v3.model.Schema;
+import org.json.JSONObject;
+import org.yaml.snakeyaml.Yaml;
+
+import java.util.Map;
+
 public enum OpenApiSchemaFormat {
 
-    YAML("yaml"),
-    JSON("json");
+    YAML("yaml"){
+        @Override
+        public String dump(Schema schema) {
+            Map<String, Object> schemaData = schema.getSchemaData();
+            return new Yaml().dump(schemaData);
+        }
+    },
+
+    JSON("json"){
+        @Override
+        public String dump(Schema schema) {
+            Map<String, Object> schemaData = schema.getSchemaData();
+            return new JSONObject(schemaData).toString(2);
+        }
+    };
 
     final String extension;
 
@@ -15,12 +34,6 @@ public enum OpenApiSchemaFormat {
         return extension;
     }
 
-    public static OpenApiSchemaFormat formatOf(String fileName) {
-        for (OpenApiSchemaFormat schemaFormat : OpenApiSchemaFormat.values()) {
-            if (fileName.toLowerCase().endsWith("." + schemaFormat.extension)) {
-                return schemaFormat;
-            }
-        }
-        throw new IllegalArgumentException("Could not find schema format for file with name=[" + fileName + "]");
-    }
+    public abstract String dump(Schema schema);
+
 }
