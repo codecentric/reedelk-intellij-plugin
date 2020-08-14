@@ -195,11 +195,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     }
 
     private void runtimeConfigNameChanged(String newRuntimeConfigName) {
-        if (message("runtimeBuilder.add.new.config").equals(newRuntimeConfigName)) {
-            addRuntimePanel.setVisible(true);
-        } else {
-            addRuntimePanel.setVisible(false);
-        }
+        addRuntimePanel.setVisible(message("runtimeBuilder.add.new.config").equals(newRuntimeConfigName));
     }
 
     private void createInputWithBrowse(WizardContext context, ModuleBuilder moduleBuilder) {
