@@ -24,12 +24,12 @@ public class Serializer {
 
     private static Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializers(OpenApiImporterContext context) {
         Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializerMap = new HashMap<>();
+        serializerMap.put(ConfigOpenApiObject.class, new ConfigOpenApiObjectSerializer(context));
+        serializerMap.put(RequestBodyObject.class, new RequestBodyObjectSerializer(context));
+        serializerMap.put(ComponentsObject.class, new ComponentsObjectSerializer(context));
         serializerMap.put(MediaTypeObject.class, new MediaTypeObjectSerializer(context));
         serializerMap.put(ParameterObject.class, new ParameterObjectSerializer(context));
         serializerMap.put(HeaderObject.class, new HeaderObjectSerializer(context));
-        serializerMap.put(RequestBodyObject.class, new RequestBodyObjectSerializer(context));
-        serializerMap.put(ConfigOpenApiObject.class, new ConfigOpenApiObjectSerializer());
-        serializerMap.put(ComponentsObject.class, new ComponentsObjectSerializer(context));
         return serializerMap;
     }
 }

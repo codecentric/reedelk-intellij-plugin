@@ -1,6 +1,5 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
-import com.reedelk.openapi.Serializer;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.ComponentsObject;
@@ -15,19 +14,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.SCHEMAS;
+import static com.reedelk.openapi.v3.model.SchemaObject.Properties;
 
-class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
-
-    private final OpenApiImporterContext context;
+class ComponentsObjectSerializer extends AbstractSerializer<ComponentsObject> {
 
     public ComponentsObjectSerializer(OpenApiImporterContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ComponentsObject componentsObject) {
-        Map<String, Object> map = new LinkedHashMap<>();
-
         // Request bodies are not serialized here.
         Map<String, RequestBodyObject> requestBodies = componentsObject.getRequestBodies();
         requestBodies.forEach(context::registerRequestBody);
@@ -40,6 +36,7 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
             Schema schema = schemaObject.getSchema();
             if (schema.getSchemaData() != null) {
 
+                // Create Asset
                 OpenApiSchemaFormat schemaFormat = context.getSchemaFormat();
                 String data = schemaFormat.dump(schemaObject.getSchema());
                 AssetProperties properties = new AssetProperties(data);
@@ -47,15 +44,19 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
                 String finalFileName = schemaId + "." + schemaFormat.getExtension();
                 String schemaAssetPath = context.createAsset(finalFileName, properties);
 
+                // Register Asset Path
                 context.registerAssetPath(schemaId, schemaAssetPath);
 
+                // Put an entry "schema": "assets/my-schema.json"
                 Map<String, Object> schemaMap = new LinkedHashMap<>();
-                schemaMap.put(SchemaObject.Properties.SCHEMA.value(), schemaAssetPath);
+                schemaMap.put(Properties.SCHEMA.value(), schemaAssetPath);
                 schemasMap.put(schemaId, schemaMap);
             }
         });
 
-        if (!schemasMap.isEmpty()) map.put(SCHEMAS.value(), schemasMap);
+        // We only set the "schemas" object if there are schemas registered.
+        Map<String, Object> map = new LinkedHashMap<>();
+        if (!schemasMap.isEmpty()) set(map, SCHEMAS.value(), schemasMap);
         return map;
     }
 }

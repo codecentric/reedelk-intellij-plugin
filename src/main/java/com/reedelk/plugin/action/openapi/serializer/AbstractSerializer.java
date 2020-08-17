@@ -1,6 +1,5 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
-import com.reedelk.openapi.Serializer;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.template.AssetProperties;
@@ -12,7 +11,7 @@ import static com.reedelk.openapi.v3.model.MediaTypeObject.Properties.SCHEMA;
 import static com.reedelk.plugin.action.openapi.OpenApiStringConstants.PROPERTY_INLINE_SCHEMA;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
-abstract class AbstractSerializer<T> implements Serializer<T> {
+abstract class AbstractSerializer<T> extends com.reedelk.openapi.commons.AbstractSerializer<T> {
 
     protected final OpenApiImporterContext context;
 

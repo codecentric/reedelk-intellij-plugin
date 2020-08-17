@@ -1,6 +1,5 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
-import com.reedelk.openapi.commons.AbstractSerializer;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
@@ -15,10 +14,8 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> {
 
-    private final OpenApiImporterContext context;
-
     public RequestBodyObjectSerializer(OpenApiImporterContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -53,7 +50,6 @@ class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> 
         }
 
         set(map, Properties.REQUIRED.value(), realRequestBodyObject.getRequired());
-
         return map;
     }
 }

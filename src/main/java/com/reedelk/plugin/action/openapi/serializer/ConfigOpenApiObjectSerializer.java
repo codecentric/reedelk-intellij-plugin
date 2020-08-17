@@ -1,8 +1,8 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
-import com.reedelk.openapi.commons.AbstractSerializer;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
+import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,10 +13,13 @@ import static java.util.stream.Collectors.toList;
 
 class ConfigOpenApiObjectSerializer extends AbstractSerializer<ConfigOpenApiObject> {
 
+    protected ConfigOpenApiObjectSerializer(OpenApiImporterContext context) {
+        super(context);
+    }
+
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ConfigOpenApiObject configOpenApiObject) {
         Map<String, Object> map = new LinkedHashMap<>();
-
 
         Map<String, Object> serializedInfo = serializerContext.serialize(navigationPath, configOpenApiObject.getInfo());
         set(map, Properties.INFO.value(), serializedInfo); // REQUIRED
