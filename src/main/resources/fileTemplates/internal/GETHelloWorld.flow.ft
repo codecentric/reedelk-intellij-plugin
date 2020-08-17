@@ -7,7 +7,7 @@
       "implementor": "com.reedelk.rest.component.RESTListener",
       "description": "GET Hello World REST Listener",
       "configuration": {"ref": "${configId}"},
-      "path": "/message/{name:.*}",
+      "path": "/message/{name}",
       "method": "GET",
       "streaming": "AUTO",
       "response": {
