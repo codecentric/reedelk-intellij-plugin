@@ -22,7 +22,7 @@ public class Serializer {
         return OpenApi.toJson(openApiModel, serializers(context), navigationPath);
     }
 
-    private static Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializers(OpenApiImporterContext context) {
+    public static Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializers(OpenApiImporterContext context) {
         Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializerMap = new HashMap<>();
         serializerMap.put(ConfigOpenApiObject.class, new ConfigOpenApiObjectSerializer(context));
         serializerMap.put(RequestBodyObject.class, new RequestBodyObjectSerializer(context));

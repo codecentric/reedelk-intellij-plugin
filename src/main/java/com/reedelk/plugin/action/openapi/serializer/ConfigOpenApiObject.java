@@ -3,7 +3,6 @@ package com.reedelk.plugin.action.openapi.serializer;
 import com.reedelk.openapi.OpenApiModel;
 import com.reedelk.openapi.v3.model.ComponentsObject;
 import com.reedelk.openapi.v3.model.InfoObject;
-import com.reedelk.openapi.v3.model.OpenApiObject;
 import com.reedelk.openapi.v3.model.ServerObject;
 
 import java.util.List;
@@ -15,10 +14,10 @@ public class ConfigOpenApiObject implements OpenApiModel {
     private List<ServerObject> servers;
     private ComponentsObject components;
 
-    public ConfigOpenApiObject(OpenApiObject object) {
-        info = object.getInfo();
-        servers = object.getServers();
-        components = object.getComponents();
+    public ConfigOpenApiObject(InfoObject info, List<ServerObject> servers, ComponentsObject components) {
+        this.info = info;
+        this.servers = servers;
+        this.components = components;
     }
 
     public InfoObject getInfo() {

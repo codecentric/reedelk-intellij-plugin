@@ -48,7 +48,10 @@ public class OpenApiImporter {
         apiPort = findListenerPort(openApiObject);
 
         // Generate REST Listener configuration
-        ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(openApiObject);
+        ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(
+                openApiObject.getInfo(),
+                openApiObject.getServers(),
+                openApiObject.getComponents());
         String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
         String title = OpenApiUtils.restListenerConfigTitleFrom(openApiObject);
         String configFileName = OpenApiUtils.restListenerConfigFileNameFrom(openApiObject);
