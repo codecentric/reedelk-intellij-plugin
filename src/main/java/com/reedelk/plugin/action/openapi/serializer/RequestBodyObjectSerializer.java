@@ -24,12 +24,17 @@ class RequestBodyObjectSerializer extends AbstractSerializer<RequestBodyObject> 
 
         RequestBodyObject realRequestBodyObject = requestBodyObject;
 
+        // This is the case where the RequestBody is expressed as a reference. At the moment
+        // we don't support this use case, and the components OpenAPI json object does not
+        // keep commons request bodies. Therefore we need to find the referenced request body object.
         String requestBodyReference = requestBodyObject.get$ref();
         if (isNotBlank(requestBodyReference)) {
             String[] segments = requestBodyReference.split("/");
-            // Last segment is the id
-            String segment = segments[segments.length - 1];
-            realRequestBodyObject = context.getRequestBodyById(segment);
+            if (segments.length > 1) {
+                // Last segment is the id
+                String segment = segments[segments.length - 1];
+                realRequestBodyObject = context.getRequestBodyById(segment);
+            }
         }
 
         set(map, Properties.DESCRIPTION.value(), realRequestBodyObject.getDescription());
