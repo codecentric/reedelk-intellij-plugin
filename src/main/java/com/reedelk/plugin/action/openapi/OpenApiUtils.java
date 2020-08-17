@@ -132,7 +132,7 @@ public class OpenApiUtils {
         } else {
             String method = segmentValueOf(navigationPath, METHOD);
             String path = segmentValueOf(navigationPath, PATH);
-            if (method != null) fileName.append(method.toLowerCase());
+            if (method != null) fileName.append(method.toUpperCase());
             if (path != null) fileName.append(normalizePath(path));
         }
         return fileName;

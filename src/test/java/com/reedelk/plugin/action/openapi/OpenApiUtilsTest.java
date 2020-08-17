@@ -52,7 +52,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.flowFileNameFrom(navigationPath);
 
         // Then
-        assertThat(actual).isEqualTo("postPet.flow");
+        assertThat(actual).isEqualTo("POSTPet.flow");
     }
 
     @Test
@@ -66,7 +66,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.flowFileNameFrom(navigationPath);
 
         // Then
-        assertThat(actual).isEqualTo("put.flow");
+        assertThat(actual).isEqualTo("PUT.flow");
     }
 
     // REST Listener Config Title
@@ -163,7 +163,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
-        assertThat(actual).isEqualTo("getOrderId_response_200_application_json.schema.json");
+        assertThat(actual).isEqualTo("GETOrderId_response_200_application_json.schema.json");
     }
 
     @Test
@@ -181,7 +181,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
-        assertThat(actual).isEqualTo("get_response_200_application_json.schema.json");
+        assertThat(actual).isEqualTo("GET_response_200_application_json.schema.json");
     }
 
     // Schema Request Body
@@ -218,7 +218,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
-        assertThat(actual).isEqualTo("getOrderId_requestBody_application_x-www-form-urlencoded.schema.json");
+        assertThat(actual).isEqualTo("GETOrderId_requestBody_application_x-www-form-urlencoded.schema.json");
     }
 
     @Test
@@ -235,7 +235,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
 
         // Then
-        assertThat(actual).isEqualTo("get_requestBody_application_x-www-form-urlencoded.schema.json");
+        assertThat(actual).isEqualTo("GET_requestBody_application_x-www-form-urlencoded.schema.json");
     }
 
     // Schema Parameter
@@ -269,7 +269,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);
 
         // Then
-        assertThat(actual).isEqualTo("getOrderFindByStatus_parameter_status.schema.json");
+        assertThat(actual).isEqualTo("GETOrderFindByStatus_parameter_status.schema.json");
     }
 
     @Test
@@ -285,7 +285,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);
 
         // Then
-        assertThat(actual).isEqualTo("post_parameter_status.schema.json");
+        assertThat(actual).isEqualTo("POST_parameter_status.schema.json");
     }
 
     // Schema Header
@@ -323,7 +323,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);
 
         // Then
-        assertThat(actual).isEqualTo("deleteOrderFindByStatus_response_200_header_X-Rate-Limit.schema.json");
+        assertThat(actual).isEqualTo("DELETEOrderFindByStatus_response_200_header_X-Rate-Limit.schema.json");
     }
 
     @Test
@@ -341,7 +341,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);
 
         // Then
-        assertThat(actual).isEqualTo("delete_response_200_header_X-Rate-Limit.schema.json");
+        assertThat(actual).isEqualTo("DELETE_response_200_header_X-Rate-Limit.schema.json");
     }
 
     // Example
@@ -379,7 +379,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, OpenApiExampleFormat.JSON);
 
         // Then
-        assertThat(actual).isEqualTo("getOrderId_response_200_application_json.example.json");
+        assertThat(actual).isEqualTo("GETOrderId_response_200_application_json.example.json");
     }
 
     @Test
@@ -397,7 +397,7 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, OpenApiExampleFormat.JSON);
 
         // Then
-        assertThat(actual).isEqualTo("get_response_200_application_json.example.json");
+        assertThat(actual).isEqualTo("GET_response_200_application_json.example.json");
     }
 
     @Test
