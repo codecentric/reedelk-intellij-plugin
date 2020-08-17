@@ -5,6 +5,7 @@ import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.Example;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
+import com.reedelk.plugin.action.openapi.OpenApiExampleFormat;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.template.AssetProperties;
@@ -28,8 +29,12 @@ class MediaTypeObjectSerializer extends AbstractSerializer<MediaTypeObject> {
         Example example = mediaTypeObject.getExample();
         if (example != null) {
             // We must create an example asset.
-            AssetProperties properties = new AssetProperties(example.data());
-            String finalFileName = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
+            String data = example.data();
+            OpenApiExampleFormat exampleFormat = context.exampleFormatOf(data);
+
+            AssetProperties properties = new AssetProperties(data);
+            String finalFileName = OpenApiUtils.exampleFileNameFrom(navigationPath, exampleFormat);
+
             String exampleAssetPath = context.createAsset(finalFileName, properties);
             serialized.put(EXAMPLE.value(), exampleAssetPath);
         }

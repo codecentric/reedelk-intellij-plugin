@@ -14,8 +14,13 @@ import com.reedelk.plugin.template.OpenAPIRESTListenerWithResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
+import org.xml.sax.InputSource;
+import org.yaml.snakeyaml.Yaml;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -101,14 +106,21 @@ public class OpenApiImporterContext {
         return Optional.empty();
     }
 
-    public void setSchemaFormat(String content) {
-        try {
-            new JSONObject(content);
+    public void setSchemaFormat(String content) throws OpenApiException {
+        if (isJson(content)) {
             this.schemaFormat = OpenApiSchemaFormat.JSON;
-        } catch (Exception e) {
-            // not JSON, but YAML
+        } else if (isYaml(content)){
             this.schemaFormat = OpenApiSchemaFormat.YAML;
+        } else {
+            throw new OpenApiException("The OpenApi schema is not a valid JSON or YAML. " +
+                    "Please make sure that the OpenApi definition is a valid JSON or YAML.");
         }
+    }
+
+    public OpenApiExampleFormat exampleFormatOf(String content) {
+        if (isJson(content)) return OpenApiExampleFormat.JSON;
+        if (isXml(content)) return OpenApiExampleFormat.XML;
+        return OpenApiExampleFormat.PLAIN_TEXT;
     }
 
     public OpenApiSchemaFormat getSchemaFormat() {
@@ -148,7 +160,6 @@ public class OpenApiImporterContext {
         String assetResourcePath = isBlank(targetDirectory) ?
                 RESOURCE_DIRECTORY.substring(1) + File.separator + fileName :
                 RESOURCE_DIRECTORY.substring(1) + File.separator + targetDirectory + File.separator + fileName;
-        // We remove the first '/' from the directory
         return removeFrontSlashIfNeeded(assetResourcePath);
     }
 
@@ -167,7 +178,40 @@ public class OpenApiImporterContext {
         return ModuleManager.getInstance(project).findModuleByName(importModuleName);
     }
 
+    // We remove the first '/' from the directory
+    // By convention an asset resource does not start with a front slash.
     private String removeFrontSlashIfNeeded(String path) {
         return path.startsWith("/") ?  path.substring(1) : path;
+    }
+
+    private boolean isXml(String content) {
+        try {
+            InputSource is = new InputSource(new StringReader(content));
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = dbFactory.newDocumentBuilder();
+            builder.parse(is);
+            return true;
+        } catch (Exception exception) {
+            // not xml
+        }
+        return false;
+    }
+
+    private boolean isYaml(String content) {
+        try {
+            new Yaml().load(content);
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
+    }
+
+    private boolean isJson(String content) {
+        try {
+            new JSONObject(content);
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
     }
 }

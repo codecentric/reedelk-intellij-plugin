@@ -2,6 +2,7 @@ package com.reedelk.plugin.action.openapi.handler;
 
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.*;
+import com.reedelk.plugin.action.openapi.OpenApiExampleFormat;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
@@ -88,9 +89,12 @@ abstract class AbstractHandler implements Handler {
                 .with(SegmentKey.CONTENT)
                 .with(SegmentKey.CONTENT_TYPE, contentType);
 
-        String exampleFileName = OpenApiUtils.exampleFileNameFrom(responseNavigationPath, context);
+        String exampleData = example.data();
 
-        AssetProperties properties = new AssetProperties(example.data());
+        OpenApiExampleFormat exampleFormat = context.exampleFormatOf(exampleData);
+        String exampleFileName = OpenApiUtils.exampleFileNameFrom(responseNavigationPath, exampleFormat);
+
+        AssetProperties properties = new AssetProperties(exampleData);
         String assetPath = context.createAsset(exampleFileName, properties);
         SuccessExample successExample = new SuccessExample(contentType, assetPath);
         return Optional.of(successExample);

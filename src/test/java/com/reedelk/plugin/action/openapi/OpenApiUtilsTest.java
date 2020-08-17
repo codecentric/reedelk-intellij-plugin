@@ -358,7 +358,7 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
-        String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, OpenApiExampleFormat.JSON);
 
         // Then
         assertThat(actual).isEqualTo("getPetById_response_200_application_json.example.json");
@@ -376,7 +376,7 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
-        String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, OpenApiExampleFormat.JSON);
 
         // Then
         assertThat(actual).isEqualTo("getOrderId_response_200_application_json.example.json");
@@ -394,10 +394,29 @@ class OpenApiUtilsTest {
                 .with(SegmentKey.CONTENT_TYPE, "application/json");
 
         // When
-        String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, context);
+        String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, OpenApiExampleFormat.JSON);
 
         // Then
         assertThat(actual).isEqualTo("get_response_200_application_json.example.json");
+    }
+
+    @Test
+    void shouldReturnCorrectExampleFileNameAsXmlWhenOperationIdPresent() {
+        // Given
+        NavigationPath navigationPath = create()
+                .with(SegmentKey.OPERATION_ID, "getPetById")
+                .with(SegmentKey.METHOD, "GET")
+                .with(SegmentKey.PATH, "/order/{id}")
+                .with(SegmentKey.RESPONSES)
+                .with(SegmentKey.STATUS_CODE, "200")
+                .with(SegmentKey.CONTENT)
+                .with(SegmentKey.CONTENT_TYPE, "application/json");
+
+        // When
+        String actual = OpenApiUtils.exampleFileNameFrom(navigationPath, OpenApiExampleFormat.XML);
+
+        // Then
+        assertThat(actual).isEqualTo("getPetById_response_200_application_json.example.xml");
     }
 
     // Get API title

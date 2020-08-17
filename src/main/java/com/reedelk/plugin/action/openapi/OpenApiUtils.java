@@ -42,7 +42,7 @@ public class OpenApiUtils {
     }
 
     @NotNull
-    public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
+    public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiExampleFormat exampleFormat) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
         String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
@@ -51,7 +51,7 @@ public class OpenApiUtils {
                 .append(statusCode).append("_")
                 .append(normalizeContentType(contentType)).append(".")
                 .append(EXAMPLE.getKey()).append(".")
-                .append(context.getSchemaFormat().getExtension());
+                .append(exampleFormat.getExtension());
         return fileName.toString();
     }
 
