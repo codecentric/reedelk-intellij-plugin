@@ -1,11 +1,19 @@
 package com.reedelk.plugin.template;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Properties;
 import java.util.UUID;
 
 public class OpenAPIRESTListenerWithPayloadSet extends Properties {
 
-    public OpenAPIRESTListenerWithPayloadSet(String configId, String flowTitle, String flowDescription, String restListenerDescription, String restPath, String restMethod, String openApiOperationObject) {
+    public OpenAPIRESTListenerWithPayloadSet(@NotNull String configId,
+                                             @NotNull String flowTitle,
+                                             @NotNull String flowDescription,
+                                             @NotNull String restListenerDescription,
+                                             @NotNull String restPath,
+                                             @NotNull String restMethod,
+                                             @NotNull String openApiOperationObject) {
         put("id", UUID.randomUUID().toString());
         put("title", flowTitle);
         put("description", flowDescription);

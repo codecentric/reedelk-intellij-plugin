@@ -1,16 +1,18 @@
 package com.reedelk.plugin.template;
 
+import org.jetbrains.annotations.NotNull;
+
 public class OpenAPIRESTListenerWithResource extends OpenAPIRESTListenerWithPayloadSet {
 
-    public OpenAPIRESTListenerWithResource(String configId,
-                                           String flowTitle,
-                                           String flowDescription,
-                                           String restListenerDescription,
-                                           String restPath,
-                                           String restMethod,
-                                           String openApiOperationObject,
-                                           String exampleResourceFile,
-                                           String exampleMimeType) {
+    public OpenAPIRESTListenerWithResource(@NotNull String configId,
+                                           @NotNull String flowTitle,
+                                           @NotNull String flowDescription,
+                                           @NotNull String restListenerDescription,
+                                           @NotNull String restPath,
+                                           @NotNull String restMethod,
+                                           @NotNull String openApiOperationObject,
+                                           @NotNull String exampleResourceFile,
+                                           @NotNull String exampleMimeType) {
         super(configId, flowTitle, flowDescription, restListenerDescription, restPath, restMethod, openApiOperationObject);
         put("exampleResourceFile", exampleResourceFile);
         put("exampleMimeType", exampleMimeType);

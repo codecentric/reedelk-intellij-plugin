@@ -13,7 +13,7 @@ public class Handlers {
     private Handlers() {
     }
 
-    private static final List<Handler> HANDLER_1s = Arrays.asList(
+    private static final List<Handler> HANDLERS = Arrays.asList(
             new GETHandler(),
             new POSTHandler(),
             new PUTHandler(),
@@ -22,7 +22,7 @@ public class Handlers {
             new OPTIONSHandler());
 
     public static void handle(OpenApiImporterContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
-        for (Handler handler : HANDLER_1s) {
+        for (Handler handler : HANDLERS) {
             if (handler.isApplicable(pathDefinition)) {
                 handler.accept(context, pathEntry, pathDefinition);
             }

@@ -52,6 +52,7 @@ abstract class AbstractHandler implements Handler {
                     restPath, restMethod, openApiOperationObject,
                     successExample.assetResourceFile, successExample.contentType);
             context.createRestListenerFlowWithExample(fileName, properties);
+
         } else {
             OpenAPIRESTListenerWithPayloadSet properties = new OpenAPIRESTListenerWithPayloadSet(
                     configId, flowTitle, flowDescription, restListenerDescription,
