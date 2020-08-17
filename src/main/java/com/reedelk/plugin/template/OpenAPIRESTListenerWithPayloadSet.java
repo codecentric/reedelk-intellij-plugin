@@ -1,5 +1,6 @@
 package com.reedelk.plugin.template;
 
+import com.reedelk.runtime.api.commons.ScriptUtils;
 import com.reedelk.runtime.api.message.content.MimeType;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,8 +10,8 @@ import java.util.UUID;
 @SuppressWarnings("FieldCanBeLocal")
 public class OpenAPIRESTListenerWithPayloadSet extends Properties {
 
-    private final String jsonTemplate = "{ \\\"example\\\": \\\"%s Flow\\\"}";
-    private final String xmlTemplate =  "<example>%s Flow</example>";
+    private final String jsonTemplate = ScriptUtils.asScript("'{\\\"example\\\": \\\"%s Flow\\\"}'");
+    private final String xmlTemplate =  ScriptUtils.asScript("'<example>%s Flow</example>'");
     private final String textTemplate = "%s Flow";
 
     public OpenAPIRESTListenerWithPayloadSet(@NotNull String configId,
