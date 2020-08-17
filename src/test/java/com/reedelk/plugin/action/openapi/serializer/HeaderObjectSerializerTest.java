@@ -12,8 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class HeaderObjectSerializerTest extends AbstractSerializerTest {
@@ -70,6 +72,35 @@ class HeaderObjectSerializerTest extends AbstractSerializerTest {
         // Then
         Map<String, Object> expectedHeaderMap =
                 ImmutableMap.of("predefinedSchema", PredefinedSchema.ARRAY_INTEGER.name());
+        assertThat(serialized).isEqualTo(expectedHeaderMap);
+    }
+
+    @Test
+    void shouldCorrectlySerializeHeaderObjectWithNonPredefinedSchema() {
+        // Given
+        String schemaId = "mySchemaId";
+        doReturn(Optional.of("assets/mySchemaId.yaml")).when(context).getAssetFrom(schemaId);
+
+        Map<String, Object> schemaData =
+                ImmutableMap.of("type", "array", "items",
+                        ImmutableMap.of("type", "Pet"));
+
+        Schema schema = new Schema();
+        schema.setSchemaData(schemaData);
+        schema.setSchemaId(schemaId);
+
+        HeaderObject headerObject = new HeaderObject();
+        headerObject.setSchema(schema);
+
+        NavigationPath navigationPath = NavigationPath.create();
+
+        // When
+        Map<String, Object> serialized =
+                serializer.serialize(serializerContext, navigationPath, headerObject);
+
+        // Then
+        Map<String, Object> expectedHeaderMap =
+                ImmutableMap.of("predefinedSchema", "NONE", "schema", "assets/mySchemaId.yaml");
         assertThat(serialized).isEqualTo(expectedHeaderMap);
     }
 }
