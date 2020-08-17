@@ -73,7 +73,7 @@ class RequestBodyObjectSerializerTest extends AbstractSerializerTest {
         RequestBodyObject requestBodyObject = new RequestBodyObject();
         requestBodyObject.set$ref("#/components/requestBodies/UserArray");
 
-        doReturn(referencedBodyObject)
+        doReturn(Optional.of(referencedBodyObject))
                 .when(context)
                 .getRequestBodyById("UserArray");
 

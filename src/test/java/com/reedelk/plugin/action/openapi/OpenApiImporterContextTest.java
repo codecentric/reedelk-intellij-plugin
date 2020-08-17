@@ -84,10 +84,10 @@ class OpenApiImporterContextTest {
 
         // When
         context.registerRequestBody(requestBodyId, requestBodyObject);
-        RequestBodyObject actual = context.getRequestBodyById(requestBodyId);
+        Optional<RequestBodyObject> actual = context.getRequestBodyById(requestBodyId);
 
         // Then
-        assertThat(actual).isEqualTo(requestBodyObject);
+        assertThat(actual).contains(requestBodyObject);
     }
 
     @Test
