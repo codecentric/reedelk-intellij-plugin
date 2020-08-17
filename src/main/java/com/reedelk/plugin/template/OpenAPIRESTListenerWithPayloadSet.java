@@ -34,9 +34,9 @@ public class OpenAPIRESTListenerWithPayloadSet extends Properties {
     }
 
     private String getResponseExampleFrom(MimeType mimeType, String title) {
-        if (MimeType.APPLICATION_JSON.equals(mimeType)) {
+        if (MimeType.APPLICATION_JSON.equals(mimeType) || MimeType.TEXT_JSON.equals(mimeType)) {
             return String.format(jsonTemplate, title);
-        } else if (MimeType.TEXT_XML.equals(mimeType)) {
+        } else if (MimeType.APPLICATION_XML.equals(mimeType) || MimeType.TEXT_XML.equals(mimeType)) {
             return String.format(xmlTemplate, title);
         } else {
             return String.format(textTemplate, title);

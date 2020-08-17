@@ -91,10 +91,7 @@ abstract class AbstractHandler implements Handler {
             Map<String, MediaTypeObject> content = responseObject.getContent();
             for (Map.Entry<String, MediaTypeObject> response : content.entrySet()) {
                 String contentType = response.getKey();
-                MediaTypeObject mediaTypeObject = response.getValue();
-                if (mediaTypeObject.getExample() != null) {
-                    return MimeType.parse(contentType, MimeType.TEXT_PLAIN);
-                }
+                return MimeType.parse(contentType, MimeType.TEXT_PLAIN);
             }
         }
         return MimeType.TEXT_PLAIN;
