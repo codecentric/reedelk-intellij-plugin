@@ -23,7 +23,7 @@ abstract class AbstractSerializer<T> implements Serializer<T> {
     protected void setSchema(String propertyKey, Map<String, Object> dataMap, Schema schema, String finalFileName) {
         // It is a schema reference
         if (isNotBlank(schema.getSchemaId())) {
-            Optional<String> schemaAsset = context.assetFrom(schema.getSchemaId());
+            Optional<String> schemaAsset = context.getAssetFrom(schema.getSchemaId());
             schemaAsset.ifPresent(schemaAssetPath -> dataMap.put(SCHEMA.value(), schemaAssetPath));
 
         } else if (schema.getSchemaData() != null){

@@ -92,14 +92,14 @@ public class OpenApiImporterContext {
         return requestBodyIdAndData.get(requestBodyId);
     }
 
-    public void register(String schemaId, String schemaAssetPath) {
+    public void registerAssetPath(String schemaId, String schemaAssetPath) {
         schemaIdAndPathMap.put(schemaId, schemaAssetPath);
     }
 
-    public Optional<String> assetFrom(String $ref) {
+    public Optional<String> getAssetFrom(String wantedSchemaId) {
         for (Map.Entry<String, String> schemaIdAndPath : schemaIdAndPathMap.entrySet()) {
             String schemaId = schemaIdAndPath.getKey();
-            if ($ref.endsWith(schemaId)) {
+            if (wantedSchemaId.endsWith(schemaId)) {
                 return Optional.of(schemaIdAndPath.getValue());
             }
         }
@@ -128,7 +128,7 @@ public class OpenApiImporterContext {
     }
 
     public String createAsset(String fileName, AssetProperties properties) {
-        Module module = getImportModule();
+        Module module = targetImportModule();
         Optional<String> assetsDirectory = PluginModuleUtils.getAssetsDirectory(module);
         assetsDirectory.ifPresent(directory ->
                 createBuildable(ASSET, properties, fileName, directory, false));
@@ -136,21 +136,21 @@ public class OpenApiImporterContext {
     }
 
     public void createRestListenerFlowWithExample(String fileName, OpenAPIRESTListenerWithResource properties) {
-        Module module = getImportModule();
+        Module module = targetImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
                 createBuildable(FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
     }
 
     public void createRestListenerFlow(String fileName, OpenAPIRESTListenerWithPayloadSet properties) {
-        Module module = getImportModule();
+        Module module = targetImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
                 createBuildable(FLOW_WITH_REST_LISTENER_AND_PAYLOAD_SET, properties, fileName, directory, true));
     }
 
     public void createRestListenerConfig(String configFileName, OpenAPIRESTListenerConfig properties) {
-        Module module = getImportModule();
+        Module module = targetImportModule();
         PluginModuleUtils.getConfigsDirectory(module)
                 .ifPresent(configsDirectory ->
                         createBuildable(REST_LISTENER_CONFIG, properties, configFileName, configsDirectory, false));
@@ -174,7 +174,7 @@ public class OpenApiImporterContext {
         });
     }
 
-    private Module getImportModule() {
+    private Module targetImportModule() {
         return ModuleManager.getInstance(project).findModuleByName(importModuleName);
     }
 

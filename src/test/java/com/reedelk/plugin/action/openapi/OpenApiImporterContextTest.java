@@ -1,11 +1,14 @@
 package com.reedelk.plugin.action.openapi;
 
 import com.intellij.openapi.project.Project;
+import com.reedelk.openapi.v3.model.RequestBodyObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,11 +25,11 @@ class OpenApiImporterContextTest {
     private final Integer openApiPort = 8989;
     private final String basePath = "/v2";
 
-    private OpenApiImporterContext openApiImporterContext;
+    private OpenApiImporterContext context;
 
     @BeforeEach
     void setUp() {
-        openApiImporterContext = new OpenApiImporterContext(
+        context = new OpenApiImporterContext(
                 project,
                 openAPIFilePath,
                 importModuleName,
@@ -43,7 +46,7 @@ class OpenApiImporterContextTest {
                 "<title>Hello</title>\n" +
                 "</book>";
         // When
-        OpenApiExampleFormat format = openApiImporterContext.exampleFormatOf(content);
+        OpenApiExampleFormat format = context.exampleFormatOf(content);
 
         // Then
         assertThat(format).isEqualTo(OpenApiExampleFormat.XML);
@@ -55,7 +58,7 @@ class OpenApiImporterContextTest {
         String content = "{ \"name\": \"John\", \"surname\": \"Doe\" }";
 
         // When
-        OpenApiExampleFormat format = openApiImporterContext.exampleFormatOf(content);
+        OpenApiExampleFormat format = context.exampleFormatOf(content);
 
         // Then
         assertThat(format).isEqualTo(OpenApiExampleFormat.JSON);
@@ -67,9 +70,71 @@ class OpenApiImporterContextTest {
         String content = "Hello this is my example";
 
         // When
-        OpenApiExampleFormat format = openApiImporterContext.exampleFormatOf(content);
+        OpenApiExampleFormat format = context.exampleFormatOf(content);
 
         // Then
         assertThat(format).isEqualTo(OpenApiExampleFormat.PLAIN_TEXT);
+    }
+
+    @Test
+    void shouldRegisterRequestBodyCorrectly() {
+        // Given
+        String requestBodyId = "MyBody";
+        RequestBodyObject requestBodyObject = new RequestBodyObject();
+
+        // When
+        context.registerRequestBody(requestBodyId, requestBodyObject);
+        RequestBodyObject actual = context.getRequestBodyById(requestBodyId);
+
+        // Then
+        assertThat(actual).isEqualTo(requestBodyObject);
+    }
+
+    @Test
+    void shouldRegisterSchemaAssetCorrectly() {
+        // Given
+        String schemaId = "MySchemaId";
+        String schemaAssetPath = "asset/my-api/com.test.my.schema.json";
+
+        // When
+        context.registerAssetPath(schemaId, schemaAssetPath);
+        Optional<String> actual = context.getAssetFrom(schemaId);
+
+        // Then
+        assertThat(actual).contains(schemaAssetPath);
+    }
+
+    @Test
+    void shouldSetCorrectSchemaFormatYAML() throws OpenApiException {
+        // Given
+        String content = "openapi: 3.0.0\n" +
+                "info:\n" +
+                "  description: \"This is a sample server Petstore server.\"\n" +
+                "  version: 1.0.2";
+
+        // When
+        context.setSchemaFormat(content);
+        OpenApiSchemaFormat actual = context.getSchemaFormat();
+
+        // Then
+        assertThat(actual).isEqualTo(OpenApiSchemaFormat.YAML);
+    }
+
+    @Test
+    void shouldSetCorrectSchemaFormatJSON() throws OpenApiException {
+        // Given
+        String content = "{\n" +
+                "  \"openapi\": \"3.0.0\",\n" +
+                "  \"info\": {\n" +
+                "    \"description\": \"This is a sample server Petstore server.\"\n" +
+                "  }\n" +
+                "}";
+
+        // When
+        context.setSchemaFormat(content);
+        OpenApiSchemaFormat actual = context.getSchemaFormat();
+
+        // Then
+        assertThat(actual).isEqualTo(OpenApiSchemaFormat.JSON);
     }
 }

@@ -47,7 +47,7 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
                 String finalFileName = schemaId + "." + schemaFormat.getExtension();
                 String schemaAssetPath = context.createAsset(finalFileName, properties);
 
-                context.register(schemaId, schemaAssetPath);
+                context.registerAssetPath(schemaId, schemaAssetPath);
 
                 Map<String, Object> schemaMap = new LinkedHashMap<>();
                 schemaMap.put(SchemaObject.Properties.SCHEMA.value(), schemaAssetPath);
