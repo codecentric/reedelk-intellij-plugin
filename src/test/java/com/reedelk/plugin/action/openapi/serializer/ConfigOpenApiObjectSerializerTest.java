@@ -1,16 +1,10 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
 import com.reedelk.openapi.commons.NavigationPath;
-import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.*;
-import com.reedelk.openapi.v3.serializer.Serializers;
-import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.runtime.api.commons.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,11 +13,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
-class ConfigOpenApiObjectSerializerTest {
 
-    @Mock
-    private OpenApiImporterContext context;
+class ConfigOpenApiObjectSerializerTest extends AbstractSerializerTest {
 
     private ConfigOpenApiObjectSerializer serializer;
 
@@ -35,9 +26,6 @@ class ConfigOpenApiObjectSerializerTest {
     @Test
     void shouldSerializeOpenApiConfigCorrectly() {
         // Given
-        Serializers serializers = new Serializers(Serializer.serializers(context));
-        SerializerContext serializerContext = new SerializerContext(serializers);
-
         NavigationPath navigationPath = NavigationPath.create();
 
         LicenseObject licenseObject = new LicenseObject();

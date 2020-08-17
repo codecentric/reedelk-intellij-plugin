@@ -7,14 +7,12 @@ import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.openapi.v3.serializer.Serializers;
-import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiSchemaFormat;
 import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.runtime.api.commons.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
@@ -26,11 +24,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class ComponentsObjectSerializerTest {
-
-    @Mock
-    private OpenApiImporterContext context;
-
+class ComponentsObjectSerializerTest extends AbstractSerializerTest {
 
     private ComponentsObjectSerializer serializer;
 
@@ -55,7 +49,6 @@ class ComponentsObjectSerializerTest {
         String petSchemaAsset = "asset/Pet.yaml";
         String petSchemaId = "Pet";
 
-        SerializerContext serializerContext = new SerializerContext(new Serializers());
         NavigationPath navigationPath = NavigationPath.create();
 
         SchemaObject petSchema = createSchemaObject(petSchemaId, ImmutableMap.of("type", "string"));
