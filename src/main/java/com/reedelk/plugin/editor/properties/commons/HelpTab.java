@@ -8,6 +8,7 @@ import com.reedelk.plugin.component.ComponentData;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
@@ -49,17 +50,23 @@ public class HelpTab extends DisposableScrollPane {
                             .orElse(message("component.description.not.provided"));
                     String componentTitle = componentData.getDisplayName();
 
+                    Color background = JBColor.foreground();
+                    String colorAsRGB = String.format("rgb(%d,%d,%d)", background.getRed(), background.getGreen(), background.getBlue());
+
+
+                    HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
+                    StyleSheet styleSheet = htmlEditorKit.getStyleSheet();
+                    styleSheet.addRule("div { color: " + colorAsRGB + "; padding-left:15px; padding-bottom:15px; padding-right:15px; font-family:verdana }");
+                    styleSheet.addRule("p { text-align: justify }");
+
                     JEditorPane editorPane = new JEditorPane();
-                    editorPane.setEditorKit(new HTMLEditorKit());
+                    editorPane.setEditorKit(htmlEditorKit);
                     editorPane.setEditable(false);
                     editorPane.addHyperlinkListener(HyperlinkListenerUtils.BROWSER_OPEN);
                     editorPane.setContentType(CONTENT_TYPE);
                     editorPane.getDocument().putProperty(IMAGE_CACHE_PROPERTY, imageCache);
 
-                    Color background = JBColor.foreground();
-
-                    String colorAsRGB = String.format("rgb(%d,%d,%d)", background.getRed(), background.getGreen(), background.getBlue());
-                    String htmlContent = message("properties.panel.tab.help.html", colorAsRGB, componentTitle, componentImageURI, componentDescription);
+                    String htmlContent = message("properties.panel.tab.help.html", componentTitle, componentImageURI, componentDescription);
                     editorPane.setText(htmlContent);
 
                     setViewportView(editorPane);
