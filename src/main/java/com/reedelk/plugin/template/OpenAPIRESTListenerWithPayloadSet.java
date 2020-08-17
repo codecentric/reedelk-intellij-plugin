@@ -9,7 +9,7 @@ import java.util.UUID;
 @SuppressWarnings("FieldCanBeLocal")
 public class OpenAPIRESTListenerWithPayloadSet extends Properties {
 
-    private final String jsonTemplate =  "{ \"example\": \"%s Flow\"}";
+    private final String jsonTemplate = "{ \\\"example\\\": \\\"%s Flow\\\"}";
     private final String xmlTemplate =  "<example>%s Flow</example>";
     private final String textTemplate = "%s Flow";
 
