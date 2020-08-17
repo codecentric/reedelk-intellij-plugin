@@ -10,6 +10,7 @@ import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithPayloadSet;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithResource;
 import com.reedelk.runtime.api.commons.StringUtils;
+import com.reedelk.runtime.api.message.content.MimeType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -27,6 +28,7 @@ abstract class AbstractHandler implements Handler {
     public void accept(OpenApiImporterContext context, String pathEntry, Map<RestMethod, OperationObject> pathDefinition) {
         OperationObject operation = getOperation(pathDefinition);
 
+        Map<String, ResponseObject> responses = operation.getResponses();
         String operationId = operation.getOperationId();
         String configId = context.getRestListenerConfigId();
         String flowTitle = getOrDefault(operation.getSummary(), operationId + " Flow");
@@ -43,7 +45,7 @@ abstract class AbstractHandler implements Handler {
 
         String fileName = OpenApiUtils.flowFileNameFrom(navigationPath);
 
-        Optional<SuccessExample> example = findSuccessExampleForFlow(operation.getResponses(), navigationPath, context);
+        Optional<SuccessExample> example = findSuccessExampleForFlow(responses, navigationPath, context);
         if (example.isPresent()) {
             // The generated flow will return the example from the project's asset directory.
             SuccessExample successExample = example.get();
@@ -54,10 +56,11 @@ abstract class AbstractHandler implements Handler {
             context.createRestListenerFlowWithExample(fileName, properties);
 
         } else {
+            MimeType responseMimeType = findResponseMimeType(responses, navigationPath, context);
             OpenAPIRESTListenerWithPayloadSet properties = new OpenAPIRESTListenerWithPayloadSet(
                     configId, flowTitle, flowDescription, restListenerDescription,
-                    restPath, restMethod, openApiOperationObject);
-            context.createRestListenerFlow(fileName, properties);
+                    restPath, restMethod, responseMimeType, openApiOperationObject);
+            context.createRestListenerFlowWithPayload(fileName, properties);
         }
     }
 
@@ -79,6 +82,22 @@ abstract class AbstractHandler implements Handler {
             }
         }
         return Optional.empty();
+    }
+
+    @NotNull
+    private MimeType findResponseMimeType(Map<String, ResponseObject> responses, NavigationPath navigationPath, OpenApiImporterContext context) {
+        if (responses.containsKey(HTTP_SUCCESS_CODE)) {
+            ResponseObject responseObject = responses.get(HTTP_SUCCESS_CODE);
+            Map<String, MediaTypeObject> content = responseObject.getContent();
+            for (Map.Entry<String, MediaTypeObject> response : content.entrySet()) {
+                String contentType = response.getKey();
+                MediaTypeObject mediaTypeObject = response.getValue();
+                if (mediaTypeObject.getExample() != null) {
+                    return MimeType.parse(contentType, MimeType.TEXT_PLAIN);
+                }
+            }
+        }
+        return MimeType.TEXT_PLAIN;
     }
 
     @NotNull

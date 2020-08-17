@@ -33,10 +33,10 @@ import static com.reedelk.runtime.commons.ModuleProperties.Assets.RESOURCE_DIREC
 
 public class OpenApiImporterContext {
 
-    private final String basePath;
     private final Project project;
-    private final String apiFileUrl;
     private final Integer openApiPort;
+    private final String basePath;
+    private final String apiFileUrl;
     private final String targetDirectory;
     private final String openApiFilePath;
     private final String importModuleName;
@@ -142,7 +142,7 @@ public class OpenApiImporterContext {
                 createBuildable(FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
     }
 
-    public void createRestListenerFlow(String fileName, OpenAPIRESTListenerWithPayloadSet properties) {
+    public void createRestListenerFlowWithPayload(String fileName, OpenAPIRESTListenerWithPayloadSet properties) {
         Module module = targetImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->

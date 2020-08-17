@@ -1,5 +1,6 @@
 package com.reedelk.plugin.template;
 
+import com.reedelk.runtime.api.message.content.MimeType;
 import org.jetbrains.annotations.NotNull;
 
 public class OpenAPIRESTListenerWithResource extends OpenAPIRESTListenerWithPayloadSet {
@@ -13,7 +14,8 @@ public class OpenAPIRESTListenerWithResource extends OpenAPIRESTListenerWithPayl
                                            @NotNull String openApiOperationObject,
                                            @NotNull String exampleResourceFile,
                                            @NotNull String exampleMimeType) {
-        super(configId, flowTitle, flowDescription, restListenerDescription, restPath, restMethod, openApiOperationObject);
+        super(configId, flowTitle, flowDescription, restListenerDescription, restPath, restMethod,
+                MimeType.parse(exampleMimeType), openApiOperationObject);
         put("exampleResourceFile", exampleResourceFile);
         put("exampleMimeType", exampleMimeType);
     }

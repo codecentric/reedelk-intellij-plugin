@@ -48,7 +48,7 @@ class AbstractHandlerTest {
 
         // Then
         verify(context)
-                .createRestListenerFlow(anyString(), restListenerWithPayload.capture());
+                .createRestListenerFlowWithPayload(anyString(), restListenerWithPayload.capture());
     }
 
     @Test
@@ -86,6 +86,6 @@ class AbstractHandlerTest {
         verify(context)
                 .createRestListenerFlowWithExample(anyString(), restListenerWithResource.capture());
         verify(context, never())
-                .createRestListenerFlow(anyString(), any(OpenAPIRESTListenerWithPayloadSet.class));
+                .createRestListenerFlowWithPayload(anyString(), any(OpenAPIRESTListenerWithPayloadSet.class));
     }
 }

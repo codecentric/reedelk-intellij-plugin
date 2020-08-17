@@ -23,8 +23,8 @@
     {
       "implementor": "com.reedelk.core.component.PayloadSet",
       "description": "Set mock OpenAPI resource payload",
-      "mimeType": "text/plain",
-      "payload": "${title} flow"
+      "mimeType": "${payloadMimeType}",
+      "payload": "${payloadData}"
     }
   ]
 }
