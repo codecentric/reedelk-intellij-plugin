@@ -55,7 +55,7 @@ class ComponentsObjectSerializer implements Serializer<ComponentsObject> {
             }
         });
 
-        map.put(SCHEMAS.value(), schemasMap);
+        if (!schemasMap.isEmpty()) map.put(SCHEMAS.value(), schemasMap);
         return map;
     }
 }
