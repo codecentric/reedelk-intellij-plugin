@@ -63,8 +63,6 @@ class HeaderObjectSerializerTest extends AbstractSerializerTest {
         HeaderObject headerObject = new HeaderObject();
         headerObject.setSchema(schema);
 
-        NavigationPath navigationPath = NavigationPath.create();
-
         // When
         Map<String, Object> serialized =
                 serializer.serialize(serializerContext, navigationPath, headerObject);
@@ -91,8 +89,6 @@ class HeaderObjectSerializerTest extends AbstractSerializerTest {
 
         HeaderObject headerObject = new HeaderObject();
         headerObject.setSchema(schema);
-
-        NavigationPath navigationPath = NavigationPath.create();
 
         // When
         Map<String, Object> serialized =

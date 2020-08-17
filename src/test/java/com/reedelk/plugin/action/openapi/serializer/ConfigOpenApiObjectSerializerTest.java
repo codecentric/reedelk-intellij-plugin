@@ -1,6 +1,5 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
-import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.*;
 import com.reedelk.runtime.api.commons.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +26,6 @@ class ConfigOpenApiObjectSerializerTest extends AbstractSerializerTest {
     @Test
     void shouldSerializeOpenApiConfigCorrectly() {
         // Given
-        NavigationPath navigationPath = NavigationPath.create();
-
         LicenseObject licenseObject = new LicenseObject();
         licenseObject.setUrl("http://my-domain.com/LICENSE.txt");
         licenseObject.setName("Apache License");

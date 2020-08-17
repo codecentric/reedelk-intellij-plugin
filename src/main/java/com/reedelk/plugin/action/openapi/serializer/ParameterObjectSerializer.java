@@ -39,9 +39,9 @@ class ParameterObjectSerializer extends AbstractSerializer<ParameterObject> {
 
         if (isPredefinedSchema.isPresent()) {
             serialize.put(PROPERTY_PREDEFINED_SCHEMA, isPredefinedSchema.get().name());
-            // schema must be set to null because the super.serialize would serialize the schema inline.
+            // schema must be removed because the super.serialize would serialize the schema inline.
             // The REST listener expects the asset path (a string), rather than the inline schema definition.
-            serialize.put(SCHEMA.value(), null);
+            serialize.remove(SCHEMA.value());
 
         } else {
             String finalFileName = OpenApiUtils.parameterSchemaFileNameFrom(navigationPath, context);

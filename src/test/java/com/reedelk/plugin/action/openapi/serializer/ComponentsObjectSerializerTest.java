@@ -1,6 +1,5 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
-import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.ComponentsObject;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
@@ -50,8 +49,6 @@ class ComponentsObjectSerializerTest extends AbstractSerializerTest {
         String petSchemaAsset = "asset/Pet.yaml";
         String petSchemaId = "Pet";
 
-        NavigationPath navigationPath = NavigationPath.create();
-
         SchemaObject petSchema = createSchemaObject(petSchemaId, ImmutableMap.of("type", "string"));
         ComponentsObject componentsObject = new ComponentsObject();
         componentsObject.setSchemas(ImmutableMap.of(petSchemaId, petSchema));
@@ -84,7 +81,6 @@ class ComponentsObjectSerializerTest extends AbstractSerializerTest {
         RequestBodyObject requestBodyObject = new RequestBodyObject();
 
         SerializerContext serializerContext = new SerializerContext(new Serializers());
-        NavigationPath navigationPath = NavigationPath.create();
 
         ComponentsObject componentsObject = new ComponentsObject();
         componentsObject.setRequestBodies(ImmutableMap.of(requestBodyId, requestBodyObject));
