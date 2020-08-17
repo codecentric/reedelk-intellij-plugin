@@ -30,6 +30,7 @@ class ComponentsObjectSerializerTest extends AbstractSerializerTest {
 
     @BeforeEach
     void setUp() {
+        super.setUp();
         serializer = new ComponentsObjectSerializer(context);
     }
 

@@ -40,7 +40,7 @@ class HeaderObjectSerializer extends AbstractSerializer<HeaderObject> {
             serialize.put(PROPERTY_PREDEFINED_SCHEMA, isPredefinedSchema.get().name());
             // schema must be set to null because the super.serialize would serialize the schema inline.
             // The REST listener expects the asset path (a string), rather than the inline schema definition.
-            serialize.put(Properties.SCHEMA.value(), null);
+            serialize.remove(Properties.SCHEMA.value());
 
         } else {
             String finalFileName = OpenApiUtils.headerSchemaFileNameFrom(navigationPath, context);

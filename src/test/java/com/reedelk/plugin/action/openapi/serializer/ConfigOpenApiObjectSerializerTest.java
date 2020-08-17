@@ -20,6 +20,7 @@ class ConfigOpenApiObjectSerializerTest extends AbstractSerializerTest {
 
     @BeforeEach
     void setUp() {
+        super.setUp();
         serializer = new ConfigOpenApiObjectSerializer(context);
     }
 
