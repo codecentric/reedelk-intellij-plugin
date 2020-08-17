@@ -53,4 +53,42 @@ class RequestBodyObjectSerializerTest extends AbstractSerializerTest {
 
         assertThat(serialized).isEqualTo(expectedMap);
     }
+
+    @Test
+    void shouldCorrectlySerializeRequestBodyWithReference() {
+        // Given
+        String schemaId = "mySchemaId";
+        MediaTypeObject mediaTypeObject = new MediaTypeObject();
+        mediaTypeObject.setSchema(new Schema(schemaId));
+
+        doReturn(Optional.of("assets/my-schema.schema.yaml"))
+                .when(context)
+                .getAssetFrom(schemaId);
+
+        RequestBodyObject referencedBodyObject = new RequestBodyObject();
+        referencedBodyObject.setDescription("My description");
+        referencedBodyObject.setRequired(true);
+        referencedBodyObject.setContent(ImmutableMap.of("application/json", mediaTypeObject));
+
+        RequestBodyObject requestBodyObject = new RequestBodyObject();
+        requestBodyObject.set$ref("#/components/requestBodies/UserArray");
+
+        doReturn(referencedBodyObject)
+                .when(context)
+                .getRequestBodyById("UserArray");
+
+        // When
+        Map<String, Object> serialized =
+                serializer.serialize(serializerContext, navigationPath, requestBodyObject);
+
+        // Then
+        Map<String, Object> contentMap = ImmutableMap.of("application/json",
+                ImmutableMap.of("schema", "assets/my-schema.schema.yaml"));
+        Map<String, Object> expectedMap =
+                ImmutableMap.of("description", "My description",
+                        "content", contentMap,
+                        "required", true);
+
+        assertThat(serialized).isEqualTo(expectedMap);
+    }
 }
