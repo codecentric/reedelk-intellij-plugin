@@ -88,8 +88,8 @@ public class OpenApiImporterContext {
         requestBodyIdAndData.put(requestBodyId, requestBodyMediaType);
     }
 
-    public RequestBodyObject getRequestBodyById(String requestBodyId) {
-        return requestBodyIdAndData.get(requestBodyId);
+    public Optional<RequestBodyObject> getRequestBodyById(String requestBodyId) {
+        return Optional.ofNullable(requestBodyIdAndData.get(requestBodyId));
     }
 
     public void registerAssetPath(String schemaId, String schemaAssetPath) {
