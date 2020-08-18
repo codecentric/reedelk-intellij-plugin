@@ -150,7 +150,7 @@ public class ChooseFileInputField extends TextFieldWithBrowseButton {
 
                 String normalizedRelativePath = normalizeProjectFilePath(fileRelativePath);
                 component.setText(normalizedRelativePath);
-                propertyAccessor.set(fileRelativePath);
+                propertyAccessor.set(normalizedRelativePath);
             } else {
                 propertyAccessor.set(EMPTY);
             }
