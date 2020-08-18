@@ -9,7 +9,6 @@ import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithPayloadSet;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithResource;
-import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.content.MimeType;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +17,8 @@ import java.util.Optional;
 
 import static com.reedelk.openapi.commons.NavigationPath.SegmentKey;
 import static com.reedelk.openapi.commons.NavigationPath.create;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 abstract class AbstractHandler implements Handler {
 
@@ -31,11 +32,11 @@ abstract class AbstractHandler implements Handler {
         Map<String, ResponseObject> responses = operation.getResponses();
         String operationId = operation.getOperationId();
         String configId = context.getRestListenerConfigId();
-        String flowTitle = getOrDefault(operation.getSummary(), operationId + " Flow");
+        String restMethod = getHttpMethod();
+        String flowTitle = getFlowTitle(operation, pathEntry, restMethod);
         String flowDescription = getOrDefault(operation.getDescription(), flowTitle + " description");
         String restListenerDescription = "Path: " + pathEntry;
         String restPath = pathEntry;
-        String restMethod = getHttpMethod();
 
         NavigationPath navigationPath = create()
                 .with(SegmentKey.OPERATION_ID, operationId)
@@ -117,8 +118,18 @@ abstract class AbstractHandler implements Handler {
         return Optional.of(successExample);
     }
 
+    @NotNull
+    private String getFlowTitle(OperationObject operation, String pathEntry, String method) {
+        if (isNotBlank(operation.getSummary())) {
+            return operation.getSummary() + " Flow";
+        } else {
+            return method.toUpperCase() + " " + pathEntry + " Flow";
+        }
+    }
+
+
     private String getOrDefault(String value, String defaultValue) {
-        return StringUtils.isBlank(value) ? defaultValue : value;
+        return isBlank(value) ? defaultValue : value;
     }
 
     static class SuccessExample {

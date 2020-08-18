@@ -10,9 +10,9 @@ import java.util.UUID;
 @SuppressWarnings("FieldCanBeLocal")
 public class OpenAPIRESTListenerWithPayloadSet extends Properties {
 
-    private final String jsonTemplate = ScriptUtils.asScript("'{\\\"example\\\": \\\"%s Flow\\\"}'");
-    private final String xmlTemplate =  ScriptUtils.asScript("'<example>%s Flow</example>'");
-    private final String textTemplate = "%s Flow";
+    private final String jsonTemplate = ScriptUtils.asScript("'{\\\"example\\\": \\\"%s\\\"}'");
+    private final String xmlTemplate =  ScriptUtils.asScript("'<example>%s</example>'");
+    private final String textTemplate = "%s";
 
     public OpenAPIRESTListenerWithPayloadSet(@NotNull String configId,
                                              @NotNull String flowTitle,
@@ -34,13 +34,13 @@ public class OpenAPIRESTListenerWithPayloadSet extends Properties {
         put("openApiOperationObject", openApiOperationObject);
     }
 
-    private String getResponseExampleFrom(MimeType mimeType, String title) {
+    private String getResponseExampleFrom(MimeType mimeType, String flowTitle) {
         if (MimeType.APPLICATION_JSON.equals(mimeType) || MimeType.TEXT_JSON.equals(mimeType)) {
-            return String.format(jsonTemplate, title);
+            return String.format(jsonTemplate, flowTitle);
         } else if (MimeType.APPLICATION_XML.equals(mimeType) || MimeType.TEXT_XML.equals(mimeType)) {
-            return String.format(xmlTemplate, title);
+            return String.format(xmlTemplate, flowTitle);
         } else {
-            return String.format(textTemplate, title);
+            return String.format(textTemplate, flowTitle);
         }
     }
 }
