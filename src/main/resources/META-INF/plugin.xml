@@ -12,7 +12,7 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>feature: added OpenAPI import tool generating REST flows skeleton starting from JSON or YAML OpenAPI specifications.</li>
+	        <li>feature: add next feature here.</li>
 	        <li>bugfix: help tab for components did not properly render in the components properties panel.</li>
 	        <li>bugfix: resource assets were not correctly serialized with correct path separator on Windows OS.</li>
         </ul>
