@@ -24,6 +24,7 @@ public class Serializer {
 
     public static Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializers(OpenApiImporterContext context) {
         Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializerMap = new HashMap<>();
+        serializerMap.put(ServerVariableObject.class, new ServerVariableObjectSerializer(context));
         serializerMap.put(ConfigOpenApiObject.class, new ConfigOpenApiObjectSerializer(context));
         serializerMap.put(RequestBodyObject.class, new RequestBodyObjectSerializer(context));
         serializerMap.put(ComponentsObject.class, new ComponentsObjectSerializer(context));

@@ -13,4 +13,7 @@ public class OpenApiStringConstants {
     public static final String PROPERTY_INLINE_SCHEMA = "inlineSchema";
     public static final String PROPERTY_PREDEFINED_SCHEMA = "predefinedSchema";
     public static final String PROPERTY_PREDEFINED_SCHEMA_NONE = "NONE";
+    public static final String PROPERTY_ENUM_VALUES = "enumValues";
+    public static final String PROPERTY_DEFAULT_VALUE  = "defaultValue";
+
 }
