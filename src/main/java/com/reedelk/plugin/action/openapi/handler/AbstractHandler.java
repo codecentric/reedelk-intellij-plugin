@@ -34,7 +34,7 @@ abstract class AbstractHandler implements Handler {
         String configId = context.getRestListenerConfigId();
         String restMethod = getHttpMethod();
         String flowTitle = getFlowTitle(operation, pathEntry, restMethod);
-        String flowDescription = getOrDefault(operation.getDescription(), flowTitle + " description");
+        String flowDescription = OpenApiUtils.escapeNewLines(getOrDefault(operation.getDescription(), flowTitle + " description"));
         String restListenerDescription = "Path: " + pathEntry;
         String restPath = pathEntry;
 

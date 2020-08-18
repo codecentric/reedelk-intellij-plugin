@@ -114,6 +114,12 @@ public class OpenApiUtils {
         return getApiTitle(openApiObject, message("openapi.importer.config.default.file.title"));
     }
 
+    @Nullable
+    public static String escapeNewLines(String value) {
+        if (value == null) return value;
+        return value.replaceAll("\n", "\\\\n");
+    }
+
     /**
      * Returns base file name given the navigation path. e.g given navigation path:
      *
