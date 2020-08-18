@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'com.reedelk'
-version '1.0.5-SNAPSHOT'
+version '1.0.5'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -25,7 +25,7 @@ dependencies {
     compile group: 'com.reedelk', name: 'runtime-api', version: '1.0.0'
     compile group: 'com.reedelk', name: 'runtime-commons', version: '1.0.0'
     compile group: 'com.reedelk', name: 'module-descriptor', version: '1.0.0'
-    compile group: 'com.reedelk', name: 'reedelk-openapi', version: '1.0.0-SNAPSHOT'
+    compile group: 'com.reedelk', name: 'reedelk-openapi', version: '1.0.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
