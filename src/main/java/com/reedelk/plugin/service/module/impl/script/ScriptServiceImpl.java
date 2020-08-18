@@ -6,6 +6,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.PluginModuleUtils;
+import com.reedelk.plugin.commons.ProjectResourcePath;
 import com.reedelk.plugin.commons.ScriptFileNameValidator;
 import com.reedelk.plugin.commons.ScriptResourceUtil;
 import com.reedelk.plugin.exception.PluginException;
@@ -47,8 +48,11 @@ public class ScriptServiceImpl implements ScriptService {
                         if (scriptFile.getPresentableUrl().startsWith(scriptsFolder)) {
                             // We keep the path from .../resource/scripts to the end.
                             // The script root is therefore /resource/scripts.
-                            String substring = scriptFile.getPresentableUrl().substring(scriptsFolder.length() + 1);
-                            scripts.add(new ScriptResource(substring, scriptFile.getNameWithoutExtension()));
+                            // We must normalize the path because on windows the path would be my\script\script.groovy,
+                            // since it is a project (jar) file path we must normalize it to use '/' instead of '\'.
+                            String scriptFileProjectPath = scriptFile.getPresentableUrl().substring(scriptsFolder.length() + 1);
+                            String normalizedScriptFileProjectPath = ProjectResourcePath.normalizeProjectFilePath(scriptFileProjectPath);
+                            scripts.add(new ScriptResource(normalizedScriptFileProjectPath, scriptFile.getNameWithoutExtension()));
                         }
                     }
                     return true;

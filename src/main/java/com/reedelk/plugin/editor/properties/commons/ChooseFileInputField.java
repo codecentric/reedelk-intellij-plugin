@@ -8,6 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.fields.ExtendableTextField;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.HintPainter;
+import com.reedelk.plugin.commons.ProjectResourcePath;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -148,18 +149,12 @@ public class ChooseFileInputField extends TextFieldWithBrowseButton {
                     fileRelativePath = text.substring(rootDirectory.length() + 1);
                 }
 
-                String normalizedRelativePath = normalizeProjectFilePath(fileRelativePath);
+                String normalizedRelativePath = ProjectResourcePath.normalizeProjectFilePath(fileRelativePath);
                 component.setText(normalizedRelativePath);
                 propertyAccessor.set(normalizedRelativePath);
             } else {
                 propertyAccessor.set(EMPTY);
             }
-        }
-
-        // Project files are referenced using '/' front slash because they belong to the .jar package and
-        // they are NOT OS dependent.
-        private static String normalizeProjectFilePath(String value) {
-            return value.replaceAll("\\\\", "\\/");
         }
     }
 }
