@@ -1,12 +1,12 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
+import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.ComponentsObject;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
 import com.reedelk.openapi.v3.serializer.Serializers;
-import com.reedelk.plugin.action.openapi.DataFormats;
 import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.runtime.api.commons.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +58,7 @@ class ComponentsObjectSerializerTest extends AbstractSerializerTest {
                 .when(context)
                 .createAsset(eq("Pet.yaml"), any(AssetProperties.class));
 
-        doReturn(DataFormats.YAML).when(context).getSchemaFormat();
+        doReturn(DataFormat.YAML).when(context).getSchemaFormat();
 
         // When
         Map<String, Object> serialized = serializer.serialize(serializerContext, navigationPath, componentsObject);

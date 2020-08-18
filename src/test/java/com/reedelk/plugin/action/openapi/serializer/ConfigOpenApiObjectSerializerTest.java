@@ -64,9 +64,9 @@ class ConfigOpenApiObjectSerializerTest extends AbstractSerializerTest {
 
         Map<String, Object> variablesMap = new LinkedHashMap<>();
         variablesMap.put("host",
-                ImmutableMap.of("default", "localhost",
+                ImmutableMap.of("defaultValue", "localhost",
                         "description","Host variable description",
-                        "enum", asList("localhost", "my-local.domain.com")));
+                        "enumValues", asList("localhost", "my-local.domain.com")));
 
         Map<String, Object> expectedMap = ImmutableMap.of(
                 "info", expectedInfoMap,

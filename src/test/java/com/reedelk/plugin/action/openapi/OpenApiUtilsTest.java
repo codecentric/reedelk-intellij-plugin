@@ -1,5 +1,6 @@
 package com.reedelk.plugin.action.openapi;
 
+import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.model.InfoObject;
 import com.reedelk.openapi.v3.model.OpenApiObject;
@@ -22,7 +23,7 @@ class OpenApiUtilsTest {
 
     @BeforeEach
     void setUp() {
-        lenient().doReturn(DataFormats.JSON).when(context).getSchemaFormat();
+        lenient().doReturn(DataFormat.JSON).when(context).getSchemaFormat();
     }
 
     // Flow File Name

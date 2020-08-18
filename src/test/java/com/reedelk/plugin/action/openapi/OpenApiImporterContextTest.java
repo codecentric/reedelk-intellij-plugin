@@ -1,6 +1,7 @@
 package com.reedelk.plugin.action.openapi;
 
 import com.intellij.openapi.project.Project;
+import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,10 +115,10 @@ class OpenApiImporterContextTest {
 
         // When
         context.setSchemaFormat(content);
-        DataFormats actual = context.getSchemaFormat();
+        DataFormat actual = context.getSchemaFormat();
 
         // Then
-        assertThat(actual).isEqualTo(DataFormats.YAML);
+        assertThat(actual).isEqualTo(DataFormat.YAML);
     }
 
     @Test
@@ -132,9 +133,9 @@ class OpenApiImporterContextTest {
 
         // When
         context.setSchemaFormat(content);
-        DataFormats actual = context.getSchemaFormat();
+        DataFormat actual = context.getSchemaFormat();
 
         // Then
-        assertThat(actual).isEqualTo(DataFormats.JSON);
+        assertThat(actual).isEqualTo(DataFormat.JSON);
     }
 }
