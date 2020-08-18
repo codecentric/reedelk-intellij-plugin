@@ -1,12 +1,12 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
+import com.reedelk.openapi.commons.DataFormats;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.ComponentsObject;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
-import com.reedelk.plugin.action.openapi.DataFormats;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.template.AssetProperties;
 
