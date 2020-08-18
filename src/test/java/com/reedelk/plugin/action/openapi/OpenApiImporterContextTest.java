@@ -114,10 +114,10 @@ class OpenApiImporterContextTest {
 
         // When
         context.setSchemaFormat(content);
-        OpenApiSchemaFormat actual = context.getSchemaFormat();
+        DataFormats actual = context.getSchemaFormat();
 
         // Then
-        assertThat(actual).isEqualTo(OpenApiSchemaFormat.YAML);
+        assertThat(actual).isEqualTo(DataFormats.YAML);
     }
 
     @Test
@@ -132,9 +132,9 @@ class OpenApiImporterContextTest {
 
         // When
         context.setSchemaFormat(content);
-        OpenApiSchemaFormat actual = context.getSchemaFormat();
+        DataFormats actual = context.getSchemaFormat();
 
         // Then
-        assertThat(actual).isEqualTo(OpenApiSchemaFormat.JSON);
+        assertThat(actual).isEqualTo(DataFormats.JSON);
     }
 }

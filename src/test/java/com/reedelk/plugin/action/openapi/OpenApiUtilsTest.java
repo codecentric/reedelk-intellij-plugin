@@ -22,7 +22,7 @@ class OpenApiUtilsTest {
 
     @BeforeEach
     void setUp() {
-        lenient().doReturn(OpenApiSchemaFormat.JSON).when(context).getSchemaFormat();
+        lenient().doReturn(DataFormats.JSON).when(context).getSchemaFormat();
     }
 
     // Flow File Name

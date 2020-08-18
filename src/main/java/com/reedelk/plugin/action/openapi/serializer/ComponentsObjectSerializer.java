@@ -6,8 +6,8 @@ import com.reedelk.openapi.v3.model.ComponentsObject;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.openapi.v3.model.SchemaObject;
+import com.reedelk.plugin.action.openapi.DataFormats;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
-import com.reedelk.plugin.action.openapi.OpenApiSchemaFormat;
 import com.reedelk.plugin.template.AssetProperties;
 
 import java.util.LinkedHashMap;
@@ -37,7 +37,7 @@ class ComponentsObjectSerializer extends AbstractSerializer<ComponentsObject> {
             if (schema.getSchemaData() != null) {
 
                 // Create Asset
-                OpenApiSchemaFormat schemaFormat = context.getSchemaFormat();
+                DataFormats schemaFormat = context.getSchemaFormat();
                 String data = schemaFormat.dump(schemaObject.getSchema());
                 AssetProperties properties = new AssetProperties(data);
 

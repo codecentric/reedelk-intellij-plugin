@@ -5,6 +5,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.reedelk.openapi.commons.DataFormats;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.template.AssetProperties;
@@ -13,14 +14,8 @@ import com.reedelk.plugin.template.OpenAPIRESTListenerWithPayloadSet;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
-import org.xml.sax.InputSource;
-import org.yaml.snakeyaml.Yaml;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -33,17 +28,16 @@ import static com.reedelk.runtime.commons.ModuleProperties.Assets.RESOURCE_DIREC
 
 public class OpenApiImporterContext {
 
-    private final Project project;
-    private final Integer openApiPort;
     private final String basePath;
     private final String apiFileUrl;
     private final String targetDirectory;
     private final String openApiFilePath;
     private final String importModuleName;
     private final String restListenerConfigId;
+    private final Integer openApiPort;
 
-    private OpenApiSchemaFormat schemaFormat;
-
+    private final Project project;
+    private DataFormats schemaFormat;
     private Map<String, String> schemaIdAndPathMap = new HashMap<>();
     private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
 
@@ -107,10 +101,10 @@ public class OpenApiImporterContext {
     }
 
     public void setSchemaFormat(String content) throws OpenApiException {
-        if (isJson(content)) {
-            this.schemaFormat = OpenApiSchemaFormat.JSON;
-        } else if (isYaml(content)){
-            this.schemaFormat = OpenApiSchemaFormat.YAML;
+        if (DataFormats.JSON.is(content)) {
+            this.schemaFormat = DataFormats.JSON;
+        } else if (DataFormats.YAML.is(content)){
+            this.schemaFormat = DataFormats.YAML;
         } else {
             throw new OpenApiException("The OpenApi schema is not a valid JSON or YAML. " +
                     "Please make sure that the OpenApi definition is a valid JSON or YAML.");
@@ -118,12 +112,12 @@ public class OpenApiImporterContext {
     }
 
     public OpenApiExampleFormat exampleFormatOf(String content) {
-        if (isJson(content)) return OpenApiExampleFormat.JSON;
-        if (isXml(content)) return OpenApiExampleFormat.XML;
+        if (DataFormats.JSON.is(content)) return OpenApiExampleFormat.JSON;
+        if (DataFormats.XML.is(content)) return OpenApiExampleFormat.XML;
         return OpenApiExampleFormat.PLAIN_TEXT;
     }
 
-    public OpenApiSchemaFormat getSchemaFormat() {
+    public DataFormats getSchemaFormat() {
         return schemaFormat;
     }
 
@@ -182,36 +176,5 @@ public class OpenApiImporterContext {
     // By convention an asset resource does not start with a front slash.
     private String removeFrontSlashIfNeeded(String path) {
         return path.startsWith("/") ?  path.substring(1) : path;
-    }
-
-    private boolean isXml(String content) {
-        try {
-            InputSource is = new InputSource(new StringReader(content));
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = dbFactory.newDocumentBuilder();
-            builder.parse(is);
-            return true;
-        } catch (Exception exception) {
-            // not xml
-        }
-        return false;
-    }
-
-    private boolean isYaml(String content) {
-        try {
-            new Yaml().load(content);
-            return true;
-        } catch (Exception exception) {
-            return false;
-        }
-    }
-
-    private boolean isJson(String content) {
-        try {
-            new JSONObject(content);
-            return true;
-        } catch (Exception exception) {
-            return false;
-        }
     }
 }
