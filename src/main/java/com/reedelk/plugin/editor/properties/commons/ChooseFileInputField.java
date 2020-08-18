@@ -38,8 +38,8 @@ public class ChooseFileInputField extends TextFieldWithBrowseButton {
         DefaultFileChooserDescriptor fileChooserDescriptor = new DefaultFileChooserDescriptor(rootDirectory, title);
 
         TextComponentAccessor<JTextField> textComponentAccessor = isBlank(rootDirectory) ?
-                new DefaultTextAccessor(propertyAccessor) :
-                new RootDirectoryAwareTextAccessor(rootDirectory, propertyAccessor);
+                new FileSystemTextAccessor(propertyAccessor) :
+                new ProjectFileAwareTextAccessor(rootDirectory, propertyAccessor);
 
         BrowseFolderActionListener<JTextField> actionListener =
                 new BrowseFolderActionListener<>(title, initText, this, project, fileChooserDescriptor, textComponentAccessor);
@@ -91,11 +91,11 @@ public class ChooseFileInputField extends TextFieldWithBrowseButton {
         }
     }
 
-    static class DefaultTextAccessor implements TextComponentAccessor<JTextField> {
+    static class FileSystemTextAccessor implements TextComponentAccessor<JTextField> {
 
         private final PropertyAccessor propertyAccessor;
 
-        DefaultTextAccessor(PropertyAccessor propertyAccessor) {
+        FileSystemTextAccessor(PropertyAccessor propertyAccessor) {
             this.propertyAccessor = propertyAccessor;
         }
 
@@ -113,14 +113,16 @@ public class ChooseFileInputField extends TextFieldWithBrowseButton {
 
     /**
      * Property accessor with root directory. This text accessor removes the root directory
-     * from the text to be set in the input field.
+     * from the text to be set in the input field. This is used by the components where
+     * a 'browse file' is used to select a file within the project.
+     * IMPORTANT: Note that projects files are separated by '/' path and not from the OS dependent path separator.
      */
-    static class RootDirectoryAwareTextAccessor implements TextComponentAccessor<JTextField> {
+    static class ProjectFileAwareTextAccessor implements TextComponentAccessor<JTextField> {
 
         private final String rootDirectory;
         private final PropertyAccessor propertyAccessor;
 
-        RootDirectoryAwareTextAccessor(String rootDirectory, PropertyAccessor propertyAccessor) {
+        ProjectFileAwareTextAccessor(String rootDirectory, PropertyAccessor propertyAccessor) {
             this.rootDirectory = rootDirectory;
             this.propertyAccessor = propertyAccessor;
         }
@@ -145,11 +147,19 @@ public class ChooseFileInputField extends TextFieldWithBrowseButton {
                 if (text.length() > rootDirectory.length()) {
                     fileRelativePath = text.substring(rootDirectory.length() + 1);
                 }
-                component.setText(fileRelativePath);
+
+                String normalizedRelativePath = normalizeProjectFilePath(fileRelativePath);
+                component.setText(normalizedRelativePath);
                 propertyAccessor.set(fileRelativePath);
             } else {
                 propertyAccessor.set(EMPTY);
             }
+        }
+
+        // Project files are referenced using '/' front slash because they belong to the .jar package and
+        // they are NOT OS dependent.
+        private static String normalizeProjectFilePath(String value) {
+            return value.replaceAll("\\\\", "\\/");
         }
     }
 }
