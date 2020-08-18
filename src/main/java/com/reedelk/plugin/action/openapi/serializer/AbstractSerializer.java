@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.reedelk.openapi.v3.model.MediaTypeObject.Properties.SCHEMA;
-import static com.reedelk.plugin.action.openapi.OpenApiStringConstants.PROPERTY_INLINE_SCHEMA;
+import static com.reedelk.plugin.action.openapi.OpenApiConstants.PROPERTY_INLINE_SCHEMA;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 abstract class AbstractSerializer<T> extends com.reedelk.openapi.commons.AbstractSerializer<T> {

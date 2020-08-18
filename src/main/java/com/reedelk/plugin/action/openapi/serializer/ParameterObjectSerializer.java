@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.reedelk.openapi.v3.model.ParameterObject.Properties.SCHEMA;
-import static com.reedelk.plugin.action.openapi.OpenApiStringConstants.PROPERTY_PREDEFINED_SCHEMA;
-import static com.reedelk.plugin.action.openapi.OpenApiStringConstants.PROPERTY_PREDEFINED_SCHEMA_NONE;
+import static com.reedelk.plugin.action.openapi.OpenApiConstants.PROPERTY_PREDEFINED_SCHEMA;
+import static com.reedelk.plugin.action.openapi.OpenApiConstants.PROPERTY_PREDEFINED_SCHEMA_NONE;
 
 class ParameterObjectSerializer extends AbstractSerializer<ParameterObject> {
 

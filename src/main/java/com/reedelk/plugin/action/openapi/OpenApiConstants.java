@@ -1,8 +1,8 @@
 package com.reedelk.plugin.action.openapi;
 
-public class OpenApiStringConstants {
+public class OpenApiConstants {
 
-    private OpenApiStringConstants() {
+    private OpenApiConstants() {
     }
 
     // Reedelk REST Listener only property. This is not part of the OpenAPI specification.
@@ -15,5 +15,9 @@ public class OpenApiStringConstants {
     public static final String PROPERTY_PREDEFINED_SCHEMA_NONE = "NONE";
     public static final String PROPERTY_ENUM_VALUES = "enumValues";
     public static final String PROPERTY_DEFAULT_VALUE  = "defaultValue";
+
+    // For a project resource the separator is the front slash '/' and not the OS
+    // file separator which is OS dependent.
+    public static final String PROJECT_RESOURCE_SEPARATOR = "/";
 
 }

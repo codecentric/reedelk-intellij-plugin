@@ -18,12 +18,12 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
 import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static com.reedelk.plugin.action.openapi.OpenApiConstants.PROJECT_RESOURCE_SEPARATOR;
 import static com.reedelk.plugin.commons.FileUtils.createDirectory;
 import static com.reedelk.plugin.template.Template.Buildable;
 import static com.reedelk.plugin.template.Template.OpenAPI.*;
@@ -156,8 +156,8 @@ public class OpenApiImporterContext {
 
     private String assetResource(String fileName) {
         String assetResourcePath = isBlank(targetDirectory) ?
-                RESOURCE_DIRECTORY.substring(1) + File.separator + fileName :
-                RESOURCE_DIRECTORY.substring(1) + File.separator + targetDirectory + File.separator + fileName;
+                RESOURCE_DIRECTORY.substring(1) + PROJECT_RESOURCE_SEPARATOR + fileName :
+                RESOURCE_DIRECTORY.substring(1) + PROJECT_RESOURCE_SEPARATOR + targetDirectory + PROJECT_RESOURCE_SEPARATOR + fileName;
         return removeFrontSlashIfNeeded(assetResourcePath);
     }
 
