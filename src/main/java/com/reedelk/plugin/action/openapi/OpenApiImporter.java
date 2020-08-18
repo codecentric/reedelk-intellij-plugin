@@ -158,10 +158,16 @@ public class OpenApiImporter {
     // localhost
     // http://localhost:8282
     // http://localhost
+    // {scheme}://developer.uspto.gov/ds-api
     // We just add the protocol in order to let the java.net object to correctly parse it.
     @NotNull
     private String appendProtocolIfNotExists(ServerObject serverObject) {
         String serverUrl = serverObject.getUrl();
+        if (serverUrl.indexOf("://") > 0) {
+            // We remove the {scheme}:// part if it starts with a variable.
+            // (e.g {scheme}://developer.uspto.gov/ds-api)
+            serverUrl = serverUrl.substring(serverUrl.indexOf("://") + 3);
+        }
         if (!(serverUrl.startsWith(PROTOCOL_HTTP) || serverUrl.startsWith(PROTOCOL_HTTPS))) {
             serverUrl = PROTOCOL_HTTP + serverUrl;
         }
