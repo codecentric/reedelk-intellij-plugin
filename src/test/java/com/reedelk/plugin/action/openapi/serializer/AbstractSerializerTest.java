@@ -1,6 +1,6 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
-import com.reedelk.openapi.commons.DataFormats;
+import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.serializer.Serializers;
@@ -24,7 +24,7 @@ abstract class AbstractSerializerTest {
 
     @BeforeEach
     void setUp() {
-        lenient().doReturn(DataFormats.YAML).when(context).getSchemaFormat();
+        lenient().doReturn(DataFormat.YAML).when(context).getSchemaFormat();
         lenient().doCallRealMethod().when(context).exampleFormatOf(anyString());
         Serializers serializers = new Serializers(Serializer.serializers(context));
         serializerContext = new SerializerContext(serializers);

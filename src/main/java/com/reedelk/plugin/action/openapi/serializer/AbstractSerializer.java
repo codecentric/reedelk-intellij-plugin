@@ -27,7 +27,7 @@ abstract class AbstractSerializer<T> extends com.reedelk.openapi.commons.Abstrac
 
         } else if (schema.getSchemaData() != null){
             // We must create a schema asset.
-            String data = context.getSchemaFormat().dump(schema);
+            String data = context.getSchemaFormat().dump(schema.getSchemaData());
             AssetProperties properties = new AssetProperties(data);
 
             String schemaAssetPath = context.createAsset(finalFileName, properties);

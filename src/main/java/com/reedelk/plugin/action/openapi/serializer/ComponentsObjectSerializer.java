@@ -1,6 +1,6 @@
 package com.reedelk.plugin.action.openapi.serializer;
 
-import com.reedelk.openapi.commons.DataFormats;
+import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.ComponentsObject;
@@ -37,8 +37,8 @@ class ComponentsObjectSerializer extends AbstractSerializer<ComponentsObject> {
             if (schema.getSchemaData() != null) {
 
                 // Create Asset
-                DataFormats schemaFormat = context.getSchemaFormat();
-                String data = schemaFormat.dump(schemaObject.getSchema());
+                DataFormat schemaFormat = context.getSchemaFormat();
+                String data = schemaFormat.dump(schemaObject.getSchema().getSchemaData());
                 AssetProperties properties = new AssetProperties(data);
 
                 String finalFileName = schemaId + "." + schemaFormat.getExtension();

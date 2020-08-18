@@ -5,7 +5,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.reedelk.openapi.commons.DataFormats;
+import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.template.AssetProperties;
@@ -14,8 +14,12 @@ import com.reedelk.plugin.template.OpenAPIRESTListenerWithPayloadSet;
 import com.reedelk.plugin.template.OpenAPIRESTListenerWithResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -37,7 +41,7 @@ public class OpenApiImporterContext {
     private final Integer openApiPort;
 
     private final Project project;
-    private DataFormats schemaFormat;
+    private DataFormat schemaFormat;
     private Map<String, String> schemaIdAndPathMap = new HashMap<>();
     private Map<String, RequestBodyObject> requestBodyIdAndData = new HashMap<>();
 
@@ -101,10 +105,10 @@ public class OpenApiImporterContext {
     }
 
     public void setSchemaFormat(String content) throws OpenApiException {
-        if (DataFormats.JSON.is(content)) {
-            this.schemaFormat = DataFormats.JSON;
-        } else if (DataFormats.YAML.is(content)){
-            this.schemaFormat = DataFormats.YAML;
+        if (DataFormat.JSON.is(content)) {
+            this.schemaFormat = DataFormat.JSON;
+        } else if (DataFormat.YAML.is(content)){
+            this.schemaFormat = DataFormat.YAML;
         } else {
             throw new OpenApiException("The OpenApi schema is not a valid JSON or YAML. " +
                     "Please make sure that the OpenApi definition is a valid JSON or YAML.");
@@ -112,12 +116,12 @@ public class OpenApiImporterContext {
     }
 
     public OpenApiExampleFormat exampleFormatOf(String content) {
-        if (DataFormats.JSON.is(content)) return OpenApiExampleFormat.JSON;
-        if (DataFormats.XML.is(content)) return OpenApiExampleFormat.XML;
+        if (DataFormat.JSON.is(content)) return OpenApiExampleFormat.JSON;
+        if (isXml(content)) return OpenApiExampleFormat.XML;
         return OpenApiExampleFormat.PLAIN_TEXT;
     }
 
-    public DataFormats getSchemaFormat() {
+    public DataFormat getSchemaFormat() {
         return schemaFormat;
     }
 
@@ -176,5 +180,18 @@ public class OpenApiImporterContext {
     // By convention an asset resource does not start with a front slash.
     private String removeFrontSlashIfNeeded(String path) {
         return path.startsWith("/") ?  path.substring(1) : path;
+    }
+
+    private static boolean isXml(String dataAsString) {
+        try {
+            InputSource is = new InputSource(new StringReader(dataAsString));
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = dbFactory.newDocumentBuilder();
+            builder.parse(is);
+            return true;
+        } catch (Exception exception) {
+            // not xml
+            return false;
+        }
     }
 }
