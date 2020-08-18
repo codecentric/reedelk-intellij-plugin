@@ -5,7 +5,6 @@ import com.reedelk.plugin.editor.properties.commons.DialogWithMessage;
 import org.jetbrains.annotations.Nullable;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static java.lang.String.format;
 
 public class DialogImportError extends DialogWithMessage {
 
@@ -19,7 +18,6 @@ public class DialogImportError extends DialogWithMessage {
     }
 
     private static String formatMessage(String message) {
-        String messageFormat = "<html><p>%s</p><br><p>%s</p></html>";
-        return format(messageFormat, message("openapi.importer.dialog.error.message"), message);
+        return message("openapi.importer.dialog.error.message", message);
     }
 }
