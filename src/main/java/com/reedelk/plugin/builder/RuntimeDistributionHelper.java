@@ -22,8 +22,10 @@ class RuntimeDistributionHelper {
 
     private static final String DISTRIBUTION_ZIP_FILE_NAME = "distribution.zip";
     private Call call;
+    private final String pluginVersion;
 
     public RuntimeDistributionHelper() {
+        pluginVersion = BuildVersion.get();
     }
 
     public void cancel() {
@@ -53,7 +55,7 @@ class RuntimeDistributionHelper {
 
         // The service returns the runtime distribution from the given plugin version.
         String downloadDistributionByPluginVersionURL =
-                message("runtime.version.by.plugin.version.url", BuildVersion.get());
+                message("runtime.version.by.plugin.version.url", pluginVersion);
         Request request = new Request.Builder().url(downloadDistributionByPluginVersionURL).get().build();
 
         OkHttpClient client = new OkHttpClient.Builder()
@@ -69,9 +71,16 @@ class RuntimeDistributionHelper {
 
         try (Response response = call.execute()) {
 
-            if (response.code() != 200) {
+            int responseCode = response.code();
+
+            if (responseCode == 404) {
+                String message = message("runtimeBuilder.downloading.distribution.error.not.found", pluginVersion);
+                throw new IOException(message);
+            }
+
+            if (responseCode != 200) {
                 String responseBody = response.body() != null ? response.body().string() : "";
-                String message = message("runtimeBuilder.downloading.distribution.error", response.code(), responseBody);
+                String message = message("runtimeBuilder.downloading.distribution.error", responseCode, responseBody);
                 throw new IOException(message);
             }
 
@@ -168,5 +177,4 @@ class RuntimeDistributionHelper {
     public static long bytesToMeg(long bytes) {
         return bytes / MEGABYTE ;
     }
-
 }
