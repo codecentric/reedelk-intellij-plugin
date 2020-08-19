@@ -12,9 +12,9 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>feature: add next feature here.</li>
-	        <li>bugfix: help tab for components did not properly render in the components properties panel.</li>
-	        <li>bugfix: resource assets were not correctly serialized with correct path separator on Windows OS.</li>
+	        <li>bugfix: OpenAPI import did not correctly serialize JSON Array.</li>
+	        <li>bugfix: Better error handling when runtime not found for IntelliJ Flow Designer version.</li>
+	        <li>bugfix: Download Runtime Version text not correctly shown on smaller screens.</li>
         </ul>
       ]]>
     </change-notes>
