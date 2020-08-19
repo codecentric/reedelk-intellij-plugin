@@ -41,11 +41,11 @@ class RuntimeDistributionHelper {
 
         final ProgressListener progressListener = (bytesRead, contentLength, done) -> {
             if (done) {
-                pushProgress.onProgress("Reedelk runtime distribution download completed.");
+                pushProgress.onProgress(message("runtimeBuilder.downloading.distribution.complete"));
             } else {
                 if (contentLength != -1) {
                     pushProgress.onProgress(format(
-                            "Downloading Reedelk runtime distribution, please wait ... %d%% (%d MB)",
+                            message("runtimeBuilder.downloading.distribution") + " %d%% (%d MB)",
                             (100 * bytesRead) / contentLength, bytesToMeg(contentLength)));
                 }
             }
