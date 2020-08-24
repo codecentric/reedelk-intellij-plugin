@@ -187,4 +187,22 @@ class OpenApiImporterTest {
         // Then
         assertThat(basePath).isEqualTo("/v1");
     }
+
+    @Test
+    void shouldReturnCorrectBasePathForLocalhost() {
+        // Given
+        ServerObject remoteServer = new ServerObject();
+        remoteServer.setUrl("http://localhost");
+
+        OpenApiObject openApiObject = new OpenApiObject();
+        openApiObject.setServers(singletonList(remoteServer));
+
+        OpenApiImporter importer = new OpenApiImporter(context);
+
+        // When
+        String basePath = importer.getBasePath(openApiObject);
+
+        // Then
+        assertThat(basePath).isEqualTo(StringUtils.EMPTY);
+    }
 }
