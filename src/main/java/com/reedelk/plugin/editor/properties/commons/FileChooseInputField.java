@@ -19,11 +19,11 @@ import java.awt.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.*;
 
-public class ChooseFileInputField extends TextFieldWithBrowseButton {
+public class FileChooseInputField extends TextFieldWithBrowseButton {
 
     private static final int INPUT_FILE_FIELD_COLUMNS = 38;
 
-    public ChooseFileInputField(@NotNull Project project,
+    public FileChooseInputField(@NotNull Project project,
                                 @NotNull String title,
                                 @Nullable String hintText,
                                 @Nullable String rootDirectory,

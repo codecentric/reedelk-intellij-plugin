@@ -10,7 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 
-public class AddItemListener implements ClickableLabel.OnClickAction, DocumentListener {
+public class ItemListenerTextField implements ClickableLabel.OnClickAction, DocumentListener {
 
     private ClickableLabel addButton;
     private final JBList<Object> list;
@@ -19,10 +19,10 @@ public class AddItemListener implements ClickableLabel.OnClickAction, DocumentLi
 
     private boolean alreadyEnabled = false;
 
-    public AddItemListener(@NotNull JBList<Object> list,
-                           @NotNull DefaultListModel<Object> listModel,
-                           @NotNull ClickableLabel addButton,
-                           @NotNull JTextField itemTextField) {
+    public ItemListenerTextField(@NotNull JBList<Object> list,
+                                 @NotNull DefaultListModel<Object> listModel,
+                                 @NotNull ClickableLabel addButton,
+                                 @NotNull JTextField itemTextField) {
         this.list = list;
         this.addButton = addButton;
         this.listModel = listModel;

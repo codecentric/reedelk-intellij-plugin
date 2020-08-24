@@ -10,9 +10,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Images;
 import com.reedelk.plugin.editor.properties.commons.*;
-import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.typeinteger.IntegerInputField;
-import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -21,6 +19,7 @@ import java.util.Arrays;
 
 import static com.intellij.util.ui.JBUI.Borders.empty;
 import static com.reedelk.plugin.commons.DefaultConstants.OpenApi;
+import static com.reedelk.plugin.editor.properties.commons.FileChooseInputFieldWithEraseBtn.PropertyAccessorInMemory;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
@@ -70,8 +69,8 @@ public class DialogImport extends DialogWrapper {
         DisposablePanelFixedWidth fixedWidthPanel = new DisposablePanelFixedWidth(label, MAX_WIDTH);
 
         // File chooser
-        ChooseFileInputFieldWithEraseBtn chooseFileInputField =
-                new ChooseFileInputFieldWithEraseBtn(project,
+        FileChooseInputFieldWithEraseBtn chooseFileInputField =
+                new FileChooseInputFieldWithEraseBtn(project,
                         message("openapi.importer.dialog.import.file.hint"),
                         message("openapi.importer.dialog.import.file.hint"),
                         EMPTY,
@@ -146,31 +145,5 @@ public class DialogImport extends DialogWrapper {
 
     public Integer getOpenApiPort() {
         return (Integer) openApiPort.getValue();
-    }
-
-    static class PropertyAccessorInMemory implements PropertyAccessor {
-
-        private Object value = EMPTY;
-
-        @Override
-        public FlowSnapshot getSnapshot() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public <T> void set(T object) {
-            this.value = object;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public <T> T get() {
-            return (T) this.value;
-        }
-
-        @Override
-        public String getProperty() {
-            throw new UnsupportedOperationException();
-        }
     }
 }

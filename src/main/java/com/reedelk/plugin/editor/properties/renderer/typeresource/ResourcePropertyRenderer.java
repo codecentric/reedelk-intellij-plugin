@@ -4,8 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.ResourceAwareDescriptor;
 import com.reedelk.plugin.commons.PluginModuleUtils;
-import com.reedelk.plugin.editor.properties.commons.ChooseFileInputFieldWithEraseBtn;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.FileChooseInputFieldWithEraseBtn;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
@@ -38,8 +38,8 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
         String chooseFileRootDirectory = PluginModuleUtils.getResourcesDirectory(module)
                 .orElseThrow(() -> new IllegalStateException(message("error.resource.dir.not.found")));
 
-        ChooseFileInputFieldWithEraseBtn chooseFileInputField =
-                new ChooseFileInputFieldWithEraseBtn(
+        FileChooseInputFieldWithEraseBtn chooseFileInputField =
+                new FileChooseInputFieldWithEraseBtn(
                         module.getProject(),
                         chooseFileDialogTitle,
                         chooseFileHint,

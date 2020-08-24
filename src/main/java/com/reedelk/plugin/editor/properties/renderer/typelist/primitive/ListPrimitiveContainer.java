@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist.primitive;
 
+import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBList;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -17,7 +18,8 @@ import static java.util.Optional.ofNullable;
 public class ListPrimitiveContainer extends DisposablePanel {
 
     public ListPrimitiveContainer(@NotNull PropertyDescriptor descriptor,
-                                  @NotNull PropertyAccessor propertyAccessor) {
+                                  @NotNull PropertyAccessor propertyAccessor,
+                                  @NotNull Module module) {
 
         // Copy data into the model
         List<Object> arrayItems = propertyAccessor.get();
@@ -36,7 +38,7 @@ public class ListPrimitiveContainer extends DisposablePanel {
         // Layout
         String hint = ofNullable(descriptor.getHintValue())
                 .orElse(message("properties.type.list.item.hint"));
-        ListControlPanel listControls = new ListControlPanel(list, model, hint);
+        ListControlPanel listControls = new ListControlPanel(list, model, hint, descriptor, module);
         ListScrollPane listScrollPane = new ListScrollPane(list);
         listScrollPane.setBorder(empty());
 

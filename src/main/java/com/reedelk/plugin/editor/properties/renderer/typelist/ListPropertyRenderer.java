@@ -40,7 +40,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
 
         JComponent content = isTypeObjectDescriptor(propertyType) ?
                 createCustomObjectContent(module, descriptor, propertyAccessor, context) :
-                createContent(descriptor, propertyAccessor);
+                createContent(descriptor, propertyAccessor, module);
 
         // No tab group
         return ofNullable(propertyType.getTabGroup())
@@ -57,8 +57,9 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
 
     @NotNull
     private JComponent createContent(@NotNull PropertyDescriptor descriptor,
-                                     @NotNull PropertyAccessor propertyAccessor) {
-        return new ListPrimitiveContainer(descriptor, propertyAccessor);
+                                     @NotNull PropertyAccessor propertyAccessor,
+                                     @NotNull Module module) {
+        return new ListPrimitiveContainer(descriptor, propertyAccessor, module);
     }
 
     @NotNull
