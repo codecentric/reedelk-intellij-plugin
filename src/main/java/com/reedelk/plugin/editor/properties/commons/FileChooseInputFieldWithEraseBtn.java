@@ -14,6 +14,8 @@ import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 
 public class FileChooseInputFieldWithEraseBtn extends DisposablePanel {
 
+    private static final int INPUT_FILE_FIELD_COLUMNS = 38;
+
     private final PropertyAccessor propertyAccessor;
     private final FileChooseInputField fileChooseInputField;
 
@@ -21,11 +23,12 @@ public class FileChooseInputFieldWithEraseBtn extends DisposablePanel {
                                             @NotNull String title,
                                             @Nullable String hintText,
                                             @Nullable String rootDirectory,
-                                            @NotNull PropertyAccessor propertyAccessor) {
+                                            @NotNull PropertyAccessor propertyAccessor,
+                                            int columns) {
         super(new BorderLayout());
         this.propertyAccessor = propertyAccessor;
         this.fileChooseInputField =
-                new FileChooseInputField(project, title, hintText, rootDirectory, propertyAccessor);
+                new FileChooseInputField(project, title, hintText, rootDirectory, propertyAccessor, columns);
 
         // Erase Button clear the ChooseFileInputField value.
         ClickableLabel eraseButton = new ClickableLabel(Icons.Misc.Erase, this::erase);
@@ -33,6 +36,14 @@ public class FileChooseInputFieldWithEraseBtn extends DisposablePanel {
 
         add(fileChooseInputField, BorderLayout.WEST);
         add(ContainerFactory.pushLeft(eraseButton), BorderLayout.CENTER);
+    }
+
+    public FileChooseInputFieldWithEraseBtn(@NotNull Project project,
+                                            @NotNull String title,
+                                            @Nullable String hintText,
+                                            @Nullable String rootDirectory,
+                                            @NotNull PropertyAccessor propertyAccessor) {
+        this(project, title, hintText, rootDirectory, propertyAccessor, INPUT_FILE_FIELD_COLUMNS);
     }
 
     public void erase() {

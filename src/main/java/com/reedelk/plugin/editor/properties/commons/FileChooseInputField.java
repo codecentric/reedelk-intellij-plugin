@@ -21,15 +21,14 @@ import static com.reedelk.runtime.api.commons.StringUtils.*;
 
 public class FileChooseInputField extends TextFieldWithBrowseButton {
 
-    private static final int INPUT_FILE_FIELD_COLUMNS = 38;
-
     public FileChooseInputField(@NotNull Project project,
                                 @NotNull String title,
                                 @Nullable String hintText,
                                 @Nullable String rootDirectory,
-                                @NotNull PropertyAccessor propertyAccessor) {
+                                @NotNull PropertyAccessor propertyAccessor,
+                                int columns) {
         // to prevent field to be infinitely re-sized in grid-box layouts
-        super(new InputFieldWithHint(hintText, INPUT_FILE_FIELD_COLUMNS), null);
+        super(new InputFieldWithHint(hintText, columns), null);
 
         String initText = propertyAccessor.get();
 

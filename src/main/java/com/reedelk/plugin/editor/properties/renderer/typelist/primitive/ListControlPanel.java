@@ -25,6 +25,8 @@ import static javax.swing.SwingConstants.VERTICAL;
 
 public class ListControlPanel extends DisposablePanel {
 
+    private static final int FILE_CHOOSER_COLUMNS = 33;
+
     public ListControlPanel(JBList<Object> list,
                             DefaultListModel<Object> model,
                             String inputHint,
@@ -107,6 +109,7 @@ public class ListControlPanel extends DisposablePanel {
 
             FileChooseInputFieldWithEraseBtn.PropertyAccessorInMemory propertyAccessorInMemory =
                     new FileChooseInputFieldWithEraseBtn.PropertyAccessorInMemory();
+
             String chooseFileRootDirectory = PluginModuleUtils.getResourcesDirectory(module)
                     .orElseThrow(() -> new IllegalStateException(message("error.resource.dir.not.found")));
 
@@ -115,7 +118,8 @@ public class ListControlPanel extends DisposablePanel {
                     chooseFileDialogTitle,
                     chooseFileHint,
                     chooseFileRootDirectory,
-                    propertyAccessorInMemory);
+                    propertyAccessorInMemory,
+                    FILE_CHOOSER_COLUMNS);
 
             addActionProvider =
             (theList, theModel, theLabel) ->
