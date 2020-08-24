@@ -46,13 +46,25 @@ public class OpenApiUtils {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
         String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
-        fileName.append("_")
-                .append(RESPONSE.getKey()).append("_")
-                .append(statusCode).append("_")
-                .append(normalizeContentType(contentType)).append(".")
-                .append(EXAMPLE.getKey()).append(".")
-                .append(exampleFormat.getExtension());
-        return fileName.toString();
+        if (segmentValueOf(navigationPath, REQUEST_BODY) != null) {
+            // Example for Request Body
+            fileName.append("_")
+                    .append(REQUEST_BODY.getKey()).append("_")
+                    .append(normalizeContentType(contentType)).append(".")
+                    .append(EXAMPLE.getKey()).append(".")
+                    .append(exampleFormat.getExtension());
+            return fileName.toString();
+
+        } else {
+            // Example for Response Body
+            fileName.append("_")
+                    .append(RESPONSE.getKey()).append("_")
+                    .append(statusCode).append("_")
+                    .append(normalizeContentType(contentType)).append(".")
+                    .append(EXAMPLE.getKey()).append(".")
+                    .append(exampleFormat.getExtension());
+            return fileName.toString();
+        }
     }
 
     @NotNull

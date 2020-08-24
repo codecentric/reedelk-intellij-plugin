@@ -2,6 +2,7 @@ package com.reedelk.plugin.action.openapi;
 
 import com.reedelk.openapi.v3.model.OpenApiObject;
 import com.reedelk.openapi.v3.model.ServerObject;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -171,7 +172,7 @@ class OpenApiImporterTest {
         String basePath = importer.getBasePath(openApiObject);
 
         // Then
-        assertThat(basePath).isEqualTo("/");
+        assertThat(basePath).isEqualTo(StringUtils.EMPTY);
     }
 
     @Test

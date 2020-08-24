@@ -12,9 +12,7 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>bugfix: OpenAPI import did not correctly serialize JSON Array.</li>
-	        <li>bugfix: Better error handling when runtime not found for IntelliJ Flow Designer version.</li>
-	        <li>bugfix: Download Runtime Version text not correctly shown on smaller screens.</li>
+	        <li>bugfix: OpenAPI import did not correctly handel server url with 'http://localhost' without base path.</li>
         </ul>
       ]]>
     </change-notes>
