@@ -31,6 +31,7 @@ public class Serializer {
         serializerMap.put(MediaTypeObject.class, new MediaTypeObjectSerializer(context));
         serializerMap.put(ParameterObject.class, new ParameterObjectSerializer(context));
         serializerMap.put(HeaderObject.class, new HeaderObjectSerializer(context));
+        serializerMap.put(OperationObject.class, new OperationObjectSerializer());
         return serializerMap;
     }
 }

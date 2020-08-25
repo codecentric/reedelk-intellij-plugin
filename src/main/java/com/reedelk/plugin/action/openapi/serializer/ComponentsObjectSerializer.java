@@ -13,17 +13,24 @@ import com.reedelk.plugin.template.AssetProperties;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.REQUEST_BODIES;
 import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.SCHEMAS;
 import static com.reedelk.openapi.v3.model.SchemaObject.Properties;
 
-class ComponentsObjectSerializer extends AbstractSerializer<ComponentsObject> {
+class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.ComponentsObjectSerializer {
+
+    private final OpenApiImporterContext context;
 
     public ComponentsObjectSerializer(OpenApiImporterContext context) {
-        super(context);
+        this.context = context;
     }
 
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ComponentsObject componentsObject) {
+        Map<String, Object> serialized = super.serialize(serializerContext, navigationPath, componentsObject);
+        serialized.remove(REQUEST_BODIES.value());
+        serialized.remove(SCHEMAS.value());
+
         // Request bodies are not serialized here.
         Map<String, RequestBodyObject> requestBodies = componentsObject.getRequestBodies();
         requestBodies.forEach(context::registerRequestBody);
@@ -55,8 +62,8 @@ class ComponentsObjectSerializer extends AbstractSerializer<ComponentsObject> {
         });
 
         // We only set the "schemas" object if there are schemas registered.
-        Map<String, Object> map = new LinkedHashMap<>();
-        if (!schemasMap.isEmpty()) set(map, SCHEMAS.value(), schemasMap);
-        return map;
+        if (!schemasMap.isEmpty()) set(serialized, SCHEMAS.value(), schemasMap);
+
+        return serialized;
     }
 }
