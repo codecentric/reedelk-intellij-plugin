@@ -48,7 +48,11 @@ class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.Compo
                 String data = schemaFormat.dump(schemaObject.getSchema().getSchemaData());
                 AssetProperties properties = new AssetProperties(data);
 
-                String finalFileName = schemaId + "." + schemaFormat.getExtension();
+
+                // TODO: Refactor the final file name to use the file name from openapi utils
+                String finalFileName = schemaId + "." +
+                        NavigationPath.SegmentKey.SCHEMA.getKey() + "." +
+                        schemaFormat.getExtension();
                 String schemaAssetPath = context.createAsset(finalFileName, properties);
 
                 // Register Asset Path

@@ -38,7 +38,8 @@ public class OpenApiUtils {
 
     @NotNull
     public static String flowFileNameFrom(NavigationPath navigationPath) {
-        return baseOperationAwareFile(navigationPath) + "." + FileExtension.FLOW.value();
+        return removeUnderscoreIfNeeded(baseOperationAwareFile(navigationPath))
+                + "." + FileExtension.FLOW.value();
     }
 
     @NotNull
@@ -49,7 +50,7 @@ public class OpenApiUtils {
             // Example for Request Body
             appendUnderscoreIfNeeded(fileName).append(REQUEST_BODY.getKey());
         }
-        if (segmentValueOf(navigationPath, RESPONSE) != null) {
+        if (segmentValueOf(navigationPath, RESPONSES) != null) {
             // Example for Response Body
             appendUnderscoreIfNeeded(fileName).append(RESPONSE.getKey());
         }
@@ -70,11 +71,6 @@ public class OpenApiUtils {
         fileName.append(".").append(EXAMPLE.getKey()).append(".")
                 .append(exampleFormat.getExtension());
         return fileName.toString();
-    }
-
-    private static StringBuilder appendUnderscoreIfNeeded(StringBuilder builder) {
-        if (builder.length() == 0) return builder;
-        return builder.charAt(builder.length() - 1) == '_' ? builder : builder.append("_");
     }
 
     @NotNull
@@ -159,7 +155,7 @@ public class OpenApiUtils {
             if (method != null) fileName.append(method.toUpperCase());
             if (path != null) fileName.append(normalizePath(path));
         }
-        return fileName;
+        return appendUnderscoreIfNeeded(fileName);
     }
 
     @Nullable
@@ -213,5 +209,15 @@ public class OpenApiUtils {
         if (value == null) return StringUtils.EMPTY;
         if (value.length() == 0) return value;
         return value.substring(0, 1).toUpperCase() + value.substring(1);
+    }
+
+    private static StringBuilder appendUnderscoreIfNeeded(StringBuilder builder) {
+        if (builder.length() == 0) return builder;
+        return builder.charAt(builder.length() - 1) == '_' ? builder : builder.append("_");
+    }
+
+    private static StringBuilder removeUnderscoreIfNeeded(StringBuilder builder) {
+        if (builder.length() == 0) return builder;
+        return builder.charAt(builder.length() - 1) == '_' ? builder.deleteCharAt(builder.length() - 1) : builder;
     }
 }
