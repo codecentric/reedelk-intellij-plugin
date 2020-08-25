@@ -4,6 +4,7 @@ import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.OperationObject;
 import com.reedelk.openapi.v3.model.SecurityRequirementObject;
+import com.reedelk.plugin.action.openapi.OpenApiConstants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +45,8 @@ public class OperationObjectSerializer extends com.reedelk.openapi.v3.serializer
         List<Map<String, Object>> mappedSecurity = security.stream().map(stringSecurityRequirementObjectMap -> {
             Map<String, Object> securityRequirementObjectSerialized = new HashMap<>();
             stringSecurityRequirementObjectMap.forEach((requirementName, securityRequirementObject) -> {
-                securityRequirementObjectSerialized.put("name", requirementName);
-                securityRequirementObjectSerialized.put("scopes", securityRequirementObject.getScopes());
+                securityRequirementObjectSerialized.put(OpenApiConstants.PROPERTY_SECURITY_REQUIREMENT_NAME, requirementName);
+                securityRequirementObjectSerialized.put(OpenApiConstants.PROPERTY_SECURITY_REQUIREMENT_SCOPES, securityRequirementObject.getScopes());
             });
             return securityRequirementObjectSerialized;
         }).collect(toList());
