@@ -44,35 +44,37 @@ public class OpenApiUtils {
     @NotNull
     public static String exampleFileNameFrom(NavigationPath navigationPath, OpenApiExampleFormat exampleFormat) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
-        String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
-        String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
+
         if (segmentValueOf(navigationPath, REQUEST_BODY) != null) {
             // Example for Request Body
-            fileName.append(REQUEST_BODY.getKey()).append("_")
-                    .append(normalizeContentType(contentType)).append(".")
-                    .append(EXAMPLE.getKey()).append(".")
-                    .append(exampleFormat.getExtension());
-            return fileName.toString();
-
-        } else if (segmentValueOf(navigationPath, EXAMPLES) != null) {
-            // Examples
-            String exampleId = segmentValueOf(navigationPath, EXAMPLE_ID);
-            fileName.append(capitalize(exampleId))
-                    .append("_")
-                    .append(EXAMPLE.getKey())
-                    .append(".")
-                    .append(exampleFormat.getExtension());
-            return fileName.toString();
-
-        } else {
-            // Example for Response Body
-            fileName.append(RESPONSE.getKey()).append("_")
-                    .append(statusCode).append("_")
-                    .append(normalizeContentType(contentType)).append(".")
-                    .append(EXAMPLE.getKey()).append(".")
-                    .append(exampleFormat.getExtension());
-            return fileName.toString();
+            appendUnderscoreIfNeeded(fileName).append(REQUEST_BODY.getKey());
         }
+        if (segmentValueOf(navigationPath, RESPONSE) != null) {
+            // Example for Response Body
+            appendUnderscoreIfNeeded(fileName).append(RESPONSE.getKey());
+        }
+        if (segmentValueOf(navigationPath, STATUS_CODE) != null) {
+            String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
+            appendUnderscoreIfNeeded(fileName).append(statusCode);
+        }
+        if (segmentValueOf(navigationPath, CONTENT_TYPE) != null) {
+            String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
+            appendUnderscoreIfNeeded(fileName).append(normalizeContentType(contentType));
+        }
+        if (segmentValueOf(navigationPath, EXAMPLE_ID) != null) {
+            // Examples from components (they don't belong to a request or response)
+            String exampleId = segmentValueOf(navigationPath, EXAMPLE_ID);
+            appendUnderscoreIfNeeded(fileName).append(capitalize(exampleId));
+        }
+
+        fileName.append(".").append(EXAMPLE.getKey()).append(".")
+                .append(exampleFormat.getExtension());
+        return fileName.toString();
+    }
+
+    private static StringBuilder appendUnderscoreIfNeeded(StringBuilder builder) {
+        if (builder.length() == 0) return builder;
+        return builder.charAt(builder.length() - 1) == '_' ? builder : builder.append("_");
     }
 
     @NotNull
@@ -138,11 +140,11 @@ public class OpenApiUtils {
 
     /**
      * Returns base file name given the navigation path. e.g given navigation path:
-     *
+     * <p>
      * Navigation path: [
-     *          paths, /pet/{petId} (path), GET (method), getPetById (operationId),
-     *          responses, 200 (statusCode), content, application/xml (contentType), schema]
-     *
+     * paths, /pet/{petId} (path), GET (method), getPetById (operationId),
+     * responses, 200 (statusCode), content, application/xml (contentType), schema]
+     * <p>
      * returns 'getPetById' if operation id is not empty, otherwise 'getPetPetId'.
      */
     @NotNull
@@ -157,7 +159,7 @@ public class OpenApiUtils {
             if (method != null) fileName.append(method.toUpperCase());
             if (path != null) fileName.append(normalizePath(path));
         }
-        return StringUtils.isBlank(fileName) ? fileName : fileName.append("_");
+        return fileName;
     }
 
     @Nullable
