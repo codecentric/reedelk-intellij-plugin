@@ -3,15 +3,15 @@ package com.reedelk.plugin.action.openapi.serializer;
 import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
-import com.reedelk.openapi.v3.model.ComponentsObject;
-import com.reedelk.openapi.v3.model.RequestBodyObject;
-import com.reedelk.openapi.v3.model.Schema;
-import com.reedelk.openapi.v3.model.SchemaObject;
+import com.reedelk.openapi.v3.model.*;
+import com.reedelk.plugin.action.openapi.OpenApiExampleFormat;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
+import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.template.AssetProperties;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.REQUEST_BODIES;
 import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.SCHEMAS;
@@ -63,6 +63,40 @@ class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.Compo
 
         // We only set the "schemas" object if there are schemas registered.
         if (!schemasMap.isEmpty()) set(serialized, SCHEMAS.value(), schemasMap);
+
+        // We need to create the assets for all the examples
+        Map<String, Object> examplesMap = new LinkedHashMap<>();
+        Map<String, ExampleObject> examples = componentsObject.getExamples();
+        examples.forEach(new BiConsumer<String, ExampleObject>() {
+            @Override
+            public void accept(String exampleId, ExampleObject exampleObject) {
+                // Create Asset
+                String data = exampleObject.getValue();
+                OpenApiExampleFormat exampleFormat = context.exampleFormatOf(data);
+
+                AssetProperties properties = new AssetProperties(data);
+
+                NavigationPath currentNavigationPath = navigationPath
+                        .with(NavigationPath.SegmentKey.EXAMPLES)
+                        .with(NavigationPath.SegmentKey.EXAMPLE_ID, exampleId);
+                String finalFileName = OpenApiUtils.exampleFileNameFrom(currentNavigationPath, exampleFormat);
+
+                String exampleAssetPath = context.createAsset(finalFileName, properties);
+
+                // Register Asset Path
+                context.registerAssetPath(exampleId, exampleAssetPath);
+
+                // Put an entry "schema": "assets/my-schema.json"
+                Map<String, Object> exampleMap = new LinkedHashMap<>();
+                exampleMap.put("summary", exampleObject.getSummary());
+                exampleMap.put("description", exampleObject.getDescription());
+                exampleMap.put("externalValue", exampleObject.getExternalValue());
+                exampleMap.put("value", exampleAssetPath);
+                examplesMap.put(exampleId, exampleMap);
+
+            }
+        });
+        serialized.put(ComponentsObject.Properties.EXAMPLES.value(), examplesMap);
 
         return serialized;
     }

@@ -13,6 +13,8 @@ import com.reedelk.plugin.template.AssetProperties;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.reedelk.openapi.commons.NavigationPath.SegmentKey.EXAMPLES;
+import static com.reedelk.openapi.commons.NavigationPath.SegmentKey.EXAMPLE_ID;
 import static com.reedelk.openapi.v3.model.MediaTypeObject.Properties.EXAMPLE;
 import static com.reedelk.openapi.v3.model.MediaTypeObject.Properties.SCHEMA;
 
@@ -44,6 +46,17 @@ class MediaTypeObjectSerializer extends AbstractSerializer<MediaTypeObject> {
         if (schema != null) {
             String finalFileName = OpenApiUtils.requestResponseSchemaFileNameFrom(navigationPath, context);
             setSchema(SCHEMA.value(), serialized, schema, finalFileName);
+        }
+
+        // Examples
+        if (mediaTypeObject.getExamples() != null && !mediaTypeObject.getExamples().isEmpty()) {
+            NavigationPath currentNavigationPath = navigationPath.with(EXAMPLES);
+            Map<String,Object> serializedExamples = new LinkedHashMap<>();
+            mediaTypeObject.getExamples().forEach((exampleId, exampleObject) -> {
+                Map<String, Object> serializedExample = serializerContext.serialize(currentNavigationPath.with(EXAMPLE_ID, exampleId), exampleObject);
+                serializedExamples.put(exampleId, serializedExample);
+            });
+            serialized.put(MediaTypeObject.Properties.EXAMPLES.value(), serializedExamples);
         }
 
         return serialized;

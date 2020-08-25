@@ -48,17 +48,25 @@ public class OpenApiUtils {
         String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
         if (segmentValueOf(navigationPath, REQUEST_BODY) != null) {
             // Example for Request Body
-            fileName.append("_")
-                    .append(REQUEST_BODY.getKey()).append("_")
+            fileName.append(REQUEST_BODY.getKey()).append("_")
                     .append(normalizeContentType(contentType)).append(".")
                     .append(EXAMPLE.getKey()).append(".")
                     .append(exampleFormat.getExtension());
             return fileName.toString();
 
+        } else if (segmentValueOf(navigationPath, EXAMPLES) != null) {
+            // Examples
+            String exampleId = segmentValueOf(navigationPath, EXAMPLE_ID);
+            fileName.append(capitalize(exampleId))
+                    .append("_")
+                    .append(EXAMPLE.getKey())
+                    .append(".")
+                    .append(exampleFormat.getExtension());
+            return fileName.toString();
+
         } else {
             // Example for Response Body
-            fileName.append("_")
-                    .append(RESPONSE.getKey()).append("_")
+            fileName.append(RESPONSE.getKey()).append("_")
                     .append(statusCode).append("_")
                     .append(normalizeContentType(contentType)).append(".")
                     .append(EXAMPLE.getKey()).append(".")
@@ -73,8 +81,7 @@ public class OpenApiUtils {
         if (segmentValueOf(navigationPath, REQUEST_BODY) != null) {
             // It is request body.
             String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
-            fileName.append("_")
-                    .append(REQUEST_BODY.getKey()).append("_")
+            fileName.append(REQUEST_BODY.getKey()).append("_")
                     .append(normalizeContentType(contentType)).append(".")
                     .append(SCHEMA.getKey()).append(".")
                     .append(context.getSchemaFormat().getExtension());
@@ -84,8 +91,7 @@ public class OpenApiUtils {
             // It is a response.
             String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
             String contentType = segmentValueOf(navigationPath, CONTENT_TYPE);
-            fileName.append("_")
-                    .append(RESPONSE.getKey()).append("_")
+            fileName.append(RESPONSE.getKey()).append("_")
                     .append(statusCode).append("_")
                     .append(normalizeContentType(contentType)).append(".")
                     .append(SCHEMA.getKey()).append(".")
@@ -98,8 +104,7 @@ public class OpenApiUtils {
     public static String parameterSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String parameterName = segmentValueOf(navigationPath, PARAMETER_NAME);
-        fileName.append("_")
-                .append(PARAMETER.getKey()).append("_")
+        fileName.append(PARAMETER.getKey()).append("_")
                 .append(parameterName).append(".")
                 .append(SCHEMA.getKey()).append(".")
                 .append(context.getSchemaFormat().getExtension());
@@ -111,8 +116,7 @@ public class OpenApiUtils {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);
         String statusCode = segmentValueOf(navigationPath, STATUS_CODE);
         String headerName = segmentValueOf(navigationPath, HEADER_NAME);
-        fileName.append("_")
-                .append(RESPONSE.getKey()).append("_")
+        fileName.append(RESPONSE.getKey()).append("_")
                 .append(statusCode).append("_")
                 .append(HEADER.getKey()).append("_")
                 .append(headerName).append(".")
@@ -153,7 +157,7 @@ public class OpenApiUtils {
             if (method != null) fileName.append(method.toUpperCase());
             if (path != null) fileName.append(normalizePath(path));
         }
-        return fileName;
+        return StringUtils.isBlank(fileName) ? fileName : fileName.append("_");
     }
 
     @Nullable

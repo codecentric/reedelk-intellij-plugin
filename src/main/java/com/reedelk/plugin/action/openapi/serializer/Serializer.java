@@ -23,15 +23,16 @@ public class Serializer {
     }
 
     public static Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializers(OpenApiImporterContext context) {
-        Map<Class<?>, com.reedelk.openapi.Serializer<?>> serializerMap = new HashMap<>();
-        serializerMap.put(ServerVariableObject.class, new ServerVariableObjectSerializer(context));
-        serializerMap.put(ConfigOpenApiObject.class, new ConfigOpenApiObjectSerializer(context));
-        serializerMap.put(RequestBodyObject.class, new RequestBodyObjectSerializer(context));
-        serializerMap.put(ComponentsObject.class, new ComponentsObjectSerializer(context));
-        serializerMap.put(MediaTypeObject.class, new MediaTypeObjectSerializer(context));
-        serializerMap.put(ParameterObject.class, new ParameterObjectSerializer(context));
-        serializerMap.put(HeaderObject.class, new HeaderObjectSerializer(context));
-        serializerMap.put(OperationObject.class, new OperationObjectSerializer());
-        return serializerMap;
+        Map<Class<?>, com.reedelk.openapi.Serializer<?>> all = new HashMap<>();
+        all.put(ServerVariableObject.class, new ServerVariableObjectSerializer(context));
+        all.put(ConfigOpenApiObject.class, new ConfigOpenApiObjectSerializer(context));
+        all.put(RequestBodyObject.class, new RequestBodyObjectSerializer(context));
+        all.put(ComponentsObject.class, new ComponentsObjectSerializer(context));
+        all.put(MediaTypeObject.class, new MediaTypeObjectSerializer(context));
+        all.put(ParameterObject.class, new ParameterObjectSerializer(context));
+        all.put(ExampleObject.class, new ExampleObjectSerializer(context));
+        all.put(HeaderObject.class, new HeaderObjectSerializer(context));
+        all.put(OperationObject.class, new OperationObjectSerializer());
+        return all;
     }
 }
