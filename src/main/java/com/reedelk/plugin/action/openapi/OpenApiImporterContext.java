@@ -7,8 +7,12 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
+import com.reedelk.plugin.action.openapi.template.OpenAPIRESTListenerConfigProperties1;
+import com.reedelk.plugin.action.openapi.template.OpenAPIRESTListenerWithPayloadSet1;
+import com.reedelk.plugin.action.openapi.template.OpenAPIRESTListenerWithResource1;
 import com.reedelk.plugin.commons.PluginModuleUtils;
-import com.reedelk.plugin.template.*;
+import com.reedelk.plugin.template.AssetProperties;
+import com.reedelk.plugin.template.TemplateWriter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.xml.sax.InputSource;
@@ -129,21 +133,21 @@ public class OpenApiImporterContext {
         return assetResource(fileName);
     }
 
-    public void createRestListenerFlowWithExample(String fileName, OpenAPIRESTListenerWithResource properties) {
+    public void createRestListenerFlowWithExample(String fileName, OpenAPIRESTListenerWithResource1 properties) {
         Module module = targetImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
                 createBuildable(FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
     }
 
-    public void createRestListenerFlowWithPayload(String fileName, OpenAPIRESTListenerWithPayloadSet properties) {
+    public void createRestListenerFlowWithPayload(String fileName, OpenAPIRESTListenerWithPayloadSet1 properties) {
         Module module = targetImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
                 createBuildable(FLOW_WITH_REST_LISTENER_AND_PAYLOAD_SET, properties, fileName, directory, true));
     }
 
-    public void createRestListenerConfig(String configFileName, OpenAPIRESTListenerConfig properties) {
+    public void createRestListenerConfig(String configFileName, OpenAPIRESTListenerConfigProperties1 properties) {
         Module module = targetImportModule();
         PluginModuleUtils.getConfigsDirectory(module)
                 .ifPresent(configsDirectory ->

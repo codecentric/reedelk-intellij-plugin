@@ -9,10 +9,10 @@ import java.util.UUID;
 public class FlowOrSubFlowFileProperties extends Properties {
 
     public FlowOrSubFlowFileProperties(String id, String title, String description, String configId) {
-        put("id", id);
-        put("title", title);
-        put("configId", configId);
-        put("description", description);
+        setProperty("id", id);
+        setProperty("title", title);
+        setProperty("configId", configId);
+        setProperty("description", description);
     }
 
     public FlowOrSubFlowFileProperties(String fileName, String templateName) {
@@ -22,8 +22,8 @@ public class FlowOrSubFlowFileProperties extends Properties {
     }
 
     public FlowOrSubFlowFileProperties(String id, String title, String description) {
-        put("id", id);
-        put("title", title);
-        put("description", description);
+        setProperty("id", id);
+        setProperty("title", title);
+        setProperty("description", description);
     }
 }
