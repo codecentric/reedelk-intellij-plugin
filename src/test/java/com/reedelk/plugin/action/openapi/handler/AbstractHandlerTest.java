@@ -3,8 +3,8 @@ package com.reedelk.plugin.action.openapi.handler;
 import com.reedelk.openapi.v3.model.*;
 import com.reedelk.plugin.action.openapi.OpenApiExampleFormat;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
-import com.reedelk.plugin.action.openapi.template.OpenAPIRESTListenerWithPayloadSet1;
-import com.reedelk.plugin.action.openapi.template.OpenAPIRESTListenerWithResource1;
+import com.reedelk.plugin.action.openapi.template.OpenApiRESTListenerWithPayloadSet;
+import com.reedelk.plugin.action.openapi.template.OpenApiRESTListenerWithResource;
 import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.runtime.api.commons.ImmutableMap;
 import org.junit.jupiter.api.Test;
@@ -24,9 +24,9 @@ import static org.mockito.Mockito.*;
 class AbstractHandlerTest {
 
     @Captor
-    private ArgumentCaptor<OpenAPIRESTListenerWithResource1> restListenerWithResource;
+    private ArgumentCaptor<OpenApiRESTListenerWithResource> restListenerWithResource;
     @Captor
-    private ArgumentCaptor<OpenAPIRESTListenerWithPayloadSet1> restListenerWithPayload;
+    private ArgumentCaptor<OpenApiRESTListenerWithPayloadSet> restListenerWithPayload;
 
     @Mock
     private OpenApiImporterContext context;
@@ -86,6 +86,6 @@ class AbstractHandlerTest {
         verify(context)
                 .createRestListenerFlowWithExample(anyString(), restListenerWithResource.capture());
         verify(context, never())
-                .createRestListenerFlowWithPayload(anyString(), any(OpenAPIRESTListenerWithPayloadSet1.class));
+                .createRestListenerFlowWithPayload(anyString(), any(OpenApiRESTListenerWithPayloadSet.class));
     }
 }
