@@ -9,7 +9,7 @@ import com.reedelk.plugin.action.openapi.reader.FileReader;
 import com.reedelk.plugin.action.openapi.reader.Readers;
 import com.reedelk.plugin.action.openapi.serializer.ConfigurationOpenApiObject;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
-import com.reedelk.plugin.action.openapi.template.OpenAPIRESTListenerConfigProperties1;
+import com.reedelk.plugin.action.openapi.template.OpenApiRESTListenerConfigProperties;
 import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +63,7 @@ public class OpenApiImporter {
         String title = OpenApiUtils.restListenerConfigTitleFrom(openApiObject);
         String configFileName = OpenApiUtils.restListenerConfigFileNameFrom(openApiObject);
 
-        OpenAPIRESTListenerConfigProperties1 properties = new OpenAPIRESTListenerConfigProperties1();
+        OpenApiRESTListenerConfigProperties properties = new OpenApiRESTListenerConfigProperties();
         properties.setOpenApiObject(configOpenApiObjectJson);
         properties.setId(context.getRestListenerConfigId());
         properties.setBasePath(apiBasePath);

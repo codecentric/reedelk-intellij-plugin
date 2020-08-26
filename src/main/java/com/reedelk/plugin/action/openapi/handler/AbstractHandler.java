@@ -6,8 +6,8 @@ import com.reedelk.plugin.action.openapi.OpenApiExampleFormat;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
-import com.reedelk.plugin.action.openapi.template.OpenAPIRESTListenerWithPayloadSet1;
-import com.reedelk.plugin.action.openapi.template.OpenAPIRESTListenerWithResource1;
+import com.reedelk.plugin.action.openapi.template.OpenApiRESTListenerWithPayloadSet;
+import com.reedelk.plugin.action.openapi.template.OpenApiRESTListenerWithResource;
 import com.reedelk.plugin.template.AssetProperties;
 import com.reedelk.runtime.api.message.content.MimeType;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +50,7 @@ abstract class AbstractHandler implements Handler {
         if (example.isPresent()) {
             // The generated flow will return the example from the project's asset directory.
             SuccessExample successExample = example.get();
-            OpenAPIRESTListenerWithResource1 properties = new OpenAPIRESTListenerWithResource1(
+            OpenApiRESTListenerWithResource properties = new OpenApiRESTListenerWithResource(
                     configId, flowTitle, flowDescription, restListenerDescription,
                     restPath, restMethod, openApiOperationObject,
                     successExample.assetResourceFile, successExample.contentType);
@@ -58,7 +58,7 @@ abstract class AbstractHandler implements Handler {
 
         } else {
             MimeType responseMimeType = findResponseMimeType(responses, navigationPath, context);
-            OpenAPIRESTListenerWithPayloadSet1 properties = new OpenAPIRESTListenerWithPayloadSet1(
+            OpenApiRESTListenerWithPayloadSet properties = new OpenApiRESTListenerWithPayloadSet(
                     configId, flowTitle, flowDescription, restListenerDescription,
                     restPath, restMethod, responseMimeType, openApiOperationObject);
             context.createRestListenerFlowWithPayload(flowFileName, properties);

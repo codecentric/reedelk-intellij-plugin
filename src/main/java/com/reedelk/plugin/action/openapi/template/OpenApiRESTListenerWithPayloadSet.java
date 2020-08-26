@@ -8,20 +8,20 @@ import java.util.Properties;
 import java.util.UUID;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class OpenAPIRESTListenerWithPayloadSet1 extends Properties {
+public class OpenApiRESTListenerWithPayloadSet extends Properties {
 
     private final String jsonTemplate = ScriptUtils.asScript("'{\\\"example\\\": \\\"%s\\\"}'");
     private final String xmlTemplate =  ScriptUtils.asScript("'<example>%s</example>'");
     private final String textTemplate = "%s";
 
-    public OpenAPIRESTListenerWithPayloadSet1(@NotNull String configId,
-                                              @NotNull String flowTitle,
-                                              @NotNull String flowDescription,
-                                              @NotNull String restListenerDescription,
-                                              @NotNull String restPath,
-                                              @NotNull String restMethod,
-                                              @NotNull MimeType responseMimeType,
-                                              @NotNull String openApiOperationObject) {
+    public OpenApiRESTListenerWithPayloadSet(@NotNull String configId,
+                                             @NotNull String flowTitle,
+                                             @NotNull String flowDescription,
+                                             @NotNull String restListenerDescription,
+                                             @NotNull String restPath,
+                                             @NotNull String restMethod,
+                                             @NotNull MimeType responseMimeType,
+                                             @NotNull String openApiOperationObject) {
         setProperty("id", UUID.randomUUID().toString());
         setProperty("title", flowTitle);
         setProperty("restPath", restPath);
