@@ -17,7 +17,11 @@
       "errorResponse": {
         "body": "#[error]",
         "status": 500
-      }
+      },
+      "openApi": {"responses": {"200": {
+        "description": "Success Response",
+        "content": {"text/plain": {}}
+      }}}
     },
     {
       "implementor": "com.reedelk.core.component.PayloadSet",
