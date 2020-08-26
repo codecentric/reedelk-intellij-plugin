@@ -44,7 +44,7 @@ abstract class AbstractHandler implements Handler {
                 .with(SegmentKey.METHOD, restMethod);
         String openApiOperationObject = Serializer.toJson(operation, context, navigationPath);
 
-        String fileName = OpenApiUtils.flowFileNameFrom(navigationPath);
+        String flowFileName = OpenApiUtils.flowFileNameFrom(navigationPath);
 
         Optional<SuccessExample> example = findSuccessExampleForFlow(responses, navigationPath, context);
         if (example.isPresent()) {
@@ -54,14 +54,14 @@ abstract class AbstractHandler implements Handler {
                     configId, flowTitle, flowDescription, restListenerDescription,
                     restPath, restMethod, openApiOperationObject,
                     successExample.assetResourceFile, successExample.contentType);
-            context.createRestListenerFlowWithExample(fileName, properties);
+            context.createRestListenerFlowWithExample(flowFileName, properties);
 
         } else {
             MimeType responseMimeType = findResponseMimeType(responses, navigationPath, context);
             OpenAPIRESTListenerWithPayloadSet properties = new OpenAPIRESTListenerWithPayloadSet(
                     configId, flowTitle, flowDescription, restListenerDescription,
                     restPath, restMethod, responseMimeType, openApiOperationObject);
-            context.createRestListenerFlowWithPayload(fileName, properties);
+            context.createRestListenerFlowWithPayload(flowFileName, properties);
         }
     }
 

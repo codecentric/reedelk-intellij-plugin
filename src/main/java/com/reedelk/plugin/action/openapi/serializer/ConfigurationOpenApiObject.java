@@ -8,13 +8,13 @@ import com.reedelk.openapi.v3.model.ServerObject;
 import java.util.List;
 
 // Object encapsulating data structure for REST Listener Configuration.
-public class ConfigOpenApiObject implements OpenApiModel {
+public class ConfigurationOpenApiObject implements OpenApiModel {
 
     private InfoObject info;
     private List<ServerObject> servers;
     private ComponentsObject components;
 
-    public ConfigOpenApiObject(InfoObject info, List<ServerObject> servers, ComponentsObject components) {
+    public ConfigurationOpenApiObject(InfoObject info, List<ServerObject> servers, ComponentsObject components) {
         this.info = info;
         this.servers = servers;
         this.components = components;

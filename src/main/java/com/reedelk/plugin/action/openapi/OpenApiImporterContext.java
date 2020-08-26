@@ -8,10 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.reedelk.openapi.commons.DataFormat;
 import com.reedelk.openapi.v3.model.RequestBodyObject;
 import com.reedelk.plugin.commons.PluginModuleUtils;
-import com.reedelk.plugin.template.AssetProperties;
-import com.reedelk.plugin.template.OpenAPIRESTListenerConfig;
-import com.reedelk.plugin.template.OpenAPIRESTListenerWithPayloadSet;
-import com.reedelk.plugin.template.OpenAPIRESTListenerWithResource;
+import com.reedelk.plugin.template.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.xml.sax.InputSource;
@@ -24,9 +21,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static com.reedelk.plugin.action.openapi.OpenApiConstants.PROJECT_RESOURCE_SEPARATOR;
+import static com.reedelk.plugin.action.openapi.template.TemplateOpenApi.*;
 import static com.reedelk.plugin.commons.FileUtils.createDirectory;
-import static com.reedelk.plugin.template.Template.Buildable;
-import static com.reedelk.plugin.template.Template.OpenAPI.*;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 import static com.reedelk.runtime.commons.ModuleProperties.Assets.RESOURCE_DIRECTORY;
 
@@ -161,11 +157,11 @@ public class OpenApiImporterContext {
         return removeFrontSlashIfNeeded(assetResourcePath);
     }
 
-    private void createBuildable(Buildable buildable, Properties properties, String finalFileName, String directory, boolean openFile) {
+    private void createBuildable(TemplateWriter templateWriter, Properties properties, String finalFileName, String directory, boolean openFile) {
         WriteCommandAction.runWriteCommandAction(project, () -> {
             Path finalTargetDirectory = Paths.get(directory, this.targetDirectory);
-            createDirectory(finalTargetDirectory).flatMap(targedDirectoryVf ->
-                    buildable.create(project, properties, targedDirectoryVf, finalFileName))
+            createDirectory(finalTargetDirectory).flatMap(targetDirectoryVf ->
+                    templateWriter.create(project, properties, targetDirectoryVf, finalFileName))
                     .ifPresent(virtualFile -> {
                         if (openFile) FileEditorManager.getInstance(project).openFile(virtualFile, false);
             });

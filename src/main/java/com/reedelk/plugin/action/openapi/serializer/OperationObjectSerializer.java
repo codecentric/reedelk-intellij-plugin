@@ -42,16 +42,17 @@ public class OperationObjectSerializer extends com.reedelk.openapi.v3.serializer
         //  }
         //]
         List<Map<String, SecurityRequirementObject>> security = input.getSecurity();
-        List<Map<String, Object>> mappedSecurity = security.stream().map(stringSecurityRequirementObjectMap -> {
-            Map<String, Object> securityRequirementObjectSerialized = new HashMap<>();
-            stringSecurityRequirementObjectMap.forEach((requirementName, securityRequirementObject) -> {
-                securityRequirementObjectSerialized.put(OpenApiConstants.PROPERTY_SECURITY_REQUIREMENT_NAME, requirementName);
-                securityRequirementObjectSerialized.put(OpenApiConstants.PROPERTY_SECURITY_REQUIREMENT_SCOPES, securityRequirementObject.getScopes());
-            });
-            return securityRequirementObjectSerialized;
-        }).collect(toList());
-
-        serialized.put(Properties.SECURITY.value(), mappedSecurity);
+        if (security != null && !security.isEmpty()) {
+            List<Map<String, Object>> mappedSecurity = security.stream().map(stringSecurityRequirementObjectMap -> {
+                Map<String, Object> securityRequirementObjectSerialized = new HashMap<>();
+                stringSecurityRequirementObjectMap.forEach((requirementName, securityRequirementObject) -> {
+                    securityRequirementObjectSerialized.put(OpenApiConstants.PROPERTY_SECURITY_REQUIREMENT_NAME, requirementName);
+                    securityRequirementObjectSerialized.put(OpenApiConstants.PROPERTY_SECURITY_REQUIREMENT_SCOPES, securityRequirementObject.getScopes());
+                });
+                return securityRequirementObjectSerialized;
+            }).collect(toList());
+            serialized.put(Properties.SECURITY.value(), mappedSecurity);
+        }
 
         return serialized;
     }

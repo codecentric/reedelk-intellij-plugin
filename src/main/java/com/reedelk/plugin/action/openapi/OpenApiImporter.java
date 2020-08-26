@@ -7,7 +7,7 @@ import com.reedelk.openapi.v3.model.ServerObject;
 import com.reedelk.plugin.action.openapi.handler.Handlers;
 import com.reedelk.plugin.action.openapi.reader.FileReader;
 import com.reedelk.plugin.action.openapi.reader.Readers;
-import com.reedelk.plugin.action.openapi.serializer.ConfigOpenApiObject;
+import com.reedelk.plugin.action.openapi.serializer.ConfigurationOpenApiObject;
 import com.reedelk.plugin.action.openapi.serializer.Serializer;
 import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.plugin.template.OpenAPIRESTListenerConfig;
@@ -26,9 +26,9 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 public class OpenApiImporter {
 
     private final OpenApiImporterContext context;
+    private int apiPort;
     private String host = DefaultConstants.OpenApi.LOCALHOST;
     private String apiBasePath;
-    private int apiPort;
     private String apiTitle = message("openapi.importer.config.default.file.title");
 
     public OpenApiImporter(@NotNull OpenApiImporterContext context) {
@@ -55,11 +55,11 @@ public class OpenApiImporter {
         extractLocalhostServerIfDefined(openApiObject.getServers());
 
         // Generate REST Listener configuration
-        ConfigOpenApiObject configOpenApiObject = new ConfigOpenApiObject(
+        ConfigurationOpenApiObject configurationOpenApiObject = new ConfigurationOpenApiObject(
                 openApiObject.getInfo(),
                 openApiObject.getServers(),
                 openApiObject.getComponents());
-        String configOpenApiObjectJson = Serializer.toJson(configOpenApiObject, context);
+        String configOpenApiObjectJson = Serializer.toJson(configurationOpenApiObject, context);
         String title = OpenApiUtils.restListenerConfigTitleFrom(openApiObject);
         String configFileName = OpenApiUtils.restListenerConfigFileNameFrom(openApiObject);
 

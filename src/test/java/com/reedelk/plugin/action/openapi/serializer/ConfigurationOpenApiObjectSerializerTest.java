@@ -13,14 +13,14 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class ConfigOpenApiObjectSerializerTest extends AbstractSerializerTest {
+class ConfigurationOpenApiObjectSerializerTest extends AbstractSerializerTest {
 
-    private ConfigOpenApiObjectSerializer serializer;
+    private ConfigurationOpenApiObjectSerializer serializer;
 
     @BeforeEach
     void setUp() {
         super.setUp();
-        serializer = new ConfigOpenApiObjectSerializer(context);
+        serializer = new ConfigurationOpenApiObjectSerializer(context);
     }
 
     @Test
@@ -48,12 +48,12 @@ class ConfigOpenApiObjectSerializerTest extends AbstractSerializerTest {
 
         ComponentsObject componentsObject = new ComponentsObject();
 
-        ConfigOpenApiObject configOpenApiObject =
-                new ConfigOpenApiObject(infoObject, singletonList(serverObject), componentsObject);
+        ConfigurationOpenApiObject configurationOpenApiObject =
+                new ConfigurationOpenApiObject(infoObject, singletonList(serverObject), componentsObject);
 
         // When
         Map<String, Object> serialize =
-                serializer.serialize(serializerContext, navigationPath, configOpenApiObject);
+                serializer.serialize(serializerContext, navigationPath, configurationOpenApiObject);
 
         // Then
         Map<String, Object> expectedInfoMap = new LinkedHashMap<>();
