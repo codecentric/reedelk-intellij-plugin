@@ -129,7 +129,7 @@ public class OpenApiImporterContext {
         Module module = targetImportModule();
         Optional<String> assetsDirectory = PluginModuleUtils.getAssetsDirectory(module);
         assetsDirectory.ifPresent(directory ->
-                createBuildable(ASSET, properties, fileName, directory, false));
+                writeTemplate(ASSET, properties, fileName, directory, false));
         return assetResource(fileName);
     }
 
@@ -137,21 +137,21 @@ public class OpenApiImporterContext {
         Module module = targetImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
-                createBuildable(FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
+                writeTemplate(FLOW_WITH_REST_LISTENER_AND_RESOURCE, properties, fileName, directory, true));
     }
 
     public void createRestListenerFlowWithPayload(String fileName, OpenApiRESTListenerWithPayloadSet properties) {
         Module module = targetImportModule();
         Optional<String> flowsDirectory = PluginModuleUtils.getFlowsDirectory(module);
         flowsDirectory.ifPresent(directory ->
-                createBuildable(FLOW_WITH_REST_LISTENER_AND_PAYLOAD_SET, properties, fileName, directory, true));
+                writeTemplate(FLOW_WITH_REST_LISTENER_AND_PAYLOAD_SET, properties, fileName, directory, true));
     }
 
     public void createRestListenerConfig(String configFileName, OpenApiRESTListenerConfigProperties properties) {
         Module module = targetImportModule();
         PluginModuleUtils.getConfigsDirectory(module)
                 .ifPresent(configsDirectory ->
-                        createBuildable(REST_LISTENER_CONFIG, properties, configFileName, configsDirectory, false));
+                        writeTemplate(REST_LISTENER_CONFIG, properties, configFileName, configsDirectory, false));
     }
 
     private String assetResource(String fileName) {
@@ -161,7 +161,7 @@ public class OpenApiImporterContext {
         return removeFrontSlashIfNeeded(assetResourcePath);
     }
 
-    private void createBuildable(TemplateWriter templateWriter, Properties properties, String finalFileName, String directory, boolean openFile) {
+    private void writeTemplate(TemplateWriter templateWriter, Properties properties, String finalFileName, String directory, boolean openFile) {
         WriteCommandAction.runWriteCommandAction(project, () -> {
             Path finalTargetDirectory = Paths.get(directory, this.targetDirectory);
             createDirectory(finalTargetDirectory).flatMap(targetDirectoryVf ->
