@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -103,7 +104,7 @@ class ComponentsObjectSerializerTest extends AbstractSerializerTest {
     @Test
     void shouldCorrectlySerializeComponentsExamples() {
         // Given
-        String example1SchemaAsset = "asset/Pet.yaml";
+        String example1SchemaAsset = "asset/BookingGetExample.example.json";
         String exampleId = "bookingGetExample";
 
         ExampleObject exampleObject = new ExampleObject();
@@ -118,17 +119,20 @@ class ComponentsObjectSerializerTest extends AbstractSerializerTest {
         // Make sure that it creates the resource asset for the schema.
         doReturn(example1SchemaAsset)
                 .when(context)
-                .createAsset(eq("BookingGetExample.example.yaml"), any(AssetProperties.class));
-
-        doReturn(DataFormat.YAML).when(context).getSchemaFormat();
+                .createAsset(eq("BookingGetExample.example.json"), any(AssetProperties.class));
 
         // When
         Map<String, Object> serialized = serializer.serialize(serializerContext, navigationPath, componentsObject);
 
         // Then
-        Map<String, Object> petSchemaMap = ImmutableMap.of("schema", example1SchemaAsset);
-        Map<String, Object> schemasMap = ImmutableMap.of(exampleId, petSchemaMap);
-        Map<String, Object> componentsMap = ImmutableMap.of("schemas", schemasMap);
+        Map<String, Object> exampleContent = new HashMap<>();
+        exampleContent.put("description", "My example description");
+        exampleContent.put("externalValue", "http://my.external.value");
+        exampleContent.put("summary", "My example");
+        exampleContent.put("value", "asset/BookingGetExample.example.json");
+
+        Map<String, Object> bookingGetExample = ImmutableMap.of(exampleId, exampleContent);
+        Map<String, Object> componentsMap = ImmutableMap.of("examples", bookingGetExample);
         assertThat(serialized).isEqualTo(componentsMap);
     }
 
