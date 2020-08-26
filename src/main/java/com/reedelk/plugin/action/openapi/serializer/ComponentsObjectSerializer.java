@@ -28,6 +28,9 @@ class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.Compo
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ComponentsObject componentsObject) {
         Map<String, Object> serialized = super.serialize(serializerContext, navigationPath, componentsObject);
+
+        // We must remove the properties already added by the default serializer which will be overridden.
+        // The REST Listener does not serialize request bodies in the components.
         serialized.remove(REQUEST_BODIES.value());
         serialized.remove(SCHEMAS.value());
 
@@ -65,34 +68,38 @@ class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.Compo
         if (!schemasMap.isEmpty()) set(serialized, SCHEMAS.value(), schemasMap);
 
         // We need to create the assets for all the examples
-        Map<String, Object> examplesMap = new LinkedHashMap<>();
+
         Map<String, ExampleObject> examples = componentsObject.getExamples();
-        examples.forEach((exampleId, exampleObject) -> {
-            // Create Asset
-            String data = exampleObject.getValue();
-            OpenApiExampleFormat exampleFormat = context.exampleFormatOf(data);
 
-            AssetProperties properties = new AssetProperties(data);
+        if (examples != null && !examples.isEmpty()) {
+            Map<String, Object> examplesMap = new LinkedHashMap<>();
+            examples.forEach((exampleId, exampleObject) -> {
+                // Create Asset
+                String data = exampleObject.getValue();
+                OpenApiExampleFormat exampleFormat = context.exampleFormatOf(data);
 
-            NavigationPath currentNavigationPath = navigationPath
-                    .with(NavigationPath.SegmentKey.EXAMPLES)
-                    .with(NavigationPath.SegmentKey.EXAMPLE_ID, exampleId);
-            String finalFileName = OpenApiUtils.exampleFileNameFrom(currentNavigationPath, exampleFormat);
+                AssetProperties properties = new AssetProperties(data);
 
-            String exampleAssetPath = context.createAsset(finalFileName, properties);
+                NavigationPath currentNavigationPath = navigationPath
+                        .with(NavigationPath.SegmentKey.EXAMPLES)
+                        .with(NavigationPath.SegmentKey.EXAMPLE_ID, exampleId);
+                String finalFileName = OpenApiUtils.exampleFileNameFrom(currentNavigationPath, exampleFormat);
 
-            // Register Asset Path
-            context.registerAssetPath(exampleId, exampleAssetPath);
+                String exampleAssetPath = context.createAsset(finalFileName, properties);
 
-            Map<String, Object> exampleMap = new LinkedHashMap<>();
-            exampleMap.put(PROPERTY_EXAMPLE_SUMMARY, exampleObject.getSummary());
-            exampleMap.put(PROPERTY_EXAMPLE_DESCRIPTION, exampleObject.getDescription());
-            exampleMap.put(PROPERTY_EXAMPLE_EXTERNAL_VALUE, exampleObject.getExternalValue());
-            exampleMap.put(PROPERTY_EXAMPLE_VALUE, exampleAssetPath);
-            examplesMap.put(exampleId, exampleMap);
+                // Register Asset Path
+                context.registerAssetPath(exampleId, exampleAssetPath);
 
-        });
-        serialized.put(ComponentsObject.Properties.EXAMPLES.value(), examplesMap);
+                Map<String, Object> exampleMap = new LinkedHashMap<>();
+                exampleMap.put(PROPERTY_EXAMPLE_SUMMARY, exampleObject.getSummary());
+                exampleMap.put(PROPERTY_EXAMPLE_DESCRIPTION, exampleObject.getDescription());
+                exampleMap.put(PROPERTY_EXAMPLE_EXTERNAL_VALUE, exampleObject.getExternalValue());
+                exampleMap.put(PROPERTY_EXAMPLE_VALUE, exampleAssetPath);
+                examplesMap.put(exampleId, exampleMap);
+
+            });
+            serialized.put(ComponentsObject.Properties.EXAMPLES.value(), examplesMap);
+        }
 
         return serialized;
     }

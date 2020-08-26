@@ -56,7 +56,7 @@ class ComponentsObjectSerializerTest extends AbstractSerializerTest {
         // Make sure that it creates the resource asset for the schema.
         doReturn(petSchemaAsset)
                 .when(context)
-                .createAsset(eq("Pet.yaml"), any(AssetProperties.class));
+                .createAsset(eq("Pet.schema.yaml"), any(AssetProperties.class));
 
         doReturn(DataFormat.YAML).when(context).getSchemaFormat();
 

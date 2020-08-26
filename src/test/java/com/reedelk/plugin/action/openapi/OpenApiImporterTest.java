@@ -85,7 +85,7 @@ class OpenApiImporterTest {
         int listenerPort = importer.findListenerPort(openApiObject);
 
         // Then
-        assertThat(listenerPort).isEqualTo(8484);
+        assertThat(listenerPort).isEqualTo(8080);
     }
 
     @Test
@@ -100,7 +100,7 @@ class OpenApiImporterTest {
         int listenerPort = importer.findListenerPort(openApiObject);
 
         // Then
-        assertThat(listenerPort).isEqualTo(8484);
+        assertThat(listenerPort).isEqualTo(8080);
     }
 
     @Test
