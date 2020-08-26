@@ -10,7 +10,7 @@ import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.template.DockerfileProperties;
 import com.reedelk.plugin.template.FlowOrSubFlowFileProperties;
-import com.reedelk.plugin.template.RESTListenerConfig;
+import com.reedelk.plugin.template.RESTListenerConfigProperties;
 import com.reedelk.plugin.template.Template;
 import com.reedelk.plugin.template.Template.HelloWorld;
 
@@ -48,7 +48,7 @@ class DefaultProjectBuilderHelper {
             // Config
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Config.RESOURCE_DIRECTORY).ifPresent(configDirectory -> {
                 String title = ReedelkBundle.message("hello.world.sample.config.title");
-                RESTListenerConfig properties = new RESTListenerConfig();
+                RESTListenerConfigProperties properties = new RESTListenerConfigProperties();
                 properties.setId(configId);
                 properties.setTitle(title);
                 properties.setHost(DefaultConstants.Template.DEFAULT_HOST);
