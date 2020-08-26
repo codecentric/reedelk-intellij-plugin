@@ -3,6 +3,7 @@ package com.reedelk.plugin.action.openapi.serializer;
 import com.reedelk.openapi.commons.NavigationPath;
 import com.reedelk.openapi.v3.SerializerContext;
 import com.reedelk.openapi.v3.model.Example;
+import com.reedelk.openapi.v3.model.ExampleObject;
 import com.reedelk.openapi.v3.model.MediaTypeObject;
 import com.reedelk.openapi.v3.model.Schema;
 import com.reedelk.plugin.action.openapi.OpenApiExampleFormat;
@@ -49,10 +50,11 @@ class MediaTypeObjectSerializer extends AbstractSerializer<MediaTypeObject> {
         }
 
         // Examples
-        if (mediaTypeObject.getExamples() != null && !mediaTypeObject.getExamples().isEmpty()) {
+        Map<String, ExampleObject> examples = mediaTypeObject.getExamples();
+        if (OpenApiUtils.isNotEmpty(examples)) {
             NavigationPath currentNavigationPath = navigationPath.with(EXAMPLES);
             Map<String,Object> serializedExamples = new LinkedHashMap<>();
-            mediaTypeObject.getExamples().forEach((exampleId, exampleObject) -> {
+            examples.forEach((exampleId, exampleObject) -> {
                 Map<String, Object> serializedExample = serializerContext.serialize(currentNavigationPath.with(EXAMPLE_ID, exampleId), exampleObject);
                 serializedExamples.put(exampleId, serializedExample);
             });
