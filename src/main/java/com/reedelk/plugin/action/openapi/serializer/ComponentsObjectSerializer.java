@@ -11,7 +11,8 @@ import com.reedelk.plugin.template.AssetProperties;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.*;
+import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.EXAMPLES;
+import static com.reedelk.openapi.v3.model.ComponentsObject.Properties.SCHEMAS;
 import static com.reedelk.openapi.v3.model.SchemaObject.Properties;
 import static com.reedelk.plugin.action.openapi.OpenApiConstants.*;
 import static com.reedelk.plugin.action.openapi.OpenApiUtils.*;
@@ -26,12 +27,7 @@ class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.Compo
 
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ComponentsObject componentsObject) {
-        Map<String, Object> serialized = super.serialize(serializerContext, navigationPath, componentsObject);
-
-        // We must remove the properties already added by the default serializer which will be overridden.
-        // The REST Listener does not serialize request bodies in the components.
-        serialized.remove(REQUEST_BODIES.value());
-        serialized.remove(SCHEMAS.value());
+        Map<String, Object> serialized = new LinkedHashMap<>();
 
         // Request bodies are not serialized here.
         Map<String, RequestBodyObject> requestBodies = componentsObject.getRequestBodies();
@@ -39,14 +35,16 @@ class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.Compo
 
         // Schemas
         Map<String, SchemaObject> schemas = componentsObject.getSchemas();
-        if (isNotEmpty(schemas)) {
-            serializeSchemas(serialized, schemas);
-        }
+        if (isNotEmpty(schemas)) serializeSchemas(serialized, schemas);
 
         // Examples
         Map<String, ExampleObject> examples = componentsObject.getExamples();
-        if (isNotEmpty(examples)) {
-            serializeExamples(navigationPath, serialized, examples);
+        if (isNotEmpty(examples)) serializeExamples(navigationPath, serialized, examples);
+
+        // Security schemes
+        Map<String, SecuritySchemeObject> securitySchemesMap = componentsObject.getSecuritySchemes();
+        if (isNotEmpty(securitySchemesMap)) {
+            super.serializeSecuritySchemas(serializerContext, navigationPath, serialized, securitySchemesMap);
         }
 
         return serialized;
@@ -58,24 +56,23 @@ class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.Compo
             // Create schema schemaObject.getSchema().getSchemaData()
             // For each schema we must create a file and assign an ID.
             Schema schema = schemaObject.getSchema();
-            if (schema.getSchemaData() != null) {
+            if (schema.getSchemaData() == null) return;
 
-                // Create Asset
-                DataFormat schemaFormat = context.getSchemaFormat();
-                String finalFileName = schemaFileNameFrom(schemaId, context);
+            // Create Asset
+            DataFormat schemaFormat = context.getSchemaFormat();
+            String finalFileName = schemaFileNameFrom(schemaId, context);
 
-                String data = schemaFormat.dump(schemaObject.getSchema().getSchemaData());
-                AssetProperties properties = new AssetProperties(data);
-                String schemaAssetPath = context.createAsset(finalFileName, properties);
+            String data = schemaFormat.dump(schemaObject.getSchema().getSchemaData());
+            AssetProperties properties = new AssetProperties(data);
+            String schemaAssetPath = context.createAsset(finalFileName, properties);
 
-                // Register Asset Path
-                context.registerAssetPath(schemaId, schemaAssetPath);
+            // Register Asset Path
+            context.registerAssetPath(schemaId, schemaAssetPath);
 
-                // Put an entry "schema": "assets/my-schema.json"
-                Map<String, Object> schemaMap = new LinkedHashMap<>();
-                schemaMap.put(Properties.SCHEMA.value(), schemaAssetPath);
-                schemasMap.put(schemaId, schemaMap);
-            }
+            // Put an entry "schema": "assets/my-schema.json"
+            Map<String, Object> schemaMap = new LinkedHashMap<>();
+            schemaMap.put(Properties.SCHEMA.value(), schemaAssetPath);
+            schemasMap.put(schemaId, schemaMap);
         });
         set(serialized, SCHEMAS.value(), schemasMap);
     }
@@ -85,6 +82,8 @@ class ComponentsObjectSerializer extends com.reedelk.openapi.v3.serializer.Compo
         examples.forEach((exampleId, exampleObject) -> {
             // Create Asset
             String data = exampleObject.getValue();
+            if (data == null) return;
+
             OpenApiExampleFormat exampleFormat = context.exampleFormatOf(data);
 
             NavigationPath currentNavigationPath = navigationPath
