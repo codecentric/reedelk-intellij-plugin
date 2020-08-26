@@ -40,7 +40,7 @@ class ConfigurationOpenApiObjectSerializer extends AbstractSerializer<Configurat
         ComponentsObject components = configurationOpenApiObject.getComponents();
         if (components != null) {
             Map<String, Object> serializedComponents = serializerContext.serialize(navigationPath, components);
-            set(serialized, COMPONENTS.value(), serializedComponents);
+            if (isNotEmpty(serializedComponents)) set(serialized, COMPONENTS.value(), serializedComponents);
         }
 
         return serialized;
