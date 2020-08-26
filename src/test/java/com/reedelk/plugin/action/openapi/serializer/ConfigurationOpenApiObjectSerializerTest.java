@@ -71,8 +71,7 @@ class ConfigurationOpenApiObjectSerializerTest extends AbstractSerializerTest {
         Map<String, Object> expectedMap = ImmutableMap.of(
                 "info", expectedInfoMap,
                 "servers", singletonList(ImmutableMap.of(
-                        "url", "http://{host}", "description", "My server object", "variables", variablesMap)),
-                "components", ImmutableMap.of());
+                        "url", "http://{host}", "description", "My server object", "variables", variablesMap)));
 
         assertThat(serialize).isEqualTo(expectedMap);
     }
