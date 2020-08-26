@@ -12,7 +12,8 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>bugfix: OpenAPI import did not correctly handel server url with 'http://localhost' without base path.</li>
+	        <li>bugfix: OpenAPI import tool did not import correctly API when server url 'http://localhost'.</li>
+	        <li>feature: OpenAPI import tool: support for 'examples' tag and security object.</li>
         </ul>
       ]]>
     </change-notes>
