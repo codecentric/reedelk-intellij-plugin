@@ -34,7 +34,7 @@ public class ExampleObjectSerializer extends AbstractSerializer<ExampleObject> {
 
             String exampleAssetPath = context.createAsset(finalFileName, properties);
 
-            // No Need to Register
+            // This is an inline schema because there is no reference.
 
             serialized.put(PROPERTY_EXAMPLE_INLINE, true);
             serialized.put(PROPERTY_EXAMPLE_SUMMARY, exampleObject.getSummary());

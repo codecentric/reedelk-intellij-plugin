@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -138,6 +139,14 @@ public class OpenApiUtils {
     public static String escapeNewLines(String value) {
         if (value == null) return value;
         return value.replaceAll("\n", "\\\\n");
+    }
+
+    public static boolean isNotEmpty(List<?> value) {
+        return value != null && !value.isEmpty();
+    }
+
+    public static boolean isNotEmpty(Map<?,?> value) {
+        return value != null && !value.isEmpty();
     }
 
     /**

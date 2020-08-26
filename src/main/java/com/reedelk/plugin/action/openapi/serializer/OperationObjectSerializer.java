@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.reedelk.openapi.v3.model.OperationObject.Properties;
+import static com.reedelk.plugin.action.openapi.OpenApiUtils.isNotEmpty;
 import static java.util.stream.Collectors.toList;
 
 public class OperationObjectSerializer extends com.reedelk.openapi.v3.serializer.OperationObjectSerializer {
@@ -42,7 +43,7 @@ public class OperationObjectSerializer extends com.reedelk.openapi.v3.serializer
         //  }
         //]
         List<Map<String, SecurityRequirementObject>> security = input.getSecurity();
-        if (security != null && !security.isEmpty()) {
+        if (isNotEmpty(security)) {
             List<Map<String, Object>> mappedSecurity = security.stream().map(stringSecurityRequirementObjectMap -> {
                 Map<String, Object> securityRequirementObjectSerialized = new HashMap<>();
                 stringSecurityRequirementObjectMap.forEach((requirementName, securityRequirementObject) -> {

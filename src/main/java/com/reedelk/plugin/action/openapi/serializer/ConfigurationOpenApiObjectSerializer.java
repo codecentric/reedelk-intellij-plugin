@@ -10,7 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.reedelk.openapi.v3.model.OpenApiObject.Properties;
+import static com.reedelk.openapi.v3.model.OpenApiObject.Properties.*;
+import static com.reedelk.plugin.action.openapi.OpenApiUtils.isNotEmpty;
 import static java.util.stream.Collectors.toList;
 
 class ConfigurationOpenApiObjectSerializer extends AbstractSerializer<ConfigurationOpenApiObject> {
@@ -21,27 +22,27 @@ class ConfigurationOpenApiObjectSerializer extends AbstractSerializer<Configurat
 
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ConfigurationOpenApiObject configurationOpenApiObject) {
-        Map<String, Object> map = new LinkedHashMap<>();
+        Map<String, Object> serialized = new LinkedHashMap<>();
 
         Map<String, Object> serializedInfo = serializerContext.serialize(navigationPath, configurationOpenApiObject.getInfo());
-        set(map, Properties.INFO.value(), serializedInfo); // REQUIRED
+        set(serialized, INFO.value(), serializedInfo); // REQUIRED
 
         List<ServerObject> servers = configurationOpenApiObject.getServers();
-        if (servers != null && !servers.isEmpty()) {
+        if (isNotEmpty(servers)) {
             List<Map<String, Object>> mappedServers = servers
                     .stream()
                     .map(serverObject ->
                             serializerContext.serialize(navigationPath, serverObject))
                     .collect(toList());
-            map.put(Properties.SERVERS.value(), mappedServers);
+            serialized.put(SERVERS.value(), mappedServers);
         }
 
         ComponentsObject components = configurationOpenApiObject.getComponents();
         if (components != null) {
             Map<String, Object> serializedComponents = serializerContext.serialize(navigationPath, components);
-            set(map, Properties.COMPONENTS.value(), serializedComponents);
+            set(serialized, COMPONENTS.value(), serializedComponents);
         }
 
-        return map;
+        return serialized;
     }
 }
