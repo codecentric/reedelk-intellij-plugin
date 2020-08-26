@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -47,6 +48,29 @@ class ExampleObjectSerializerTest extends AbstractSerializerTest {
         expectedHeaderMap.put("externalValue", "http://my.external.value");
         expectedHeaderMap.put("inlineExample", true);
         expectedHeaderMap.put("summary", "My summary");
+        expectedHeaderMap.put("value", "assets/MyExample.json");
+        assertThat(serialized).isEqualTo(expectedHeaderMap);
+    }
+
+    @Test
+    void shouldCorrectlySerializeExampleObjectWithReference() {
+        // Given
+        String $ref = "#/components/examples/bookingPutExample";
+        ExampleObject exampleObject = new ExampleObject();
+        exampleObject.setExampleRef($ref);
+
+        NavigationPath navigationPath = NavigationPath.create();
+
+        doReturn(Optional.of("assets/MyExample.json"))
+                .when(context)
+                .getAssetFrom($ref);
+
+        // When
+        Map<String, Object> serialized =
+                serializer.serialize(serializerContext, navigationPath, exampleObject);
+
+        // Then
+        Map<String, Object> expectedHeaderMap = new HashMap<>();
         expectedHeaderMap.put("value", "assets/MyExample.json");
         assertThat(serialized).isEqualTo(expectedHeaderMap);
     }
