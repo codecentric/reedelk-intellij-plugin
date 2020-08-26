@@ -98,6 +98,12 @@ public class OpenApiUtils {
         }
     }
 
+    public static String schemaFileNameFrom(String schemaId, OpenApiImporterContext context) {
+        return schemaId + "." +
+                NavigationPath.SegmentKey.SCHEMA.getKey() + "." +
+                context.getSchemaFormat().getExtension();
+    }
+
     @NotNull
     public static String parameterSchemaFileNameFrom(NavigationPath navigationPath, OpenApiImporterContext context) {
         StringBuilder fileName = baseOperationAwareFile(navigationPath);

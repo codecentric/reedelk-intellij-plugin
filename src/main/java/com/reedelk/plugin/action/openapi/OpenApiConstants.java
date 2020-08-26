@@ -17,6 +17,12 @@ public class OpenApiConstants {
     public static final String PROPERTY_DEFAULT_VALUE  = "defaultValue";
     public static final String PROPERTY_SECURITY_REQUIREMENT_NAME = "name";
     public static final String PROPERTY_SECURITY_REQUIREMENT_SCOPES = "scopes";
+    public static final String PROPERTY_EXAMPLE_INLINE = "inlineExample";
+    public static final String PROPERTY_EXAMPLE_SUMMARY = "summary";
+    public static final String PROPERTY_EXAMPLE_DESCRIPTION = "description";
+    public static final String PROPERTY_EXAMPLE_EXTERNAL_VALUE = "externalValue";
+    public static final String PROPERTY_EXAMPLE_VALUE = "value";
+
 
     // For a project resource the separator is the front slash '/' and not the OS
     // file separator which is OS dependent.

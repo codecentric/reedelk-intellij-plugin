@@ -7,10 +7,12 @@ import com.reedelk.plugin.action.openapi.OpenApiExampleFormat;
 import com.reedelk.plugin.action.openapi.OpenApiImporterContext;
 import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.plugin.template.AssetProperties;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.reedelk.plugin.action.openapi.OpenApiConstants.*;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class ExampleObjectSerializer extends AbstractSerializer<ExampleObject> {
 
@@ -21,7 +23,7 @@ public class ExampleObjectSerializer extends AbstractSerializer<ExampleObject> {
     @Override
     public Map<String, Object> serialize(SerializerContext serializerContext, NavigationPath navigationPath, ExampleObject exampleObject) {
         Map<String,Object> serialized = new LinkedHashMap<>();
-        if (StringUtils.isBlank(exampleObject.getExampleRef())) {
+        if (isBlank(exampleObject.getExampleRef())) {
 
             String data = exampleObject.getValue();
             OpenApiExampleFormat exampleFormat = context.exampleFormatOf(data);
@@ -34,11 +36,11 @@ public class ExampleObjectSerializer extends AbstractSerializer<ExampleObject> {
 
             // No Need to Register
 
-            serialized.put("inlineExample", true);
-            serialized.put("summary", exampleObject.getSummary());
-            serialized.put("description", exampleObject.getDescription());
-            serialized.put("externalValue", exampleObject.getExternalValue());
-            serialized.put("value", exampleAssetPath);
+            serialized.put(PROPERTY_EXAMPLE_INLINE, true);
+            serialized.put(PROPERTY_EXAMPLE_SUMMARY, exampleObject.getSummary());
+            serialized.put(PROPERTY_EXAMPLE_DESCRIPTION, exampleObject.getDescription());
+            serialized.put(PROPERTY_EXAMPLE_EXTERNAL_VALUE, exampleObject.getExternalValue());
+            serialized.put(PROPERTY_EXAMPLE_VALUE, exampleAssetPath);
 
         } else {
             context.getAssetFrom(exampleObject.getExampleRef())
