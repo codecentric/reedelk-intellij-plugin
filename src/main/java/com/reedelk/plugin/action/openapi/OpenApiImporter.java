@@ -161,12 +161,15 @@ public class OpenApiImporter {
         }
     }
 
-    // localhost:8282
-    // localhost
-    // http://localhost:8282
-    // http://localhost
-    // {scheme}://developer.uspto.gov/ds-api
-    // We just add the protocol in order to let the java.net object to correctly parse it.
+    /**
+     * We just add the protocol in order to let the java.net object to correctly parse it.
+     * Possible cases are:
+     * - localhost:8282
+     * - localhost
+     * - http://localhost:8282
+     * - http://localhost
+     * - {scheme}://developer.uspto.gov/ds-api
+     */
     @NotNull
     private String appendProtocolIfNotExists(ServerObject serverObject) {
         String serverUrl = serverObject.getUrl();
