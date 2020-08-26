@@ -136,6 +136,44 @@ class ComponentsObjectSerializerTest extends AbstractSerializerTest {
         assertThat(serialized).isEqualTo(componentsMap);
     }
 
+    @Test
+    void shouldCorrectlySerializeComponentsSecuritySchemes() {
+        // Given
+        String securitySchemeId = "petstore_auth";
+
+        SecuritySchemeObject securitySchemeObject = new SecuritySchemeObject();
+        securitySchemeObject.setType(SecurityType.http);
+        securitySchemeObject.setDescription("My description");
+        securitySchemeObject.setName("api_key");
+        securitySchemeObject.setIn(SecurityKeyLocation.header);
+        securitySchemeObject.setScheme("basic");
+        securitySchemeObject.setBearerFormat("JWT");
+        securitySchemeObject.setOpenIdConnectUrl("http://openid.connect.url/url");
+
+        Map<String, SecuritySchemeObject> securitySchemeObjectMap = new HashMap<>();
+        securitySchemeObjectMap.put(securitySchemeId, securitySchemeObject);
+
+        ComponentsObject componentsObject = new ComponentsObject();
+        componentsObject.setSecuritySchemes(securitySchemeObjectMap);
+
+        // When
+        Map<String, Object> serialized = serializer.serialize(serializerContext, navigationPath, componentsObject);
+
+        // Then
+        Map<String, Object> securityScheme = new HashMap<>();
+        securityScheme.put("type", "http");
+        securityScheme.put("description", "My description");
+        securityScheme.put("name", "api_key");
+        securityScheme.put("in", "header");
+        securityScheme.put("scheme", "basic");
+        securityScheme.put("bearerFormat", "JWT");
+        securityScheme.put("openIdConnectUrl", "http://openid.connect.url/url");
+
+        Map<String, Object> securitySchemes = ImmutableMap.of(securitySchemeId, securityScheme);
+        Map<String, Object> componentsMap = ImmutableMap.of("securitySchemes", securitySchemes);
+        assertThat(serialized).isEqualTo(componentsMap);
+    }
+
     private SchemaObject createSchemaObject(String schemaId, Map<String,Object> schemaDataMap) {
         SchemaObject petSchema = new SchemaObject();
         petSchema.setSchema(new Schema(schemaDataMap));
