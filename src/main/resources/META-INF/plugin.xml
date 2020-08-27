@@ -12,8 +12,7 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>bugfix: OpenAPI import tool did not import correctly API when server url 'http://localhost'.</li>
-	        <li>feature: OpenAPI import tool: support for 'examples' tag and security object.</li>
+	        <li>bugfix: properties input field values were not re-initialized when visibility status changed to true.</li>
         </ul>
       ]]>
     </change-notes>
