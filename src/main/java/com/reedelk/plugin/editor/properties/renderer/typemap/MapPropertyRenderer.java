@@ -29,7 +29,7 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor descriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
@@ -38,7 +38,7 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
         final MapDescriptor propertyType = descriptor.getType();
         final MapColumnAndModel columnAndModel = getColumnAndModel(module, propertyAccessor, propertyType, descriptor.getName(), context);
 
-        return ofNullable(propertyType.getTabGroup())
+        JComponent component = ofNullable(propertyType.getTabGroup())
                 // Tab group exists
                 .map((Function<String, JComponent>) tabGroupName -> {
                     JComponent content = new MapTableTabContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
@@ -50,6 +50,8 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
                 }).orElseGet(() ->
                         // No tab group
                         new MapTableContainer(module, columnAndModel.model, columnAndModel.columnModelFactory));
+
+        return RenderedComponent.create(component);
     }
 
     private MapColumnAndModel getColumnAndModel(@NotNull Module module,

@@ -8,13 +8,11 @@ import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 public abstract class AbstractDynamicPropertyTypeRenderer extends AbstractPropertyTypeRenderer {
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor propertyDescriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
@@ -27,7 +25,7 @@ public abstract class AbstractDynamicPropertyTypeRenderer extends AbstractProper
         DynamicValueField field =
                 new DynamicValueField(module, inputFieldAdapter, componentPropertyPath, context, initValue);
         field.addListener(propertyAccessor::set);
-        return field;
+        return RenderedComponent.create(field);
     }
 
     protected abstract DynamicValueInputFieldAdapter inputFieldAdapter(String hint);

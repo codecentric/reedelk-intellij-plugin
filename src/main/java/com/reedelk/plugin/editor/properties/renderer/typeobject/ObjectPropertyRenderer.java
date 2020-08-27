@@ -21,19 +21,20 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor descriptor,
                              @NotNull PropertyAccessor accessor,
                              @NotNull ContainerContext context) {
         ObjectDescriptor objectDescriptor = descriptor.getType();
-        return Shared.YES.equals(objectDescriptor.getShared()) ?
+        JComponent component = Shared.YES.equals(objectDescriptor.getShared()) ?
                 renderShareable(module, descriptor, accessor, context) :
                 renderInline(module, accessor, descriptor, context);
+        return RenderedComponent.create(component);
     }
 
     @Override
     public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
+                            @NotNull RenderedComponent rendered,
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
         ObjectDescriptor objectDescriptor = descriptor.getType();
@@ -43,7 +44,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
             super.addToParent(parent, rendered, descriptor, context);
         }
         // Add the component to the context
-        context.addComponent(new JComponentHolder(rendered));
+        context.addComponent(new JComponentHolder(rendered.component));
     }
 
     @NotNull
@@ -83,15 +84,15 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     private void addToParentInline(@NotNull JComponent parent,
-                                   @NotNull JComponent rendered,
+                                   @NotNull RenderedComponent rendered,
                                    @NotNull PropertyDescriptor descriptor,
                                    @NotNull ContainerContext context) {
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
-        WhenVisibilityApplier.on(descriptor.getWhens(), context, rendered);
+        WhenVisibilityApplier.on(descriptor, context, rendered);
 
         // Add the component to the parent container.
-        FormBuilder.get().addFullWidthAndHeight(rendered, parent);
+        FormBuilder.get().addFullWidthAndHeight(rendered.component, parent);
     }
 
     @NotNull

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.intellij.util.ui.JBUI.emptyInsets;
+import static com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer.RenderedComponent;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
@@ -96,7 +97,7 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
                 JComponent panel = new PropertiesPanelHolder(module, newContext, objectDataHolder, objectProperties);
                 // Apply visibility specified on this object property with @When annotations.
                 // Note that the visibility is computed using the *parent* context on this object panel holder.
-                WhenVisibilityApplier.on(propertyDescriptor.getWhens(), context, panel);
+                WhenVisibilityApplier.on(propertyDescriptor, context, RenderedComponent.create(panel));
                 return panel;
             };
 

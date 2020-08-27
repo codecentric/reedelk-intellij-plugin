@@ -22,7 +22,7 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor propertyDescriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
@@ -32,7 +32,8 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
         String propertyDisplayName = propertyDescriptor.getDisplayName();
         String componentPropertyPath = context.getPropertyPath(propertyName);
 
-        return ofNullable(propertyType.getTabGroup())
+        JComponent component = ofNullable(propertyType.getTabGroup())
+
                 .map((Function<String, JComponent>) tabGroupName -> {
                     // The table must fit into a Table Tab Group.
                     DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
@@ -49,5 +50,7 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
                     DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath, context);
                     return new MapTableContainer(module, tableModel, columnModelFactory);
                 });
+
+        return RenderedComponent.create(component);
     }
 }

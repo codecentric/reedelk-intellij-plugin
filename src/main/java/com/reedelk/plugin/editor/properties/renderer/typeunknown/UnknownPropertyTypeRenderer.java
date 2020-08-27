@@ -13,7 +13,7 @@ public class UnknownPropertyTypeRenderer implements PropertyTypeRenderer {
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor propertyDescriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
@@ -22,7 +22,7 @@ public class UnknownPropertyTypeRenderer implements PropertyTypeRenderer {
 
     @Override
     public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
+                            @NotNull RenderedComponent rendered,
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
         throw new UnsupportedOperationException();

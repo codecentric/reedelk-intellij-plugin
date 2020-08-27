@@ -7,16 +7,14 @@ import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 public class PasswordPropertyRenderer extends AbstractPropertyTypeRenderer {
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module, @NotNull PropertyDescriptor propertyDescriptor, @NotNull PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
+    public RenderedComponent render(@NotNull Module module, @NotNull PropertyDescriptor propertyDescriptor, @NotNull PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
         PasswordInputField field = new PasswordInputField();
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
-        return field;
+        return RenderedComponent.create(field, field::setValue);
     }
 }

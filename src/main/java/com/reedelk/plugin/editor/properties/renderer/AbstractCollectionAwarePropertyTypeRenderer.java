@@ -22,7 +22,7 @@ public abstract class AbstractCollectionAwarePropertyTypeRenderer extends Abstra
 
     @Override
     public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
+                            @NotNull RenderedComponent rendered,
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
 
@@ -40,12 +40,12 @@ public abstract class AbstractCollectionAwarePropertyTypeRenderer extends Abstra
 
             // Note that the rendered component is the tabbed pane to be added to the parent container.
             // For now we assume that its visibility is the same for all the tabs present in the tabbed pane.
-            WhenVisibilityApplier.on(descriptor.getWhens(), context, rendered);
+            WhenVisibilityApplier.on(descriptor, context, rendered);
 
             // Add the component to the parent container.
-            FormBuilder.get().addFullWidthAndHeight(rendered, parent);
+            FormBuilder.get().addFullWidthAndHeight(rendered.component, parent);
 
-            JComponentHolder holder = new JComponentHolder(rendered);
+            JComponentHolder holder = new JComponentHolder(rendered.component);
 
             // Add the component to the container context.
             Optional.ofNullable(propertyType.getTabGroup())
@@ -58,15 +58,15 @@ public abstract class AbstractCollectionAwarePropertyTypeRenderer extends Abstra
             propertyTitleLabel.setBorder(emptyTop(6));
 
             // Apply visibility conditions to the label and the rendered component
-            WhenVisibilityApplier.on(descriptor.getWhens(), context, rendered, propertyTitleLabel);
+            WhenVisibilityApplier.on(descriptor, context, rendered, RenderedComponent.create(propertyTitleLabel));
 
             // Add the component and its property title label to the parent container.
             FormBuilder.get()
                     .addLabelTop(propertyTitleLabel, parent)
-                    .addLastField(rendered, parent);
+                    .addLastField(rendered.component, parent);
 
             // Add the component to the context.
-            context.addComponent(new JComponentHolder(rendered));
+            context.addComponent(new JComponentHolder(rendered.component));
         }
     }
 

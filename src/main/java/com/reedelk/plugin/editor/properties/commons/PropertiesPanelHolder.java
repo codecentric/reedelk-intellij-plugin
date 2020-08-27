@@ -11,7 +11,6 @@ import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
@@ -68,7 +67,7 @@ public class PropertiesPanelHolder extends DisposablePanel {
 
             PropertyAccessor propertyAccessor = context.propertyAccessorOf(propertyName, propertyType, dataHolder);
 
-            JComponent renderedComponent = renderer.render(module, descriptor, propertyAccessor, context);
+            PropertyTypeRenderer.RenderedComponent renderedComponent = renderer.render(module, descriptor, propertyAccessor, context);
 
             renderer.addToParent(this, renderedComponent, descriptor, context);
 

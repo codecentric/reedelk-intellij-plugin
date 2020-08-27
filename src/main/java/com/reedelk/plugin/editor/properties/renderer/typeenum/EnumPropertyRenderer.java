@@ -19,7 +19,7 @@ public class EnumPropertyRenderer extends AbstractPropertyTypeRenderer {
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor propertyDescriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
@@ -39,6 +39,6 @@ public class EnumPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         JPanel dropDownContainer = new DisposablePanel(new BorderLayout());
         dropDownContainer.add(dropDown, WEST);
-        return dropDownContainer;
+        return RenderedComponent.create(dropDownContainer, dropDown::setValue);
     }
 }

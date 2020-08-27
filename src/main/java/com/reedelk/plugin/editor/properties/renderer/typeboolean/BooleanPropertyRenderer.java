@@ -16,7 +16,7 @@ public class BooleanPropertyRenderer extends AbstractPropertyTypeRenderer {
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor descriptor,
                              @NotNull PropertyAccessor accessor,
                              @NotNull ContainerContext context) {
@@ -33,24 +33,28 @@ public class BooleanPropertyRenderer extends AbstractPropertyTypeRenderer {
         container.setLayout(flowLayout);
         container.add(checkbox);
         container.add(propertyTitleLabel);
-        return container;
+
+        return RenderedComponent.create(container, value -> {
+            boolean isSelected = value == null ? Boolean.FALSE : (boolean) value;
+            checkbox.setSelected(isSelected);
+        });
     }
 
     @Override
     public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
+                            @NotNull RenderedComponent rendered,
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
 
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
-        WhenVisibilityApplier.on(descriptor.getWhens(), context, rendered);
+        WhenVisibilityApplier.on(descriptor, context, rendered);
 
         // Add the component to the parent container.
-        FormBuilder.get().addFullWidthAndHeight(rendered, parent);
+        FormBuilder.get().addFullWidthAndHeight(rendered.component, parent);
 
         // Add the component to the context.
-        context.addComponent(new JComponentHolder(rendered));
+        context.addComponent(new JComponentHolder(rendered.component));
     }
 
     static class CheckboxPropertyTitle extends PropertyTitleLabel {

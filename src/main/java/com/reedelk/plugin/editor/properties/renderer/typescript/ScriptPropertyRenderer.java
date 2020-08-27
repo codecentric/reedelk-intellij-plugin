@@ -7,16 +7,15 @@ import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor propertyDescriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
-        return new ScriptInputField(module, propertyDescriptor, propertyAccessor, context);
+        ScriptInputField inputField = new ScriptInputField(module, propertyDescriptor, propertyAccessor, context);
+        return RenderedComponent.create(inputField);
     }
 }

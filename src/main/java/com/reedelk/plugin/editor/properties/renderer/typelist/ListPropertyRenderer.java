@@ -30,7 +30,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module,
+    public RenderedComponent render(@NotNull Module module,
                              @NotNull PropertyDescriptor descriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
@@ -43,7 +43,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
                 createContent(descriptor, propertyAccessor);
 
         // No tab group
-        return ofNullable(propertyType.getTabGroup())
+        JComponent component = ofNullable(propertyType.getTabGroup())
                 // Tab group exists
                 .map((Function<String, JComponent>) tabGroupName -> {
                     final DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context);
@@ -53,6 +53,8 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
 
                     // No tab group
                 }).orElse(content);
+
+        return RenderedComponent.create(component);
     }
 
     @NotNull
