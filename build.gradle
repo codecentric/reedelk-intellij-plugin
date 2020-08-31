@@ -22,9 +22,9 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20190722'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.0'
 
-    compile group: 'com.reedelk', name: 'runtime-api', version: '1.0.3-SNAPSHOT'
-    compile group: 'com.reedelk', name: 'runtime-commons', version: '1.0.3-SNAPSHOT'
-    compile group: 'com.reedelk', name: 'module-descriptor', version: '1.0.3-SNAPSHOT'
+    compile group: 'com.reedelk', name: 'runtime-api', version: '1.0.4-SNAPSHOT'
+    compile group: 'com.reedelk', name: 'runtime-commons', version: '1.0.4-SNAPSHOT'
+    compile group: 'com.reedelk', name: 'module-descriptor', version: '1.0.4-SNAPSHOT'
     compile group: 'com.reedelk', name: 'reedelk-openapi', version: '1.0.4-SNAPSHOT'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'

@@ -13,6 +13,7 @@
     <change-notes><![CDATA[
 	    <ul>
 	        <li>bugfix: properties input field values were not re-initialized when visibility status changed to true.</li>
+	        <li>bugfix: Sync and Async Reedelk processor templates did not use correctly Configuration precondition.</li>
         </ul>
       ]]>
     </change-notes>

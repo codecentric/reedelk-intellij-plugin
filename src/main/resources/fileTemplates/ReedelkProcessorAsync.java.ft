@@ -29,7 +29,7 @@ public class ${NAME} implements ProcessorAsync {
 
     @Override
     public void initialize() {
-        Configuration.requireNotBlank(${NAME}.class, "myProperty", "My property must not be empty");
+        Configuration.requireNotBlank(${NAME}.class, myProperty, "My property must not be empty");
     }
 
     @Override
