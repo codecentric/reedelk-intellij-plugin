@@ -27,7 +27,7 @@ public class ${NAME} implements ProcessorSync {
 
     @Override
     public void initialize() {
-        Configuration.requireNotBlank(${NAME}.class, "myProperty", "My property must not be empty");
+        Configuration.requireNotBlank(${NAME}.class, myProperty, "My property must not be empty");
     }
 
     @Override
