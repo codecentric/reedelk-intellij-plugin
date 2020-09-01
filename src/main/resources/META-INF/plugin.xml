@@ -14,6 +14,7 @@
 	    <ul>
 	        <li>bugfix: properties input field values were not re-initialized when visibility status changed to true.</li>
 	        <li>bugfix: Sync and Async Reedelk processor templates did not use correctly Configuration precondition.</li>
+	        <li>bugfix: OpenAPI import tool did not escape correctly single quotes for example message payload.</li>
         </ul>
       ]]>
     </change-notes>
