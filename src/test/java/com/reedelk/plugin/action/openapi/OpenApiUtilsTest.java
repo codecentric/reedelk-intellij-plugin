@@ -457,6 +457,6 @@ class OpenApiUtilsTest {
         String actual = OpenApiUtils.escapeSingleQuotes(given);
 
         // Then
-        assertThat(actual).isEqualTo("Returns all resources for \\'vehicle\\' data");
+        assertThat(actual).isEqualTo("Returns all resources for \\\\\\'vehicle\\\\\\' data");
     }
 }

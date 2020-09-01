@@ -143,7 +143,7 @@ public class OpenApiUtils {
 
     public static String escapeSingleQuotes(String value) {
         if (value == null) return value;
-        return value.replaceAll("'", "\\\\'");
+        return value.replaceAll("'", "\\\\\\\\\\\\'");
     }
 
     public static boolean isNotEmpty(List<?> value) {
