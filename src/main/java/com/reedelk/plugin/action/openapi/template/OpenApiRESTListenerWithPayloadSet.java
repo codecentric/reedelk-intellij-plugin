@@ -1,5 +1,6 @@
 package com.reedelk.plugin.action.openapi.template;
 
+import com.reedelk.plugin.action.openapi.OpenApiUtils;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import com.reedelk.runtime.api.message.content.MimeType;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,8 @@ public class OpenApiRESTListenerWithPayloadSet extends Properties {
 
     private String getResponseExampleFrom(MimeType mimeType, String flowTitle) {
         if (MimeType.APPLICATION_JSON.equals(mimeType) || MimeType.TEXT_JSON.equals(mimeType)) {
-            return String.format(jsonTemplate, flowTitle);
+            String data = OpenApiUtils.escapeSingleQuotes(flowTitle);
+            return String.format(jsonTemplate, data);
         } else if (MimeType.APPLICATION_XML.equals(mimeType) || MimeType.TEXT_XML.equals(mimeType)) {
             return String.format(xmlTemplate, flowTitle);
         } else {

@@ -447,4 +447,16 @@ class OpenApiUtilsTest {
         // Then
         assertThat(actual).isEqualTo("My Api");
     }
+
+    @Test
+    void shouldCorrectlyEscapeSingleQuotes() {
+        // Given
+        String given = "Returns all resources for 'vehicle' data";
+
+        // When
+        String actual = OpenApiUtils.escapeSingleQuotes(given);
+
+        // Then
+        assertThat(actual).isEqualTo("Returns all resources for \\'vehicle\\' data");
+    }
 }
