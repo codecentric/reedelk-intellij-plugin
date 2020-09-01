@@ -14,7 +14,6 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url "http://repository.reedelk.com/snapshot/" }
     maven { url "http://repository.reedelk.com/release/" }
 }
 
