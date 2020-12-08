@@ -12,9 +12,9 @@ import com.reedelk.plugin.runconfig.runtime.parameter.ParameterStrategyBuilder;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -51,7 +51,10 @@ public class RuntimeRunCommandLine extends JavaCommandLineState {
                 NameConvention.RUNTIME_JAR_FILE_PREFIX + "." + FileExtension.JAR.value());
 
         javaParams.setJdk(sdk);
-        javaParams.getClassPath().add(libsPath.toString() + File.separator +  "*");
+
+        Optional.ofNullable(libsPath.toFile().listFiles((dir, name) -> FileExtension.JAR.is(name)))
+                .ifPresent(files -> javaParams.getClassPath().addAllFiles(files));
+
         javaParams.getClassPath().add(runtimePath.toString());
         javaParams.setMainClass(NameConvention.RUNTIME_LAUNCHER_CLASS);
         return javaParams;

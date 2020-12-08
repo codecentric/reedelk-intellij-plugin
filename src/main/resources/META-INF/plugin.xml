@@ -12,9 +12,7 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>bugfix: properties input field values were not re-initialized when visibility status changed to true.</li>
-	        <li>bugfix: Sync and Async Reedelk processor templates did not use correctly Configuration precondition.</li>
-	        <li>bugfix: OpenAPI import tool did not escape correctly single quotes for example message payload.</li>
+	        <li>bugfix: classpath not computed correctly with '*' on Windows systems.</li>
         </ul>
       ]]>
     </change-notes>
