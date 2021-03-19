@@ -4,7 +4,7 @@
   "description": "${description}",
   "flow": [
     {
-      "implementor": "com.reedelk.rest.component.RESTListener",
+      "implementor": "de.codecentric.reedelk.rest.component.RESTListener",
       "description": "${restDescription}",
       "configuration": {"ref": "${restConfigId}"},
       "path": "${restPath}",
@@ -21,7 +21,7 @@
       "openApi": ${openApiOperationObject}
     },
     {
-      "implementor": "com.reedelk.core.component.ResourceReadText",
+      "implementor": "de.codecentric.reedelk.core.component.ResourceReadText",
       "description": "Example",
       "resourceFile": "${exampleResourceFile}",
       "mimeType": "${exampleMimeType}"

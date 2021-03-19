@@ -1,11 +1,11 @@
 #if (${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
 
-import com.reedelk.runtime.api.annotation.*;
-import com.reedelk.runtime.api.component.AbstractInbound;
-import com.reedelk.runtime.api.message.Message;
-import com.reedelk.runtime.api.message.MessageAttributes;
-import com.reedelk.runtime.api.message.MessageBuilder;
-import com.reedelk.runtime.api.message.content.MimeType;
+import de.codecentric.reedelk.runtime.api.annotation.*;
+import de.codecentric.reedelk.runtime.api.component.AbstractInbound;
+import de.codecentric.reedelk.runtime.api.message.Message;
+import de.codecentric.reedelk.runtime.api.message.MessageAttributes;
+import de.codecentric.reedelk.runtime.api.message.MessageBuilder;
+import de.codecentric.reedelk.runtime.api.message.content.MimeType;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.Timer;

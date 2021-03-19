@@ -1,0 +1,16 @@
+{
+  "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode1",
+  "integerProperty": 234923,
+  "integerObjectProperty": 998829743,
+  "longProperty": 913281,
+  "longObjectProperty": 55663,
+  "floatProperty": 123.234,
+  "floatObjectProperty": 7843.12,
+  "doubleProperty": 234.234,
+  "doubleObjectProperty": 11.88877,
+  "booleanProperty": true,
+  "booleanObjectProperty": true,
+  "stringProperty": "my text sample",
+  "bigIntegerProperty": 88923423423,
+  "bigDecimalProperty": 1.001
+}

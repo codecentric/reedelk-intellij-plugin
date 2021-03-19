@@ -42,12 +42,6 @@
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
-            <artifactId>module-google-drive-v3</artifactId>
-            <version>${reedelk.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.reedelk</groupId>
             <artifactId>module-csv</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>

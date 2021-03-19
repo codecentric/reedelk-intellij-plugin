@@ -1,0 +1,39 @@
+{
+  "id": "d7f8160c-db7f-405c-bc38-bd2e3c57b692",
+  "flow": [
+    {
+      "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode1"
+    },
+    {
+      "implementor": "de.codecentric.reedelk.runtime.component.Router",
+      "when": [
+        {
+          "condition": "otherwise",
+          "next": [
+            {
+              "implementor": "de.codecentric.reedelk.runtime.component.FlowReference",
+              "ref": "dee1d69e-e749-4cd5-9134-8f8615be1d40"
+            },
+            {
+              "implementor": "de.codecentric.reedelk.runtime.component.Router",
+              "when": [
+                {
+                  "condition": "otherwise",
+                  "next": [
+                    {
+                      "implementor": "de.codecentric.reedelk.runtime.component.FlowReference",
+                      "ref": "e2a81295-c2eb-48b2-a2b1-6b1e740cdd24"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode2"
+    }
+  ]
+}

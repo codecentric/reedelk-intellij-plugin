@@ -4,7 +4,7 @@
   "description": "${description}",
   "flow": [
     {
-      "implementor": "com.reedelk.rest.component.RESTListener",
+      "implementor": "de.codecentric.reedelk.rest.component.RESTListener",
       "description": "POST Hello World REST Listener",
       "configuration": {"ref": "${configId}"},
       "path": "/message",
@@ -24,7 +24,7 @@
       }}}
     },
     {
-      "implementor": "com.reedelk.core.component.PayloadSet",
+      "implementor": "de.codecentric.reedelk.core.component.PayloadSet",
       "description": "Prefix 'Hello World' to POST data",
       "mimeType": "text/plain",
       "payload": "#['Hello World ' + message.payload()]"

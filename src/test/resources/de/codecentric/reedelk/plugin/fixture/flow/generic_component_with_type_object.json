@@ -1,0 +1,8 @@
+{
+  "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode1",
+  "stringProperty": "yet another string property",
+  "typeObjectProperty": {
+    "stringProperty": "sample string property",
+    "integerObjectProperty": 255
+  }
+}

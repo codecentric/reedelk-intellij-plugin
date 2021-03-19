@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.reedelk.plugin</id>
     <name>Reedelk IntelliJ flow designer</name>
-    <vendor email="info@reedelk.com" url="https://www.reedelk.com">Reedelk</vendor>
+    <vendor email="reedelk@codecentric.de" url="https://www.codecentric.de">codecentric AG</vendor>
 
     <description>
         <![CDATA[
@@ -24,78 +24,78 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <!-- File Type -->
-        <fileType name="REEDELK_FILE_TYPE_FLOW" extensions="flow" language="JSON" implementationClass="com.reedelk.plugin.filetype.FlowFileType" />
-        <fileType name="REEDELK_FILE_TYPE_SUBFLOW" extensions="subflow" language="JSON" implementationClass="com.reedelk.plugin.filetype.SubFlowFileType" />
-        <fileType name="REEDELK_FILE_TYPE_CONFIG" extensions="fconfig" language="JSON" implementationClass="com.reedelk.plugin.filetype.FlowConfigFileType" />
+        <fileType name="REEDELK_FILE_TYPE_FLOW" extensions="flow" language="JSON" implementationClass="de.codecentric.reedelk.plugin.filetype.FlowFileType" />
+        <fileType name="REEDELK_FILE_TYPE_SUBFLOW" extensions="subflow" language="JSON" implementationClass="de.codecentric.reedelk.plugin.filetype.SubFlowFileType" />
+        <fileType name="REEDELK_FILE_TYPE_CONFIG" extensions="fconfig" language="JSON" implementationClass="de.codecentric.reedelk.plugin.filetype.FlowConfigFileType" />
 
         <!-- File Editor -->
-        <fileEditorProvider implementation="com.reedelk.plugin.editor.FlowDesignerEditorProvider" order="first"/>
-        <fileEditorProvider implementation="com.reedelk.plugin.editor.SubFlowDesignerEditorProvider" order="first"/>
+        <fileEditorProvider implementation="de.codecentric.reedelk.plugin.editor.FlowDesignerEditorProvider" order="first"/>
+        <fileEditorProvider implementation="de.codecentric.reedelk.plugin.editor.SubFlowDesignerEditorProvider" order="first"/>
 
-        <stepsBeforeRunProvider implementation="com.reedelk.plugin.runconfig.module.beforetask.ModuleBuilderBeforeTaskProvider"/>
+        <stepsBeforeRunProvider implementation="de.codecentric.reedelk.plugin.runconfig.module.beforetask.ModuleBuilderBeforeTaskProvider"/>
 
         <!-- Module Builder -->
-        <moduleBuilder builderClass="com.reedelk.plugin.builder.ModuleBuilder" id="REEDELK_MODULE_BUILDER" order="first"/>
+        <moduleBuilder builderClass="de.codecentric.reedelk.plugin.builder.ModuleBuilder" id="REEDELK_MODULE_BUILDER" order="first"/>
 
         <!-- Services -->
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.PlatformModuleService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.component.PlatformModuleServiceImpl"/>
+        <moduleService serviceInterface="de.codecentric.reedelk.plugin.service.module.PlatformModuleService"
+                       serviceImplementation="de.codecentric.reedelk.plugin.service.module.impl.component.PlatformModuleServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.SubflowService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.subflow.SubflowServiceImpl"/>
+        <moduleService serviceInterface="de.codecentric.reedelk.plugin.service.module.SubflowService"
+                       serviceImplementation="de.codecentric.reedelk.plugin.service.module.impl.subflow.SubflowServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ConfigurationService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl"/>
+        <moduleService serviceInterface="de.codecentric.reedelk.plugin.service.module.ConfigurationService"
+                       serviceImplementation="de.codecentric.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.script.ScriptServiceImpl"/>
+        <moduleService serviceInterface="de.codecentric.reedelk.plugin.service.module.ScriptService"
+                       serviceImplementation="de.codecentric.reedelk.plugin.service.module.impl.script.ScriptServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.RuntimeApiService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.runtimeapi.RuntimeApiServiceImpl"/>
+        <moduleService serviceInterface="de.codecentric.reedelk.plugin.service.module.RuntimeApiService"
+                       serviceImplementation="de.codecentric.reedelk.plugin.service.module.impl.runtimeapi.RuntimeApiServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.DependenciesSyncService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.syncdeps.DependenciesSyncServiceImpl"/>
+        <moduleService serviceInterface="de.codecentric.reedelk.plugin.service.module.DependenciesSyncService"
+                       serviceImplementation="de.codecentric.reedelk.plugin.service.module.impl.syncdeps.DependenciesSyncServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.CheckStateService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.checkstate.CheckStateServiceImpl"/>
+        <moduleService serviceInterface="de.codecentric.reedelk.plugin.service.module.CheckStateService"
+                       serviceImplementation="de.codecentric.reedelk.plugin.service.module.impl.checkstate.CheckStateServiceImpl"/>
 
         <!-- Program Runner and Executors -->
-        <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>
-        <executor implementation="com.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor"/>
-        <executor implementation="com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor"/>
+        <programRunner implementation="de.codecentric.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>
+        <executor implementation="de.codecentric.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor"/>
+        <executor implementation="de.codecentric.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor"/>
 
         <!-- Run Configurations -->
-        <configurationType implementation="com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationType"/>
-        <configurationType implementation="com.reedelk.plugin.runconfig.module.ModuleRunConfigurationType"/>
+        <configurationType implementation="de.codecentric.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationType"/>
+        <configurationType implementation="de.codecentric.reedelk.plugin.runconfig.module.ModuleRunConfigurationType"/>
 
         <!-- Palette and Component properties tool window -->
         <toolWindow id="com.reedelk.plugin.toolwindow.palette.components" anchor="right"
-                    factoryClass="com.reedelk.plugin.editor.palette.PaletteToolWindowFactory"/>
+                    factoryClass="de.codecentric.reedelk.plugin.editor.palette.PaletteToolWindowFactory"/>
 
         <toolWindow id="com.reedelk.plugin.toolwindow.palette.component.properties" anchor="bottom"
-                    factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
+                    factoryClass="de.codecentric.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
-        <fileType name="Reedelk" implementationClass="com.reedelk.plugin.language.ReedelkFileType"
+        <fileType name="Reedelk" implementationClass="de.codecentric.reedelk.plugin.language.ReedelkFileType"
                   fieldName="INSTANCE" language="reedelk" extensions="reedelk"/>
 
         <lang.syntaxHighlighterFactory language="reedelk"
-                                       implementationClass="com.reedelk.plugin.language.ReedelkSyntaxHighlighterFactory"/>
+                                       implementationClass="de.codecentric.reedelk.plugin.language.ReedelkSyntaxHighlighterFactory"/>
 
         <completion.contributor language="any"
-                                implementationClass="com.reedelk.plugin.completion.ScriptCompletionContributor"
+                                implementationClass="de.codecentric.reedelk.plugin.completion.ScriptCompletionContributor"
                                 order="first"/>
 
         <lang.parserDefinition language="reedelk"
-                               implementationClass="com.reedelk.plugin.language.ReedelkParserDefinition"/>
+                               implementationClass="de.codecentric.reedelk.plugin.language.ReedelkParserDefinition"/>
 
     </extensions>
 
     <actions>
-        <action id="Reedelk.CreateProjectFile" class="com.reedelk.plugin.action.CreateProjectFile">
+        <action id="Reedelk.CreateProjectFile" class="de.codecentric.reedelk.plugin.action.CreateProjectFile">
             <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
         </action>
-        <action id="com.reedelk.plugin.action.openapi.OpenApiActionImport"
-                class="com.reedelk.plugin.action.openapi.OpenApiActionImport"
+        <action id="de.codecentric.reedelk.plugin.action.openapi.OpenApiActionImport"
+                class="de.codecentric.reedelk.plugin.action.openapi.OpenApiActionImport"
                 text="Import Open API"
                 icon="/META-INF/pluginIcon-small.svg"
                 description="Import Open API and generate integration flow blueprint for rest based flows.">
@@ -105,12 +105,12 @@
 
     <project-components>
         <component>
-            <interface-class>com.reedelk.plugin.service.project.SourceChangeService</interface-class>
-            <implementation-class>com.reedelk.plugin.service.project.impl.sourcechange.SourceChangeServiceImpl</implementation-class>
+            <interface-class>de.codecentric.reedelk.plugin.service.project.SourceChangeService</interface-class>
+            <implementation-class>de.codecentric.reedelk.plugin.service.project.impl.sourcechange.SourceChangeServiceImpl</implementation-class>
         </component>
         <component>
-            <interface-class>com.reedelk.plugin.service.project.PreferredRunConfigurationService</interface-class>
-            <implementation-class>com.reedelk.plugin.service.project.impl.runconfiguration.PreferredRunConfigurationServiceImpl</implementation-class>
+            <interface-class>de.codecentric.reedelk.plugin.service.project.PreferredRunConfigurationService</interface-class>
+            <implementation-class>de.codecentric.reedelk.plugin.service.project.impl.runconfiguration.PreferredRunConfigurationServiceImpl</implementation-class>
         </component>
     </project-components>
 

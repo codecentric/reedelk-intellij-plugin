@@ -1,0 +1,13 @@
+{
+  "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode1",
+  "dynamicBigDecimalProperty": "#['big decimal']",
+  "dynamicBigIntegerProperty": "#['big integer']",
+  "dynamicBooleanProperty": "#['boolean']",
+  "dynamicByteArrayProperty": "#['byte array']",
+  "dynamicDoubleProperty": "#['double']",
+  "dynamicFloatProperty": "#['float']",
+  "dynamicIntegerProperty": "#['integer']",
+  "dynamicLongProperty": "#['long']",
+  "dynamicObjectProperty": "#['object']",
+  "dynamicStringProperty": "#['string']"
+}

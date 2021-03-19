@@ -1,0 +1,19 @@
+{
+  "implementor": "de.codecentric.reedelk.runtime.component.TryCatch",
+  "try": [
+    {
+      "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode3"
+    },
+    {
+      "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode1"
+    }
+  ],
+  "catch": [
+    {
+      "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode5"
+    },
+    {
+      "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode6"
+    }
+  ]
+}
