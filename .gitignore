@@ -33,5 +33,4 @@ hostkey.ser
 
 .gradle
 build/
-gradle/
 out/
