@@ -1,0 +1,39 @@
+{
+  "implementor": "de.codecentric.reedelk.runtime.component.Router",
+  "description": "A simple description",
+  "when": [
+    {
+      "condition": "1 == 1",
+      "next": [
+        {
+          "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode3"
+        },
+        {
+          "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode1"
+        }
+      ]
+    },
+    {
+      "condition": "1 != 0",
+      "next": [
+        {
+          "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode2"
+        },
+        {
+          "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode4"
+        }
+      ]
+    },
+    {
+      "condition": "otherwise",
+      "next": [
+        {
+          "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode5"
+        },
+        {
+          "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode6"
+        }
+      ]
+    }
+  ]
+}

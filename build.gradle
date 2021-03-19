@@ -5,8 +5,8 @@ plugins {
     id "jacoco"
 }
 
-group 'com.reedelk'
-version '1.0.9'
+group 'de.codecentric.reedelk'
+version '2.0.0'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -14,17 +14,16 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url "http://repository.reedelk.com/release/" }
 }
 
 dependencies {
     compile group: 'org.json', name: 'json', version: '20190722'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.0'
 
-    compile group: 'com.reedelk', name: 'runtime-api', version: '1.0.4'
-    compile group: 'com.reedelk', name: 'runtime-commons', version: '1.0.4'
-    compile group: 'com.reedelk', name: 'module-descriptor', version: '1.0.4'
-    compile group: 'com.reedelk', name: 'reedelk-openapi', version: '1.0.4'
+    compile group: 'de.codecentric.reedelk', name: 'runtime-api', version: '2.0.0'
+    compile group: 'de.codecentric.reedelk', name: 'runtime-commons', version: '2.0.0'
+    compile group: 'de.codecentric.reedelk', name: 'module-descriptor', version: '2.0.0'
+    compile group: 'de.codecentric.reedelk', name: 'reedelk-openapi', version: '2.0.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'

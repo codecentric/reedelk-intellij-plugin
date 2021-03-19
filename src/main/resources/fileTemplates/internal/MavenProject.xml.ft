@@ -24,21 +24,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>reedelk-repository</id>
-            <name>Reedelk Repository</name>
-            <url>http://repository.reedelk.com/release/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>reedelk-plugin-repository</id>
-            <name>Reedelk Plugin Repository</name>
-            <url>http://repository.reedelk.com/release/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <dependencies>
         <dependency>
             <groupId>com.reedelk</groupId>
@@ -61,12 +46,6 @@
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-rabbitmq</artifactId>
-            <version>${reedelk.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.reedelk</groupId>
-            <artifactId>module-google-drive-v3</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>

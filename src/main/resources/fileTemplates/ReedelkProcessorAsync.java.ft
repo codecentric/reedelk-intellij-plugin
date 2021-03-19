@@ -1,16 +1,16 @@
 #if (${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
 
-import com.reedelk.runtime.api.annotation.*;
-import com.reedelk.runtime.api.component.OnResult;
-import com.reedelk.runtime.api.component.ProcessorAsync;
-import com.reedelk.runtime.api.flow.FlowContext;
-import com.reedelk.runtime.api.message.Message;
-import com.reedelk.runtime.api.message.MessageAttributes;
-import com.reedelk.runtime.api.message.MessageBuilder;
-import com.reedelk.runtime.api.message.content.MimeType;
+import de.codecentric.reedelk.runtime.api.annotation.*;
+import de.codecentric.reedelk.runtime.api.component.OnResult;
+import de.codecentric.reedelk.runtime.api.component.ProcessorAsync;
+import de.codecentric.reedelk.runtime.api.flow.FlowContext;
+import de.codecentric.reedelk.runtime.api.message.Message;
+import de.codecentric.reedelk.runtime.api.message.MessageAttributes;
+import de.codecentric.reedelk.runtime.api.message.MessageBuilder;
+import de.codecentric.reedelk.runtime.api.message.content.MimeType;
 import org.osgi.service.component.annotations.Component;
 
-import static com.reedelk.runtime.api.commons.ComponentPrecondition.Configuration;
+import static de.codecentric.reedelk.runtime.api.commons.ComponentPrecondition.Configuration;
 import static org.osgi.service.component.annotations.ServiceScope.PROTOTYPE;
 
 @ModuleComponent("${NAME}")

@@ -4,7 +4,7 @@
   "description": "${description}",
   "flow": [
     {
-      "implementor": "com.reedelk.rest.component.RESTListener",
+      "implementor": "de.codecentric.reedelk.rest.component.RESTListener",
       "description": "GET Hello World REST Listener",
       "configuration": {"ref": "${configId}"},
       "path": "/message/{name}",
@@ -24,13 +24,13 @@
       }}}
     },
     {
-      "implementor": "com.reedelk.core.component.LoggerComponent",
+      "implementor": "de.codecentric.reedelk.core.component.LoggerComponent",
       "description": "Log message attributes",
       "level": "INFO",
       "message": "#[message.attributes()]"
     },
     {
-      "implementor": "com.reedelk.core.component.ScriptEvaluator",
+      "implementor": "de.codecentric.reedelk.core.component.ScriptEvaluator",
       "description": "Concatenate 'Hello World' with 'name' path parameter",
       "mimeType": "text/plain",
       "script": "helloWorld.groovy"

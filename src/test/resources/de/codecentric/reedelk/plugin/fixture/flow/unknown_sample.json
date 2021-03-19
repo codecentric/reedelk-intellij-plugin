@@ -1,0 +1,8 @@
+{
+  "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode1",
+  "property1": "property 1 value",
+  "property2": {
+    "property3": 3,
+    "property4": "property 4 value"
+  }
+}

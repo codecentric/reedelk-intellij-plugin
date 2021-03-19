@@ -1,0 +1,12 @@
+{
+  "implementor": "de.codecentric.reedelk.runtime.component.ForEach",
+  "collection": "#[['one','two','three']]",
+  "next": [
+    {
+      "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode3"
+    },
+    {
+      "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode2"
+    }
+  ]
+}

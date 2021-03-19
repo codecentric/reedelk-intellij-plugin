@@ -1,0 +1,8 @@
+{
+  "implementor": "de.codecentric.reedelk.plugin.fixture.ComponentNode1",
+  "id": "38add40d-6a29-4e9e-9620-2bf165276204",
+  "title": "HTTP Configuration",
+  "host": "127.0.0.12",
+  "port": 7891,
+  "keepAlive": true
+}
