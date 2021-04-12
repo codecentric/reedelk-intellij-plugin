@@ -17,73 +17,67 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-core</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-rest</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-json</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-rabbitmq</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-csv</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-database</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-xml</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-mail</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
-            <artifactId>module-mongodb</artifactId>
-            <version>${reedelk.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-file</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-ftp</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.reedelk</groupId>
+            <groupId>de.codecentric.reedelk</groupId>
             <artifactId>module-scheduler</artifactId>
             <version>${reedelk.version}</version>
             <scope>provided</scope>
